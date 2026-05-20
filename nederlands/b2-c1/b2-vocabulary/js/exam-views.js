@@ -338,10 +338,44 @@
       ));
 
       const ta = el("textarea", { class: "essay-area",
-        placeholder: "Begin met schrijven…",
+        placeholder: "Begin met schrijven… of upload/scan handgeschreven pagina's hieronder.",
         disabled: sec.status === "graded" || undefined,
         onInput: (e) => { sec.response = e.target.value; setSectionField(exam, "schrijven", { response: e.target.value }); updateWC(); },
       }, sec.response || "");
+
+      // Upload / capture toolbar — only when not yet graded
+      if (sec.status !== "graded" && window.Handwriting) {
+        const ocrStatus = el("span", { class: "exam-status", style: "margin-left:.5rem" });
+        const toolbar = el("div", { class: "schrijven-actions" },
+          el("button", { class: "subtle", title: "Scan met je Mac-webcam of upload foto's van handgeschreven pagina's",
+            onClick: async () => {
+              try {
+                const pages = await window.Handwriting.openCaptureModal();
+                if (!pages || !pages.length) return;
+                ocrStatus.innerHTML = `<span class="ai-loading">${pages.length} pagina${pages.length === 1 ? "" : "'s"} transcriberen…</span>`;
+                const text = await window.Handwriting.transcribePages(pages);
+                // Append (or replace) — confirm if textarea already has content
+                let newVal = text;
+                if (ta.value.trim()) {
+                  const append = confirm("Bestaande tekst behouden en transcriptie eronder zetten?\nOK = toevoegen.  Annuleer = vervangen.");
+                  newVal = append ? (ta.value.trimEnd() + "\n\n" + text) : text;
+                }
+                ta.value = newVal;
+                sec.response = newVal;
+                setSectionField(exam, "schrijven", { response: newVal });
+                updateWC();
+                ocrStatus.textContent = "✓ Transcriptie ingevoegd — controleer en bewerk waar nodig.";
+              } catch (err) {
+                ocrStatus.innerHTML = `<span class="ai-error">${err.message}</span>`;
+              }
+            },
+          }, "📷 Scan / upload pagina's"),
+          el("span", { class: "or" }, "— of typ direct hieronder"),
+          ocrStatus,
+        );
+        host.append(toolbar);
+      }
+
       host.append(ta);
       const meta = el("p", { class: "essay-meta" }, el("span", { id: "schr-wc" }, "0 woorden"));
       host.append(meta);
