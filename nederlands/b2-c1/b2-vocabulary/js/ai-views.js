@@ -498,36 +498,41 @@
     updateMeta();
   }
 
-  /* ============ Chat view ============ */
+  /* ============ Chat view (multi-thread) ============ */
   function renderChat(mount) {
     mount.innerHTML = "";
     const root = el("div", { class: "chat-page" });
     root.append(el("div", { class: "chat-head" },
       el("h2", { class: "view-title" }, "Chat ", el("span", { class: "accent" }, "· conversatiepartner")),
-      el("p", { class: "view-sub" }, "Praat in het Nederlands. De AI verbetert je fouten zachtjes door correcte herhaling.")
+      el("p", { class: "view-sub" }, "Praat in het Nederlands. De AI verbetert je fouten zachtjes door correcte herhaling. Elk gesprek wordt automatisch een titel gegeven.")
     ));
 
     if (!window.AI.isConfigured()) {
-      root.append(el("div", { class: "empty-ai" },
+      root.append(el("div", { class: "empty-ai", style: "grid-column:1/-1" },
         "AI nog niet geconfigureerd. ", el("a", { href: "#/settings" }, "Stel je sleutel in"), " om te chatten."));
       mount.append(root);
       return;
     }
 
-    // Persist history per session in localStorage
-    const key = "b2vocab.chatHistory";
-    let history;
-    try { history = JSON.parse(localStorage.getItem(key) || "[]"); }
-    catch (e) { history = []; }
+    // Active chat — get-or-create the most recent one
+    let activeChat = window.ChatStore.getOrCreateActive();
+
+    // Sidebar
+    const sidebar = el("aside", { class: "chat-sidebar" });
+    root.append(sidebar);
+
+    // Main pane
+    const main = el("div", { class: "chat-main" });
+    root.append(main);
 
     const scroll = el("div", { class: "chat-scroll" });
     const input = el("textarea", { placeholder: "Typ in het Nederlands… (Enter = verstuur, Shift+Enter = nieuwe regel)" });
     const sendBtn = el("button", { onClick: send }, "Verstuur");
-    const clearBtn = el("button", { class: "subtle", onClick: () => {
-      if (!confirm("Gespreksgeschiedenis wissen?")) return;
-      history = [];
-      localStorage.removeItem(key);
+    const clearBtn = el("button", { class: "subtle", title: "Berichten in dit gesprek wissen (gesprek blijft bestaan)", onClick: () => {
+      if (!confirm("Berichten in dit gesprek wissen?")) return;
+      activeChat = window.ChatStore.update(activeChat.id, { messages: [], autoTitled: false, title: "Nieuw gesprek" });
       renderHistory();
+      renderSidebar();
     } }, "Wis");
 
     function escapeHTML(s) {
@@ -626,6 +631,7 @@
 
     function renderHistory() {
       scroll.innerHTML = "";
+      const history = activeChat.messages || [];
       if (history.length === 0) {
         scroll.append(el("div", { class: "empty-ai" },
           "Begin met iets als ", el("em", null, "\"Hoi, ik woon in Limburg en wil mijn Nederlands oefenen.\""),
@@ -634,7 +640,6 @@
       }
       history.forEach((m, idx) => {
         if (m.role === "user") {
-          // Look ahead for AI's response with correction for this message
           const next = history[idx + 1];
           const correction = (next && next.role === "assistant" && next.correctionForUser)
             ? next.correctionForUser
@@ -655,13 +660,163 @@
       scroll.scrollTop = scroll.scrollHeight;
     }
 
+    /* ============ Sidebar ============ */
+    function renderSidebar() {
+      sidebar.innerHTML = "";
+
+      const actions = el("div", { class: "chat-side-actions" },
+        el("button", { onClick: () => {
+          activeChat = window.ChatStore.create();
+          renderSidebar();
+          renderHistory();
+          setTimeout(() => input.focus(), 30);
+        } }, "+ Nieuw gesprek"),
+      );
+      sidebar.append(actions);
+
+      const all = window.ChatStore.list();
+      const listMount = el("div", { class: "chat-side-list" });
+      if (!all.length) {
+        listMount.append(el("div", { class: "chat-empty-state" }, "Geen gesprekken nog."));
+      }
+      all.forEach((c) => {
+        const isActive = c.id === activeChat.id;
+        const titleSpan = el("span", { class: "ci-title" }, c.title || "Naamloos");
+        const item = el("button", {
+          class: "chat-item" + (isActive ? " active" : "") + (c.autoTitled ? "" : " untitled"),
+          title: c.title,
+          onClick: () => {
+            if (c.id === activeChat.id) return;
+            activeChat = window.ChatStore.get(c.id);
+            window.ChatStore.setActiveId(c.id);
+            renderSidebar();
+            renderHistory();
+          },
+        },
+          titleSpan,
+          el("span", { class: "ci-meta" }, relTime(c.updatedAt) + " · " + (c.messages || []).length + " ber."),
+          el("button", {
+            class: "ci-del", title: "Gesprek verwijderen",
+            onClick: (e) => {
+              e.stopPropagation();
+              if (!confirm(`"${c.title}" verwijderen?`)) return;
+              window.ChatStore.remove(c.id);
+              if (c.id === activeChat.id) {
+                activeChat = window.ChatStore.getOrCreateActive();
+              }
+              renderSidebar();
+              renderHistory();
+            },
+          }, "✕"),
+        );
+        // Double-click title to rename inline
+        titleSpan.addEventListener("dblclick", (e) => {
+          e.stopPropagation();
+          startRename(item, c);
+        });
+        listMount.append(item);
+      });
+      sidebar.append(listMount);
+
+      sidebar.append(el("div", { class: "chat-side-foot" },
+        el("button", { class: "subtle", title: "Exporteer alle gesprekken als JSON", onClick: () => window.ChatStore.exportAll() }, "Export"),
+        el("button", { class: "subtle", title: "Importeer een JSON-bestand", onClick: triggerImport }, "Import"),
+      ));
+    }
+
+    function startRename(itemEl, chat) {
+      const titleSpan = itemEl.querySelector(".ci-title");
+      const original = chat.title;
+      const inp = document.createElement("input");
+      inp.type = "text";
+      inp.value = original;
+      inp.className = "chat-side-title-input";
+      titleSpan.replaceWith(inp);
+      inp.focus(); inp.select();
+      function commit() {
+        const v = inp.value.trim() || original;
+        window.ChatStore.update(chat.id, { title: v, autoTitled: true });
+        if (activeChat.id === chat.id) activeChat.title = v;
+        renderSidebar();
+      }
+      function cancel() { renderSidebar(); }
+      inp.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") { e.preventDefault(); commit(); }
+        else if (e.key === "Escape") { e.preventDefault(); cancel(); }
+      });
+      inp.addEventListener("blur", commit);
+    }
+
+    function triggerImport() {
+      const fi = document.createElement("input");
+      fi.type = "file"; fi.accept = "application/json,.json";
+      fi.onchange = async () => {
+        const file = fi.files && fi.files[0];
+        if (!file) return;
+        try {
+          const txt = await file.text();
+          const json = JSON.parse(txt);
+          const mode = confirm("OK = TOEVOEGEN aan bestaande gesprekken. Annuleer = VERVANGEN.") ? "merge" : "replace";
+          const n = window.ChatStore.importChats(json, mode);
+          alert(`${n} gesprek${n === 1 ? "" : "ken"} geïmporteerd.`);
+          activeChat = window.ChatStore.getOrCreateActive();
+          renderSidebar();
+          renderHistory();
+        } catch (err) {
+          alert("Import mislukt: " + err.message);
+        }
+      };
+      fi.click();
+    }
+
+    function relTime(iso) {
+      if (!iso) return "—";
+      const d = new Date(iso);
+      const diff = (Date.now() - d.getTime()) / 1000;
+      if (diff < 60) return "nu";
+      if (diff < 3600) return Math.floor(diff / 60) + "m";
+      if (diff < 86400) return Math.floor(diff / 3600) + "u";
+      if (diff < 86400 * 7) return Math.floor(diff / 86400) + "d";
+      return d.toISOString().slice(5, 10);
+    }
+
+    /* ============ Auto-title generation ============ */
+    async function autoTitleIfNeeded() {
+      if (activeChat.autoTitled) return;
+      const msgs = activeChat.messages || [];
+      // Only after we have at least one user + one AI turn
+      const hasUser = msgs.some((m) => m.role === "user");
+      const hasAI = msgs.some((m) => m.role === "assistant");
+      if (!hasUser || !hasAI) return;
+      try {
+        const first = msgs.find((m) => m.role === "user");
+        const firstAI = msgs.find((m) => m.role === "assistant");
+        const r = await window.AI.complete({
+          kind: "chat-title",
+          model: "gpt-5-nano", // titles are tiny, use cheapest
+          system: "Je geeft een korte, beschrijvende titel van 3 tot 6 woorden in het Nederlands voor een conversatie. Geen aanhalingstekens, geen punt, geen emoji — alleen de titel zelf.",
+          user: `Gebruiker: ${first.content}\nAI: ${(firstAI.content || "").slice(0, 200)}`,
+          maxTokens: 40,
+          reasoning: "minimal",
+        });
+        const title = (r.text || "").trim().replace(/^["'`]|["'`.]$/g, "").slice(0, 80);
+        if (title) {
+          activeChat = window.ChatStore.setTitle(activeChat.id, title);
+          renderSidebar();
+        }
+      } catch (e) {
+        // Auto-title is best-effort; ignore errors
+        console.warn("Auto-title failed:", e);
+      }
+    }
+
     async function send() {
       const txt = input.value.trim();
       if (!txt) return;
-      history.push({ role: "user", content: txt });
-      localStorage.setItem(key, JSON.stringify(history));
+      activeChat = window.ChatStore.appendMessage(activeChat.id, { role: "user", content: txt });
       input.value = "";
       renderHistory();
+      renderSidebar();
       sendBtn.disabled = true;
 
       // Add placeholder AI message row
@@ -757,12 +912,12 @@ VOCAB-REGELS:
 
       // Build proper OpenAI messages array. For richer turns we serialise the
       // assistant content (which was JSON internally) as just the visible reply text.
-      const recent = history.slice(-16);
+      const recent = (activeChat.messages || []).slice(-16);
       const messages = [{ role: "system", content: system }];
       recent.forEach((m) => {
         messages.push({
           role: m.role === "user" ? "user" : "assistant",
-          content: m.content, // for assistant entries, this is the plain reply text
+          content: m.content,
         });
       });
       try {
@@ -770,24 +925,25 @@ VOCAB-REGELS:
           kind: "chat",
           messages,
           maxTokens: 1500,
-          reasoning: "minimal", // chat doesn't need deep reasoning; the strict prompt drives the check
+          reasoning: "minimal",
           json: true,
           noCache: true,
         });
         let parsed;
         try { parsed = JSON.parse(r.text); }
         catch (e) {
-          // Fallback: treat raw text as plain reply
           parsed = { reply: r.text, correctionForUser: { needed: false }, vocab: [] };
         }
-        history.push({
+        activeChat = window.ChatStore.appendMessage(activeChat.id, {
           role: "assistant",
           content: parsed.reply || r.text,
           correctionForUser: parsed.correctionForUser || { needed: false },
           vocab: parsed.vocab || [],
         });
-        localStorage.setItem(key, JSON.stringify(history));
         renderHistory();
+        renderSidebar();
+        // Fire-and-forget auto-title (won't block UI)
+        autoTitleIfNeeded();
       } catch (err) {
         aiMsg.querySelector(".body").innerHTML = `<span class="ai-error">${format(err.message)}</span>`;
       } finally {
@@ -800,10 +956,12 @@ VOCAB-REGELS:
       if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); }
     });
 
-    const inputRow = el("div", { class: "chat-input-row" }, input, el("div", { style: "display:flex;flex-direction:column;gap:.4rem" }, sendBtn, clearBtn));
+    const inputRow = el("div", { class: "chat-input-row" }, input,
+      el("div", { style: "display:flex;flex-direction:column;gap:.4rem" }, sendBtn, clearBtn));
 
-    root.append(scroll, inputRow);
+    main.append(scroll, inputRow);
     mount.append(root);
+    renderSidebar();
     renderHistory();
     setTimeout(() => input.focus(), 50);
   }
