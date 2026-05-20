@@ -117,18 +117,31 @@
             "Vak 1 → 1 dag · Vak 2 → 2 d · Vak 3 → 4 d · Vak 4 → 9 d · Vak 5 → 19 d"
           ),
         ),
-        el("div", { class: "card card-pad" },
-          el("h3", { style: "font-family:var(--serif);margin:.1rem 0 1rem" }, "Zwakke plekken"),
-          weak.length === 0
-            ? el("p", { class: "stat-note" }, "Nog niet genoeg data. Blijf oefenen — dit vult zich vanzelf.")
-            : el("ul", { class: "weak-list" },
-                weak.map((w) => el("li", null,
-                  el("span", null, w.cat),
-                  el("span", { class: "weak-bar" }, el("span", { style: `width:${Math.round(w.rate * 100)}%` })),
-                  el("span", { class: "weak-pct" }, `${Math.round(w.rate * 100)}%`),
-                ))
-              )
-        ),
+        (() => {
+          const card = el("div", { class: "card card-pad" });
+          card.append(el("h3", { style: "font-family:var(--serif);margin:.1rem 0 1rem" }, "Zwakke plekken"));
+          if (weak.length === 0) {
+            card.append(el("p", { class: "stat-note" }, "Nog niet genoeg data. Blijf oefenen — dit vult zich vanzelf."));
+          } else {
+            card.append(el("ul", { class: "weak-list" },
+              weak.map((w) => el("li", null,
+                el("span", null, w.cat),
+                el("span", { class: "weak-bar" }, el("span", { style: `width:${Math.round(w.rate * 100)}%` })),
+                el("span", { class: "weak-pct" }, `${Math.round(w.rate * 100)}%`),
+              ))
+            ));
+            // Adaptive AI quiz
+            if (window.AIViews) {
+              const quizHost = el("div", { style: "margin-top:1rem" });
+              const quizBtn = el("button", { class: "ai-btn", onClick: () => {
+                window.AIViews.generateAdaptiveQuiz(weak, quizHost);
+              } }, "Quiz mijn zwakke plekken", el("span", { class: "label-en" }, "· AI quiz"));
+              card.append(el("div", { style: "margin-top:1rem;text-align:right" }, quizBtn));
+              card.append(quizHost);
+            }
+          }
+          return card;
+        })(),
       ),
 
       // Settings card
@@ -299,6 +312,9 @@
           el("p", { class: "nl" }, it.exampleNL),
           el("p", { class: "en" }, it.exampleEN),
           it.subcategory ? el("p", { class: "en", style: "font-size:.78rem;margin-top:.4rem" }, "— " + it.subcategory) : null,
+          window.AIViews ? el("div", { style: "margin-top:.7rem;display:flex;gap:.4rem", onClick: (e) => e.stopPropagation() },
+            window.AIViews.explainWord(it),
+          ) : null,
         ),
       );
       row.addEventListener("click", () => row.classList.toggle("open"));
@@ -478,6 +494,11 @@
           : el("div", { class: "fc-actions" },
               el("button", { onClick: flip }, "Omdraaien · Space"),
             ),
+        // AI buttons (only on back, only if AI is configured/enabled)
+        flipped && window.AIViews ? el("div", { style: "display:flex;justify-content:center;gap:.45rem;margin-top:1.2rem;flex-wrap:wrap" },
+          window.AIViews.explainWord(it),
+          window.AIViews.moreExamples(it),
+        ) : null,
       );
       stage.append(card);
     }
@@ -601,6 +622,7 @@
         if (revealed) return next();
         const res = window.Match.check(input.value, answer);
         revealed = true;
+        const userAnswer = input.value;
         if (res.ok) {
           input.classList.add("correct");
           feedback.innerHTML = `<span class="ok">Goed${res.kind === "fuzzy" ? " (typo vergeven)" : ""}</span> — <span class="nl" style="font-family:var(--serif)">${answer}</span>`;
@@ -620,6 +642,10 @@
         );
         actions.innerHTML = "";
         actions.append(el("button", { onClick: next }, "Volgende · Enter"));
+        // Mistake coach: only on wrong answers
+        if (!res.ok && window.AIViews) {
+          actions.append(window.AIViews.explainMistake(it, userAnswer));
+        }
       }
       function next() { revealed = false; i += 1; render(); }
 
@@ -725,6 +751,7 @@
         if (revealed) return next();
         const res = window.Match.check(input.value, target);
         revealed = true;
+        const userAnswer = input.value;
         if (res.ok) {
           input.classList.add("correct");
           feedback.innerHTML = `<span class="ok">Goed</span> — <em>${it.dutch}</em>`;
@@ -736,6 +763,9 @@
         }
         actions.innerHTML = "";
         actions.append(el("button", { onClick: next }, "Volgende · Enter"));
+        if (!res.ok && window.AIViews) {
+          actions.append(window.AIViews.explainMistake(it, userAnswer));
+        }
       }
       function next() { revealed = false; i += 1; render(); }
 
@@ -1458,6 +1488,9 @@
     cloze: renderCloze,
     mixed: renderMixed,
     metrics: (mount) => window.Metrics.render(mount),
+    chat: (mount) => window.AIViews.chat(mount),
+    essay: (mount) => window.AIViews.essay(mount),
+    settings: (mount) => window.AIViews.settings(mount),
     help: renderHelp,
   };
 })();

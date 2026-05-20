@@ -28,8 +28,15 @@
       sessionSize: 15,
       categoryFilter: null,
       coreOnly: false,
+      // AI
+      apiKey: "",
+      aiModel: "gpt-4o-mini",
+      aiEnabled: true,
+      aiSoftLimit: 50, // soft warning threshold per day
     },
     sessionStats: { today: { right: 0, wrong: 0, day: TODAY() } },
+    aiCallsByDay: {}, // ISO date → { total, byKind: { explain: n, ... } }
+    aiCache: {}, // hash → { response, ts, model }
   };
 
   function load() {
@@ -46,6 +53,8 @@
         history: (parsed.history && typeof parsed.history === "object") ? parsed.history : {},
         achievements: (parsed.achievements && typeof parsed.achievements === "object") ? parsed.achievements : {},
         xp: typeof parsed.xp === "number" ? parsed.xp : 0,
+        aiCallsByDay: (parsed.aiCallsByDay && typeof parsed.aiCallsByDay === "object") ? parsed.aiCallsByDay : {},
+        aiCache: (parsed.aiCache && typeof parsed.aiCache === "object") ? parsed.aiCache : {},
       });
       // Forward-migration: ensure any newly added levels are enabled by default
       const lvls = new Set(merged.settings.levels || []);

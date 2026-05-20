@@ -1,6 +1,6 @@
 /* Hash router + global keyboard hooks. */
 (function () {
-  const ROUTES = ["dashboard", "browse", "flashcards", "typed", "cloze", "mixed", "metrics", "help"];
+  const ROUTES = ["dashboard", "browse", "flashcards", "typed", "cloze", "mixed", "metrics", "chat", "essay", "settings", "help"];
   let cleanupFn = null;
 
   function currentRoute() {
