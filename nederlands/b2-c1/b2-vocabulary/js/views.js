@@ -291,6 +291,50 @@
     render();
   }
 
+  /* ============ Direction toggle (NL→EN / EN→NL / Mixed) ============ */
+  function directionToggle(onChange) {
+    const current = window.Store.state.settings.direction;
+    const opts = [
+      { val: "nl-en", label: "NL", arrow: "→", to: "EN" },
+      { val: "en-nl", label: "EN", arrow: "→", to: "NL" },
+      { val: "mixed", label: "Gemengd", arrow: "", to: "" },
+    ];
+    const wrap = el("div", { class: "dir-toggle-wrap" });
+    const label = el("span", null, "Richting");
+    const toggle = el("div", { class: "dir-toggle", role: "group", "aria-label": "Richting" });
+    opts.forEach((o) => {
+      const btn = el("button", {
+        class: current === o.val ? "active" : "",
+        "data-dir": o.val,
+        title: `Schakel naar ${o.label}${o.arrow ? " → " + o.to : ""}`,
+        onClick: () => {
+          if (window.Store.state.settings.direction === o.val) return;
+          window.Store.state.settings.direction = o.val;
+          window.Store.save();
+          // Update active state without full re-render
+          toggle.querySelectorAll("button").forEach((b) =>
+            b.classList.toggle("active", b.getAttribute("data-dir") === o.val));
+          if (typeof onChange === "function") onChange(o.val);
+        },
+      },
+        o.label,
+        o.arrow ? el("span", { class: "arrow" }, o.arrow) : null,
+        o.to || null,
+      );
+      toggle.append(btn);
+    });
+    wrap.append(label, toggle);
+    return wrap;
+  }
+  function cycleDirection() {
+    const order = ["nl-en", "en-nl", "mixed"];
+    const i = order.indexOf(window.Store.state.settings.direction);
+    const next = order[(i + 1) % order.length];
+    window.Store.state.settings.direction = next;
+    window.Store.save();
+    return next;
+  }
+
   /* ============ Voice button helpers (Ellen / Xander) ============ */
   function voiceBtn(voiceName, flag, text, size) {
     const sp = window.Speech;
@@ -329,16 +373,16 @@
     }
     let i = 0;
     let flipped = false;
-    let direction = window.Store.state.settings.direction;
 
     mount.innerHTML = "";
     const stage = el("div", { class: "fc-stage" });
     mount.append(el("h2", { class: "view-title" }, "Flashcards"),
-      el("p", { class: "view-sub" }, "Probeer eerst zelf het antwoord op te halen. Daarna pas omdraaien."));
+      el("p", { class: "view-sub" }, "Probeer eerst zelf het antwoord op te halen. Daarna pas omdraaien."),
+      directionToggle(() => { flipped = false; render(); }));
     mount.append(stage);
 
     function rng() {
-      // Mixed direction: half items NL→EN, half EN→NL
+      const direction = window.Store.state.settings.direction;
       if (direction === "mixed") return i % 2 === 0 ? "nl-en" : "en-nl";
       return direction;
     }
@@ -415,6 +459,20 @@
         if (!flipped) flip();
         return;
       }
+      // T → cycle direction
+      if (e.key === "t" || e.key === "T") {
+        cycleDirection();
+        // Update toggle UI + re-render current card
+        const wrap = mount.querySelector(".dir-toggle");
+        if (wrap) {
+          const cur = window.Store.state.settings.direction;
+          wrap.querySelectorAll("button").forEach((b) =>
+            b.classList.toggle("active", b.getAttribute("data-dir") === cur));
+        }
+        flipped = false;
+        render();
+        return;
+      }
       // E / X → play current Dutch text with Ellen / Xander
       if (e.key === "e" || e.key === "E" || e.key === "x" || e.key === "X") {
         const it = session[i];
@@ -451,6 +509,7 @@
     mount.append(
       el("h2", { class: "view-title" }, "Generation"),
       el("p", { class: "view-sub" }, "Type het antwoord vóór je controleert. Diacritics, lidwoorden en kleine typo's zijn vergeven."),
+      directionToggle(() => { revealed = false; render(); }),
     );
     const progressBar = el("div", { class: "session-progress" },
       el("span", { id: "pg-num" }, ""),
@@ -463,7 +522,6 @@
     function dir() {
       const d = window.Store.state.settings.direction;
       if (d === "mixed") return i % 2 === 0 ? "en-nl" : "nl-en";
-      // Default to en-nl for typed practice (productive recall is harder/more useful)
       return d === "nl-en" ? "nl-en" : "en-nl";
     }
 
@@ -539,7 +597,25 @@
       $("#pg-fill", mount).style.width = "100%";
     }
 
+    // T cycles direction (only when not typing in an input)
+    const tHandler = (e) => {
+      if (e.target.matches && e.target.matches("input, textarea")) return;
+      if (e.key === "t" || e.key === "T") {
+        cycleDirection();
+        const wrap = mount.querySelector(".dir-toggle");
+        if (wrap) {
+          const cur = window.Store.state.settings.direction;
+          wrap.querySelectorAll("button").forEach((b) =>
+            b.classList.toggle("active", b.getAttribute("data-dir") === cur));
+        }
+        revealed = false;
+        render();
+      }
+    };
+    document.addEventListener("keydown", tHandler);
+
     render();
+    return () => document.removeEventListener("keydown", tHandler);
   }
 
   /* ============ Cloze ============ */
