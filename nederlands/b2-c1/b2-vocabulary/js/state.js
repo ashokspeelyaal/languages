@@ -27,6 +27,7 @@
       levels: ["A2", "B1", "B2", "C1"],
       sessionSize: 15,
       categoryFilter: null,
+      coreOnly: false,
     },
     sessionStats: { today: { right: 0, wrong: 0, day: TODAY() } },
   };

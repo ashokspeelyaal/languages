@@ -37,6 +37,7 @@
     const s = window.Store.state.settings;
     return ITEMS.filter((it) => {
       if (!s.levels.includes(it.level)) return false;
+      if (s.coreOnly && !it.core) return false;
       if (s.categoryFilter && it.category !== s.categoryFilter) return false;
       return true;
     });
@@ -83,6 +84,8 @@
       el("p", { class: "view-sub" },
         "Korte ophaaltjes, vaak herhaald. Je vergeet en haalt het terug — dat is waar het stikt."
       ),
+
+      modusToggle(() => { mount.innerHTML = ""; renderDashboard(mount); }),
 
       // Stat row
       el("div", { class: "dash-grid" },
@@ -188,6 +191,7 @@
     let search = "";
     let levelF = new Set(window.Store.state.settings.levels);
     let catF = window.Store.state.settings.categoryFilter || "";
+    let coreF = !!window.Store.state.settings.coreOnly;
 
     mount.innerHTML = "";
     mount.append(
@@ -225,8 +229,20 @@
       ...cats.map((c) => el("option", { value: c, selected: c === catF || undefined }, c))
     );
 
+    const coreToggle = el("label", { style: "display:flex;align-items:center;gap:.3rem;font-size:.88rem" },
+      el("input", {
+        type: "checkbox", checked: coreF || undefined,
+        onChange: (e) => {
+          coreF = e.target.checked;
+          window.Store.state.settings.coreOnly = coreF;
+          window.Store.save();
+          render();
+        },
+      }),
+      "Alleen kern"
+    );
     const countChip = el("span", { class: "count-chip" }, "");
-    toolbar.append(searchInput, levelSel, catSel, countChip);
+    toolbar.append(searchInput, levelSel, coreToggle, catSel, countChip);
 
     const listMount = el("ul", { class: "entry-list card", style: "padding:0;list-style:none" });
     mount.append(toolbar, listMount);
@@ -235,6 +251,7 @@
       const q = window.Match.strip(search);
       const filtered = ITEMS.filter((it) => {
         if (!levelF.has(it.level)) return false;
+        if (coreF && !it.core) return false;
         if (catF && it.category !== catF) return false;
         if (!q) return true;
         return (
@@ -335,6 +352,36 @@
     return next;
   }
 
+  /* ============ Modus toggle (Alles / Kernwoordenschat) ============ */
+  function modusToggle(onChange) {
+    const opts = [
+      { val: false, label: "Alles", sub: "all" },
+      { val: true, label: "Kernwoordenschat", sub: "core only" },
+    ];
+    const wrap = el("div", { class: "dir-toggle-wrap" });
+    const label = el("span", null, "Modus");
+    const toggle = el("div", { class: "dir-toggle", role: "group", "aria-label": "Modus" });
+    opts.forEach((o) => {
+      const active = !!window.Store.state.settings.coreOnly === o.val;
+      const btn = el("button", {
+        class: active ? "active" : "",
+        "data-modus": String(o.val),
+        title: o.label,
+        onClick: () => {
+          if (!!window.Store.state.settings.coreOnly === o.val) return;
+          window.Store.state.settings.coreOnly = o.val;
+          window.Store.save();
+          toggle.querySelectorAll("button").forEach((b) =>
+            b.classList.toggle("active", b.getAttribute("data-modus") === String(o.val)));
+          if (typeof onChange === "function") onChange(o.val);
+        },
+      }, o.label);
+      toggle.append(btn);
+    });
+    wrap.append(label, toggle);
+    return wrap;
+  }
+
   /* ============ Voice button helpers (Ellen / Xander) ============ */
   function voiceBtn(voiceName, flag, text, size) {
     const sp = window.Speech;
@@ -378,7 +425,8 @@
     const stage = el("div", { class: "fc-stage" });
     mount.append(el("h2", { class: "view-title" }, "Flashcards"),
       el("p", { class: "view-sub" }, "Probeer eerst zelf het antwoord op te halen. Daarna pas omdraaien."),
-      directionToggle(() => { flipped = false; render(); }));
+      directionToggle(() => { flipped = false; render(); }),
+      modusToggle(() => { mount.innerHTML = ""; renderFlashcards(mount); }));
     mount.append(stage);
 
     function rng() {
@@ -510,6 +558,7 @@
       el("h2", { class: "view-title" }, "Generation"),
       el("p", { class: "view-sub" }, "Type het antwoord vóór je controleert. Diacritics, lidwoorden en kleine typo's zijn vergeven."),
       directionToggle(() => { revealed = false; render(); }),
+      modusToggle(() => { mount.innerHTML = ""; renderTyped(mount); }),
     );
     const progressBar = el("div", { class: "session-progress" },
       el("span", { id: "pg-num" }, ""),
@@ -639,6 +688,7 @@
     mount.append(
       el("h2", { class: "view-title" }, "Cloze · Vul de leemte"),
       el("p", { class: "view-sub" }, "Type het ontbrekende Nederlandse woord in zijn natuurlijke context."),
+      modusToggle(() => { mount.innerHTML = ""; renderCloze(mount); }),
       el("div", { class: "session-progress" },
         el("span", { id: "cl-num" }, ""),
         el("span", { class: "bar" }, el("span", { id: "cl-fill" })))
@@ -739,6 +789,7 @@
     mount.append(
       el("h2", { class: "view-title" }, "Gemengde toets"),
       el("p", { class: "view-sub" }, "Categorieën door elkaar, modus per vraag wisselend. Moeilijker — en blijvender."),
+      modusToggle(() => { mount.innerHTML = ""; renderMixed(mount); }),
       el("div", { class: "session-progress" },
         el("span", { id: "mx-num" }, ""),
         el("span", { class: "bar" }, el("span", { id: "mx-fill" })),
