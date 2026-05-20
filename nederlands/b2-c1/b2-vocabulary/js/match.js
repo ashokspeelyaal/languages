@@ -18,8 +18,11 @@
   // Acceptable answers for a target string that may contain `/` synonyms,
   // e.g. "to ask / to enquire", or "kwam/kwamen · gekomen".
   function variants(target) {
-    // strip arrow-style decorations like "→" used in irregular-verb entries
-    const cleaned = target.replace(/→/g, "/").replace(/·/g, "/");
+    // strip arrow / dot / not-equal decorations to comparable separators
+    const cleaned = target
+      .replace(/→/g, "/")
+      .replace(/·/g, "/")
+      .replace(/≠/g, "/");
     return cleaned.split(/[\/|]/).map((s) => strip(s)).filter(Boolean);
   }
 

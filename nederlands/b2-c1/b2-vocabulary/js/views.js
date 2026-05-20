@@ -41,6 +41,14 @@
       return true;
     });
   }
+  // Comparison-pair items use ≠ (e.g. "groei ≠ ontwikkeling"); they're not
+  // a single typeable answer. Strip them from modes that require typed input.
+  function isComparisonItem(it) {
+    return /[≠]/.test(it.dutch) || /[≠]/.test(it.english || "");
+  }
+  function typeableItems() {
+    return activeItems().filter((it) => !isComparisonItem(it));
+  }
 
   /* ============ Dashboard ============ */
   function renderDashboard(mount) {
@@ -434,7 +442,7 @@
   /* ============ Typed (generation) ============ */
   function renderTyped(mount) {
     window.Store.recordSessionStart("typed");
-    const session = window.SRS.shuffle(activeItems().slice()).slice(0, window.Store.state.settings.sessionSize);
+    const session = window.SRS.shuffle(typeableItems().slice()).slice(0, window.Store.state.settings.sessionSize);
     if (!session.length) { mount.innerHTML = ""; mount.append(emptyState("Geen items", "Selecteer een niveau in de instellingen.")); return; }
     let i = 0;
     let revealed = false;
@@ -537,7 +545,7 @@
   /* ============ Cloze ============ */
   function renderCloze(mount) {
     window.Store.recordSessionStart("cloze");
-    const candidates = activeItems().filter((it) => {
+    const candidates = typeableItems().filter((it) => {
       if (!it.exampleNL || !it.dutch) return false;
       const t = window.Match.strip(it.dutch).split(" ")[0];
       return t && window.Match.strip(it.exampleNL).includes(t);
@@ -643,7 +651,7 @@
   /* ============ Mixed quiz: interleaved, multi-mode ============ */
   function renderMixed(mount) {
     window.Store.recordSessionStart("mixed");
-    const pool = activeItems();
+    const pool = typeableItems();
     if (pool.length < 4) { mount.innerHTML = ""; mount.append(emptyState("Te weinig items", "Activeer meer niveaus of categorieën.")); return; }
     const session = window.SRS.shuffle(pool.slice()).slice(0, window.Store.state.settings.sessionSize);
     const modes = ["mc-nl-en", "mc-en-nl", "type", "cloze"];
