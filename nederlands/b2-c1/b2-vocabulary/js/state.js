@@ -24,7 +24,7 @@
     achievements: {}, // id -> { date: ISO }
     settings: {
       direction: "nl-en",
-      levels: ["A2", "B1", "B2"],
+      levels: ["A2", "B1", "B2", "C1"],
       sessionSize: 15,
       categoryFilter: null,
     },
@@ -37,7 +37,7 @@
       if (!raw) return structuredClone(defaultState);
       const parsed = JSON.parse(raw);
       if (!parsed || typeof parsed !== "object") return structuredClone(defaultState);
-      return Object.assign(structuredClone(defaultState), parsed, {
+      const merged = Object.assign(structuredClone(defaultState), parsed, {
         settings: Object.assign({}, defaultState.settings, parsed.settings || {}),
         sessionStats: Object.assign({}, defaultState.sessionStats, parsed.sessionStats || {}),
         items: (parsed.items && typeof parsed.items === "object") ? parsed.items : {},
@@ -46,6 +46,17 @@
         achievements: (parsed.achievements && typeof parsed.achievements === "object") ? parsed.achievements : {},
         xp: typeof parsed.xp === "number" ? parsed.xp : 0,
       });
+      // Forward-migration: ensure any newly added levels are enabled by default
+      const lvls = new Set(merged.settings.levels || []);
+      ["A2", "B1", "B2", "C1"].forEach((l) => {
+        if (!parsed.settings || !parsed.settings.levels || !parsed.settings.levels.includes(l)) {
+          // Only auto-add if this level wasn't explicitly disabled (i.e. settings.levels didn't exist yet for it)
+          if (!parsed.settings || !parsed.settings.levels) lvls.add(l);
+          else if (l === "C1" && !parsed.settings.levels.includes("C1")) lvls.add(l);
+        }
+      });
+      merged.settings.levels = Array.from(lvls);
+      return merged;
     } catch (e) {
       console.warn("State load failed, resetting:", e);
       return structuredClone(defaultState);

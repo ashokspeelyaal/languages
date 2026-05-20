@@ -125,7 +125,7 @@
         el("h3", { style: "font-family:var(--serif);margin:.1rem 0 1rem" }, "Instellingen"),
         el("div", { class: "browse-toolbar" },
           el("label", { for: "lvl" }, "Niveaus:"),
-          ...["A2", "B1", "B2"].map((lvl) => {
+          ...["A2", "B1", "B2", "C1"].map((lvl) => {
             const checked = s.settings.levels.includes(lvl);
             return el("label", { style: "display:flex;align-items:center;gap:.3rem;margin-right:.6rem" },
               el("input", {
@@ -196,7 +196,7 @@
     });
 
     const levelSel = el("div", { style: "display:flex;gap:.3rem" },
-      ...["A2", "B1", "B2"].map((lvl) =>
+      ...["A2", "B1", "B2", "C1"].map((lvl) =>
         el("label", { style: "display:flex;align-items:center;gap:.3rem;font-size:.88rem" },
           el("input", {
             type: "checkbox", checked: levelF.has(lvl) || undefined,

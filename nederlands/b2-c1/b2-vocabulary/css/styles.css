@@ -648,6 +648,7 @@ dialog td { padding: .35rem 0; color: var(--ink-soft); }
 .level-badge.l-A2 { background: rgba(31,71,117,.08); color: var(--delft); border-color: var(--delft-soft); }
 .level-badge.l-B1 { background: rgba(216,169,59,.13); color: #8a6817; border-color: var(--geel); }
 .level-badge.l-B2 { background: rgba(154,58,44,.08); color: var(--rood); border-color: var(--rood-soft); }
+.level-badge.l-C1 { background: linear-gradient(135deg, rgba(154,58,44,.12), rgba(31,71,117,.12)); color: var(--ink); border-color: var(--ink-soft); font-weight: 800; }
 
 @media (max-width: 700px) {
   .topbar { flex-wrap: wrap; padding: 1rem; gap: 1rem; }
