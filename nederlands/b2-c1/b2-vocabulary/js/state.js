@@ -33,6 +33,10 @@
       aiModel: "gpt-5-mini",
       aiEnabled: true,
       aiSoftLimit: 50, // soft warning threshold per day
+      // Audio (exam)
+      ttsModel: "gpt-4o-mini-tts",
+      ttsVoice: "shimmer",
+      sttModel: "gpt-4o-mini-transcribe",
     },
     sessionStats: { today: { right: 0, wrong: 0, day: TODAY() } },
     aiCallsByDay: {}, // ISO date → { total, byKind: { explain: n, ... } }

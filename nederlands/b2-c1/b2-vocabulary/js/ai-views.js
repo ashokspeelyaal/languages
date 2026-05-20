@@ -364,6 +364,119 @@
     ));
     root.append(useSec);
 
+    // --- Audio models section (TTS + STT, for exam) ---
+    const audioSec = el("div", { class: "settings-section" });
+    audioSec.append(el("h3", null, "Audio · TTS & STT (examenmodule)"));
+    audioSec.append(el("p", { class: "sub" },
+      "TTS = tekst-naar-spraak voor de luistersectie. STT = spraak-naar-tekst voor de spreeksectie."
+    ));
+
+    const TTS_MODELS = [
+      { id: "gpt-4o-mini-tts", in: 0.60, audio: 12.00, note: "★ aanbevolen — natuurlijk, instruction-aware" },
+      { id: "tts-1",           charPrice: 15.00,       note: "klassiek, snel, lagere kwaliteit" },
+      { id: "tts-1-hd",        charPrice: 30.00,       note: "hogere kwaliteit, dubbele prijs" },
+    ];
+    const STT_MODELS = [
+      { id: "gpt-4o-mini-transcribe", in: 3.00, out: 5.00,  note: "★ aanbevolen — goedkoop, accuraat" },
+      { id: "gpt-4o-transcribe",      in: 6.00, out: 10.00, note: "scherper, duurder" },
+      { id: "whisper-1",              perMin: 0.006,        note: "klassiek, vast tarief per minuut" },
+    ];
+    const TTS_VOICES = ["alloy", "echo", "fable", "onyx", "nova", "shimmer", "sage", "ash"];
+
+    function ttsLabel(m) {
+      if (m.charPrice != null) {
+        const perMin = (m.charPrice / 1e6 * 1000);
+        return `${m.id}  ·  $${m.charPrice.toFixed(2)}/1M chars  (~$${perMin.toFixed(3)}/min)  ·  ${m.note}`;
+      }
+      return `${m.id}  ·  in $${m.in.toFixed(2)} / audio out $${m.audio.toFixed(2)}/1M (~$0.015/min)  ·  ${m.note}`;
+    }
+    function sttLabel(m) {
+      if (m.perMin != null) {
+        return `${m.id}  ·  $${m.perMin.toFixed(3)}/min  ·  ${m.note}`;
+      }
+      return `${m.id}  ·  in $${m.in.toFixed(2)} / out $${m.out.toFixed(2)} per 1M (~$0.${(m.in / 1000).toFixed(3).slice(2)}/min)  ·  ${m.note}`;
+    }
+
+    const ttsSel = el("select", { class: "select-input", onChange: (e) => {
+      window.Store.state.settings.ttsModel = e.target.value;
+      window.Store.save();
+    } }, ...TTS_MODELS.map((m) =>
+      el("option", { value: m.id, selected: m.id === (s.ttsModel || "gpt-4o-mini-tts") || undefined }, ttsLabel(m))));
+
+    const voiceSel = el("select", { class: "select-input", onChange: (e) => {
+      window.Store.state.settings.ttsVoice = e.target.value;
+      window.Store.save();
+    } }, ...TTS_VOICES.map((v) =>
+      el("option", { value: v, selected: v === (s.ttsVoice || "shimmer") || undefined }, v)));
+
+    const sttSel = el("select", { class: "select-input", onChange: (e) => {
+      window.Store.state.settings.sttModel = e.target.value;
+      window.Store.save();
+    } }, ...STT_MODELS.map((m) =>
+      el("option", { value: m.id, selected: m.id === (s.sttModel || "gpt-4o-mini-transcribe") || undefined }, sttLabel(m))));
+
+    audioSec.append(
+      el("div", { class: "field" },
+        el("label", null, "TTS-model (luister-audio)"),
+        ttsSel,
+        el("p", { class: "hint" }, "Voor een typisch 90s-luisterfragment ≈ $0,015–$0,03."),
+      ),
+      el("div", { class: "field" },
+        el("label", null, "TTS-stem"),
+        voiceSel,
+        el("p", { class: "hint" }, "OpenAI-stemmen zijn niet Vlaams getint, maar wel verstaanbaar Standaardnederlands. 'shimmer' / 'nova' klinken het warmst."),
+      ),
+      el("div", { class: "field" },
+        el("label", null, "STT-model (spreeksectie)"),
+        sttSel,
+        el("p", { class: "hint" }, "Voor een 60-90s opname ≈ $0,003–$0,01."),
+      ),
+    );
+    root.append(audioSec);
+
+    // --- Audio storage section (IndexedDB) ---
+    const blobSec = el("div", { class: "settings-section" });
+    blobSec.append(el("h3", null, "Audio-opslag · audio storage"));
+    blobSec.append(el("p", { class: "sub" },
+      "TTS-fragmenten en jouw spreekopnames worden bewaard in IndexedDB (binair, geen localStorage-druk)."
+    ));
+    const blobStatus = el("p", { class: "hint", style: "font-family:var(--mono);font-size:.78rem" }, "berekenen…");
+    blobSec.append(blobStatus);
+
+    function refreshBlobStats() {
+      if (!window.BlobStore) { blobStatus.textContent = "BlobStore niet beschikbaar."; return; }
+      window.BlobStore.list().then((rows) => {
+        const total = rows.reduce((a, r) => a + (r.size || 0), 0);
+        const mb = (total / 1024 / 1024).toFixed(2);
+        blobStatus.innerHTML =
+          `<strong>${rows.length}</strong> audio-bestand${rows.length === 1 ? "" : "en"}  ·  ` +
+          `<strong>${mb} MB</strong>  ·  IDB-quota in deze browser is meestal &gt;50 MB.`;
+      }).catch(() => { blobStatus.textContent = "Kon IDB niet lezen."; });
+    }
+    refreshBlobStats();
+
+    blobSec.append(el("div", { class: "field actions" },
+      el("button", { class: "subtle", title: "Audio van verwijderde examens opruimen", onClick: async () => {
+        // Active keys = audio referenced by an existing exam
+        const exams = window.ExamStore ? window.ExamStore.list() : [];
+        const active = [];
+        exams.forEach((e) => {
+          if (e.sections.luisteren.audioKey) active.push(e.sections.luisteren.audioKey);
+          if (e.sections.spreken.recordingKey) active.push(e.sections.spreken.recordingKey);
+        });
+        const n = await window.BlobStore.purgeOrphans(active);
+        alert(`${n} ouderloze audio-bestand${n === 1 ? "" : "en"} verwijderd.`);
+        refreshBlobStats();
+      } }, "Wezen opruimen · purge orphans"),
+      el("button", { class: "subtle danger", onClick: async () => {
+        if (!confirm("Alle opgeslagen audio (TTS én opnames) wissen?")) return;
+        await window.BlobStore.clearAll();
+        alert("Audio-opslag leeggemaakt.");
+        refreshBlobStats();
+      } }, "Alle audio wissen"),
+    ));
+    root.append(blobSec);
+
     // --- General app section ---
     const appSec = el("div", { class: "settings-section" });
     appSec.append(el("h3", null, "App · algemene voorkeuren"));

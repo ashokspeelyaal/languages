@@ -1490,6 +1490,7 @@
     metrics: (mount) => window.Metrics.render(mount),
     chat: (mount) => window.AIViews.chat(mount),
     essay: (mount) => window.AIViews.essay(mount),
+    exam: (mount) => window.ExamViews.render(mount),
     settings: (mount) => window.AIViews.settings(mount),
     help: renderHelp,
   };
