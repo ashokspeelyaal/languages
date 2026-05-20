@@ -283,6 +283,33 @@
     render();
   }
 
+  /* ============ Voice button helpers (Ellen / Xander) ============ */
+  function voiceBtn(voiceName, flag, text, size) {
+    const sp = window.Speech;
+    const disabled = !sp || !sp.supported;
+    const btn = el("button", {
+      class: "voice-btn",
+      "data-voice": voiceName,
+      title: disabled ? "Spraak niet beschikbaar" : `Uitspraak (${voiceName}, ${flag})`,
+      disabled: disabled || undefined,
+      onClick: (e) => {
+        e.stopPropagation();
+        if (sp && sp.supported) sp.speak(text, voiceName);
+      },
+    },
+      el("span", { class: "speaker" }, "▶"),
+      el("span", null, voiceName),
+      el("span", { class: "flag" }, flag),
+    );
+    return btn;
+  }
+  function voiceRow(text) {
+    return el("div", { class: "fc-voices" },
+      voiceBtn("Ellen", "BE", text),
+      voiceBtn("Xander", "NL", text),
+    );
+  }
+
   /* ============ Flashcards (Leitner) ============ */
   function renderFlashcards(mount) {
     window.Store.recordSessionStart("flashcards");
@@ -318,16 +345,27 @@
       const answerEx = d === "nl-en" ? it.exampleEN : it.exampleNL;
 
       stage.innerHTML = "";
-      const card = el("div", { class: "fc" + (flipped ? " back" : "") });
-      card.append(
+      // The Dutch text on this side of the card (for the voice buttons to speak)
+      const dutchOnThisSide = d === "nl-en" ? it.dutch : (flipped ? it.dutch : null);
+      const card = el("div", { class: "fc" + (flipped ? " back" : "") },
         el("span", { class: "fc-progress" }, `${i + 1} / ${session.length}`),
         el("p", { class: "fc-meta" },
           el("span", { class: "level" }, it.level), " · ", it.category, " · ", d === "nl-en" ? "NL → EN" : "EN → NL"),
         el("p", { class: "fc-prompt" }, prompt),
+        // Voice buttons for the prompt: only if there's Dutch text visible to pronounce
+        dutchOnThisSide ? voiceRow(dutchOnThisSide) : null,
         flipped ? el("p", { class: "fc-answer" }, answer) : null,
+        // If EN→NL and flipped, the answer is Dutch — add voice buttons for it too
+        (flipped && d === "en-nl") ? voiceRow(it.dutch) : null,
         flipped ? el("div", { class: "fc-examples" },
-          el("p", { class: "fc-example" }, el("span", { class: "lab" }, "NL"),
-            el("span", { class: "nl" }, it.exampleNL)),
+          el("p", { class: "fc-example" },
+            el("span", { class: "lab" }, "NL"),
+            el("span", { class: "nl" }, it.exampleNL),
+            el("span", { class: "row-voices" },
+              voiceBtn("Ellen", "BE", it.exampleNL, "klein"),
+              voiceBtn("Xander", "NL", it.exampleNL, "klein"),
+            ),
+          ),
           el("p", { class: "fc-example" }, el("span", { class: "lab" }, "EN"),
             el("span", { class: "en" }, it.exampleEN)),
         ) : null,
@@ -363,9 +401,23 @@
     }
 
     const keys = (e) => {
+      if (e.target.matches && e.target.matches("input, textarea")) return;
       if (e.key === " " ) {
         e.preventDefault();
         if (!flipped) flip();
+        return;
+      }
+      // E / X → play current Dutch text with Ellen / Xander
+      if (e.key === "e" || e.key === "E" || e.key === "x" || e.key === "X") {
+        const it = session[i];
+        if (!it) return;
+        const d = rng();
+        // Dutch is visible: as prompt if NL→EN, or as answer once flipped if EN→NL
+        const dutch = d === "nl-en" ? it.dutch : (flipped ? it.dutch : null);
+        if (dutch && window.Speech) {
+          const v = (e.key === "e" || e.key === "E") ? "Ellen" : "Xander";
+          window.Speech.speak(dutch, v);
+        }
         return;
       }
       if (flipped) {

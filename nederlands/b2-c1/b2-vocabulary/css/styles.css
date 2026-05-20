@@ -427,6 +427,58 @@ button:disabled { opacity: .4; cursor: not-allowed; }
   margin: 0 0 1.2rem;
   color: var(--ink);
 }
+.fc-voices {
+  display: flex;
+  justify-content: center;
+  gap: .45rem;
+  margin: -.4rem 0 1.4rem;
+  flex-wrap: wrap;
+}
+.voice-btn {
+  font-size: .78rem;
+  padding: .35rem .7rem;
+  background: var(--paper-2);
+  color: var(--ink);
+  border: 1px solid var(--rule-strong);
+  border-radius: 999px;
+  letter-spacing: .02em;
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  transition: border-color .12s, background .12s;
+}
+.voice-btn:hover { border-color: var(--ink-soft); background: var(--card); }
+.voice-btn[data-voice="Ellen"] { border-color: var(--rood-soft); }
+.voice-btn[data-voice="Ellen"]:hover { border-color: var(--rood); }
+.voice-btn[data-voice="Xander"] { border-color: var(--delft-soft); }
+.voice-btn[data-voice="Xander"]:hover { border-color: var(--delft); }
+.voice-btn .flag {
+  font-size: .65rem;
+  letter-spacing: .12em;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+  font-weight: 700;
+}
+.voice-btn[data-voice="Ellen"] .flag { color: var(--rood); }
+.voice-btn[data-voice="Xander"] .flag { color: var(--delft); }
+.voice-btn .speaker {
+  font-size: .9rem;
+  line-height: 1;
+}
+.voice-btn:disabled {
+  opacity: .35;
+  cursor: not-allowed;
+}
+.fc-example .row-voices {
+  display: inline-flex;
+  gap: .3rem;
+  margin-left: .5rem;
+  vertical-align: middle;
+}
+.fc-example .row-voices .voice-btn {
+  font-size: .68rem;
+  padding: .15rem .45rem;
+}
 .fc-answer {
   font-family: var(--serif);
   font-size: 1.4rem;
