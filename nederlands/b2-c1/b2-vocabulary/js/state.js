@@ -30,7 +30,7 @@
       coreOnly: false,
       // AI
       apiKey: "",
-      aiModel: "gpt-4o-mini",
+      aiModel: "gpt-5-mini",
       aiEnabled: true,
       aiSoftLimit: 50, // soft warning threshold per day
     },

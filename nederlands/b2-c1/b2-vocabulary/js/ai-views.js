@@ -150,7 +150,7 @@
       kind: "mistake",
       system: sys,
       user,
-      maxTokens: 400,
+      maxTokens: 700,
       json: true,
       onResult: renderBilingual,
     });
@@ -207,17 +207,97 @@
       }
     } }, "Test verbinding");
 
-    const modelSel = el("select", { class: "select-input", onChange: (e) => {
+    // Full model catalogue. Prices per 1M tokens (input / output) in USD.
+    // Tweak this object when OpenAI ships new tiers.
+    // Only GPT-5 family is supported — they require max_completion_tokens and
+    // reject custom temperature. Keeping the codepath uniform avoids edge cases.
+    // ★ = my recommendation for this app.
+    const MODEL_FAMILIES = [
+      { label: "GPT-5 family", models: [
+        { id: "gpt-5-nano",  in: 0.05,  out: 0.40,   note: "★ goedkoopste solide keuze — voor licht werk" },
+        { id: "gpt-5-mini",  in: 0.25,  out: 2.00,   note: "★ aanbevolen — sweet spot voor coaching" },
+        { id: "gpt-5",       in: 1.25,  out: 10.00,  note: "★ ideaal voor essay-beoordeling" },
+        { id: "gpt-5.1",     in: 1.25,  out: 10.00,  note: "incrementele tweak van gpt-5" },
+        { id: "gpt-5.2",     in: 1.75,  out: 14.00,  note: "nieuwste 5-serie" },
+        { id: "gpt-5-pro",   in: 15.00, out: 120.00, note: "overkill voor vocab" },
+        { id: "gpt-5.2-pro", in: 21.00, out: 168.00, note: "agentic / zware taken — extreem duur" },
+      ]},
+    ];
+    const MODEL_LOOKUP = {};
+    MODEL_FAMILIES.forEach((f) => f.models.forEach((m) => { MODEL_LOOKUP[m.id] = m; }));
+
+    // Migrate any pre-existing setting that points to a non-5 model.
+    if (!MODEL_LOOKUP[s.aiModel]) {
+      window.Store.state.settings.aiModel = "gpt-5-mini";
+      window.Store.save();
+      s.aiModel = "gpt-5-mini";
+    }
+
+    function fmtPrice(p) {
+      return p < 1 ? `$${p.toFixed(2)}` : `$${p.toFixed(2)}`;
+    }
+    function modelLabel(m) {
+      const note = m.note ? "  ·  " + m.note : "";
+      return `${m.id}  ·  in ${fmtPrice(m.in)} / out ${fmtPrice(m.out)}${note}`;
+    }
+
+    const modelSel = el("select", { class: "select-input", id: "model-select", onChange: (e) => {
       window.Store.state.settings.aiModel = e.target.value;
       window.Store.save();
-    } },
-      ...[
-        ["gpt-4o-mini", "gpt-4o-mini  · snel & goedkoop (aanbevolen)"],
-        ["gpt-4o", "gpt-4o  · sterker, duurder"],
-        ["gpt-4.1-mini", "gpt-4.1-mini · nog scherper"],
-        ["gpt-4.1", "gpt-4.1 · krachtigst, duurst"],
-      ].map(([v, lbl]) => el("option", { value: v, selected: v === s.aiModel || undefined }, lbl))
-    );
+      updateCostEstimate();
+    } });
+    MODEL_FAMILIES.forEach((fam) => {
+      const og = document.createElement("optgroup");
+      og.label = fam.label;
+      fam.models.forEach((m) => {
+        const opt = document.createElement("option");
+        opt.value = m.id;
+        opt.textContent = modelLabel(m);
+        if (m.id === s.aiModel) opt.selected = true;
+        og.appendChild(opt);
+      });
+      modelSel.appendChild(og);
+    });
+
+    // Live cost estimate based on typical Dutch-coaching call shapes.
+    // Numbers based on observed token counts in our prompts.
+    const TYPICAL_CALLS = [
+      { kind: "Uitleg / Meer voorbeelden",  inTokens: 280,  outTokens: 350 },
+      { kind: "Mistake coach (Waarom?)",    inTokens: 200,  outTokens: 220 },
+      { kind: "Chat turn (richting C1)",    inTokens: 700,  outTokens: 400 },
+      { kind: "Essay grade (CNaVT-rubric)", inTokens: 900,  outTokens: 1100 },
+      { kind: "Adaptieve quiz",             inTokens: 350,  outTokens: 900 },
+    ];
+    const costMount = el("div", { id: "cost-estimate", style: "margin-top:.7rem;background:var(--paper-2);border:1px solid var(--rule);border-radius:3px;padding:.7rem .9rem;font-size:.82rem" });
+
+    function updateCostEstimate() {
+      const id = modelSel.value;
+      const m = MODEL_LOOKUP[id];
+      if (!m) { costMount.innerHTML = ""; return; }
+      let rows = TYPICAL_CALLS.map((c) => {
+        const cost = (c.inTokens / 1e6) * m.in + (c.outTokens / 1e6) * m.out;
+        const usdPer100 = cost * 100;
+        return `<tr><td style="padding:.18rem .8rem .18rem 0;color:var(--ink-soft)">${c.kind}</td>` +
+               `<td style="text-align:right;font-variant-numeric:tabular-nums;color:var(--ink)">$${cost.toFixed(5)}</td>` +
+               `<td style="text-align:right;font-variant-numeric:tabular-nums;color:var(--ink-faint);padding-left:1rem">$${usdPer100.toFixed(3)}/100</td></tr>`;
+      }).join("");
+      costMount.innerHTML = `
+        <p style="margin:0 0 .35rem;font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint)">
+          Schatting · estimate met <strong style="color:var(--rood)">${id}</strong>
+        </p>
+        <table style="width:100%;border-collapse:collapse;font-size:.82rem">
+          <thead><tr style="color:var(--ink-faint);font-size:.7rem;text-transform:uppercase;letter-spacing:.1em">
+            <th style="text-align:left;font-weight:normal;padding-bottom:.25rem">type call</th>
+            <th style="text-align:right;font-weight:normal">per call</th>
+            <th style="text-align:right;font-weight:normal;padding-left:1rem">per 100</th>
+          </tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+        <p style="margin:.55rem 0 0;font-size:.74rem;color:var(--ink-faint);font-style:italic">
+          Token-schattingen op basis van typische promptgroottes. Werkelijke kosten variëren ± 20%.
+        </p>
+      `;
+    }
 
     aiSec.append(
       el("div", { class: "field" },
@@ -233,7 +313,8 @@
       el("div", { class: "field" },
         el("label", null, "Model"),
         modelSel,
-        el("p", { class: "hint" }, "gpt-4o-mini volstaat ruim voor woordencoaching. Stap naar gpt-4o als de uitleg te kort is."),
+        costMount,
+        el("p", { class: "hint" }, "Alleen de GPT-5-familie. Andere modellen vragen een ander API-formaat. Voor 90% van de coaching: gpt-5-mini. Voor heel licht werk: gpt-5-nano. Voor essay-beoordeling: gpt-5."),
       ),
       el("div", { class: "field" },
         el("label", null, "AI ingeschakeld"),
@@ -259,7 +340,8 @@
     const chipCls = used >= limit ? "ai-counter-chip warn" : "ai-counter-chip";
     useSec.append(el("p", { class: "sub" },
       "Vandaag: ", el("span", { class: chipCls }, `${used} oproep${used === 1 ? "" : "en"}`),
-      "  ·  zachte waarschuwing vanaf ", String(limit), ". Schat: ≈ $0,00018/oproep voor gpt-4o-mini."
+      "  ·  zachte waarschuwing vanaf ", String(limit),
+      "  ·  zie ", el("strong", null, "Schatting"), " hierboven voor kost per call met je gekozen model."
     ));
 
     const days = window.AI.recentCalls(14);
@@ -292,6 +374,7 @@
     root.append(appSec);
 
     mount.append(root);
+    updateCostEstimate();
   }
 
   /* ============ Essay grader view ============ */
@@ -447,19 +530,127 @@
       renderHistory();
     } }, "Wis");
 
+    function escapeHTML(s) {
+      return String(s || "").replace(/[&<>]/g, (c) => ({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+    }
+
+    // Highlight differences between user's original and the corrected version
+    // by wrapping changed tokens in <strong>. Crude but effective.
+    function highlightDiff(orig, fixed) {
+      const oTokens = (orig || "").split(/(\s+)/);
+      const fTokens = (fixed || "").split(/(\s+)/);
+      const oSet = new Set(oTokens.map((t) => t.toLowerCase().replace(/[.,!?;:]/g, "")));
+      return fTokens.map((t) => {
+        if (/^\s+$/.test(t)) return t;
+        const norm = t.toLowerCase().replace(/[.,!?;:]/g, "");
+        if (!norm) return escapeHTML(t);
+        return oSet.has(norm) ? escapeHTML(t) : `<strong>${escapeHTML(t)}</strong>`;
+      }).join("");
+    }
+
+    function correctionCard(userMsg, correction) {
+      if (!correction || correction.pending) {
+        return el("div", { class: "chat-annot correction pending" },
+          el("p", { class: "annot-head" }, "Correctie · correction"),
+          "wachten op AI…");
+      }
+      if (correction.needed === false) {
+        return el("div", { class: "chat-annot correction clean" },
+          el("p", { class: "annot-head" }, "Correctie · correction"),
+          el("span", { class: "ok-msg" }, "✓ Goed Nederlands"),
+        );
+      }
+      const card = el("div", { class: "chat-annot correction" },
+        el("p", { class: "annot-head" }, "Correctie · correction"),
+      );
+      if (correction.corrected) {
+        const inner = el("span", { class: "corrected" });
+        inner.innerHTML = highlightDiff(userMsg, correction.corrected);
+        card.append(inner);
+      }
+      if (correction.notes && correction.notes.length) {
+        const ul = el("ul", { class: "notes-rich" });
+        correction.notes.forEach((n) => {
+          // Backward-compat: notes may be plain strings (old format) or
+          // {error, fix, rule, rubric} objects (new format).
+          if (typeof n === "string") {
+            ul.append(el("li", { class: "note-simple" }, n));
+          } else {
+            ul.append(richNote(n));
+          }
+        });
+        card.append(ul);
+      }
+      return card;
+    }
+
+    function richNote(n) {
+      const li = el("li", { class: "note-rich" });
+      const head = el("div", { class: "note-head" });
+      if (n.error || n.fix) {
+        head.append(
+          n.error ? el("span", { class: "note-error" }, n.error) : null,
+          (n.error && n.fix) ? el("span", { class: "note-arrow" }, "→") : null,
+          n.fix ? el("span", { class: "note-fix" }, n.fix) : null,
+        );
+      }
+      if (n.rubric) {
+        head.append(el("span", { class: "rubric-chip rubric-" + (n.rubric || "").toLowerCase() }, n.rubric));
+      }
+      li.append(head);
+      if (n.rule) li.append(el("p", { class: "note-rule" }, n.rule));
+      return li;
+    }
+
+    function vocabCard(vocab) {
+      if (!vocab || !vocab.length) {
+        return el("div", { class: "chat-annot vocab pending" },
+          el("p", { class: "annot-head" }, "Woordenschat · vocab"),
+          "—");
+      }
+      const card = el("div", { class: "chat-annot vocab" },
+        el("p", { class: "annot-head" }, "Woordenschat · vocab"),
+      );
+      const ul = el("ul");
+      vocab.forEach((v) => {
+        const li = el("li", null,
+          el("span", { class: "nl-word" }, v.dutch || v.nl || ""),
+          el("span", { class: "en-gloss" }, v.english || v.en || ""),
+          v.note ? el("span", { class: "vocab-note" }, v.note) : null,
+        );
+        ul.append(li);
+      });
+      card.append(ul);
+      return card;
+    }
+
     function renderHistory() {
       scroll.innerHTML = "";
       if (history.length === 0) {
         scroll.append(el("div", { class: "empty-ai" },
           "Begin met iets als ", el("em", null, "\"Hoi, ik woon in Limburg en wil mijn Nederlands oefenen.\""),
-          " De AI antwoordt natuurlijk."));
+          " Rechts verschijnt feedback op je Nederlands en de woordenschat uit de antwoorden."));
         return;
       }
-      history.forEach((m) => {
-        scroll.append(el("div", { class: "chat-msg " + (m.role === "user" ? "user" : "ai") },
-          el("div", { class: "who" }, m.role === "user" ? "jij" : "AI"),
-          el("div", { class: "body", html: format(m.content) }),
-        ));
+      history.forEach((m, idx) => {
+        if (m.role === "user") {
+          // Look ahead for AI's response with correction for this message
+          const next = history[idx + 1];
+          const correction = (next && next.role === "assistant" && next.correctionForUser)
+            ? next.correctionForUser
+            : (next && next.role === "assistant" ? null : { pending: true });
+          scroll.append(el("div", { class: "chat-msg user" },
+            el("div", { class: "who" }, "jij"),
+            el("div", { class: "body" }, m.content),
+            correctionCard(m.content, correction),
+          ));
+        } else {
+          scroll.append(el("div", { class: "chat-msg ai" },
+            el("div", { class: "who" }, "AI"),
+            el("div", { class: "body", html: format(m.content) }),
+            vocabCard(m.vocab),
+          ));
+        }
       });
       scroll.scrollTop = scroll.scrollHeight;
     }
@@ -473,26 +664,128 @@
       renderHistory();
       sendBtn.disabled = true;
 
-      // Add a placeholder AI message
+      // Add placeholder AI message row
       const aiMsg = el("div", { class: "chat-msg ai" },
         el("div", { class: "who" }, "AI"),
         el("div", { class: "body" }, el("span", { class: "ai-loading" }, "denkt na…")),
+        el("div", { class: "chat-annot vocab pending" },
+          el("p", { class: "annot-head" }, "Woordenschat · vocab"),
+          "—"),
       );
       scroll.append(aiMsg);
       scroll.scrollTop = scroll.scrollHeight;
 
-      const system = "Je bent een Nederlandse conversatiepartner in Vlaams-België. Spreek natuurlijk en idiomatisch Nederlands op B2-C1 niveau. Verbeter fouten van de gebruiker subtiel door het correcte alternatief in jouw antwoord te gebruiken (zonder uitleg te geven, tenzij gevraagd). Stel follow-up-vragen om het gesprek levendig te houden. Houd antwoorden tot 3-4 zinnen, tenzij meer nodig is.";
-      // Provide last ~10 turns as context
-      const context = history.slice(-10).map((m) => `${m.role === "user" ? "Gebruiker" : "AI"}: ${m.content}`).join("\n");
+      const system = `Je bent een Nederlandse conversatiepartner én een CNaVT-examinator (niveau C1 Educatief Professioneel) in Vlaams-België. Spreek natuurlijk Nederlands op B2-C1 niveau. Houd je gespreksantwoord tot 3-4 zinnen.
+
+Antwoord ALTIJD met geldig JSON — geen markdown, geen extra tekst — in deze structuur:
+{
+  "reply": "<je natuurlijke gespreksantwoord in het Nederlands. NOOIT beginnen met 'AI:' of een rolprefix>",
+  "correctionForUser": {
+    "needed": true|false,
+    "corrected": "<de volledig herschreven correcte versie van de zin van de gebruiker>",
+    "notes": [
+      {
+        "error": "<exact citaat van de foute frase uit de oorspronkelijke zin>",
+        "fix": "<de juiste vervanging>",
+        "rule": "<1-2 zinnen Nederlandse uitleg van de onderliggende regel of het principe — waarom dit fout is op CNaVT C1-niveau>",
+        "rubric": "<één van: Grammatica | Lexicaal | Register | Coherentie | Spelling>"
+      }
+    ]
+  },
+  "vocab": [
+    {"dutch": "<woord/uitdrukking uit JOUW reply>", "english": "<korte Engelse vertaling>", "note": "<optionele korte gebruiksnoot>"}
+  ]
+}
+
+KEY RULE — GEEN OVERELABORATIE:
+Je corrigeert ALLEEN wat fout is. Vervang een correcte eenvoudige zin NOOIT door een complexere variant. "Mooier" of "academischer" is geen reden om iets te wijzigen. Behoud het complexiteitsniveau, register en stijl van de gebruiker. Als de gebruiker B1-stijl schrijft maar grammaticaal correct, blijft dat zo — alleen reële fouten worden gecorrigeerd.
+
+CORRECTIEREGELS (strikt — een CNaVT-examinator zou ze allemaal signaleren):
+Markeer 'needed' = true bij ELKE van deze fouten in het bericht van de gebruiker:
+  • Subject-werkwoord-congruentie ("C-mine en X ZIJN", niet "is")
+  • Woordvolgorde, vooral in bijzinnen met die/dat/wat/waar/omdat/hoewel (werkwoord naar het einde)
+  • Ontbrekende of foute voorzetsel-collocaties ("leuk vinden AAN [plaats]", "denken AAN", "bang VOOR")
+  • Missing 'het' in superlatieven ("het leukst", "het best")
+  • Foute of ontbrekende lidwoorden (de/het/een)
+  • Hoofdlettergebruik: eigennamen (Genk, België) en begin van zinnen
+  • Ontbrekende reflexieve voornaamwoorden (me/je/zich): "ik voel ME moe"
+  • Foute werkwoordtijden, vormen of stam (sterke werkwoorden)
+  • Foute woordkeuze (false friends, woord bestaat niet in NL, verkeerd register voor de context)
+  • Onnatuurlijke woordvolgorde of vreemde collocaties
+
+Markeer 'needed' = false ALLEEN als de zin grammaticaal én lexicaal én register-gepast is. 'corrected' bevat ALTIJD de correcte versie (bij needed=false: dezelfde zin).
+
+CNaVT-RUBRIC-CRITERIA voor 'rubric':
+  • "Grammatica"  — congruentie, woordvolgorde, werkwoordtijden, lidwoorden, reflexieven, naamval
+  • "Lexicaal"    — verkeerd woord, false friend, woord bestaat niet, foute collocatie
+  • "Register"    — informeel/formeel niet passend bij context
+  • "Coherentie"  — verkeerd connector, onlogische opbouw
+  • "Spelling"    — tikfout, hoofdletters, diakritische tekens
+
+VOORBEELD 1 — meerdere fouten:
+Gebruikersbericht: "c-mine en multicultuur is wat vind ik leukst in genk"
+correctionForUser = {
+  "needed": true,
+  "corrected": "C-mine en de multiculturele sfeer zijn wat ik het leukst vind aan Genk.",
+  "notes": [
+    { "error": "is", "fix": "zijn", "rule": "Bij een meervoudig onderwerp staat het werkwoord in het meervoud.", "rubric": "Grammatica" },
+    { "error": "wat vind ik leukst", "fix": "wat ik het leukst vind", "rule": "In een bijzin met 'wat' staat de persoonsvorm aan het EINDE. De overtreffende trap vereist 'het'.", "rubric": "Grammatica" },
+    { "error": "in genk", "fix": "aan Genk", "rule": "Vaste collocatie 'leuk vinden AAN [plaats]'. Plaatsnamen krijgen altijd een hoofdletter.", "rubric": "Lexicaal" }
+  ]
+}
+
+VOORBEELD 2 — ALLEEN hoofdletter, verder grammaticaal correct:
+Gebruikersbericht: "ik woon in genk"
+correctionForUser = {
+  "needed": true,
+  "corrected": "Ik woon in Genk.",
+  "notes": [
+    { "error": "ik", "fix": "Ik", "rule": "Een zin begint altijd met een hoofdletter.", "rubric": "Spelling" },
+    { "error": "genk", "fix": "Genk", "rule": "Eigennamen — plaatsnamen, landen, voornamen — krijgen altijd een hoofdletter. CNaVT-correctoren rekenen dit aan.", "rubric": "Spelling" }
+  ]
+}
+
+VOORBEELD 3 — werkelijk correcte zin:
+Gebruikersbericht: "Ik woon in Genk."
+correctionForUser = { "needed": false, "corrected": "Ik woon in Genk.", "notes": [] }
+
+LEER hieruit: missing hoofdletter op een eigennaam = ALTIJD needed=true. Geen uitzonderingen.
+
+VOCAB-REGELS:
+- 'vocab' bevat 2 tot 4 nuttige Nederlandse woorden/uitdrukkingen uit JOUW eigen reply
+- Kies C1-niveau items: collocaties, idiomen, register-markeerders, abstracte concepten — niet basale woorden zoals 'het', 'is', 'maar'`;
+
+      // Build proper OpenAI messages array. For richer turns we serialise the
+      // assistant content (which was JSON internally) as just the visible reply text.
+      const recent = history.slice(-16);
+      const messages = [{ role: "system", content: system }];
+      recent.forEach((m) => {
+        messages.push({
+          role: m.role === "user" ? "user" : "assistant",
+          content: m.content, // for assistant entries, this is the plain reply text
+        });
+      });
       try {
         const r = await window.AI.complete({
           kind: "chat",
-          system,
-          user: context,
-          maxTokens: 350,
+          messages,
+          maxTokens: 1500,
+          reasoning: "minimal", // chat doesn't need deep reasoning; the strict prompt drives the check
+          json: true,
           noCache: true,
         });
-        history.push({ role: "assistant", content: r.text });
+        let parsed;
+        try { parsed = JSON.parse(r.text); }
+        catch (e) {
+          // Fallback: treat raw text as plain reply
+          parsed = { reply: r.text, correctionForUser: { needed: false }, vocab: [] };
+        }
+        history.push({
+          role: "assistant",
+          content: parsed.reply || r.text,
+          correctionForUser: parsed.correctionForUser || { needed: false },
+          vocab: parsed.vocab || [],
+        });
         localStorage.setItem(key, JSON.stringify(history));
         renderHistory();
       } catch (err) {
