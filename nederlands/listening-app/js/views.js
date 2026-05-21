@@ -253,6 +253,33 @@
 
   function renderVocabGrammar(ex) {
     const wrap = el("div");
+
+    // Header with re-extract button (only if we still have a script)
+    if (ex.script) {
+      const status = el("span", { class: "vocab-reextract-status" });
+      const reBtn = el("button", { class: "btn-subtle vocab-reextract-btn", onClick: async () => {
+        if (!confirm("Vocabulary opnieuw extraheren uit dit transcript? De huidige lijst wordt vervangen.")) return;
+        reBtn.disabled = true;
+        status.innerHTML = '<span class="loading">opnieuw extraheren…</span>';
+        try {
+          const vocab = await window.AI.extractVocab({ script: ex.script });
+          if (!vocab.length) throw new Error("Geen vocabulary terug.");
+          window.Store.update(ex.id, { vocab });
+          status.innerHTML = '<span style="color:var(--groen)">✓ ' + vocab.length + ' items</span>';
+          if (window.App) window.App.refresh();
+        } catch (err) {
+          status.innerHTML = '<span class="ai-error">' + escapeHTML(err.message) + '</span>';
+        } finally {
+          reBtn.disabled = false;
+        }
+      } }, "↻ Vocab opnieuw");
+      wrap.append(el("div", { class: "vocab-toolbar" },
+        el("span", { class: "vocab-count" }, (ex.vocab || []).length + " woorden"),
+        reBtn,
+        status,
+      ));
+    }
+
     if (ex.vocab && ex.vocab.length) {
       wrap.append(el("h3", { class: "section-h" }, "Woordenschat · vocabulary"));
       const ul = el("ul", { class: "vocab-list" });
@@ -276,7 +303,9 @@
       });
       wrap.append(ul);
     }
-    if (!wrap.children.length) wrap.append(el("p", { class: "ai-error" }, "Geen woordenschat of grammatica beschikbaar."));
+    if (!ex.vocab?.length && !ex.grammar?.length) {
+      wrap.append(el("p", { class: "ai-error" }, "Geen woordenschat of grammatica beschikbaar."));
+    }
     return wrap;
   }
 

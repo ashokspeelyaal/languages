@@ -20,7 +20,7 @@
     const system = [
       `You are a language-learning content generator. The learner wants to practise LISTENING in ${targetLang} on a topic they choose.`,
       `Produce a self-contained spoken-style piece of about ${targetWords} words (~${dur} minutes spoken) in ${targetLang}, NATURAL register, written so it reads aloud cleanly.`,
-      "Then produce 5 multiple-choice comprehension questions, AS MANY useful vocabulary items as you can extract (target 25-40 entries — be thorough), and 3-5 grammar / collocation notes.",
+      "Then produce 5 multiple-choice comprehension questions, EXHAUSTIVE vocabulary (every word/phrase above A2 level — there is NO upper limit; could be 50-150 entries depending on script density), and 3-5 grammar / collocation notes.",
       "",
       "Respond ONLY with valid JSON in this exact shape — no markdown, no commentary:",
       "{",
@@ -32,14 +32,21 @@
       "  ],",
       '  "vocab": [',
       '    {"dutch":"<word or phrase from the script>", "english":"<short English gloss>", "note":"<optional one-line usage note>"}',
-      "    // Target 25-40 entries — extract widely. Include:",
-      "    //   - all C1-level items (collocations, idioms, register markers)",
-      "    //   - all B2-level less-common verbs, abstract nouns, derived adjectives",
-      "    //   - any domain-specific terms used in the script (history, economics, etc.)",
-      "    //   - useful multi-word expressions and verb-preposition pairs",
-      "    //   - SKIP only the most basic words (de, het, een, en, is, was, voor, maar, ook, dat, dit)",
-      "    // If the script has fewer interesting items, include all of them — don't pad with trivia.",
-      "    // Preserve the form as it appears in the script (e.g. 'aan de bel trekken', not 'bel').",
+      "    // EXHAUSTIVE EXTRACTION — extract EVERY word and phrase above A2 level. No artificial limit.",
+      "    // INCLUDE all of these (do not be selective):",
+      "    //   - every B1+ verb (e.g. vermijden, biedt, vermijdt, dwingt, oplopen, inzetten)",
+      "    //   - every B1+ adjective (e.g. aantrekkelijk, omslachtig, betrouwbaar, onderhoudbaar, pragmatisch, performance-kritisch)",
+      "    //   - every abstract noun (e.g. geheugenveiligheid, vrijgave, betrouwbaarheid, maturiteit, leercurve, valkuilen)",
+      "    //   - every compound noun (e.g. compilatietijden, ecosfeer, pakketbeheer, scriptingtalen)",
+      "    //   - every derived form / nominalization (e.g. allocatie, vervanging, controle)",
+      "    //   - every collocation and multi-word expression (e.g. 'bekend staan om', 'aan te treffen aan')",
+      "    //   - every domain-specific term and technical jargon used",
+      "    //   - every connector / discourse marker above A2 (e.g. tegelijkertijd, daarnaast, natuurlijk, toch, voor wie)",
+      "    //",
+      "    // SKIP only the most basic A2 function words: de, het, een, en, of, maar, ook, dat, dit, is, was, voor, op, in, aan, met, om, niet, ja, hij, zij, ik, je, jij, wij, jullie, hun, zo, nu, dan, hier, daar.",
+      "    // When in doubt INCLUDE it. A learner who already knows the word doesn't lose anything by seeing it; missing one they don't know is worse.",
+      "    // Preserve form as it appears in the script (e.g. 'aan de bel trekken' as one unit, not 'bel').",
+      "    // Aim for completeness, not curation. 80-150 entries is normal for a dense script.",
       "  ],",
       '  "grammar": [',
       '    {"point":"<short grammar / collocation title>", "explanation":"<2-3 sentence explanation in NL>"}',
@@ -59,7 +66,7 @@
       "- Use varied sentence length and registered vocabulary appropriate for B2-C1 learners.",
       "- If the topic is non-Dutch (e.g. an Indian musician), keep proper names accurate but discuss them in " + targetLang + ".",
       "",
-      "Keep total JSON under 7000 tokens.",
+      "Keep total JSON under 12000 tokens. Vocab list can be long — prioritise completeness over brevity in the vocab section, but keep notes concise (max 1 line each).",
     ].join("\n");
 
     const body = {
@@ -68,7 +75,7 @@
         { role: "system", content: system },
         { role: "user", content: "Topic: " + topic },
       ],
-      max_completion_tokens: 7000,
+      max_completion_tokens: 13000,
       response_format: { type: "json_object" },
       reasoning_effort: "minimal",
     };
@@ -86,6 +93,63 @@
     window.Store.bumpCallCount("generate");
     const text = data.choices?.[0]?.message?.content || "{}";
     return JSON.parse(text);
+  }
+
+  /* ============ Re-extract vocab from an existing script ============ */
+  // Cheap — no TTS, no question generation, just the maximalist vocab pass.
+  async function extractVocab({ script, language, model }) {
+    const s = window.Store.getSettings();
+    const usedModel = model || s.chatModel || "gpt-5-mini";
+    const targetLang = language || s.outputLanguage || "Dutch (Belgian / Standard Dutch register)";
+
+    const system = [
+      `You extract vocabulary from a ${targetLang} text for a B1-C1 learner.`,
+      "Goal: EXHAUSTIVE extraction. Pull every word and phrase above A2 level. NO upper limit.",
+      "",
+      "INCLUDE all of these (do not be selective):",
+      "  - every B1+ verb",
+      "  - every B1+ adjective",
+      "  - every abstract noun",
+      "  - every compound noun",
+      "  - every derived form / nominalization",
+      "  - every collocation and multi-word expression (kept as a unit)",
+      "  - every domain-specific term and technical jargon",
+      "  - every connector / discourse marker above A2",
+      "",
+      "SKIP only the most basic A2 function words: de, het, een, en, of, maar, ook, dat, dit, is, was, voor, op, in, aan, met, om, niet, ja, hij, zij, ik, je, jij, wij, jullie, hun, zo, nu, dan, hier, daar.",
+      "When in doubt INCLUDE it. A learner who already knows the word doesn't lose anything by seeing it; missing one they don't know is worse.",
+      "Preserve form as it appears (e.g. 'aan de bel trekken' as one unit).",
+      "Aim for completeness, not curation. 80-150 entries is normal for a dense script.",
+      "",
+      "Respond ONLY with valid JSON: {\"vocab\": [{\"dutch\":\"...\", \"english\":\"...\", \"note\":\"...\"}]}",
+      "Keep notes concise (max 1 line each).",
+    ].join("\n");
+
+    const body = {
+      model: usedModel,
+      messages: [
+        { role: "system", content: system },
+        { role: "user", content: "Script:\n\n" + script },
+      ],
+      max_completion_tokens: 10000,
+      response_format: { type: "json_object" },
+      reasoning_effort: "minimal",
+    };
+
+    const resp = await fetch(CHAT_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: "Bearer " + key() },
+      body: JSON.stringify(body),
+    });
+    if (!resp.ok) {
+      const t = await resp.text().catch(() => "");
+      throw new Error(`Vocab-extractie fout ${resp.status}: ${t.slice(0, 200)}`);
+    }
+    const data = await resp.json();
+    window.Store.bumpCallCount("vocab-reextract");
+    const text = data.choices?.[0]?.message?.content || "{}";
+    const parsed = JSON.parse(text);
+    return Array.isArray(parsed.vocab) ? parsed.vocab : [];
   }
 
   /* ============ TTS ============ */
@@ -235,5 +299,5 @@
     return (data.choices?.[0]?.message?.content || "").trim();
   }
 
-  window.AI = { generateExercise, tts, azureTTS, generateSpeech, testKey, testAzureKey, complete, isConfigured };
+  window.AI = { generateExercise, extractVocab, tts, azureTTS, generateSpeech, testKey, testAzureKey, complete, isConfigured };
 })();

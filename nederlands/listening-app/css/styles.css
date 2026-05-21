@@ -595,6 +595,38 @@ button:disabled { opacity: .35; cursor: not-allowed; }
 }
 
 /* Vocab + grammar */
+.vocab-toolbar {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  padding: .5rem .7rem;
+  margin: 0 0 1rem;
+  background: var(--paper-2);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  flex-wrap: wrap;
+}
+.vocab-count {
+  font-family: var(--mono);
+  font-size: .78rem;
+  color: var(--ink-faint);
+  letter-spacing: .04em;
+}
+.vocab-reextract-btn {
+  font-size: .82rem;
+  padding: .35rem .8rem;
+  min-height: auto;
+  margin-left: auto;
+}
+.vocab-reextract-status {
+  font-size: .82rem;
+  flex-basis: 100%;
+  text-align: right;
+  font-family: var(--mono);
+  letter-spacing: .04em;
+}
+.vocab-reextract-status:empty { display: none; }
+
 .vocab-list, .grammar-list {
   list-style: none;
   margin: 0;
