@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <!-- Background: warm cream rounded square -->
+  <rect width="512" height="512" rx="112" ry="112" fill="#f5efe1"/>
+
+  <!-- Subtle inset border line (Dutch ink) -->
+  <rect x="22" y="22" width="468" height="468" rx="96" ry="96"
+        fill="none" stroke="#e6dcc1" stroke-width="2"/>
+
+  <!-- Audio wave: three concentric arcs in warm red, like ear-cup ripples -->
+  <g fill="none" stroke="#9a3a2c" stroke-width="22" stroke-linecap="round">
+    <path d="M 196 256 a 32 32 0 0 1 0 0" opacity="0"/>
+    <path d="M 220 196 a 84 84 0 0 1 0 120"/>
+    <path d="M 256 156 a 140 140 0 0 1 0 200"/>
+    <path d="M 290 116 a 196 196 0 0 1 0 280"/>
+  </g>
+
+  <!-- Play triangle, ink dark, slightly offset for warmth -->
+  <path d="M 168 168 L 168 344 L 312 256 Z"
+        fill="#1b1813"/>
+
+  <!-- Small delfts-blue accent dot, top right -->
+  <circle cx="412" cy="100" r="14" fill="#1f4775"/>
+</svg>
