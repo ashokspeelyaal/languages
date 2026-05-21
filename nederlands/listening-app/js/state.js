@@ -7,8 +7,14 @@
   const defaultSettings = {
     apiKey: "",
     chatModel: "gpt-5-mini",
+    // TTS — provider switch + per-provider settings
+    ttsProvider: "openai",          // "openai" | "azure"
     ttsModel: "gpt-4o-mini-tts",
     ttsVoice: "shimmer",
+    azureKey: "",
+    azureRegion: "westeurope",
+    azureVoice: "nl-BE-DenaNeural",
+    azureRate: "0%",                // SSML prosody rate, e.g. "-10%" slower
     outputLanguage: "Dutch (Belgian / Standard Dutch register)",
     durationMinutes: 2.5,
     callsByDay: {},

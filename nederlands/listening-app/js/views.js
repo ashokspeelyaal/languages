@@ -600,10 +600,11 @@
       grammar: content.grammar || [],
     });
 
-    setActive("Audio inspreken (TTS)");
+    const provider = (window.Store.getSettings().ttsProvider || "openai");
+    setActive("Audio inspreken (" + (provider === "azure" ? "Azure · Vlaams" : "OpenAI") + ")");
     let blob;
     try {
-      blob = await window.AI.tts(content.script);
+      blob = await window.AI.generateSpeech(content.script);
     } catch (err) {
       host.innerHTML += '<p class="ai-error">' + escapeHTML(err.message) + '</p>';
       window.Store.update(exId, { status: "error", error: err.message });
@@ -667,29 +668,119 @@
       el("p", { class: "hint" }, "Per oefening ~$0,003 met gpt-5-mini."),
     ));
 
-    // TTS model + voice
-    const ttsSel = el("select", null,
-      el("option", { value: "gpt-4o-mini-tts" }, "gpt-4o-mini-tts  ·  natuurlijk (aanbevolen)"),
-      el("option", { value: "tts-1" }, "tts-1  ·  klassiek, snel"),
-      el("option", { value: "tts-1-hd" }, "tts-1-hd  ·  hogere kwaliteit"),
-    );
-    ttsSel.value = s.ttsModel;
-    ttsSel.addEventListener("change", () => window.Store.patchSettings({ ttsModel: ttsSel.value }));
-
-    const voiceSel = el("select", null,
-      ...["alloy","echo","fable","onyx","nova","shimmer","sage","ash"].map((v) =>
-        el("option", { value: v }, v))
-    );
-    voiceSel.value = s.ttsVoice;
-    voiceSel.addEventListener("change", () => window.Store.patchSettings({ ttsVoice: voiceSel.value }));
-
-    sec1.append(
-      el("div", { class: "field" }, el("label", null, "TTS-model"), ttsSel,
-        el("p", { class: "hint" }, "Per 2,5 min ~$0,03.")),
-      el("div", { class: "field" }, el("label", null, "Stem"), voiceSel),
-    );
-
     root.append(sec1);
+
+    /* ============ TTS provider section ============ */
+    const ttsSec = el("div", { class: "settings-section" });
+    ttsSec.append(el("h3", null, "Audio (TTS)"));
+
+    const providerSel = el("select", null,
+      el("option", { value: "openai" }, "OpenAI  ·  neutraal Standaardnederlands"),
+      el("option", { value: "azure" }, "Azure Speech  ·  Vlaams (BE) accent ★"),
+    );
+    providerSel.value = s.ttsProvider || "openai";
+    providerSel.addEventListener("change", () => {
+      window.Store.patchSettings({ ttsProvider: providerSel.value });
+      renderSettings(mount); // re-render so the right provider section shows
+    });
+
+    ttsSec.append(el("div", { class: "field" },
+      el("label", null, "TTS-provider"),
+      providerSel,
+      el("p", { class: "hint" }, "Kies welk audio-platform de luisterfragmenten inspreekt."),
+    ));
+
+    // OpenAI sub-section
+    if ((s.ttsProvider || "openai") === "openai") {
+      const ttsModelSel = el("select", null,
+        el("option", { value: "gpt-4o-mini-tts" }, "gpt-4o-mini-tts  ·  natuurlijk (aanbevolen)"),
+        el("option", { value: "tts-1" }, "tts-1  ·  klassiek, snel"),
+        el("option", { value: "tts-1-hd" }, "tts-1-hd  ·  hogere kwaliteit"),
+      );
+      ttsModelSel.value = s.ttsModel;
+      ttsModelSel.addEventListener("change", () => window.Store.patchSettings({ ttsModel: ttsModelSel.value }));
+
+      const voiceSel = el("select", null,
+        ...["alloy","echo","fable","onyx","nova","shimmer","sage","ash"].map((v) =>
+          el("option", { value: v }, v))
+      );
+      voiceSel.value = s.ttsVoice;
+      voiceSel.addEventListener("change", () => window.Store.patchSettings({ ttsVoice: voiceSel.value }));
+
+      ttsSec.append(
+        el("div", { class: "field" }, el("label", null, "OpenAI TTS-model"), ttsModelSel,
+          el("p", { class: "hint" }, "Per 2,5 min ~$0,03. Stem klinkt neutraal, niet specifiek Vlaams.")),
+        el("div", { class: "field" }, el("label", null, "Stem"), voiceSel),
+      );
+    } else {
+      // Azure sub-section
+      const azKeyInput = el("input", { type: "password", value: s.azureKey || "", placeholder: "Azure subscription key" });
+      azKeyInput.addEventListener("input", () => window.Store.patchSettings({ azureKey: azKeyInput.value.trim() }));
+      const azShowBtn = el("button", { class: "btn-subtle", onClick: () => { azKeyInput.type = azKeyInput.type === "password" ? "text" : "password"; } }, "Toon");
+
+      const azRegions = ["westeurope","northeurope","francecentral","swedencentral","germanywestcentral","uksouth","eastus","westus2"];
+      const azRegionSel = el("select", null, ...azRegions.map((r) => el("option", { value: r }, r)));
+      azRegionSel.value = s.azureRegion || "westeurope";
+      azRegionSel.addEventListener("change", () => window.Store.patchSettings({ azureRegion: azRegionSel.value }));
+
+      const azVoiceSel = el("select", null,
+        el("option", { value: "nl-BE-DenaNeural" }, "nl-BE-DenaNeural  ·  Vlaams (vrouw)  ★"),
+        el("option", { value: "nl-BE-ArnaudNeural" }, "nl-BE-ArnaudNeural  ·  Vlaams (man)  ★"),
+        el("option", { value: "nl-NL-FennaNeural" }, "nl-NL-FennaNeural  ·  Hollands (vrouw)"),
+        el("option", { value: "nl-NL-MaartenNeural" }, "nl-NL-MaartenNeural  ·  Hollands (man)"),
+        el("option", { value: "nl-NL-ColetteNeural" }, "nl-NL-ColetteNeural  ·  Hollands (vrouw)"),
+      );
+      azVoiceSel.value = s.azureVoice || "nl-BE-DenaNeural";
+      azVoiceSel.addEventListener("change", () => window.Store.patchSettings({ azureVoice: azVoiceSel.value }));
+
+      const azRateSel = el("select", null,
+        el("option", { value: "-20%" }, "Heel rustig (-20%)"),
+        el("option", { value: "-10%" }, "Rustig (-10%)"),
+        el("option", { value: "0%" }, "Normaal (0%)"),
+        el("option", { value: "+10%" }, "Snel (+10%)"),
+      );
+      azRateSel.value = s.azureRate || "0%";
+      azRateSel.addEventListener("change", () => window.Store.patchSettings({ azureRate: azRateSel.value }));
+
+      const azTestBtn = el("button", { class: "btn-subtle", onClick: async () => {
+        azTestBtn.disabled = true; azTestBtn.textContent = "testen…";
+        try {
+          await window.AI.testAzureKey();
+          azTestResult.innerHTML = '<span style="color:var(--groen)">✓ Azure-verbinding OK</span>';
+        } catch (err) {
+          azTestResult.innerHTML = '<span class="ai-error">' + escapeHTML(err.message) + '</span>';
+        } finally {
+          azTestBtn.disabled = false; azTestBtn.textContent = "Test verbinding";
+        }
+      } }, "Test verbinding");
+      const azTestResult = el("p", { class: "hint" });
+
+      ttsSec.append(
+        el("div", { class: "field" },
+          el("label", null, "Azure subscription key"),
+          azKeyInput,
+          el("div", { style: "display:flex;gap:.4rem;margin-top:.3rem" }, azShowBtn, azTestBtn),
+          azTestResult,
+          el("p", { class: "hint" }, "Vrij F0-tarief geeft je 500.000 tekens/maand gratis (≈5 uur audio)."),
+        ),
+        el("div", { class: "field" },
+          el("label", null, "Regio"),
+          azRegionSel,
+          el("p", { class: "hint" }, "Kies de regio die je in Azure portal hebt aangemaakt. West Europe geeft de beste latentie vanuit België."),
+        ),
+        el("div", { class: "field" },
+          el("label", null, "Stem"),
+          azVoiceSel,
+          el("p", { class: "hint" }, "Dena en Arnaud zijn echte Vlaams-Belgische stemmen."),
+        ),
+        el("div", { class: "field" },
+          el("label", null, "Spreektempo"),
+          azRateSel,
+        ),
+      );
+    }
+
+    root.append(ttsSec);
 
     // Storage section
     const sec2 = el("div", { class: "settings-section" });
