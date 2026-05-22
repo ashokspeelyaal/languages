@@ -19,11 +19,12 @@
   function list() { return readAll().slice().sort((a, b) => (b.updatedAt || "").localeCompare(a.updatedAt || "")); }
   function get(id) { return readAll().find((e) => e.id === id) || null; }
 
-  function create(topic) {
+  function create(topic, opts = {}) {
     const ex = {
       id: makeId(),
       title: "Nieuwe oefening",
       topic: topic || "",
+      level: opts.level || "B2",                // B1 | B2 | C1
       createdAt: nowISO(),
       updatedAt: nowISO(),
       autoTitled: false,

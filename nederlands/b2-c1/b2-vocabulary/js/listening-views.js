@@ -78,6 +78,7 @@
       if (!all.length) listEl.append(el("div", { class: "chat-empty-state" }, "Geen oefeningen nog."));
       all.forEach((e) => {
         const active = activeEx && e.id === activeEx.id;
+        const lvl = (e.level || "B2").toUpperCase();
         const item = el("button", {
           class: "chat-item" + (active ? " active" : "") + (e.autoTitled ? "" : " untitled"),
           onClick: () => {
@@ -86,7 +87,9 @@
             refresh();
           },
         },
-          el("span", { class: "ci-title" }, e.title || "Naamloos"),
+          el("span", { class: "ci-title" },
+            el("span", { class: "level-badge l-" + lvl, style: "margin-right:.45rem;vertical-align:1px" }, lvl),
+            e.title || "Naamloos"),
           el("span", { class: "ci-meta" },
             (e.status === "ready" ? "✓" : (e.status === "generating" ? "⏳" : (e.status === "error" ? "✗" : "○"))) +
             " · " + relTime(e.updatedAt) + (e.vocab ? " · " + e.vocab.length + " woorden" : "")),
@@ -146,12 +149,22 @@
       );
       durSel.value = String(s.durationMinutes || 2.5);
 
+      // Level picker — affects script complexity and vocab density
+      const levelSel = el("select", { class: "select-input" },
+        el("option", { value: "B1" }, "B1 · intermediate (eenvoudiger zinsbouw)"),
+        el("option", { value: "B2" }, "B2 · upper-intermediate (aanbevolen voor CNaVT prep)"),
+        el("option", { value: "C1" }, "C1 · advanced (academisch, idiomatisch)"),
+      );
+      levelSel.value = s.lastExerciseLevel || "B2";
+
       const status = el("p", { class: "stat-note" });
 
       card.append(
         el("h3", { style: "font-family:var(--serif);font-weight:600;margin:0 0 .3rem" }, "Nieuwe luisteroefening"),
-        el("p", { class: "stat-note", style: "margin-bottom:1rem" }, "Specifiek onderwerp. AI schrijft, spreekt in en stelt vragen."),
+        el("p", { class: "stat-note", style: "margin-bottom:1rem" }, "Specifiek onderwerp. AI schrijft, spreekt in en stelt vragen op het gekozen niveau."),
         el("div", { class: "field" }, el("label", null, "Onderwerp"), topicInput),
+        el("div", { class: "field" }, el("label", null, "Niveau"), levelSel,
+          el("p", { class: "hint" }, "B1 = eenvoudige zinnen + alledaagse woorden. C1 = complexe syntaxis + abstract.")),
         el("div", { class: "field" }, el("label", null, "Taal"), langSel),
         el("div", { class: "field" }, el("label", null, "Lengte"), durSel),
         el("div", { style: "display:flex;gap:.5rem;margin-top:.6rem" },
@@ -167,8 +180,9 @@
         if (!topic) { status.innerHTML = '<span class="ai-error">Onderwerp is leeg.</span>'; return; }
         window.Store.state.settings.outputLanguage = langSel.value;
         window.Store.state.settings.durationMinutes = parseFloat(durSel.value);
+        window.Store.state.settings.lastExerciseLevel = levelSel.value;
         window.Store.save();
-        const newEx = window.ListeningStore.create(topic);
+        const newEx = window.ListeningStore.create(topic, { level: levelSel.value });
         activeEx = newEx;
         refresh();
       }
@@ -191,7 +205,9 @@
       // Title row
       const titleNode = el("h3", { style: "font-family:var(--serif);font-weight:600;font-size:1.3rem;margin:0;flex:1;cursor:pointer", title: "Klik om te hernoemen" }, ex.title || "Naamloos");
       titleNode.addEventListener("click", () => renameTitleInline(titleNode, ex));
+      const lvl = (ex.level || "B2").toUpperCase();
       main.append(el("div", { style: "display:flex;align-items:baseline;gap:.5rem;padding:1.2rem 1.4rem;border-bottom:1px solid var(--rule)" },
+        el("span", { class: "level-badge l-" + lvl, style: "vertical-align:2px" }, lvl),
         titleNode,
         el("span", { class: "fc-meta", style: "margin:0" }, ex.topic ? "· " + ex.topic : ""),
       ));
@@ -828,10 +844,10 @@
       window.ListeningStore.update(exId, { status: "generating" });
       let ex = window.ListeningStore.get(exId);
 
-      setActive("Script + vragen + woordenschat schrijven");
+      setActive("Script + vragen + woordenschat schrijven (" + (ex.level || "B2") + ")");
       let content;
       try {
-        content = await window.AI.generateListeningExercise({ topic: ex.topic });
+        content = await window.AI.generateListeningExercise({ topic: ex.topic, level: ex.level || "B2" });
       } catch (err) {
         host.innerHTML += '<p class="ai-error">' + escapeHTML(err.message) + '</p>';
         window.ListeningStore.update(exId, { status: "error", error: err.message });
