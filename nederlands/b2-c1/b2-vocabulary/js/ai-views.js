@@ -366,72 +366,149 @@
 
     // --- Audio models section (TTS + STT, for exam) ---
     const audioSec = el("div", { class: "settings-section" });
-    audioSec.append(el("h3", null, "Audio · TTS & STT (examenmodule)"));
+    audioSec.append(el("h3", null, "Audio · TTS & STT"));
     audioSec.append(el("p", { class: "sub" },
-      "TTS = tekst-naar-spraak voor de luistersectie. STT = spraak-naar-tekst voor de spreeksectie."
+      "TTS = tekst-naar-spraak voor de Luister- en Examen-modules. STT = spraak-naar-tekst voor de Spreek-sectie van het examen."
     ));
 
-    const TTS_MODELS = [
-      { id: "gpt-4o-mini-tts", in: 0.60, audio: 12.00, note: "★ aanbevolen — natuurlijk, instruction-aware" },
-      { id: "tts-1",           charPrice: 15.00,       note: "klassiek, snel, lagere kwaliteit" },
-      { id: "tts-1-hd",        charPrice: 30.00,       note: "hogere kwaliteit, dubbele prijs" },
-    ];
     const STT_MODELS = [
       { id: "gpt-4o-mini-transcribe", in: 3.00, out: 5.00,  note: "★ aanbevolen — goedkoop, accuraat" },
       { id: "gpt-4o-transcribe",      in: 6.00, out: 10.00, note: "scherper, duurder" },
       { id: "whisper-1",              perMin: 0.006,        note: "klassiek, vast tarief per minuut" },
     ];
-    const TTS_VOICES = ["alloy", "echo", "fable", "onyx", "nova", "shimmer", "sage", "ash"];
-
-    function ttsLabel(m) {
-      if (m.charPrice != null) {
-        const perMin = (m.charPrice / 1e6 * 1000);
-        return `${m.id}  ·  $${m.charPrice.toFixed(2)}/1M chars  (~$${perMin.toFixed(3)}/min)  ·  ${m.note}`;
-      }
-      return `${m.id}  ·  in $${m.in.toFixed(2)} / audio out $${m.audio.toFixed(2)}/1M (~$0.015/min)  ·  ${m.note}`;
-    }
     function sttLabel(m) {
-      if (m.perMin != null) {
-        return `${m.id}  ·  $${m.perMin.toFixed(3)}/min  ·  ${m.note}`;
-      }
-      return `${m.id}  ·  in $${m.in.toFixed(2)} / out $${m.out.toFixed(2)} per 1M (~$0.${(m.in / 1000).toFixed(3).slice(2)}/min)  ·  ${m.note}`;
+      if (m.perMin != null) return `${m.id}  ·  $${m.perMin.toFixed(3)}/min  ·  ${m.note}`;
+      return `${m.id}  ·  in $${m.in.toFixed(2)} / out $${m.out.toFixed(2)} per 1M  ·  ${m.note}`;
     }
 
-    const ttsSel = el("select", { class: "select-input", onChange: (e) => {
-      window.Store.state.settings.ttsModel = e.target.value;
+    /* --- TTS provider selector --- */
+    const providerSel = el("select", { class: "select-input", onChange: (e) => {
+      window.Store.state.settings.ttsProvider = e.target.value;
       window.Store.save();
-    } }, ...TTS_MODELS.map((m) =>
-      el("option", { value: m.id, selected: m.id === (s.ttsModel || "gpt-4o-mini-tts") || undefined }, ttsLabel(m))));
-
-    const voiceSel = el("select", { class: "select-input", onChange: (e) => {
-      window.Store.state.settings.ttsVoice = e.target.value;
-      window.Store.save();
-    } }, ...TTS_VOICES.map((v) =>
-      el("option", { value: v, selected: v === (s.ttsVoice || "shimmer") || undefined }, v)));
-
-    const sttSel = el("select", { class: "select-input", onChange: (e) => {
-      window.Store.state.settings.sttModel = e.target.value;
-      window.Store.save();
-    } }, ...STT_MODELS.map((m) =>
-      el("option", { value: m.id, selected: m.id === (s.sttModel || "gpt-4o-mini-transcribe") || undefined }, sttLabel(m))));
-
-    audioSec.append(
-      el("div", { class: "field" },
-        el("label", null, "TTS-model (luister-audio)"),
-        ttsSel,
-        el("p", { class: "hint" }, "Voor een typisch 90s-luisterfragment ≈ $0,015–$0,03."),
-      ),
-      el("div", { class: "field" },
-        el("label", null, "TTS-stem"),
-        voiceSel,
-        el("p", { class: "hint" }, "OpenAI-stemmen zijn niet Vlaams getint, maar wel verstaanbaar Standaardnederlands. 'shimmer' / 'nova' klinken het warmst."),
-      ),
-      el("div", { class: "field" },
-        el("label", null, "STT-model (spreeksectie)"),
-        sttSel,
-        el("p", { class: "hint" }, "Voor een 60-90s opname ≈ $0,003–$0,01."),
-      ),
+      renderSettings(mount);   // re-render: show the right provider's fields
+    } },
+      el("option", { value: "openai", selected: (s.ttsProvider || "openai") === "openai" || undefined }, "OpenAI  ·  neutraal Standaardnederlands"),
+      el("option", { value: "azure",  selected: s.ttsProvider === "azure"  || undefined }, "Azure Speech  ·  Vlaams (BE) accent  ★"),
     );
+
+    audioSec.append(el("div", { class: "field" },
+      el("label", null, "TTS-provider"),
+      providerSel,
+      el("p", { class: "hint" }, "Kies welk audio-platform de luister- en examenfragmenten inspreekt."),
+    ));
+
+    if ((s.ttsProvider || "openai") === "openai") {
+      /* OpenAI TTS sub-section */
+      const TTS_MODELS = [
+        { id: "gpt-4o-mini-tts", in: 0.60, audio: 12.00, note: "★ aanbevolen — natuurlijk, instruction-aware" },
+        { id: "tts-1",           charPrice: 15.00,       note: "klassiek, snel, lagere kwaliteit" },
+        { id: "tts-1-hd",        charPrice: 30.00,       note: "hogere kwaliteit, dubbele prijs" },
+      ];
+      const TTS_VOICES = ["alloy", "echo", "fable", "onyx", "nova", "shimmer", "sage", "ash"];
+      function ttsLabel(m) {
+        if (m.charPrice != null) {
+          const perMin = (m.charPrice / 1e6 * 1000);
+          return `${m.id}  ·  $${m.charPrice.toFixed(2)}/1M chars  (~$${perMin.toFixed(3)}/min)  ·  ${m.note}`;
+        }
+        return `${m.id}  ·  in $${m.in.toFixed(2)} / audio out $${m.audio.toFixed(2)}/1M (~$0.015/min)  ·  ${m.note}`;
+      }
+      const ttsSel = el("select", { class: "select-input", onChange: (e) => {
+        window.Store.state.settings.ttsModel = e.target.value; window.Store.save();
+      } }, ...TTS_MODELS.map((m) => el("option", { value: m.id, selected: m.id === (s.ttsModel || "gpt-4o-mini-tts") || undefined }, ttsLabel(m))));
+      const voiceSel = el("select", { class: "select-input", onChange: (e) => {
+        window.Store.state.settings.ttsVoice = e.target.value; window.Store.save();
+      } }, ...TTS_VOICES.map((v) => el("option", { value: v, selected: v === (s.ttsVoice || "shimmer") || undefined }, v)));
+
+      audioSec.append(
+        el("div", { class: "field" }, el("label", null, "OpenAI TTS-model"), ttsSel,
+          el("p", { class: "hint" }, "Per 2,5 min ~$0,03. Stem klinkt neutraal, niet specifiek Vlaams.")),
+        el("div", { class: "field" }, el("label", null, "Stem"), voiceSel,
+          el("p", { class: "hint" }, "'shimmer' / 'nova' klinken het warmst.")),
+      );
+    } else {
+      /* Azure Speech sub-section */
+      const azKey = el("input", { type: "password", value: s.azureKey || "", placeholder: "Azure subscription key" });
+      azKey.addEventListener("input", () => window.Store.patchSettings ? window.Store.patchSettings({ azureKey: azKey.value.trim() }) : (window.Store.state.settings.azureKey = azKey.value.trim(), window.Store.save()));
+      // Main app's Store doesn't have patchSettings — use direct write
+      azKey.addEventListener("input", () => {
+        window.Store.state.settings.azureKey = azKey.value.trim();
+        window.Store.save();
+      });
+      const azShow = el("button", { class: "subtle", onClick: () => { azKey.type = azKey.type === "password" ? "text" : "password"; } }, "Toon");
+
+      const REGIONS = ["westeurope","northeurope","francecentral","swedencentral","germanywestcentral","uksouth","eastus","westus2"];
+      const azRegion = el("select", { class: "select-input", onChange: (e) => {
+        window.Store.state.settings.azureRegion = e.target.value; window.Store.save();
+      } }, ...REGIONS.map((r) => el("option", { value: r, selected: r === (s.azureRegion || "westeurope") || undefined }, r)));
+
+      const VOICES = [
+        ["nl-BE-DenaNeural", "nl-BE-DenaNeural  ·  Vlaams (vrouw)  ★"],
+        ["nl-BE-ArnaudNeural", "nl-BE-ArnaudNeural  ·  Vlaams (man)  ★"],
+        ["nl-NL-FennaNeural", "nl-NL-FennaNeural  ·  Hollands (vrouw)"],
+        ["nl-NL-MaartenNeural", "nl-NL-MaartenNeural  ·  Hollands (man)"],
+        ["nl-NL-ColetteNeural", "nl-NL-ColetteNeural  ·  Hollands (vrouw)"],
+      ];
+      const azVoice = el("select", { class: "select-input", onChange: (e) => {
+        window.Store.state.settings.azureVoice = e.target.value; window.Store.save();
+      } }, ...VOICES.map(([v, lbl]) => el("option", { value: v, selected: v === (s.azureVoice || "nl-BE-DenaNeural") || undefined }, lbl)));
+
+      const RATES = [["-20%","Heel rustig (-20%)"],["-10%","Rustig (-10%)"],["0%","Normaal (0%)"],["+10%","Snel (+10%)"]];
+      const azRate = el("select", { class: "select-input", onChange: (e) => {
+        window.Store.state.settings.azureRate = e.target.value; window.Store.save();
+      } }, ...RATES.map(([v, lbl]) => el("option", { value: v, selected: v === (s.azureRate || "-10%") || undefined }, lbl)));
+
+      const azTestResult = el("p", { class: "hint" });
+      const azTestBtn = el("button", { class: "subtle", onClick: async () => {
+        azTestBtn.disabled = true; azTestBtn.textContent = "testen…";
+        try {
+          await window.AI.testAzureKey();
+          azTestResult.innerHTML = '<span style="color:var(--groen)">✓ Azure-verbinding OK</span>';
+        } catch (err) {
+          azTestResult.innerHTML = `<span class="ai-error">${err.message}</span>`;
+        } finally {
+          azTestBtn.disabled = false; azTestBtn.textContent = "Test verbinding";
+        }
+      } }, "Test verbinding");
+
+      audioSec.append(
+        el("div", { class: "field" },
+          el("label", null, "Azure subscription key"),
+          azKey,
+          el("div", { style: "display:flex;gap:.4rem;margin-top:.3rem" }, azShow, azTestBtn),
+          azTestResult,
+          el("p", { class: "hint" },
+            "Maak een Speech-resource aan in portal.azure.com (Free F0 tier). KEY 1 + Region komen uit 'Keys and Endpoint'. " +
+            "Free tier = 500.000 tekens/maand gratis (≈10 uur audio, ≈260 oefeningen)."),
+        ),
+        el("div", { class: "field" },
+          el("label", null, "Regio"),
+          azRegion,
+          el("p", { class: "hint" }, "West Europe geeft de beste latentie vanuit België."),
+        ),
+        el("div", { class: "field" },
+          el("label", null, "Stem"),
+          azVoice,
+          el("p", { class: "hint" }, "Dena en Arnaud zijn echte Vlaams-Belgische stemmen — het verschil met OpenAI is hoorbaar groot."),
+        ),
+        el("div", { class: "field" },
+          el("label", null, "Spreektempo"),
+          azRate,
+          el("p", { class: "hint" }, "Rustiger tempo is beter voor luisteroefeningen op niveau."),
+        ),
+      );
+    }
+
+    /* STT (separate, unchanged behaviour) */
+    const sttSel = el("select", { class: "select-input", onChange: (e) => {
+      window.Store.state.settings.sttModel = e.target.value; window.Store.save();
+    } }, ...STT_MODELS.map((m) => el("option", { value: m.id, selected: m.id === (s.sttModel || "gpt-4o-mini-transcribe") || undefined }, sttLabel(m))));
+
+    audioSec.append(el("div", { class: "field" },
+      el("label", null, "STT-model (Spreek-sectie van examen)"),
+      sttSel,
+      el("p", { class: "hint" }, "Voor een 60-90s opname ≈ $0,003–$0,01. STT loopt altijd via OpenAI."),
+    ));
+
     root.append(audioSec);
 
     // --- Audio storage section (IndexedDB) ---

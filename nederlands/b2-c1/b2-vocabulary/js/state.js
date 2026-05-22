@@ -33,10 +33,19 @@
       aiModel: "gpt-5-mini",
       aiEnabled: true,
       aiSoftLimit: 50, // soft warning threshold per day
-      // Audio (exam)
+      // Audio (exam + listening)
+      ttsProvider: "openai",          // "openai" | "azure"
       ttsModel: "gpt-4o-mini-tts",
       ttsVoice: "shimmer",
       sttModel: "gpt-4o-mini-transcribe",
+      // Azure Speech (for Vlaams voices)
+      azureKey: "",
+      azureRegion: "westeurope",
+      azureVoice: "nl-BE-DenaNeural",
+      azureRate: "-10%",
+      // Listening defaults
+      outputLanguage: "Dutch (Belgian / Standard Dutch register)",
+      durationMinutes: 2.5,
     },
     sessionStats: { today: { right: 0, wrong: 0, day: TODAY() } },
     aiCallsByDay: {}, // ISO date → { total, byKind: { explain: n, ... } }

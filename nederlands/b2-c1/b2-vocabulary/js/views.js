@@ -21,7 +21,29 @@
     return n;
   };
 
-  const ITEMS = window.VOCAB_DATA.items;
+  const BUILTIN_ITEMS = window.VOCAB_DATA.items;
+  // Merge built-in items with user-added items (from CustomVocab). Re-read each
+  // call so newly-imported items show up immediately without a page reload.
+  function allItems() {
+    const custom = (window.CustomVocab ? window.CustomVocab.list() : []);
+    return BUILTIN_ITEMS.concat(custom);
+  }
+  // Backwards-compat shim — many functions still reference ITEMS as a name.
+  // Define it as a getter so it always reflects the live merged list.
+  const ITEMS = new Proxy([], {
+    get(target, prop) {
+      const list = allItems();
+      if (prop === "length") return list.length;
+      if (typeof prop === "string" && /^\d+$/.test(prop)) return list[+prop];
+      const val = list[prop];
+      return typeof val === "function" ? val.bind(list) : val;
+    },
+    has(_t, prop) { return prop in allItems(); },
+    ownKeys() { return Reflect.ownKeys(allItems()); },
+    getOwnPropertyDescriptor(_t, prop) {
+      return Object.getOwnPropertyDescriptor(allItems(), prop);
+    },
+  });
 
   function levelBadge(lvl) {
     return el("span", { class: `level-badge l-${lvl}` }, lvl);
@@ -29,13 +51,13 @@
 
   function categoryList() {
     const cats = new Set();
-    ITEMS.forEach((it) => cats.add(it.category));
+    allItems().forEach((it) => cats.add(it.category));
     return Array.from(cats).sort();
   }
 
   function activeItems() {
     const s = window.Store.state.settings;
-    return ITEMS.filter((it) => {
+    return allItems().filter((it) => {
       if (!s.levels.includes(it.level)) return false;
       if (s.coreOnly && !it.core) return false;
       if (s.categoryFilter && it.category !== s.categoryFilter) return false;
@@ -1491,6 +1513,7 @@
     chat: (mount) => window.AIViews.chat(mount),
     essay: (mount) => window.AIViews.essay(mount),
     exam: (mount) => window.ExamViews.render(mount),
+    luisteren: (mount) => window.ListeningViews.render(mount),
     settings: (mount) => window.AIViews.settings(mount),
     help: renderHelp,
   };
