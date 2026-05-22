@@ -432,24 +432,10 @@
       if (!hasTimings) {
         body.textContent = ex.script || "—";
       } else {
-        // Render each word as a span with start/end attributes
-        const audioEl = mount.querySelector("audio");
-        ex.wordTimings.forEach((w, i) => {
-          const span = el("span", {
-            class: "ts-word",
-            "data-start": String(w.start),
-            "data-end": String(w.end),
-            "data-idx": String(i),
-            title: w.start.toFixed(2) + "s",
-            onClick: () => {
-              const a = mount.querySelector("audio");
-              if (a) { a.currentTime = Math.max(0, w.start - 0.05); a.play().catch(() => {}); }
-            },
-          }, w.word);
-          body.append(span);
-          // Re-insert a space (the API strips between-word spaces inconsistently)
-          body.append(document.createTextNode(" "));
-        });
+        // Walk the punctuated text and wrap each word from the timings array
+        // in a span at its actual position. Everything between words (spaces,
+        // punctuation, line breaks) comes through as plain text.
+        renderTimedSpans(body, ex.sttText || ex.script || "", ex.wordTimings);
       }
       wrap.append(body);
 
@@ -469,6 +455,58 @@
         }, 100);
       }
       return wrap;
+    }
+
+    // Render timed transcript: walk `text` (with punctuation) and wrap each
+    // word from `timings` in a span at its actual character position.
+    // Whitespace, commas, periods, line breaks all preserved as plain text.
+    function renderTimedSpans(body, text, timings) {
+      const seek = (start) => {
+        const a = mount.querySelector("audio");
+        if (a) { a.currentTime = Math.max(0, start - 0.05); a.play().catch(() => {}); }
+      };
+      let cursor = 0;
+      let placed = 0;
+      timings.forEach((w, idx) => {
+        if (!w.word) return;
+        // Whisper sometimes prefixes a space; trim.
+        const raw = String(w.word).replace(/^\s+|\s+$/g, "");
+        if (!raw) return;
+        // Try to find this exact substring in text starting at cursor
+        let at = text.indexOf(raw, cursor);
+        if (at < 0) {
+          // Maybe punctuation around the word doesn't match exactly; try a stripped form
+          const core = raw.replace(/^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu, "");
+          if (!core) return;
+          at = text.indexOf(core, cursor);
+          if (at < 0) return; // give up on this word; it'll just not be clickable/highlighted
+        }
+        // Emit text between cursor and the match (preserves punctuation, spaces)
+        if (at > cursor) {
+          body.appendChild(document.createTextNode(text.slice(cursor, at)));
+        }
+        const matched = text.slice(at, at + raw.length);
+        const span = el("span", {
+          class: "ts-word",
+          "data-start": String(w.start),
+          "data-end": String(w.end),
+          "data-idx": String(idx),
+          title: w.start.toFixed(2) + "s",
+          onClick: () => seek(w.start),
+        }, matched);
+        body.appendChild(span);
+        cursor = at + raw.length;
+        placed += 1;
+      });
+      // Emit anything after the last placed word
+      if (cursor < text.length) {
+        body.appendChild(document.createTextNode(text.slice(cursor)));
+      }
+      // Defensive fallback: if for some reason no words could be placed,
+      // fall back to plain text so the user at least sees the transcript.
+      if (placed === 0) {
+        body.textContent = text;
+      }
     }
 
     function attachHighlighter(audio, body, timings) {
@@ -904,6 +942,21 @@
     }
 
     refresh();
+
+    /* ============ Keyboard: Space = play/pause ============ */
+    function onKey(e) {
+      if (e.key !== " " && e.code !== "Space") return;
+      // Don't hijack Space when the user is typing
+      const t = e.target;
+      if (t && t.matches && t.matches("input, textarea, select, [contenteditable='true']")) return;
+      const audio = mount.querySelector("audio");
+      if (!audio || !audio.src) return;     // no audio loaded → leave default behaviour
+      e.preventDefault();                    // stop the page from scrolling
+      if (audio.paused) audio.play().catch(() => {});
+      else audio.pause();
+    }
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
   }
 
   window.ListeningViews = { render };

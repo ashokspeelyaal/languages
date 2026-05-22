@@ -1513,7 +1513,7 @@
     chat: (mount) => window.AIViews.chat(mount),
     essay: (mount) => window.AIViews.essay(mount),
     exam: (mount) => window.ExamViews.render(mount),
-    luisteren: (mount) => window.ListeningViews.render(mount),
+    luisteren: (mount) => window.ListeningViews.render(mount),   /* returns cleanup fn */
     settings: (mount) => window.AIViews.settings(mount),
     help: renderHelp,
   };
