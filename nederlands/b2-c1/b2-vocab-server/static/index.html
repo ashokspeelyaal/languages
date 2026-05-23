@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b3d91">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Studeerkamer">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/static/icons/icon-180.png">
+<title>Studeerkamer · Nederlands B2 → C1</title>
+<link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark">NL</span>
+    <div class="brand-text">
+      <h1>Studeerkamer</h1>
+      <p>A2 · B1 · <strong>B2 → C1</strong></p>
+    </div>
+  </div>
+  <nav class="nav">
+    <a href="#/dashboard" data-route="dashboard">Overzicht</a>
+    <a href="#/browse" data-route="browse">Bladeren</a>
+    <a href="#/flashcards" data-route="flashcards">Flashcards</a>
+    <a href="#/typed" data-route="typed">Generation</a>
+    <a href="#/cloze" data-route="cloze">Cloze</a>
+    <a href="#/mixed" data-route="mixed">Gemengd</a>
+    <a href="#/chat" data-route="chat">Chat</a>
+    <a href="#/essay" data-route="essay">Essay</a>
+    <a href="#/schrijven" data-route="schrijven">Schrijven</a>
+    <a href="#/exam" data-route="exam">Examen</a>
+    <a href="#/luisteren" data-route="luisteren">Luisteren</a>
+    <a href="#/metrics" data-route="metrics">Metrics</a>
+    <a href="#/help" data-route="help">Uitleg</a>
+    <a href="#/settings" data-route="settings">Instellingen</a>
+    <a href="#/logout" data-route="logout" id="logout-link">Afmelden</a>
+  </nav>
+  <div class="streak" id="streak-chip" title="Daily streak">
+    <span class="streak-flame">●</span>
+    <span id="streak-count">0</span>
+    <span class="streak-label">dag</span>
+  </div>
+</header>
+
+<main id="view">
+  <div class="empty" style="padding:48px;text-align:center;color:#5a627a">Bezig met laden…</div>
+</main>
+
+<footer class="hints" id="hints">
+  <span><kbd>1</kbd>–<kbd>3</kbd> rate</span>
+  <span><kbd>Space</kbd> flip / next</span>
+  <span><kbd>Enter</kbd> submit</span>
+  <span><kbd>E</kbd>/<kbd>X</kbd> play audio</span>
+  <span><kbd>T</kbd> toggle direction</span>
+  <span><kbd>?</kbd> shortcuts</span>
+</footer>
+
+<dialog id="shortcuts">
+  <h2>Toetsenbord</h2>
+  <table>
+    <tr><th>Space</th><td>flip card / next</td></tr>
+    <tr><th>1</th><td>moeilijk (back to box 1)</td></tr>
+    <tr><th>2</th><td>goed (next box)</td></tr>
+    <tr><th>3</th><td>makkelijk (skip a box)</td></tr>
+    <tr><th>E</th><td>play with Ellen (BE)</td></tr>
+    <tr><th>X</th><td>play with Xander (NL)</td></tr>
+    <tr><th>T</th><td>toggle direction (NL→EN / EN→NL / Mixed)</td></tr>
+    <tr><th>Enter</th><td>submit answer</td></tr>
+    <tr><th>Esc</th><td>close dialog</td></tr>
+    <tr><th>?</th><td>this help</td></tr>
+  </table>
+  <form method="dialog"><button>sluiten</button></form>
+</dialog>
+
+<!-- Foundation -->
+<script src="/static/js/d3.v7.min.js"></script>
+<script src="/static/js/api.js"></script>
+<script src="/static/js/srs.js"></script>
+<script src="/static/js/match.js"></script>
+<script src="/static/js/speech.js"></script>
+<script src="/static/js/state.js"></script>
+<script src="/static/js/ai.js"></script>
+<script src="/static/js/audio.js"></script>
+<script src="/static/js/blob-store.js"></script>
+<script src="/static/js/chat-store.js"></script>
+<script src="/static/js/exam-store.js"></script>
+<script src="/static/js/listening-store.js"></script>
+<script src="/static/js/writing-store.js"></script>
+<script src="/static/js/custom-vocab-store.js"></script>
+<script src="/static/js/ai-views.js"></script>
+<script src="/static/js/handwriting.js"></script>
+<script src="/static/js/exam-views.js"></script>
+<script src="/static/js/listening-views.js"></script>
+<script src="/static/js/writing-views.js"></script>
+<script src="/static/js/selection-bar.js"></script>
+<script src="/static/js/metrics.js"></script>
+<script src="/static/js/views.js"></script>
+<script src="/static/js/app.js"></script>
+<script>
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("/service-worker.js").catch(() => {});
+    });
+  }
+</script>
+</body>
+</html>

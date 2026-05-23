@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b3d91">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Studeerkamer">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/static/icons/icon-180.png">
+<title>Studeerkamer · inloggen</title>
+<link rel="stylesheet" href="/static/css/styles.css">
+<style>
+  body.login-shell { display: flex; min-height: 100vh; align-items: center; justify-content: center; background: linear-gradient(180deg, #f3f4f9, #e1e3ee); }
+  .login-card { width: min(420px, 92vw); background: #fff; padding: 32px 28px; border-radius: 14px; box-shadow: 0 12px 32px rgba(11,61,145,0.10); }
+  .login-card h1 { font-size: 22px; margin: 0 0 4px; color: #0b3d91; }
+  .login-card p.lead { margin: 0 0 24px; color: #5a627a; font-size: 14px; }
+  .login-card label { display: block; font-size: 13px; font-weight: 600; color: #2d3344; margin-bottom: 4px; }
+  .login-card input { width: 100%; padding: 10px 12px; border-radius: 8px; border: 1.5px solid #d3d6e2; font-size: 15px; box-sizing: border-box; }
+  .login-card input:focus { outline: none; border-color: #0b3d91; }
+  .login-card .row { margin-bottom: 14px; }
+  .login-card button { width: 100%; padding: 11px; border-radius: 8px; background: #0b3d91; color: #fff; border: 0; font-size: 15px; font-weight: 600; cursor: pointer; }
+  .login-card button:disabled { opacity: 0.5; cursor: not-allowed; }
+  .login-card .err { color: #b3261e; font-size: 13px; min-height: 18px; margin-top: 10px; }
+  .login-card .brand { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+  .login-card .brand-mark { background: #0b3d91; color: #fff; border-radius: 8px; padding: 4px 8px; font-weight: 700; font-size: 14px; }
+</style>
+</head>
+<body class="login-shell">
+  <form class="login-card" id="login-form" autocomplete="on">
+    <div class="brand">
+      <span class="brand-mark">NL</span>
+      <div><strong>Studeerkamer</strong><br><small style="color:#5a627a">A2 · B1 · B2 → C1</small></div>
+    </div>
+    <h1>Inloggen</h1>
+    <p class="lead">Persoonlijke trainer voor het CNaVT C1 examen.</p>
+    <div class="row">
+      <label for="u">Gebruikersnaam</label>
+      <input id="u" name="username" autocomplete="username" autofocus required>
+    </div>
+    <div class="row">
+      <label for="p">Wachtwoord</label>
+      <input id="p" name="password" type="password" autocomplete="current-password" required>
+    </div>
+    <button type="submit" id="btn">Inloggen</button>
+    <div class="err" id="err"></div>
+  </form>
+<script>
+  const form = document.getElementById("login-form");
+  const btn = document.getElementById("btn");
+  const err = document.getElementById("err");
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    err.textContent = "";
+    btn.disabled = true;
+    btn.textContent = "Bezig…";
+    try {
+      const resp = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "X-Requested-With": "fetch" },
+        credentials: "same-origin",
+        body: JSON.stringify({
+          username: document.getElementById("u").value.trim(),
+          password: document.getElementById("p").value,
+        }),
+      });
+      if (!resp.ok) {
+        const data = await resp.json().catch(() => ({}));
+        throw new Error(data.detail || ("Fout " + resp.status));
+      }
+      const params = new URLSearchParams(location.search);
+      location.replace(params.get("next") || "/");
+    } catch (e) {
+      err.textContent = e.message;
+      btn.disabled = false;
+      btn.textContent = "Inloggen";
+    }
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,24 @@
+[Unit]
+Description=Studeerkamer (Dutch B2->C1 trainer)
+After=network.target
+
+[Service]
+Type=simple
+User=studeerkamer
+Group=studeerkamer
+WorkingDirectory=/opt/studeerkamer
+EnvironmentFile=/opt/studeerkamer/.env
+ExecStart=/opt/studeerkamer/.venv/bin/uvicorn server.main:app --host 127.0.0.1 --port 8000 --workers 1
+Restart=on-failure
+RestartSec=3
+
+# Hardening (works for our simple single-process setup).
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+ReadWritePaths=/opt/studeerkamer/data
+LimitNOFILE=4096
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,32 @@
+# Caddy v2 site config. Drop this in /etc/caddy/Caddyfile (or include from
+# your main Caddyfile). Replace studeerkamer.example.com with your real
+# Cloudflare-managed domain. Caddy will auto-fetch a Let's Encrypt cert
+# the first time it sees a request for the host.
+#
+# For Cloudflare in front of Caddy:
+#   - Set the orange-cloud (proxied) on the A record
+#   - In Cloudflare SSL/TLS: "Full (strict)" mode
+#   - Open ports 80 + 443 from Hetzner firewall + ufw
+
+studeerkamer.example.com {
+    encode zstd gzip
+
+    # Long cache for hashed static files (we don't hash, so be conservative)
+    @static path /static/* /manifest.webmanifest
+    header @static Cache-Control "public, max-age=3600"
+
+    # Don't ever cache the service worker — must always re-check
+    @sw path /service-worker.js
+    header @sw Cache-Control "no-cache"
+
+    reverse_proxy 127.0.0.1:8000 {
+        header_up X-Real-IP {remote_host}
+        header_up X-Forwarded-For {remote_host}
+        header_up X-Forwarded-Proto {scheme}
+    }
+
+    # Sane defaults
+    request_body {
+        max_size 50MB
+    }
+}
