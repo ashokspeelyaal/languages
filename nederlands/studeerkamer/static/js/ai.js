@@ -69,19 +69,20 @@
   function clearCache() { window.Store.state.aiCache = {}; }
   function cacheSize() { return Object.keys(window.Store.state.aiCache || {}).length; }
 
-  async function recentCalls(days = 14) {
-    try {
-      const u = await window.API.get("/api/ai/usage?days=" + days);
-      const out = [];
-      const now = new Date();
-      for (let i = days - 1; i >= 0; i--) {
-        const d = new Date(now); d.setDate(d.getDate() - i);
-        const iso = d.toISOString().slice(0, 10);
-        const e = (u.byDay && u.byDay[iso]) || { total: 0, byKind: {} };
-        out.push({ iso, total: e.total, byKind: e.byKind || {} });
-      }
-      return out;
-    } catch (e) { return []; }
+  // Sync, like the original. Reads from Store.state.aiCallsByDay which
+  // boot() has already populated from /api/ai/usage. Background mutations
+  // (bumpCounterLocal) keep it fresh in-session.
+  function recentCalls(days = 14) {
+    const out = [];
+    const log = window.Store.state.aiCallsByDay || {};
+    const now = new Date();
+    for (let i = days - 1; i >= 0; i--) {
+      const d = new Date(now); d.setDate(d.getDate() - i);
+      const iso = d.toISOString().slice(0, 10);
+      const e = log[iso] || { total: 0, byKind: {} };
+      out.push({ iso, total: e.total || 0, byKind: e.byKind || {} });
+    }
+    return out;
   }
 
   function isConfigured() {

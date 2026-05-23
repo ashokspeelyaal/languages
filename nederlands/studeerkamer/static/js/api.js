@@ -4,6 +4,12 @@
  * On 401 we hard-redirect to /login (the server returns 401 if the
  * cookie is missing or expired). Other errors throw with a Dutch message.
  */
+
+// Initialise VOCAB_DATA before any view IIFE captures a reference to .items.
+// app.js's boot() populates it later by pushing items into the SAME array,
+// so the reference captured at IIFE-time stays valid.
+if (!window.VOCAB_DATA) window.VOCAB_DATA = { items: [] };
+
 (function () {
   const BASE = ""; // same-origin
 
