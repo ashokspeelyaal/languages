@@ -1,11 +1,13 @@
 """Schrijven exercises — writing correction with audio + score."""
 import secrets
+import shutil
 from datetime import datetime, timezone
 
 from fastapi import APIRouter, Depends, HTTPException
 
 from ..auth import require_user
 from ..db import conn, jdump, jload
+from ..settings import AUDIO_DIR
 
 router = APIRouter(prefix="/api/writing", tags=["writing"])
 
@@ -139,7 +141,8 @@ def patch_writing(wid: str, body: dict, user=Depends(require_user)):
 
 @router.delete("/{wid}")
 def delete_writing(wid: str, user=Depends(require_user)):
-    """Also deletes any pushed custom vocab tagged with this exercise as source."""
+    """Also deletes any pushed custom vocab tagged with this exercise as
+    source, and removes the on-disk audio directory for the exercise."""
     with conn() as c:
         c.execute(
             "DELETE FROM custom_vocab WHERE user_id = ? AND source_id = ?",
@@ -149,4 +152,7 @@ def delete_writing(wid: str, user=Depends(require_user)):
             "DELETE FROM writing_exercises WHERE id = ? AND user_id = ?",
             (wid, user["id"]),
         )
+    audio_dir = AUDIO_DIR / str(user["id"]) / "writing" / wid
+    if audio_dir.exists():
+        shutil.rmtree(audio_dir, ignore_errors=True)
     return {"ok": True}

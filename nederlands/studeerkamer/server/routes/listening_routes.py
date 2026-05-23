@@ -1,11 +1,13 @@
 """Luisteren (listening) exercises — generated script + audio + karaoke timings."""
 import secrets
+import shutil
 from datetime import datetime, timezone
 
 from fastapi import APIRouter, Depends, HTTPException
 
 from ..auth import require_user
 from ..db import conn, jdump, jload
+from ..settings import AUDIO_DIR
 
 router = APIRouter(prefix="/api/listening", tags=["listening"])
 
@@ -147,4 +149,7 @@ def delete_ex(ex_id: str, user=Depends(require_user)):
             "DELETE FROM listening_exercises WHERE id = ? AND user_id = ?",
             (ex_id, user["id"]),
         )
+    audio_dir = AUDIO_DIR / str(user["id"]) / "listening" / ex_id
+    if audio_dir.exists():
+        shutil.rmtree(audio_dir, ignore_errors=True)
     return {"ok": True}

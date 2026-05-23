@@ -2,11 +2,13 @@
 luisteren, schrijven, spreken — and we store the entire `sections` blob as
 JSON because the structure varies per section type."""
 import secrets
+import shutil
 from datetime import datetime, timezone
 
 from fastapi import APIRouter, Depends, HTTPException
 
 from ..auth import require_user
+from ..settings import AUDIO_DIR
 from ..db import conn, jdump, jload
 
 router = APIRouter(prefix="/api/exam", tags=["exam"])
@@ -135,9 +137,19 @@ def patch_section(exam_id: str, section: str, body: dict, user=Depends(require_u
 
 @router.delete("/{exam_id}")
 def delete_exam(exam_id: str, user=Depends(require_user)):
+    """Exam audio is uploaded under data/audio/<uid>/exam/<owner_id>/. The
+    BlobStore client uses logical keys like `exam-{examId}-q{i}` which my
+    audio router parses into owner_type=exam, owner_id=`{examId}-q{i}`.
+    Sweep the exam audio tree for any subdir whose name starts with this
+    exam's id."""
     with conn() as c:
         c.execute(
             "DELETE FROM exam_attempts WHERE id = ? AND user_id = ?",
             (exam_id, user["id"]),
         )
+    exam_root = AUDIO_DIR / str(user["id"]) / "exam"
+    if exam_root.exists():
+        for sub in exam_root.iterdir():
+            if sub.name == exam_id or sub.name.startswith(exam_id + "-"):
+                shutil.rmtree(sub, ignore_errors=True)
     return {"ok": True}

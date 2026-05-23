@@ -21,7 +21,9 @@
     booted = true;
     try {
       const r = await window.API.get("/api/chats");
-      chats = (r.chats || []).map((c) => ({ ...c, messages: c.messages || [] }));
+      // Server's list endpoint now returns chats with their full message
+      // arrays, matching the original localStorage-blob behaviour.
+      chats = (r.chats || []).map((c) => ({ ...c, messages: c.messages || [], _messagesLoaded: true }));
     } catch (e) { chats = []; }
   }
 
@@ -70,6 +72,12 @@
     Object.assign(c, patch, { updatedAt: nowISO() });
     const allowed = { title: c.title, autoTitled: !!c.autoTitled };
     bg(window.API.patch("/api/chats/" + encodeURIComponent(id), allowed));
+    // The "Wis" button passes { messages: [] } to clear history. Server
+    // PATCH only accepts title/autoTitled, so we must also call the
+    // dedicated clear endpoint to persist the wipe.
+    if (Array.isArray(patch.messages) && patch.messages.length === 0) {
+      bg(window.API.del("/api/chats/" + encodeURIComponent(id) + "/messages"));
+    }
     return c;
   }
 

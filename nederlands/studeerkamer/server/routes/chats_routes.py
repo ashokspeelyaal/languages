@@ -42,12 +42,26 @@ def _msg_dict(row) -> dict:
 
 @router.get("")
 def list_chats(user=Depends(require_user)):
+    """Return all chats *with* their full messages. The original app stored
+    chats in one localStorage blob so views read chat.messages freely; we
+    preserve that by eager-loading messages here. A typical user has a
+    handful of chats so the payload stays small."""
     with conn() as c:
         rows = c.execute(
             "SELECT * FROM chats WHERE user_id = ? ORDER BY updated_at DESC",
             (user["id"],),
         ).fetchall()
-    return {"chats": [_chat_dict(r) for r in rows]}
+        msg_rows = c.execute(
+            """SELECT chat_id, role, content, ts, meta_json
+               FROM chat_messages
+               WHERE chat_id IN (SELECT id FROM chats WHERE user_id = ?)
+               ORDER BY chat_id, id""",
+            (user["id"],),
+        ).fetchall()
+    by_chat = {}
+    for m in msg_rows:
+        by_chat.setdefault(m["chat_id"], []).append(_msg_dict(m))
+    return {"chats": [_chat_dict(r, by_chat.get(r["id"], [])) for r in rows]}
 
 
 @router.get("/{chat_id}")
@@ -128,6 +142,22 @@ def append_message(chat_id: str, body: dict, user=Depends(require_user)):
             "INSERT INTO chat_messages (chat_id, role, content, meta_json) VALUES (?, ?, ?, ?)",
             (chat_id, role, content, jdump(meta) if meta else None),
         )
+        c.execute("UPDATE chats SET updated_at = ? WHERE id = ?", (_now(), chat_id))
+    return {"ok": True}
+
+
+@router.delete("/{chat_id}/messages")
+def clear_messages(chat_id: str, user=Depends(require_user)):
+    """Wipe all messages from a chat (but keep the chat itself).
+    Used by the "Wis" button in the chat view."""
+    with conn() as c:
+        own = c.execute(
+            "SELECT id FROM chats WHERE id = ? AND user_id = ?",
+            (chat_id, user["id"]),
+        ).fetchone()
+        if not own:
+            raise HTTPException(404, "Chat not found")
+        c.execute("DELETE FROM chat_messages WHERE chat_id = ?", (chat_id,))
         c.execute("UPDATE chats SET updated_at = ? WHERE id = ?", (_now(), chat_id))
     return {"ok": True}
 

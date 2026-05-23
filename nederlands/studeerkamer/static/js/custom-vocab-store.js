@@ -1,10 +1,19 @@
-/* CustomVocab — server-backed. addBatch dedups against built-in + existing custom. */
+/* CustomVocab — server-backed with optimistic local cache.
+ *
+ * addBatch / remove / removeBySource / clearAll are SYNC like the original
+ * (views read return.added etc immediately). Local dedup is authoritative
+ * for the return value; the server call goes in the background and is
+ * idempotent (the server dedup runs again). */
 (function () {
   let items = [];
   let booted = false;
 
   function bg(p) { return Promise.resolve(p).catch(() => {}); }
   function nowISO() { return new Date().toISOString(); }
+  function makeId() { return "user-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 5); }
+  function norm(s) {
+    return String(s || "").toLowerCase().replace(/^(de |het |een )/, "").trim();
+  }
 
   async function boot() {
     if (booted) return;
@@ -16,25 +25,52 @@
   function count() { return items.length; }
   function coreCount() { return items.filter((i) => i.core).length; }
 
-  async function addBatch(toAdd, meta = {}) {
-    const r = await window.API.post("/api/custom-vocab/batch", { items: toAdd, meta });
-    // refresh local cache
-    try {
-      const refreshed = await window.API.get("/api/custom-vocab");
-      items = refreshed.items || [];
-    } catch (e) {}
-    return r;
+  function addBatch(toAdd, meta = {}) {
+    const builtIn = (window.VOCAB_DATA && window.VOCAB_DATA.items) || [];
+    const seen = new Set([
+      ...items.map((i) => norm(i.dutch)),
+      ...builtIn.map((i) => norm(i.dutch)),
+    ]);
+    let added = 0, skipped = 0;
+    const toPost = [];
+    (toAdd || []).forEach((it) => {
+      const k = norm(it.dutch);
+      if (!k || seen.has(k)) { skipped += 1; return; }
+      seen.add(k);
+      items.push({
+        id: makeId(),
+        level: it.level || "B2",
+        category: it.category || meta.category || "Custom",
+        subcategory: meta.subcategory || null,
+        dutch: it.dutch,
+        english: it.english || "",
+        exampleNL: it.exampleNL || meta.exampleNL || "",
+        exampleEN: it.exampleEN || "",
+        core: !!it.core,
+        source: meta.source || "user",
+        sourceId: meta.sourceId || null,
+        addedAt: nowISO(),
+      });
+      toPost.push(it);
+      added += 1;
+    });
+    if (toPost.length) {
+      bg(window.API.post("/api/custom-vocab/batch", { items: toPost, meta }));
+    }
+    return { added, skipped };
   }
 
-  async function remove(id) {
+  function remove(id) {
     items = items.filter((i) => i.id !== id);
-    await bg(window.API.del("/api/custom-vocab/" + encodeURIComponent(id)));
+    bg(window.API.del("/api/custom-vocab/" + encodeURIComponent(id)));
   }
 
-  async function removeBySource(sourceId) {
+  function removeBySource(sourceId) {
+    const before = items.length;
     items = items.filter((i) => i.sourceId !== sourceId);
-    const r = await window.API.del("/api/custom-vocab/by-source/" + encodeURIComponent(sourceId)).catch(() => ({ deleted: 0 }));
-    return r.deleted || 0;
+    const removed = before - items.length;
+    bg(window.API.del("/api/custom-vocab/by-source/" + encodeURIComponent(sourceId)));
+    return removed;
   }
 
   function exportJSON() {
@@ -46,9 +82,10 @@
     a.click();
     URL.revokeObjectURL(a.href);
   }
-  async function clearAll() {
+
+  function clearAll() {
     items = [];
-    await bg(window.API.del("/api/custom-vocab"));
+    bg(window.API.del("/api/custom-vocab"));
   }
 
   window.CustomVocab = { boot, list, addBatch, remove, removeBySource, count, coreCount, exportJSON, clearAll };
