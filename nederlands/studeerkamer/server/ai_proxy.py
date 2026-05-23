@@ -66,7 +66,11 @@ async def _openai_json(path: str, payload: dict, timeout: float = 120.0) -> dict
             },
         )
     if r.status_code != 200:
-        raise HTTPException(r.status_code, f"OpenAI {r.status_code}: {r.text[:400]}")
+        # NEVER pass through 401 — that means OpenAI rejected OUR key, not
+        # that the user's session expired. The frontend's api.js redirects
+        # to /login on 401, which would be very misleading. Remap to 502.
+        out = 502 if r.status_code in (401, 403) else r.status_code
+        raise HTTPException(out, f"OpenAI {r.status_code}: {r.text[:400]}")
     return r.json()
 
 
@@ -127,7 +131,8 @@ async def _openai_tts(text: str, body: dict, user: dict) -> Response:
             headers={"Authorization": f"Bearer {OPENAI_API_KEY}"},
         )
     if r.status_code != 200:
-        raise HTTPException(r.status_code, f"OpenAI TTS {r.status_code}: {r.text[:400]}")
+        out = 502 if r.status_code in (401, 403) else r.status_code
+        raise HTTPException(out, f"OpenAI TTS {r.status_code}: {r.text[:400]}")
     bump_counter(user["id"], "tts")
     return Response(content=r.content, media_type="audio/mpeg")
 
@@ -174,7 +179,8 @@ async def _azure_tts(text: str, body: dict, user: dict) -> Response:
         msg = r.text[:400]
         if r.status_code == 401:
             msg = f"Azure 401 — meestal regio-mismatch (configured: {region}). {msg}"
-        raise HTTPException(r.status_code, msg)
+        out = 502 if r.status_code in (401, 403) else r.status_code
+        raise HTTPException(out, msg)
     bump_counter(user["id"], "tts-azure")
     return Response(content=r.content, media_type="audio/mpeg")
 
@@ -212,7 +218,8 @@ async def transcribe(
             headers={"Authorization": f"Bearer {OPENAI_API_KEY}"},
         )
     if r.status_code != 200:
-        raise HTTPException(r.status_code, f"Whisper {r.status_code}: {r.text[:400]}")
+        out = 502 if r.status_code in (401, 403) else r.status_code
+        raise HTTPException(out, f"Whisper {r.status_code}: {r.text[:400]}")
     payload = r.json()
     bump_counter(user["id"], "stt-words" if word_timings else "stt")
     words = []
