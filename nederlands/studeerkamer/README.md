@@ -15,12 +15,12 @@ SQLite so the same account works from Mac, iPhone, anywhere.
 | Devices | One browser at a time | Login on any device, same state |
 | PWA | Could install but data per-device | Installable + truly cross-device |
 
-The original `b2-vocabulary/` directory is **untouched**. This is a sibling.
+The original `b2-c1/b2-vocabulary/` directory is **untouched**. This is the new home.
 
 ## Run locally
 
 ```bash
-cd nederlands/b2-c1/b2-vocab-server
+cd nederlands/studeerkamer
 ./run.sh            # first run creates .venv, installs deps, copies .env
 ```
 
@@ -73,7 +73,7 @@ in `USERS=` in `.env` (default: `ashok:change-me` — change it!).
 ## Architecture
 
 ```
-b2-vocab-server/
+studeerkamer/
 ├── server/                     # FastAPI app
 │   ├── main.py                 # app factory + login/logout endpoints
 │   ├── auth.py                 # bcrypt + session cookie
