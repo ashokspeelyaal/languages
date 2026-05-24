@@ -51,6 +51,33 @@ def _path_for(user_id: int, owner_type: str, owner_id: str, filename: str) -> Pa
     return p / (_sanitise(filename, "audio") + ".mp3")
 
 
+@router.get("/keys")
+def list_keys(user=Depends(require_user)):
+    """List every audio file the user owns, as logical keys + sizes.
+    The PWA's offline sync pre-warms its cache by walking this list."""
+    user_root = AUDIO_DIR / str(user["id"])
+    keys = []
+    total = 0
+    if user_root.exists():
+        for path in user_root.rglob("*.mp3"):
+            try:
+                rel = path.relative_to(user_root)
+            except ValueError:
+                continue
+            parts = rel.parts
+            if len(parts) != 3:
+                continue
+            owner_type, owner_id, fname = parts
+            if owner_type not in {"writing", "listening", "exam", "free"}:
+                continue
+            filename = fname[:-4] if fname.endswith(".mp3") else fname
+            key = f"{owner_type}-{owner_id}" + (f"/{filename}" if filename != "audio" else "")
+            size = path.stat().st_size
+            keys.append({"key": key, "size": size})
+            total += size
+    return {"keys": keys, "totalSize": total, "count": len(keys)}
+
+
 # ---- Logical-key endpoints (preferred) ----
 
 @router.post("/key/{logical_key:path}")

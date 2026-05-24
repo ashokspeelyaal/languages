@@ -171,8 +171,7 @@
     const aiSec = el("div", { class: "settings-section" });
     aiSec.append(el("h3", null, "OpenAI toegang"));
     aiSec.append(el("p", { class: "sub" },
-      "Server beheert OpenAI- en Azure-sleutels via .env (OPENAI_API_KEY / AZURE_SPEECH_KEY). " +
-      "De sleutelvelden hieronder zijn historisch — alleen de model- en taalkeuzes verderop worden gebruikt."));
+      "Sleutel wordt in SQLite bewaard (per gebruiker). Als je hier niets invult, valt de server terug op de .env-waarde (OPENAI_API_KEY)."));
 
     let showing = false;
     const keyField = el("input", {

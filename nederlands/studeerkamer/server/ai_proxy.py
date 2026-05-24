@@ -24,6 +24,7 @@ from fastapi.responses import JSONResponse, Response
 
 from .auth import require_user
 from .db import conn
+from .routes.settings_routes import get_user_keys
 from .settings import (
     AI_SOFT_LIMIT,
     AZURE_SPEECH_KEY,
@@ -49,19 +50,22 @@ def bump_counter(user_id: int, kind: str) -> None:
         )
 
 
-def _require_openai_key():
-    if not OPENAI_API_KEY:
-        raise HTTPException(503, "OPENAI_API_KEY not configured on server.")
+def _resolve_openai_key(user_id: int) -> str:
+    key = get_user_keys(user_id)["openai_key"]
+    if not key:
+        raise HTTPException(503,
+            "Geen OpenAI-sleutel. Zet er een in Instellingen → API-sleutel, of in .env.")
+    return key
 
 
-async def _openai_json(path: str, payload: dict, timeout: float = 120.0) -> dict:
-    _require_openai_key()
+async def _openai_json(path: str, payload: dict, user_id: int, timeout: float = 120.0) -> dict:
+    key = _resolve_openai_key(user_id)
     async with httpx.AsyncClient(timeout=timeout) as client:
         r = await client.post(
             f"{OPENAI_BASE}{path}",
             json=payload,
             headers={
-                "Authorization": f"Bearer {OPENAI_API_KEY}",
+                "Authorization": f"Bearer {key}",
                 "Content-Type": "application/json",
             },
         )
@@ -97,7 +101,7 @@ async def complete(body: dict, user=Depends(require_user)):
     if body.get("json"):
         payload["response_format"] = {"type": "json_object"}
 
-    data = await _openai_json("/chat/completions", payload, timeout=240.0)
+    data = await _openai_json("/chat/completions", payload, user["id"], timeout=240.0)
     text = ((data.get("choices") or [{}])[0].get("message") or {}).get("content") or ""
     bump_counter(user["id"], kind)
     return {"text": text.strip(), "model": model, "kind": kind}
@@ -117,7 +121,7 @@ async def tts(body: dict, user=Depends(require_user)):
 
 
 async def _openai_tts(text: str, body: dict, user: dict) -> Response:
-    _require_openai_key()
+    key = _resolve_openai_key(user["id"])
     model = body.get("model") or "gpt-4o-mini-tts"
     voice = body.get("voice") or "shimmer"
     payload = {"model": model, "input": text, "voice": voice, "response_format": "mp3"}
@@ -128,7 +132,7 @@ async def _openai_tts(text: str, body: dict, user: dict) -> Response:
         r = await client.post(
             f"{OPENAI_BASE}/audio/speech",
             json=payload,
-            headers={"Authorization": f"Bearer {OPENAI_API_KEY}"},
+            headers={"Authorization": f"Bearer {key}"},
         )
     if r.status_code != 200:
         out = 502 if r.status_code in (401, 403) else r.status_code
@@ -149,9 +153,12 @@ def _escape_xml(s: str) -> str:
 
 
 async def _azure_tts(text: str, body: dict, user: dict) -> Response:
-    if not AZURE_SPEECH_KEY:
-        raise HTTPException(503, "AZURE_SPEECH_KEY not configured on server.")
-    region = (body.get("region") or AZURE_SPEECH_REGION).strip()
+    keys = get_user_keys(user["id"])
+    az_key = keys["azure_key"]
+    if not az_key:
+        raise HTTPException(503,
+            "Geen Azure-sleutel. Zet er een in Instellingen → Azure subscription key, of in .env.")
+    region = (body.get("region") or keys["azure_region"] or "westeurope").strip()
     voice = body.get("voice") or "nl-BE-DenaNeural"
     rate = body.get("rate") or "0%"
     lang = "nl-BE" if voice.startswith("nl-BE") else ("nl-NL" if voice.startswith("nl-NL") else "nl-BE")
@@ -169,7 +176,7 @@ async def _azure_tts(text: str, body: dict, user: dict) -> Response:
             url,
             content=ssml,
             headers={
-                "Ocp-Apim-Subscription-Key": AZURE_SPEECH_KEY,
+                "Ocp-Apim-Subscription-Key": az_key,
                 "Content-Type": "application/ssml+xml",
                 "X-Microsoft-OutputFormat": "audio-24khz-48kbitrate-mono-mp3",
                 "User-Agent": "studeerkamer-app/1.0",
@@ -195,7 +202,7 @@ async def transcribe(
 ):
     """Whisper-1 transcription. Returns verbose_json with word-level timings
     when word_timings is true — required for karaoke sync in Luisteren."""
-    _require_openai_key()
+    key = _resolve_openai_key(user["id"])
     audio_bytes = await file.read()
     files = {"file": (file.filename or "audio.mp3", audio_bytes, file.content_type or "audio/mpeg")}
     data = {
@@ -215,7 +222,7 @@ async def transcribe(
             f"{OPENAI_BASE}/audio/transcriptions",
             files=files,
             data=data,
-            headers={"Authorization": f"Bearer {OPENAI_API_KEY}"},
+            headers={"Authorization": f"Bearer {key}"},
         )
     if r.status_code != 200:
         out = 502 if r.status_code in (401, 403) else r.status_code
@@ -263,7 +270,7 @@ async def ocr(body: dict, user=Depends(require_user)):
         "max_completion_tokens": 4000,
         "reasoning_effort": "minimal",
     }
-    data = await _openai_json("/chat/completions", payload, timeout=180.0)
+    data = await _openai_json("/chat/completions", payload, user["id"], timeout=180.0)
     text = ((data.get("choices") or [{}])[0].get("message") or {}).get("content") or ""
     bump_counter(user["id"], "ocr")
     return {"text": text.strip()}
@@ -294,10 +301,13 @@ def usage(days: int = 14, user=Depends(require_user)):
 
 @router.get("/config")
 def ai_config(user=Depends(require_user)):
-    """Tell the frontend which providers are actually wired up server-side."""
+    """Tell the frontend which providers are configured — combining the
+    user's UI-entered keys and the server's .env defaults. `openai`/`azure`
+    are true when *either* source has a key."""
+    keys = get_user_keys(user["id"])
     return {
-        "openai": bool(OPENAI_API_KEY),
-        "azure": bool(AZURE_SPEECH_KEY),
-        "azureRegion": AZURE_SPEECH_REGION,
+        "openai": bool(keys["openai_key"]),
+        "azure":  bool(keys["azure_key"]),
+        "azureRegion": keys["azure_region"],
         "softLimit": AI_SOFT_LIMIT,
     }
