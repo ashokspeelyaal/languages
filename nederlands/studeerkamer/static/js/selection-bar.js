@@ -3,8 +3,16 @@
  * "Uitleg" and "Vertaal" buttons. Results show in a fixed bottom-right panel. */
 (function () {
   let bar = null;
+  let chip = null;          // iOS-only floating ✦ button anchored near the selection
   let panel = null;
   let lastText = "";
+
+  // iOS native callout (Copy / Translate / Look Up) wants to own touch-end
+  // gestures on selected text, so on iOS we don't auto-show our bar on
+  // mouseup. Instead we show a tiny floating "✦ AI" chip near the selection;
+  // tapping it opens the full toolbar. Native callout still works in parallel.
+  const IS_IOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+                 (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
 
   // Rough Dutch vs English detection by counting function words.
   const NL_WORDS = new Set("de het een en van niet ook dat dit ik je jij u hij zij wij jullie zich met voor op aan bij om door over uit in is zijn was waren heeft hebben wat wie waar wanneer hoe waarom omdat maar want toch wel zonder mij jou hem haar ons hun zo nu dan daar hier".split(" "));
@@ -53,12 +61,47 @@
     });
   }
   function isInOurUI(node) {
-    return climbContains(node, (n) => n.classList && (n.classList.contains("sel-bar") || n.classList.contains("sel-panel")));
+    return climbContains(node, (n) => n.classList && (
+      n.classList.contains("sel-bar") || n.classList.contains("sel-panel") || n.classList.contains("sel-chip")
+    ));
   }
 
   function hideBar() { if (bar) { bar.remove(); bar = null; } }
+  function hideChip() { if (chip) { chip.remove(); chip = null; } }
   function hidePanel() { if (panel) { panel.remove(); panel = null; } }
-  function hide() { hideBar(); hidePanel(); }
+  function hide() { hideBar(); hideChip(); hidePanel(); }
+
+  // iOS chip: a small floating "✦" pill positioned just below the selection
+  // (so iOS's own callout, which appears above, isn't covered). Tapping
+  // opens the full sel-bar with Uitleg / Vertaal.
+  function showChip(rect, text) {
+    hideChip();
+    chip = document.createElement("button");
+    chip.className = "sel-chip";
+    chip.setAttribute("aria-label", "AI-uitleg / vertaal");
+    chip.innerHTML = '<span class="sel-chip-ico">✦</span><span class="sel-chip-lbl">AI</span>';
+
+    document.body.appendChild(chip);
+    const cr = chip.getBoundingClientRect();
+    let top = rect.bottom + window.scrollY + 8;
+    let left = rect.left + window.scrollX + (rect.width - cr.width) / 2;
+    if (left < 8) left = 8;
+    if (left + cr.width > window.innerWidth - 8) left = window.innerWidth - cr.width - 8;
+    if (top + cr.height > window.innerHeight + window.scrollY - 8) {
+      // No room below — place above the selection.
+      top = rect.top + window.scrollY - cr.height - 8;
+    }
+    chip.style.top = top + "px";
+    chip.style.left = left + "px";
+
+    chip.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const r = getSelectionRect();
+      hideChip();
+      if (r && text) show(r, text);
+    });
+  }
 
   function escapeHTML(s) {
     return String(s || "").replace(/[&<>]/g, (c) => ({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
@@ -168,40 +211,56 @@
     setTimeout(() => {
       const text = getSelectedText();
       if (!text || text.length < 2) {
-        // Empty selection: hide bar but keep panel (user might be reading it)
         if (e && bar && bar.contains(e.target)) return;
         if (e && panel && panel.contains(e.target)) return;
+        if (e && chip && chip.contains(e.target)) return;
         hideBar();
+        hideChip();
         if (text !== lastText) lastText = text;
         return;
       }
-      if (text === lastText && bar) return; // already shown
+      if (text === lastText && (bar || chip)) return;
       lastText = text;
-      if (text.length > 400) return; // too long for inline AI
+      if (text.length > 400) return;
       const sel = window.getSelection();
       if (!sel || sel.rangeCount === 0) return;
       const node = sel.anchorNode;
       if (isInInput(node)) return;
       if (isInOurUI(node)) return;
       const rect = getSelectionRect();
-      if (rect) show(rect, text);
+      if (!rect) return;
+      // Desktop: show the full bar immediately. iOS: show the small chip
+      // so the native callout (Copy / Translate / Look Up) stays usable.
+      if (IS_IOS) showChip(rect, text);
+      else show(rect, text);
     }, 10);
   }
 
-  document.addEventListener("mouseup", handleSelection);
-  document.addEventListener("keyup", (e) => {
-    // For shift+arrow selections via keyboard
-    if (e.shiftKey || e.key === "Shift") handleSelection(e);
-  });
+  if (!IS_IOS) {
+    // Desktop: mouseup is reliable.
+    document.addEventListener("mouseup", handleSelection);
+    document.addEventListener("keyup", (e) => {
+      if (e.shiftKey || e.key === "Shift") handleSelection(e);
+    });
+  } else {
+    // iOS: mouseup is unreliable (touch events don't synthesise it
+    // consistently around the native callout). Use selectionchange,
+    // debounced so we don't flicker while the user drags the handles.
+    let pending = null;
+    document.addEventListener("selectionchange", () => {
+      clearTimeout(pending);
+      pending = setTimeout(() => handleSelection(null), 220);
+    });
+  }
 
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") hide();
   });
 
-  // Hide on scroll (the bar would be in the wrong place)
-  let scrollTimer;
+  // Hide on scroll (anchors would be wrong)
   window.addEventListener("scroll", () => {
     hideBar();
+    hideChip();
     // Don't auto-hide panel; user might want to read it while scrolling
   }, true);
 

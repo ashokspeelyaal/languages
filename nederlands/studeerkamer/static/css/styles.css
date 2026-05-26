@@ -67,6 +67,16 @@ body {
   position: sticky; top: 0; z-index: 10;
   backdrop-filter: blur(6px);
 }
+
+/* The audio player in Luisteren / Schrijven sticks just below the topbar
+   so you can pause / scrub / change speed while scrolling a long transcript.
+   --topbar-h is set by app.js after layout so this stays correct when the
+   nav wraps on narrow screens. */
+.player {
+  position: sticky;
+  top: var(--topbar-h, 4.5rem);
+  z-index: 4;
+}
 .brand { display: flex; align-items: center; gap: .8rem; }
 .brand-mark {
   font-family: var(--serif);
@@ -1707,6 +1717,32 @@ dialog td { padding: .35rem 0; color: var(--ink-soft); }
   background: rgba(255,255,255,.18);
   margin: 0 1px;
 }
+
+/* iOS-only mini chip: shows up after a touch selection so iOS's own
+   callout (Copy / Translate / Look Up) keeps its place above, and our
+   Uitleg / Vertaal lives below as a single tap. */
+.sel-chip {
+  position: absolute;
+  z-index: 9998;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px 6px 10px;
+  border: 1px solid var(--ink);
+  background: linear-gradient(135deg, var(--ink), #2a2620);
+  color: var(--paper);
+  border-radius: 999px;
+  font: 600 13px/1 var(--sans);
+  letter-spacing: .02em;
+  box-shadow: 0 8px 22px -8px rgba(0,0,0,.45);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  animation: sel-pop .14s ease-out;
+  touch-action: manipulation;
+}
+.sel-chip .sel-chip-ico { color: var(--rood); font-size: 14px; line-height: 1; }
+.sel-chip .sel-chip-lbl { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; opacity: .9; }
+.sel-chip:active { transform: scale(.96); }
 
 /* Result panel — fixed bottom-right */
 .sel-panel {

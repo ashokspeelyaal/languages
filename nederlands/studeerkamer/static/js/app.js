@@ -91,6 +91,17 @@
     render();
   }
 
+  // Keep --topbar-h matched to the actual rendered topbar height so the
+  // sticky audio player in Luisteren / Schrijven docks correctly even when
+  // the nav wraps onto two lines on narrow screens.
+  function updateTopbarHeight() {
+    const tb = document.querySelector(".topbar");
+    if (tb) document.documentElement.style.setProperty("--topbar-h", tb.offsetHeight + "px");
+  }
+  window.addEventListener("load", updateTopbarHeight);
+  window.addEventListener("resize", updateTopbarHeight);
+  window.addEventListener("orientationchange", updateTopbarHeight);
+
   window.addEventListener("hashchange", render);
   document.addEventListener("DOMContentLoaded", boot);
 
