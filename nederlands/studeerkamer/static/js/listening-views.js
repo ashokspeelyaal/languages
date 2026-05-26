@@ -899,6 +899,46 @@
       const steps = host.querySelectorAll(".gen-step");
       if (steps.length) steps[steps.length - 1].innerHTML = '<span style="color:var(--groen)">✓ Script + ' + ((content.vocab || []).length) + ' vocab + ' + ((content.questions || []).length) + ' vragen</span>';
 
+      // ---- Self-critique pass: catch AI-invented non-words in the script ----
+      // (e.g. "baanrekeneprojecten" instead of "baanbrekende projecten").
+      // Has to happen BEFORE audio is generated so TTS reads the cleaned text
+      // and BEFORE word-timing transcription so karaoke sync matches.
+      setActive("Spelling controleren");
+      let fixes = [];
+      try {
+        fixes = await window.AI.validateDutchSpelling(content.script || "");
+      } catch (e) { /* non-fatal */ }
+      if (fixes.length) {
+        content.script = window.AI.applySpellingFixes(content.script, fixes);
+        // Vocab and question text also reference the same words; fix them too
+        // so the corpus and quiz align with the cleaned script.
+        content.vocab = (content.vocab || []).map((v) => ({
+          ...v,
+          dutch: window.AI.applySpellingFixes(v.dutch || "", fixes),
+          note: window.AI.applySpellingFixes(v.note || "", fixes),
+        }));
+        content.questions = (content.questions || []).map((q) => ({
+          ...q,
+          q: window.AI.applySpellingFixes(q.q || "", fixes),
+          options: (q.options || []).map((o) => window.AI.applySpellingFixes(o, fixes)),
+          explanation: q.explanation ? {
+            nl: window.AI.applySpellingFixes(q.explanation.nl || "", fixes),
+            en: q.explanation.en || "",  // English untouched
+          } : q.explanation,
+        }));
+      }
+      const sSteps = host.querySelectorAll(".gen-step");
+      if (sSteps.length) {
+        const last = sSteps[sSteps.length - 1];
+        if (fixes.length) {
+          const sample = fixes.slice(0, 3).map((f) => `<em>${escapeHTML(f.original)}</em>→${escapeHTML(f.fix)}`).join(" · ");
+          last.innerHTML = '<span style="color:var(--groen)">✓ ' + fixes.length + ' spelfout' + (fixes.length === 1 ? "" : "en") + ' opgeruimd</span> ' +
+                           '<span style="color:var(--ink-faint);font-size:.8rem">— ' + sample + (fixes.length > 3 ? " …" : "") + '</span>';
+        } else {
+          last.innerHTML = '<span style="color:var(--ink-faint)">— geen spelfouten</span>';
+        }
+      }
+
       const title = content.title && content.title.trim() ? content.title.trim() : ex.title;
       window.ListeningStore.update(exId, {
         title, autoTitled: true,

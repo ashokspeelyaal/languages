@@ -318,6 +318,72 @@
     return JSON.parse(r.text);
   }
 
+  /* ============ Dutch spelling validation (self-critique pass) ============
+   * GPT-5 occasionally invents plausible-looking but non-existent Dutch
+   * compounds in generated text (e.g. "baanrekeneprojecten" for
+   * "baanbrekende projecten"). A separate focused call catches them — the
+   * monolithic generation prompt underinvests in this because it's
+   * juggling six other concerns.
+   *
+   * Returns an array of {original, fix} pairs. Only objective spelling
+   * errors — never style, register, or grammar changes.
+   */
+  async function validateDutchSpelling(text) {
+    if (!text || text.length < 20) return [];
+    const system = [
+      "Je bent een strenge Nederlandse spellingcontroleur.",
+      "Bekijk de tekst en vind UITSLUITEND objectieve spelfouten:",
+      "- Niet-bestaande woorden (verzonnen samenstellingen, typfouten, verkeerde verbuigingen)",
+      "- Letterlijke spelfouten (ontbrekende of verkeerde letters)",
+      "NEGEER:",
+      "- Stijl, register, woordkeuze",
+      "- Grammatica, werkwoordtijden, woordvolgorde",
+      "- Belgisch-Nederlands vs Hollands-Nederlands verschillen",
+      "- Eigennamen, acroniemen, leenwoorden",
+      "Antwoord ALLEEN met geldige JSON, geen markdown:",
+      '{ "fixes": [ { "original": "<exact verkeerd geschreven woord>", "fix": "<correcte vorm>" } ] }',
+      "Als er geen fouten zijn, antwoord met { \"fixes\": [] }.",
+      "Voorbeelden van wat WEL moet worden gevangen:",
+      '  "baanrekeneprojecten" → "baanbrekende projecten"',
+      '  "lijft" (waar bedoeld blijft) → "blijft"',
+      '  "defineert" → "definieert"',
+      "Voorbeelden van wat NIET gefixt mag worden (laat met rust):",
+      "  'middenklasse' (correct samenstelling)",
+      "  'CNaVT' (acroniem)",
+      "  'India' (eigennaam)",
+    ].join("\n");
+    const r = await complete({
+      kind: "spelling-check",
+      messages: [
+        { role: "system", content: system },
+        { role: "user", content: text },
+      ],
+      maxTokens: 1500,
+      json: true,
+      noCache: true,
+      model: settings().aiModel || "gpt-5-mini",  // a focused call — keep on user's normal model so it understands Dutch idioms
+    });
+    try {
+      const parsed = JSON.parse(r.text);
+      return Array.isArray(parsed.fixes) ? parsed.fixes.filter((f) => f && f.original && f.fix && f.original !== f.fix) : [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  /* Apply spelling fixes (whole-word, case-sensitive) to a string. */
+  function applySpellingFixes(text, fixes) {
+    if (!text || !fixes || !fixes.length) return text;
+    let out = text;
+    for (const { original, fix } of fixes) {
+      // Word-boundary match avoids fixing substrings of unrelated words.
+      const safe = original.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      const re = new RegExp("\\b" + safe + "\\b", "g");
+      out = out.replace(re, fix);
+    }
+    return out;
+  }
+
   /* ============ Re-extract vocab from existing script ============ */
   async function extractVocab({ script, language }) {
     const s = settings();
@@ -362,5 +428,7 @@
     correctEssay,
     extractVocab,
     transcribeWithTimestamps,
+    validateDutchSpelling,
+    applySpellingFixes,
   };
 })();
