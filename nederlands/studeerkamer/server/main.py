@@ -32,6 +32,7 @@ from .routes import (
     metrics_routes,
     progress_routes,
     settings_routes,
+    spreken_routes,
     srs_routes,
     vocab_routes,
     writing_routes,
@@ -100,6 +101,7 @@ def create_app() -> FastAPI:
     app.include_router(chats_routes.router)
     app.include_router(writing_routes.router)
     app.include_router(listening_routes.router)
+    app.include_router(spreken_routes.router)
     app.include_router(exam_routes.router)
     app.include_router(metrics_routes.router)
     app.include_router(settings_routes.router)

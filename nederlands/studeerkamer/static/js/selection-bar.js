@@ -124,6 +124,11 @@
         <span class="sel-ico">✦</span> Vertaal
         <span class="sel-sub">→ ${transTo}</span>
       </button>
+      <span class="sel-divider"></span>
+      <button class="sel-btn" data-action="addvocab" title="Toevoegen aan je woordenschat">
+        <span class="sel-ico">+</span> Woord
+        <span class="sel-sub">to vocab</span>
+      </button>
     `;
     document.body.appendChild(bar);
 
@@ -145,6 +150,10 @@
       e.preventDefault(); e.stopPropagation();
       runAction("translate", text, lang);
     });
+    bar.querySelector('[data-action="addvocab"]').addEventListener("click", (e) => {
+      e.preventDefault(); e.stopPropagation();
+      runAction("addvocab", text, lang);
+    });
   }
 
   async function runAction(action, text, lang) {
@@ -157,7 +166,9 @@
 
     panel = document.createElement("div");
     panel.className = "sel-panel";
-    const headLabel = action === "explain" ? "Uitleg · explain" : `Vertaal · translate → ${lang === "nl" ? "EN" : "NL"}`;
+    const headLabel = action === "explain"  ? "Uitleg · explain"
+                    : action === "translate" ? `Vertaal · translate → ${lang === "nl" ? "EN" : "NL"}`
+                    :                          "Toevoegen aan corpus · add to vocab";
     panel.innerHTML = `
       <button class="sel-panel-close" title="Sluiten (Esc)">✕</button>
       <p class="sel-panel-head"><span class="badge">AI</span> ${headLabel}</p>
@@ -186,7 +197,7 @@
           </div>
           ${r.cached ? '<p class="sel-cached">uit cache</p>' : ''}
         `;
-      } else {
+      } else if (action === "translate") {
         const target = lang === "nl" ? "English" : "Dutch (Belgian / Standard Dutch register)";
         const sys = `You are a precise translator. Translate the user's text into ${target}. Preserve register, tone and meaning. Output ONLY the translation, no commentary, no quotes.`;
         const r = await window.AI.complete({
@@ -199,6 +210,63 @@
         panel.querySelector(".sel-panel-body").innerHTML = `
           <p class="sel-translation">${escapeHTML(r.text)}</p>
           ${r.cached ? '<p class="sel-cached">uit cache</p>' : ''}
+        `;
+      } else if (action === "addvocab") {
+        // AI normalises the headword (adds the article for nouns, lemmatises
+        // verbs, etc.) and picks a CEFR level + closed-class flag. Then we
+        // dedup-add via CustomVocab.addBatch which the rest of the app
+        // already merges into the Browse / Flashcards corpus.
+        const sys = [
+          "Je krijgt een woord of korte uitdrukking. Geef terug als geldige JSON:",
+          '{',
+          '  "dutch":     "<canonical Dutch form — met lidwoord als zelfstandig naamwoord (de/het), infinitief voor werkwoorden>",',
+          '  "english":   "<korte Engelse glos>",',
+          '  "level":     "A2" | "B1" | "B2" | "C1",',
+          '  "core":      true|false,        // true ALLEEN voor structurele woorden (voorzetsels, voegwoorden, partikels, voornaamwoorden, ontkenning, comparatief, tijdmarkers)',
+          '  "note":      "<optionele 1-regelige gebruiksnotitie, mag leeg>",',
+          '  "exampleNL": "<korte voorbeeldzin in Nederlands, mag leeg>"',
+          '}',
+          "Als de input Engels is, geef tóch een Nederlandse headword + Engelse glos terug.",
+          "ALLEEN JSON, geen markdown, geen uitleg.",
+        ].join("\n");
+        const r = await window.AI.complete({
+          kind: "sel-addvocab",
+          system: sys,
+          user: text,
+          maxTokens: 400,
+          json: true,
+          reasoning: "minimal",
+        });
+        let obj;
+        try { obj = JSON.parse(r.text); }
+        catch (e) { throw new Error("AI antwoord niet parseerbaar."); }
+        if (!obj || !obj.dutch) throw new Error("Geen Nederlandse vorm gevonden.");
+
+        const result = window.CustomVocab.addBatch([{
+          dutch:     obj.dutch,
+          english:   obj.english || "",
+          level:     obj.level || "B2",
+          core:      !!obj.core,
+          note:      obj.note || "",
+          exampleNL: obj.exampleNL || "",
+        }], { source: "selection", category: "Selectie", sourceId: "selection-" + Date.now() });
+
+        const isDup = result.added === 0 && result.skipped > 0;
+        panel.querySelector(".sel-panel-body").innerHTML = `
+          <div style="display:flex;flex-direction:column;gap:.45rem">
+            <div style="display:flex;gap:.6rem;align-items:baseline">
+              <strong style="font-family:var(--serif);font-size:1.1rem;color:var(--ink)">${escapeHTML(obj.dutch)}</strong>
+              <span style="font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint)">${escapeHTML(obj.level || "")}${obj.core ? " · core" : ""}</span>
+            </div>
+            <div style="color:var(--ink-soft);font-size:.95rem">${escapeHTML(obj.english || "")}</div>
+            ${obj.exampleNL ? `<div style="font-style:italic;color:var(--ink-soft);font-size:.85rem">"${escapeHTML(obj.exampleNL)}"</div>` : ""}
+            ${obj.note ? `<div style="font-size:.78rem;color:var(--ink-faint)">${escapeHTML(obj.note)}</div>` : ""}
+            <div style="margin-top:.4rem;font-family:var(--mono);font-size:.72rem;letter-spacing:.08em">
+              ${isDup
+                ? '<span style="color:var(--ink-faint)">— al in corpus</span>'
+                : '<span style="color:var(--groen)">✓ toegevoegd · in Bladeren / Flashcards</span>'}
+            </div>
+          </div>
         `;
       }
     } catch (err) {

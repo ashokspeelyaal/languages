@@ -1514,6 +1514,7 @@
     schrijven: (mount) => window.WritingViews.render(mount),     /* returns cleanup fn */
     exam: (mount) => window.ExamViews.render(mount),
     luisteren: (mount) => window.ListeningViews.render(mount),   /* returns cleanup fn */
+    spreken: (mount) => window.SprekenViews.render(mount),
     settings: (mount) => window.AIViews.settings(mount),
     help: renderHelp,
   };

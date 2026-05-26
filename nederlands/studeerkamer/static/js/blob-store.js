@@ -1,5 +1,6 @@
 /* BlobStore — server-backed audio storage with the original opaque-key
- * semantics preserved.
+ * semantics preserved. Logical key prefixes: writing- listening- spreken-
+ * exam- free-  (must match the server-side regex in audio_routes.py).
  *
  * Views do:
  *   await BlobStore.put("listening-{id}", blob);

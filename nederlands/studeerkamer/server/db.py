@@ -195,6 +195,36 @@ CREATE TABLE IF NOT EXISTS listening_exercises (
 );
 CREATE INDEX IF NOT EXISTS listening_user_idx ON listening_exercises(user_id, updated_at);
 
+-- Spreken exercises (user records, AI evaluates pronunciation + corrects).
+CREATE TABLE IF NOT EXISTS spreken_exercises (
+  id              TEXT PRIMARY KEY,
+  user_id         INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  title           TEXT NOT NULL DEFAULT 'Nieuwe opname',
+  topic           TEXT NOT NULL DEFAULT '',
+  level           TEXT NOT NULL DEFAULT 'B2',
+  status          TEXT NOT NULL DEFAULT 'new',
+  error_msg       TEXT,
+  -- Original (user-recorded)
+  original_audio_path     TEXT,
+  original_transcript     TEXT,
+  original_word_timings   TEXT,
+  pronunciation_json      TEXT,
+  -- Corrected (AI-generated)
+  corrected_text          TEXT,
+  corrected_audio_path    TEXT,
+  corrected_word_timings  TEXT,
+  sentences_json          TEXT,
+  score_json              TEXT,
+  -- Shared
+  vocab_json              TEXT,
+  grammar_json            TEXT,
+  auto_titled             INTEGER NOT NULL DEFAULT 0,
+  pushed_to_corpus        INTEGER NOT NULL DEFAULT 0,
+  created_at              TEXT NOT NULL DEFAULT (datetime('now')),
+  updated_at              TEXT NOT NULL DEFAULT (datetime('now'))
+);
+CREATE INDEX IF NOT EXISTS spreken_user_idx ON spreken_exercises(user_id, updated_at);
+
 -- Exam attempts (Lezen / Luisteren / Schrijven / Spreken).
 CREATE TABLE IF NOT EXISTS exam_attempts (
   id              TEXT PRIMARY KEY,

@@ -235,6 +235,65 @@ async def transcribe(
     return {"text": payload.get("text") or "", "words": words}
 
 
+@router.post("/pronounce")
+async def pronounce(
+    file: UploadFile = File(...),
+    language: str = Form("nl-NL"),
+    reference_text: str = Form(""),
+    user=Depends(require_user),
+):
+    """Azure Speech Pronunciation Assessment.
+
+    Audio MUST be WAV 16kHz mono 16-bit PCM. The client (audio.js) does
+    the resample/encode dance in the browser via AudioContext before
+    sending here. Free-form speech: pass reference_text="" — the service
+    runs ASR + assessment in one shot.
+
+    Returns the raw NBest[0] payload from Azure (we surface scores +
+    per-word breakdown to the UI as-is)."""
+    keys = get_user_keys(user["id"])
+    az_key = keys["azure_key"]
+    if not az_key:
+        raise HTTPException(503,
+            "Geen Azure-sleutel. Zet er een in Instellingen → Azure subscription key, of in .env.")
+    region = (keys["azure_region"] or "westeurope").strip()
+
+    config = {
+        "ReferenceText": reference_text or "",
+        "GradingSystem": "HundredMark",
+        "Granularity": "Phoneme",
+        "Dimension": "Comprehensive",
+        "EnableMiscue": bool(reference_text),
+        "EnableProsodyAssessment": True,
+        "PhonemeAlphabet": "IPA",
+    }
+    pa_header = base64.b64encode(json.dumps(config).encode("utf-8")).decode("ascii")
+
+    audio_bytes = await file.read()
+    url = (f"https://{region}.stt.speech.microsoft.com/speech/recognition/conversation/cognitiveservices/v1"
+           f"?language={language}&format=detailed")
+    async with httpx.AsyncClient(timeout=120.0) as client:
+        r = await client.post(
+            url,
+            content=audio_bytes,
+            headers={
+                "Ocp-Apim-Subscription-Key": az_key,
+                "Content-Type": "audio/wav; codecs=audio/pcm; samplerate=16000",
+                "Pronunciation-Assessment": pa_header,
+                "Accept": "application/json",
+                "User-Agent": "studeerkamer-app/1.0",
+            },
+        )
+    if r.status_code != 200:
+        msg = r.text[:600]
+        if r.status_code == 401:
+            msg = f"Azure 401 — meestal regio-mismatch (configured: {region}). {msg}"
+        out = 502 if r.status_code in (401, 403) else r.status_code
+        raise HTTPException(out, msg)
+    bump_counter(user["id"], "pronounce")
+    return r.json()
+
+
 @router.post("/ocr")
 async def ocr(body: dict, user=Depends(require_user)):
     """Handwriting OCR via GPT-5 vision. image_b64 is the raw base64 (no data:

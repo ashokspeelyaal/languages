@@ -11,7 +11,7 @@
   if (!window.VOCAB_DATA) window.VOCAB_DATA = { items: [] };
 
   const ROUTES = ["dashboard", "browse", "flashcards", "typed", "cloze", "mixed",
-                  "metrics", "chat", "schrijven", "exam", "luisteren",
+                  "metrics", "chat", "schrijven", "exam", "luisteren", "spreken",
                   "settings", "help", "logout"];
   let cleanupFn = null;
   let booted = false;
@@ -85,6 +85,7 @@
       window.ChatStore && window.ChatStore.boot(),
       window.ListeningStore && window.ListeningStore.boot(),
       window.WritingStore && window.WritingStore.boot(),
+      window.SprekenStore && window.SprekenStore.boot(),
       window.ExamStore && window.ExamStore.boot(),
       window.CustomVocab && window.CustomVocab.boot(),
     ]);

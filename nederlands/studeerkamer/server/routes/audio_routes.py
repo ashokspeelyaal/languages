@@ -12,7 +12,7 @@ Two endpoint families:
     kept for completeness.
 
 Files live at: AUDIO_DIR/{user_id}/{owner_type}/{owner_id}/{filename}.mp3
-where owner_type ∈ {writing, listening, exam, free}.
+where owner_type ∈ {writing, listening, spreken, exam, free}.
 """
 import re
 from pathlib import Path
@@ -27,7 +27,7 @@ router = APIRouter(prefix="/api/audio", tags=["audio"])
 
 
 _SAFE = re.compile(r"[^a-zA-Z0-9_.\-]")
-_KEY = re.compile(r"^(writing|listening|exam|free)-([^/]+)(?:/(.+))?$")
+_KEY = re.compile(r"^(writing|listening|spreken|exam|free)-([^/]+)(?:/(.+))?$")
 
 
 def _sanitise(s: str, default: str = "x") -> str:
@@ -125,7 +125,7 @@ async def upload(
     key: str = Form("audio"),
     user=Depends(require_user),
 ):
-    if owner_type not in {"writing", "listening", "exam", "free"}:
+    if owner_type not in {"writing", "listening", "spreken", "exam", "free"}:
         raise HTTPException(400, "invalid owner_type")
     target = _path_for(user["id"], owner_type, owner_id, key)
     with target.open("wb") as f:
