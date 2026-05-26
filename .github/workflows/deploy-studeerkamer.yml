@@ -1,0 +1,292 @@
+# =============================================================================
+# Studeerkamer (Nederlands B2 → C1 trainer) — Production Deploy
+# =============================================================================
+#
+# Triggered on push to `main` when files under nederlands/studeerkamer/ change.
+# Mirrors the campuszeus-college pipeline: rsync code + venv + systemd + nginx.
+#
+# Topology:
+#   Server:      162.55.47.246 (Hetzner, shared with campuszeus)
+#   Domain:      nederlands.yaal.be   (Cloudflare proxied, mode "Full")
+#   App root:    /opt/studeerkamer
+#   Port:        15191   (uvicorn, bound to 127.0.0.1)
+#   DB:          SQLite at /opt/studeerkamer/data/b2vocab.db
+#   Audio:       /opt/studeerkamer/data/audio/...
+#
+# GitHub Secrets required:
+#   DEPLOY_SSH_KEY              SSH private key for root@162.55.47.246
+#   STUDEERKAMER_USERS          e.g. "ashok:somepw" — seeded on first boot
+#   STUDEERKAMER_OPENAI_KEY     (optional) fallback OpenAI key; per-user UI key wins
+#   STUDEERKAMER_AZURE_KEY      (optional) fallback Azure key
+#   STUDEERKAMER_AZURE_REGION   (optional) default "westeurope"
+# =============================================================================
+
+name: Deploy Studeerkamer
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "nederlands/studeerkamer/**"
+      - ".github/workflows/deploy-studeerkamer.yml"
+  workflow_dispatch: {}
+
+concurrency:
+  group: deploy-studeerkamer
+  cancel-in-progress: false
+
+jobs:
+  # ---------------------------------------------------------------------------
+  # GATE 1 — sanity check the code parses before shipping it anywhere
+  # ---------------------------------------------------------------------------
+  check:
+    name: "Syntax check"
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile Python
+        run: python -m compileall -q nederlands/studeerkamer/server
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Parse JS modules
+        run: |
+          for f in nederlands/studeerkamer/static/js/*.js; do
+            [ "$(basename "$f")" = "d3.v7.min.js" ] && continue
+            node --check "$f"
+          done
+
+  # ---------------------------------------------------------------------------
+  # GATE 2 — ship it
+  # ---------------------------------------------------------------------------
+  deploy:
+    name: "Deploy"
+    runs-on: ubuntu-latest
+    needs: [check]
+    timeout-minutes: 15
+
+    env:
+      SERVER: "162.55.47.246"
+      APP_ROOT: "/opt/studeerkamer"
+      DOMAIN: "nederlands.yaal.be"
+      PORT: "15191"
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # -- Server directories ------------------------------------------------
+      - name: Set up server directories
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ env.SERVER }}
+          username: root
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          script: |
+            mkdir -p ${{ env.APP_ROOT }}/{server,static,seeds,deploy,data/audio}
+
+      # -- Sync code ---------------------------------------------------------
+      - name: Sync app
+        uses: burnett01/rsync-deployments@7.0.1
+        with:
+          switches: >-
+            -avz --delete
+            --exclude='.venv'
+            --exclude='__pycache__'
+            --exclude='*.pyc'
+            --exclude='.DS_Store'
+            --exclude='.env'
+            --exclude='data/'
+          path: nederlands/studeerkamer/
+          remote_path: ${{ env.APP_ROOT }}/
+          remote_host: ${{ env.SERVER }}
+          remote_user: root
+          remote_key: ${{ secrets.DEPLOY_SSH_KEY }}
+
+      # -- Python env --------------------------------------------------------
+      - name: Install Python dependencies
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ env.SERVER }}
+          username: root
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          script: |
+            apt-get update -qq
+            apt-get install -y -qq python3-full python3-venv python3-pip rsync > /dev/null 2>&1 || true
+            cd ${{ env.APP_ROOT }}
+            if [ ! -f .venv/bin/python ] || ! .venv/bin/python -c "import uvicorn" >/dev/null 2>&1; then
+              rm -rf .venv
+              python3 -m venv .venv
+            fi
+            .venv/bin/python -m pip install --quiet --upgrade pip
+            .venv/bin/python -m pip install --quiet -r requirements.txt
+
+      # -- .env from secrets -------------------------------------------------
+      # Written by hand so we don't leak secrets in the rsync.
+      - name: Write .env
+        uses: appleboy/ssh-action@v1.0.0
+        env:
+          USERS_VAL:           ${{ secrets.STUDEERKAMER_USERS }}
+          OPENAI_API_KEY:      ${{ secrets.STUDEERKAMER_OPENAI_KEY }}
+          AZURE_SPEECH_KEY:    ${{ secrets.STUDEERKAMER_AZURE_KEY }}
+          AZURE_SPEECH_REGION: ${{ secrets.STUDEERKAMER_AZURE_REGION }}
+        with:
+          host: ${{ env.SERVER }}
+          username: root
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          envs: USERS_VAL,OPENAI_API_KEY,AZURE_SPEECH_KEY,AZURE_SPEECH_REGION
+          script: |
+            umask 077
+            cat > ${{ env.APP_ROOT }}/.env << ENVEOF
+            USERS=${USERS_VAL}
+            OPENAI_API_KEY=${OPENAI_API_KEY}
+            AZURE_SPEECH_KEY=${AZURE_SPEECH_KEY}
+            AZURE_SPEECH_REGION=${AZURE_SPEECH_REGION:-westeurope}
+            DATABASE_PATH=${{ env.APP_ROOT }}/data/b2vocab.db
+            AUDIO_DIR=${{ env.APP_ROOT }}/data/audio
+            SEEDS_DIR=${{ env.APP_ROOT }}/seeds
+            HOST=127.0.0.1
+            PORT=${{ env.PORT }}
+            ENVEOF
+            chmod 600 ${{ env.APP_ROOT }}/.env
+
+      # -- systemd unit ------------------------------------------------------
+      - name: Deploy systemd service
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ env.SERVER }}
+          username: root
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          script: |
+            cat > /etc/systemd/system/studeerkamer.service << 'SERVICEEOF'
+            [Unit]
+            Description=Studeerkamer — Nederlands B2->C1 trainer
+            After=network.target
+
+            [Service]
+            Type=simple
+            User=root
+            WorkingDirectory=/opt/studeerkamer
+            EnvironmentFile=/opt/studeerkamer/.env
+            ExecStart=/opt/studeerkamer/.venv/bin/python -m uvicorn server.main:app --host 127.0.0.1 --port 15191 --workers 1
+            Restart=always
+            RestartSec=3
+            NoNewPrivileges=true
+            PrivateTmp=true
+            StandardOutput=journal
+            StandardError=journal
+            SyslogIdentifier=studeerkamer
+
+            [Install]
+            WantedBy=multi-user.target
+            SERVICEEOF
+
+            systemctl daemon-reload
+            systemctl enable studeerkamer
+            systemctl restart studeerkamer
+
+      # -- nginx site --------------------------------------------------------
+      - name: Deploy nginx config
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ env.SERVER }}
+          username: root
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          script: |
+            if ! command -v nginx &> /dev/null; then
+              apt-get update -qq
+              apt-get install -y -qq nginx > /dev/null 2>&1
+              systemctl enable nginx
+              systemctl start nginx
+            fi
+            mkdir -p /etc/nginx/sites-available /etc/nginx/sites-enabled
+
+            cat > /etc/nginx/sites-available/studeerkamer << 'NGINXEOF'
+            # Cloudflare-proxied origin. TLS terminates at Cloudflare; this
+            # vhost speaks plain HTTP. Mode in Cloudflare must be "Full".
+            server {
+                listen 80;
+                server_name nederlands.yaal.be;
+
+                # Audio + uploads can be a few MB.
+                client_max_body_size 50m;
+
+                # Real client IP from Cloudflare.
+                set_real_ip_from 103.21.244.0/22;
+                set_real_ip_from 103.22.200.0/22;
+                set_real_ip_from 103.31.4.0/22;
+                set_real_ip_from 104.16.0.0/13;
+                set_real_ip_from 104.24.0.0/14;
+                set_real_ip_from 108.162.192.0/18;
+                set_real_ip_from 131.0.72.0/22;
+                set_real_ip_from 141.101.64.0/18;
+                set_real_ip_from 162.158.0.0/15;
+                set_real_ip_from 172.64.0.0/13;
+                set_real_ip_from 173.245.48.0/20;
+                set_real_ip_from 188.114.96.0/20;
+                set_real_ip_from 190.93.240.0/20;
+                set_real_ip_from 197.234.240.0/22;
+                set_real_ip_from 198.41.128.0/17;
+                set_real_ip_from 2400:cb00::/32;
+                set_real_ip_from 2606:4700::/32;
+                set_real_ip_from 2803:f800::/32;
+                set_real_ip_from 2405:b500::/32;
+                set_real_ip_from 2405:8100::/32;
+                set_real_ip_from 2c0f:f248::/32;
+                set_real_ip_from 2a06:98c0::/29;
+                real_ip_header CF-Connecting-IP;
+
+                location / {
+                    proxy_pass http://127.0.0.1:15191;
+                    proxy_set_header Host $host;
+                    proxy_set_header X-Real-IP $remote_addr;
+                    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                    proxy_set_header X-Forwarded-Proto $http_x_forwarded_proto;
+                    proxy_read_timeout 300s;
+                    proxy_send_timeout 300s;
+                }
+            }
+            NGINXEOF
+
+            ln -sf /etc/nginx/sites-available/studeerkamer /etc/nginx/sites-enabled/studeerkamer
+            nginx -t && systemctl reload nginx
+
+      # -- Verify ------------------------------------------------------------
+      - name: Verify deployment
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ env.SERVER }}
+          username: root
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          script: |
+            echo "=========================================="
+            echo "  Studeerkamer — Deployment Report"
+            echo "=========================================="
+
+            if systemctl is-active --quiet studeerkamer; then
+              echo "  Backend: RUNNING"
+            else
+              echo "  Backend: FAILED"
+              journalctl -u studeerkamer --no-pager -n 30
+              exit 1
+            fi
+
+            sleep 3
+            if curl -sf http://127.0.0.1:${{ env.PORT }}/api/health > /dev/null 2>&1; then
+              echo "  Health:  OK"
+            else
+              echo "  Health:  FAILED"
+              journalctl -u studeerkamer --no-pager -n 30
+              exit 1
+            fi
+
+            if systemctl is-active --quiet nginx; then
+              echo "  Nginx:   RUNNING"
+            fi
+
+            echo ""
+            echo "  URL: https://${{ env.DOMAIN }}"
+            echo "  Deploy OK."

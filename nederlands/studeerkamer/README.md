@@ -27,48 +27,62 @@ cd nederlands/studeerkamer
 Then open <http://127.0.0.1:8000> and log in with the credentials you put
 in `USERS=` in `.env` (default: `ashok:change-me` — change it!).
 
-## Deploy to Hetzner
+## Deploy (CI/CD)
 
-1. **DNS** — In Cloudflare, point an A record at the Hetzner box's IP.
-   Proxied (orange cloud) is fine; SSL/TLS mode "Full (strict)".
+Deployment runs automatically via GitHub Actions on push to `main` whenever
+files under `nederlands/studeerkamer/**` change. Same pattern as
+`campuszeus-college`: rsync + venv + systemd + nginx on the Hetzner box
+shared with that project.
 
-2. **Box bootstrap** (run on the server, once):
-   ```bash
-   adduser --system --group --home /opt/studeerkamer studeerkamer
-   apt update && apt install -y python3 python3-venv caddy rsync
-   ```
+**Topology**: Cloudflare (TLS) → `nederlands.yaal.be` → nginx :80 → uvicorn :15191 → SQLite + audio files on disk
 
-3. **First deploy** from your laptop:
-   ```bash
-   HOST=root@<server-ip> ./deploy/deploy.sh
-   ```
-   This rsyncs the app to `/opt/studeerkamer`, creates a venv,
-   installs requirements, and restarts the systemd unit.
+### One-time setup (do this before the first push)
 
-4. **Wire systemd + Caddy** (once):
-   ```bash
-   ssh <server>
-   cp /opt/studeerkamer/deploy/studeerkamer.service /etc/systemd/system/
-   cp /opt/studeerkamer/deploy/Caddyfile /etc/caddy/Caddyfile
-   # edit /etc/caddy/Caddyfile and replace studeerkamer.example.com
-   chown -R studeerkamer:studeerkamer /opt/studeerkamer/data
-   systemctl daemon-reload
-   systemctl enable --now studeerkamer caddy
-   ```
+1. **GitHub Secrets** — repo Settings → Secrets and variables → Actions:
 
-5. **Set .env** on the server (`/opt/studeerkamer/.env`):
-   ```env
-   USERS=ashok:strong-pw
-   OPENAI_API_KEY=sk-...
-   AZURE_SPEECH_KEY=...        # optional, for Vlaams voices
-   AZURE_SPEECH_REGION=westeurope
-   SESSION_SECRET=<32+ random chars>
-   ```
-   Restart: `systemctl restart studeerkamer`.
+   | Secret | Value |
+   |---|---|
+   | `DEPLOY_SSH_KEY` | SSH private key with root@162.55.47.246 access (the same one campuszeus uses) |
+   | `STUDEERKAMER_USERS` | `ashok:strong-password-here` — seeded on first boot |
+   | `STUDEERKAMER_OPENAI_KEY` | optional fallback; per-user UI key wins |
+   | `STUDEERKAMER_AZURE_KEY` | optional |
+   | `STUDEERKAMER_AZURE_REGION` | optional, defaults to `westeurope` |
 
-6. **Install as PWA**
-   - **iPhone**: Safari → open the site → Share → "Add to Home Screen".
-   - **Mac**: Safari → File → Add to Dock; or Chrome → "Install".
+2. **Cloudflare DNS** — add an A record:
+   - Name: `nederlands`
+   - Value: `162.55.47.246`
+   - Proxy: **on** (orange cloud)
+   - SSL/TLS mode for the zone: **Full** (not Flexible)
+
+### Deploying
+
+```bash
+git push origin main
+```
+
+If your changes are under `nederlands/studeerkamer/`, the workflow at
+`.github/workflows/deploy-studeerkamer.yml` runs:
+- Python syntax check (`compileall`)
+- JS parse check (`node --check`)
+- rsync code to `/opt/studeerkamer`
+- create/refresh venv + install requirements
+- write `.env` from secrets
+- write systemd unit + nginx site (idempotent — fresh boxes self-bootstrap)
+- restart `studeerkamer` + reload nginx
+- health check `curl /api/health`
+
+Manual run: Actions tab → "Deploy Studeerkamer" → Run workflow.
+
+### Install as PWA
+
+- **iPhone**: Safari → open the site → Share → "Add to Home Screen"
+- **Mac**: Safari → File → Add to Dock; or Chrome → Install
+
+### Adding a second user
+
+Easiest: edit `STUDEERKAMER_USERS` to `ashok:pw1,partner:pw2` and re-deploy.
+Seeding only creates users that don't yet exist; existing users keep their
+hashed passwords.
 
 ## Architecture
 
