@@ -76,15 +76,20 @@
     }
 
     // 2. Eagerly hydrate every store + the main state.
-    await Promise.all([
+    //    Use allSettled so one broken store (typically: stale SW serving an
+    //    older version that doesn't have the store yet) doesn't hang the
+    //    whole app. The "Bezig met laden…" placeholder would stick forever.
+    const results = await Promise.allSettled([
       loadVocab(),
-      window.Store.boot(),
-      window.ChatStore.boot(),
-      window.ListeningStore.boot(),
-      window.WritingStore.boot(),
-      window.ExamStore.boot(),
-      window.CustomVocab.boot(),
+      window.Store && window.Store.boot(),
+      window.ChatStore && window.ChatStore.boot(),
+      window.ListeningStore && window.ListeningStore.boot(),
+      window.WritingStore && window.WritingStore.boot(),
+      window.ExamStore && window.ExamStore.boot(),
+      window.CustomVocab && window.CustomVocab.boot(),
     ]);
+    const failed = results.filter((r) => r.status === "rejected");
+    if (failed.length) console.warn("Some stores failed to boot:", failed.map((f) => f.reason));
 
     booted = true;
     if (!location.hash) location.hash = "#/dashboard";

@@ -9,7 +9,7 @@
  * can purge it independently and so a shell version bump doesn't blow
  * away possibly-large audio downloads.
  */
-const SHELL_VERSION = "studeerkamer-shell-v2";
+const SHELL_VERSION = "studeerkamer-shell-v3";
 const AUDIO_CACHE = "studeerkamer-audio-v1";
 const SHELL = [
   "/",
@@ -53,11 +53,23 @@ self.addEventListener("fetch", (e) => {
     e.respondWith(swr(e.request));
     return;
   }
-  // App shell.
-  e.respondWith(
-    caches.match(e.request).then((cached) => cached || fetch(e.request).catch(() => caches.match("/")))
-  );
+  // App shell (/, /login, /index.html). Network-first with cache fallback
+  // — that way a deploy lands on the next reload instead of waiting for a
+  // SW upgrade cycle. Cached version only serves when offline.
+  e.respondWith(networkFirst(e.request));
 });
+
+async function networkFirst(request) {
+  const cache = await caches.open(SHELL_VERSION);
+  try {
+    const resp = await fetch(request);
+    if (resp && resp.ok) cache.put(request, resp.clone()).catch(() => {});
+    return resp;
+  } catch (e) {
+    const cached = await cache.match(request);
+    return cached || cache.match("/");
+  }
+}
 
 async function swr(request) {
   const cache = await caches.open(SHELL_VERSION);
