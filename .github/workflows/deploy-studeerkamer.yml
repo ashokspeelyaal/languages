@@ -239,6 +239,43 @@ jobs:
                 set_real_ip_from 2a06:98c0::/29;
                 real_ip_header CF-Connecting-IP;
 
+                # Static assets: ALWAYS revalidate against origin. FastAPI's
+                # StaticFiles already sends ETag + Last-Modified, so a fresh
+                # browser request takes one round-trip and gets a 304 if
+                # nothing changed. Combined with the SW cache, this is fast
+                # offline AND fresh after every deploy. The "always" flag
+                # makes nginx attach the header even on 304 responses.
+                location /static/ {
+                    proxy_pass http://127.0.0.1:15191;
+                    proxy_set_header Host $host;
+                    proxy_set_header X-Real-IP $remote_addr;
+                    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                    proxy_set_header X-Forwarded-Proto $http_x_forwarded_proto;
+                    proxy_hide_header Cache-Control;
+                    add_header Cache-Control "public, max-age=0, must-revalidate" always;
+                }
+
+                # Service worker MUST NEVER be cached — caching it breaks
+                # the PWA update mechanism that picks up new versions on
+                # next reload.
+                location = /service-worker.js {
+                    proxy_pass http://127.0.0.1:15191;
+                    proxy_set_header Host $host;
+                    proxy_hide_header Cache-Control;
+                    add_header Cache-Control "no-cache, no-store, must-revalidate" always;
+                }
+
+                # Manifest: small, rarely changes, but cheap to revalidate.
+                location = /manifest.webmanifest {
+                    proxy_pass http://127.0.0.1:15191;
+                    proxy_set_header Host $host;
+                    proxy_hide_header Cache-Control;
+                    add_header Cache-Control "public, max-age=0, must-revalidate" always;
+                }
+
+                # Default: app shell, /api/*, /login.
+                # We don't add Cache-Control here — FastAPI handlers and the
+                # /api/* routes set their own as appropriate.
                 location / {
                     proxy_pass http://127.0.0.1:15191;
                     proxy_set_header Host $host;
