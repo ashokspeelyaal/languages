@@ -140,12 +140,17 @@
       );
       levelSel.value = s.lastEssayLevel || "B2";
 
-      const wcEl = el("p", { class: "stat-note", style: "font-family:var(--mono);font-size:.78rem" }, "0 woorden");
+      const wcEl = el("p", { class: "stat-note", style: "font-family:var(--mono);font-size:.78rem" }, "0 woorden · richt op 200–400 voor C1");
       function updateWC() {
         const wc = (essayInput.value.match(/\b[\w'-]+\b/g) || []).length;
-        wcEl.textContent = wc + " woord" + (wc === 1 ? "" : "en");
-        if (wc < 100) wcEl.style.color = "var(--ink-faint)";
-        else if (wc > 600) wcEl.style.color = "var(--rood)";
+        const label = wc + " woord" + (wc === 1 ? "" : "en");
+        let hint = "";
+        if (wc === 0) hint = " · richt op 200–400 voor C1";
+        else if (wc < 150) hint = " · te kort voor C1 (richt op 200–400)";
+        else if (wc > 500) hint = " · lang — een kortere essay scoort gerichter";
+        wcEl.textContent = label + hint;
+        if (wc < 100 || wc > 600) wcEl.style.color = "var(--rood)";
+        else if (wc < 200 || wc > 400) wcEl.style.color = "var(--geel)";
         else wcEl.style.color = "var(--groen)";
       }
       essayInput.addEventListener("input", updateWC);
@@ -301,30 +306,55 @@
       const wrap = el("div");
       const score = ex.score || null;
 
+      // Helper: render NL+EN side-by-side, accepting either a string
+      // (backwards-compat with pre-bilingual exercises) or {nl, en}.
+      function bilingualBlock(v, opts = {}) {
+        if (v && typeof v === "object" && (v.nl || v.en)) {
+          return el("div", { class: "bilingual", style: "margin:0;gap:.4rem 1rem;" + (opts.style || "") },
+            el("div", { class: "nl" }, el("span", { class: "lang-tag" }, "NL"), v.nl || ""),
+            el("div", { class: "en" }, el("span", { class: "lang-tag" }, "EN"), v.en || ""),
+          );
+        }
+        return el("p", { style: opts.style || "" }, v || "");
+      }
+
+      // Criteria entries may be either a number (old format) or {score, nl, en}.
+      function criterionScore(v) { return typeof v === "number" ? v : (v && typeof v.score === "number" ? v.score : null); }
+      function criterionFeedback(v) {
+        if (v && typeof v === "object" && (v.nl || v.en)) return { nl: v.nl, en: v.en };
+        return null;
+      }
+
       /* ----- Score card ----- */
       if (score && typeof score.overall === "number") {
         const overall = score.overall;
         const max = 10;
         const color = overall >= 8 ? "var(--groen)" : overall >= 6 ? "var(--geel)" : "var(--rood)";
-        const card = el("div", { style: "background:var(--card);border:1px solid var(--rule);border-radius:6px;padding:1.1rem 1.3rem;margin:0 0 1.2rem;display:grid;grid-template-columns:auto 1fr;gap:1.2rem;align-items:center" },
-          el("div", { style: "text-align:center" },
+        const card = el("div", { style: "background:var(--card);border:1px solid var(--rule);border-radius:6px;padding:1.1rem 1.3rem;margin:0 0 1.2rem;display:grid;grid-template-columns:auto 1fr;gap:1.2rem;align-items:start" },
+          el("div", { style: "text-align:center;padding-top:.3rem" },
             el("div", { style: "font-family:var(--serif);font-size:2.6rem;font-weight:600;line-height:1;color:" + color }, String(overall)),
             el("div", { style: "font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);margin-top:.15rem" }, "van " + max + " · " + (ex.level || "B2")),
           ),
           (function() {
             const right = el("div");
             if (score.summary) {
-              right.append(el("p", { style: "font-family:var(--serif);font-size:1rem;color:var(--ink);margin:0 0 .6rem;font-style:italic" }, '"' + score.summary + '"'));
+              const isObj = typeof score.summary === "object";
+              if (isObj) {
+                right.append(el("div", { style: "margin:0 0 .8rem;font-style:italic;font-family:var(--serif);color:var(--ink)" },
+                  bilingualBlock(score.summary, { style: "font-family:var(--serif);font-size:1rem" })));
+              } else {
+                right.append(el("p", { style: "font-family:var(--serif);font-size:1rem;color:var(--ink);margin:0 0 .6rem;font-style:italic" }, '"' + score.summary + '"'));
+              }
             }
-            // Mini-bars for each criterion
             if (score.criteria) {
-              const grid = el("div", { style: "display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:.4rem .8rem" });
+              const grid = el("div", { style: "display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.7rem 1rem" });
               const labels = { grammatica: "Grammatica", lexicaal: "Lexicaal", coherentie: "Coherentie", register: "Register", spelling: "Spelling" };
               Object.entries(labels).forEach(([k, lbl]) => {
-                const v = score.criteria[k];
+                const raw = score.criteria[k];
+                const v = criterionScore(raw);
                 if (typeof v !== "number") return;
                 const c = v >= 8 ? "var(--groen)" : v >= 6 ? "var(--geel)" : "var(--rood)";
-                grid.append(el("div", null,
+                const cell = el("div", { style: "min-width:0" },
                   el("div", { style: "display:flex;justify-content:space-between;font-size:.72rem;color:var(--ink-soft);font-family:var(--mono);letter-spacing:.04em;margin-bottom:2px" },
                     el("span", null, lbl),
                     el("span", { style: "color:" + c + ";font-weight:600" }, v + "/10"),
@@ -332,7 +362,13 @@
                   el("div", { style: "height:4px;background:var(--rule);border-radius:2px;overflow:hidden" },
                     el("div", { style: "height:100%;width:" + (v * 10) + "%;background:" + c }),
                   ),
-                ));
+                );
+                const fb = criterionFeedback(raw);
+                if (fb) {
+                  cell.append(el("div", { style: "margin-top:.35rem;font-size:.74rem;line-height:1.45;color:var(--ink-soft)" },
+                    bilingualBlock(fb, { style: "font-size:.74rem" })));
+                }
+                grid.append(cell);
               });
               right.append(grid);
             }
@@ -340,6 +376,23 @@
           })(),
         );
         wrap.append(card);
+
+        // 3 strategic improvements (migrated from old /essay view).
+        const imps = Array.isArray(score.improvements) ? score.improvements
+                   : Array.isArray(ex.improvements) ? ex.improvements
+                   : null;
+        if (imps && imps.length) {
+          const impBox = el("div", { style: "background:var(--paper-2);border:1px solid var(--rule);border-radius:6px;padding:1rem 1.2rem;margin:0 0 1.2rem" },
+            el("h4", { style: "margin:0 0 .6rem;font-family:var(--sans);font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint)" },
+              "Drie concrete verbeterpunten · three concrete improvements"),
+          );
+          const ol = el("ol", { style: "margin:0;padding-left:1.3rem" });
+          imps.forEach((imp) => {
+            ol.append(el("li", { style: "margin-bottom:.6rem;line-height:1.5" }, bilingualBlock(imp)));
+          });
+          impBox.append(ol);
+          wrap.append(impBox);
+        }
       }
 
       /* ----- Re-actions toolbar ----- */

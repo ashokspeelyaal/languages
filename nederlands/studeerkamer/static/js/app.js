@@ -11,7 +11,7 @@
   if (!window.VOCAB_DATA) window.VOCAB_DATA = { items: [] };
 
   const ROUTES = ["dashboard", "browse", "flashcards", "typed", "cloze", "mixed",
-                  "metrics", "chat", "essay", "schrijven", "exam", "luisteren",
+                  "metrics", "chat", "schrijven", "exam", "luisteren",
                   "settings", "help", "logout"];
   let cleanupFn = null;
   let booted = false;

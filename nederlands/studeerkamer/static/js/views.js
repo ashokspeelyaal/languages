@@ -1511,7 +1511,6 @@
     mixed: renderMixed,
     metrics: (mount) => window.Metrics.render(mount),
     chat: (mount) => window.AIViews.chat(mount),
-    essay: (mount) => window.AIViews.essay(mount),
     schrijven: (mount) => window.WritingViews.render(mount),     /* returns cleanup fn */
     exam: (mount) => window.ExamViews.render(mount),
     luisteren: (mount) => window.ListeningViews.render(mount),   /* returns cleanup fn */

@@ -568,127 +568,6 @@
     updateCostEstimate();
   }
 
-  /* ============ Essay grader view ============ */
-  function renderEssay(mount) {
-    mount.innerHTML = "";
-    const root = el("div", { class: "essay-page" });
-    root.append(
-      el("h2", { class: "view-title" }, "Essay grader ", el("span", { class: "accent" }, "· CNaVT-rubric")),
-      el("p", { class: "view-sub" },
-        "Plak je essay (Nederlands, 200–400 woorden). De AI scoort op de officiële CNaVT C1-criteria en geeft drie concrete verbeterpunten."
-      ),
-    );
-
-    if (!window.AI.isConfigured()) {
-      root.append(el("div", { class: "empty-ai" },
-        "AI nog niet geconfigureerd. ", el("a", { href: "#/settings" }, "Stel je sleutel in"), " om essays te laten beoordelen."));
-      mount.append(root);
-      return;
-    }
-
-    const area = el("textarea", { class: "essay-area", placeholder: "Plak hier je essay…", spellcheck: "false" });
-    const meta = el("div", { class: "essay-meta" },
-      el("span", { id: "essay-wc" }, "0 woorden"),
-      el("span", { id: "essay-warn", class: "warn" }, ""),
-    );
-    function updateMeta() {
-      const wc = (area.value.match(/\b[\w'-]+\b/g) || []).length;
-      meta.querySelector("#essay-wc").textContent = `${wc} woord${wc === 1 ? "" : "en"}`;
-      const w = meta.querySelector("#essay-warn");
-      if (wc < 150) w.textContent = "te kort voor C1 (richt op 200–400)";
-      else if (wc > 500) w.textContent = "lang — een kortere essay scoort gerichter";
-      else w.textContent = "";
-    }
-    area.addEventListener("input", updateMeta);
-    root.append(area, meta);
-
-    const actions = el("div", { style: "display:flex;gap:.5rem;margin-top:1rem;align-items:center" });
-    const submitBtn = el("button", { onClick: grade }, "Beoordeel · grade");
-    const status = el("span", { style: "font-size:.85rem;color:var(--ink-faint)" });
-    actions.append(submitBtn, status);
-    root.append(actions);
-
-    const resultMount = el("div");
-    root.append(resultMount);
-
-    async function grade() {
-      const essay = area.value.trim();
-      if (essay.length < 80) {
-        status.textContent = "te kort om zinvol te beoordelen";
-        return;
-      }
-      submitBtn.disabled = true;
-      status.innerHTML = '<span class="ai-loading">beoordelen…</span>';
-      resultMount.innerHTML = "";
-      const system = "Je bent een CNaVT-examinator op niveau C1 Educatief Professioneel (Vlaams-Belgisch Nederlands). Beoordeel het essay volgens de rubric. Geef alleen geldige JSON terug — geen markdown, geen extra tekst. Alle feedback-tekst in TWEE talen (Nederlands + Engels). Structuur:\n{\n  \"scores\": [\n    {\"criterion\": \"Inhoud & taakvervulling\", \"score\": 1-5, \"feedback\": {\"nl\": \"...\", \"en\": \"...\"}},\n    {\"criterion\": \"Coherentie & samenhang\", \"score\": 1-5, \"feedback\": {\"nl\": \"...\", \"en\": \"...\"}},\n    {\"criterion\": \"Lexicale rijkdom\", \"score\": 1-5, \"feedback\": {\"nl\": \"...\", \"en\": \"...\"}},\n    {\"criterion\": \"Grammaticale correctheid\", \"score\": 1-5, \"feedback\": {\"nl\": \"...\", \"en\": \"...\"}},\n    {\"criterion\": \"Register & stijl\", \"score\": 1-5, \"feedback\": {\"nl\": \"...\", \"en\": \"...\"}}\n  ],\n  \"improvements\": [\n    {\"nl\": \"verbeterpunt 1 in Nederlands\", \"en\": \"improvement 1 in English\"},\n    {\"nl\": \"...\", \"en\": \"...\"},\n    {\"nl\": \"...\", \"en\": \"...\"}\n  ],\n  \"overall\": {\"nl\": \"globale beoordeling in 1-2 zinnen\", \"en\": \"overall in 1-2 sentences\"}\n}";
-      const user = "Essay:\n\n" + essay;
-      try {
-        const r = await window.AI.complete({
-          kind: "essay",
-          system, user,
-          maxTokens: 1500,
-          json: true,
-          noCache: true, // each essay is unique
-        });
-        const obj = JSON.parse(r.text);
-        status.textContent = "klaar.";
-        renderRubric(resultMount, obj);
-      } catch (err) {
-        status.innerHTML = `<span class="ai-error">${err.message}</span>`;
-      } finally {
-        submitBtn.disabled = false;
-      }
-    }
-    // Helper: render either a string or {nl, en} as bilingual block
-    function bilingualBlock(value) {
-      if (value && typeof value === "object" && (value.nl || value.en)) {
-        return el("div", { class: "bilingual", style: "margin:0;gap:.7rem 1.4rem" },
-          el("div", { class: "nl" }, el("span", { class: "lang-tag" }, "NL"), value.nl || ""),
-          el("div", { class: "en" }, el("span", { class: "lang-tag" }, "EN"), value.en || ""),
-        );
-      }
-      return el("p", null, value || "");
-    }
-    function renderRubric(host, obj) {
-      host.innerHTML = "";
-      const avg = obj.scores.reduce((a, s) => a + s.score, 0) / obj.scores.length;
-      const overallNl = (obj.overall && typeof obj.overall === "object") ? (obj.overall.nl || "") : (obj.overall || "");
-      const overallEn = (obj.overall && typeof obj.overall === "object") ? (obj.overall.en || "") : "";
-      host.append(el("div", { style: "margin-top:1.4rem" },
-        el("div", { style: "display:flex;align-items:baseline;gap:1rem" },
-          el("span", { style: "font-family:var(--serif);font-size:2rem;font-weight:600;color:var(--rood)" }, avg.toFixed(1) + " / 5"),
-        ),
-        overallNl || overallEn ? el("div", { style: "margin-top:.5rem" },
-          bilingualBlock({ nl: overallNl, en: overallEn })) : null,
-      ));
-      const rubric = el("div", { class: "rubric" });
-      obj.scores.forEach((s) => {
-        const row = el("div", { class: "rubric-row score-" + s.score },
-          el("span", { class: "name" }, s.criterion),
-          el("span", { class: "score" }, s.score + "/5"),
-        );
-        const fbHost = el("div", { class: "feedback", style: "grid-column:1/-1" });
-        fbHost.append(bilingualBlock(s.feedback));
-        row.append(fbHost);
-        rubric.append(row);
-      });
-      host.append(rubric);
-      if (obj.improvements && obj.improvements.length) {
-        const ul = el("ol", null);
-        obj.improvements.forEach((imp) => {
-          ul.append(el("li", { style: "margin-bottom:.8rem" }, bilingualBlock(imp)));
-        });
-        host.append(el("div", { class: "improvements" },
-          el("h4", null, "Drie concrete verbeterpunten · three concrete improvements"),
-          ul,
-        ));
-      }
-    }
-
-    mount.append(root);
-    updateMeta();
-  }
-
   /* ============ Chat view (multi-thread) ============ */
   function renderChat(mount) {
     mount.innerHTML = "";
@@ -1256,7 +1135,6 @@ VOCAB-REGELS:
 
   window.AIViews = {
     settings: renderSettings,
-    essay: renderEssay,
     chat: renderChat,
     explainWord,
     moreExamples,
