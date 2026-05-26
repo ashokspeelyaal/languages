@@ -68,14 +68,19 @@ body {
   backdrop-filter: blur(6px);
 }
 
-/* The audio player in Luisteren / Schrijven sticks just below the topbar
-   so you can pause / scrub / change speed while scrolling a long transcript.
-   --topbar-h is set by app.js after layout so this stays correct when the
-   nav wraps on narrow screens. */
-.player {
+/* In Luisteren the audio player + the tab strip share a single sticky
+   container (.audio-tabs-sticky) so you can pause / scrub AND switch
+   tabs while scrolling a long transcript — neither hides the other.
+   The .player class itself stays non-sticky; the wrapper does the work.
+   --topbar-h is measured in app.js so the offset stays correct when
+   the nav wraps onto two lines on narrow screens. */
+.audio-tabs-sticky {
   position: sticky;
   top: var(--topbar-h, 4.5rem);
   z-index: 4;
+  background: var(--paper);
+  /* Tiny shadow under the strip so it feels detached from scrolling content */
+  box-shadow: 0 4px 8px -8px rgba(0,0,0,.18);
 }
 .brand { display: flex; align-items: center; gap: .8rem; }
 .brand-mark {

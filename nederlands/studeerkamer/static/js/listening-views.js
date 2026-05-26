@@ -225,9 +225,14 @@
         return renderExerciseBody(updated);
       }
 
-      // Player
-      const playerHost = el("div", { class: "player", style: "background:var(--card);border:1px solid var(--rule);border-radius:4px;padding:1rem 1.2rem;margin:0 0 1.2rem" });
-      body.append(playerHost);
+      // Player + tabs share a single sticky container so the tabs are
+      // never hidden behind the audio controls when you scroll into a
+      // long transcript. tabBody scrolls underneath as expected.
+      const stickyWrap = el("div", { class: "audio-tabs-sticky" });
+      body.append(stickyWrap);
+
+      const playerHost = el("div", { class: "player", style: "background:var(--card);border:1px solid var(--rule);border-radius:4px;padding:1rem 1.2rem;margin:0 0 .8rem" });
+      stickyWrap.append(playerHost);
       if (ex.audioKey && window.BlobStore) {
         window.BlobStore.getURL(ex.audioKey).then((url) => {
           if (url) buildPlayer(playerHost, url);
@@ -235,7 +240,6 @@
         });
       }
 
-      // Tabs
       const tabBar = el("div", { class: "exam-tabs" });
       const tabBody = el("div");
       const tabs = [
@@ -260,7 +264,8 @@
         if (t) tabBody.append(t.render());
       }
       paintTabs(); paintBody();
-      body.append(tabBar, tabBody);
+      stickyWrap.append(tabBar);
+      body.append(tabBody);
     }
 
     function renameTitleInline(node, ex) {
