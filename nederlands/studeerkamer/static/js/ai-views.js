@@ -899,7 +899,7 @@
           system: "Je geeft een korte, beschrijvende titel van 3 tot 6 woorden in het Nederlands voor een conversatie. Geen aanhalingstekens, geen punt, geen emoji — alleen de titel zelf.",
           user: `Gebruiker: ${first.content}\nAI: ${(firstAI.content || "").slice(0, 200)}`,
           maxTokens: 40,
-          reasoning: "minimal",
+          reasoning: "low",
         });
         const title = (r.text || "").trim().replace(/^["'`]|["'`.]$/g, "").slice(0, 80);
         if (title) {
@@ -1027,7 +1027,7 @@ VOCAB-REGELS:
           kind: "chat",
           messages,
           maxTokens: 1500,
-          reasoning: "minimal",
+          reasoning: "low",
           json: true,
           noCache: true,
         });

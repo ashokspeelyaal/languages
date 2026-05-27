@@ -187,7 +187,7 @@
           user: text,
           maxTokens: 700,
           json: true,
-          reasoning: "minimal",
+          reasoning: "low",
         });
         const obj = JSON.parse(r.text);
         panel.querySelector(".sel-panel-body").innerHTML = `
@@ -205,7 +205,7 @@
           system: sys,
           user: text,
           maxTokens: 500,
-          reasoning: "minimal",
+          reasoning: "low",
         });
         panel.querySelector(".sel-panel-body").innerHTML = `
           <p class="sel-translation">${escapeHTML(r.text)}</p>
@@ -235,7 +235,7 @@
           user: text,
           maxTokens: 400,
           json: true,
-          reasoning: "minimal",
+          reasoning: "low",
         });
         let obj;
         try { obj = JSON.parse(r.text); }

@@ -25,7 +25,7 @@
     return log ? log.total : 0;
   }
 
-  async function rawComplete({ system, user, messages, maxTokens = 800, json = false, model, reasoning = "minimal", kind }) {
+  async function rawComplete({ system, user, messages, maxTokens = 800, json = false, model, reasoning = "low", kind }) {
     const usedModel = model || settings().aiModel || "gpt-5-mini";
     const body = {
       kind: kind || "complete",

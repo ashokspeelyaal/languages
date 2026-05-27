@@ -41,6 +41,16 @@ def _today() -> str:
     return datetime.now(timezone.utc).strftime("%Y-%m-%d")
 
 
+def _normalise_reasoning(val: str) -> str:
+    """Older client builds (and cached service workers) send
+    reasoning_effort="minimal" which gpt-5.4+ rejects with 400. Map it to
+    "low" — universally accepted across gpt-5 and gpt-5.4 families."""
+    v = (val or "low").strip()
+    if v == "minimal":
+        return "low"
+    return v
+
+
 def bump_counter(user_id: int, kind: str) -> None:
     with conn() as c:
         c.execute(
@@ -96,7 +106,10 @@ async def complete(body: dict, user=Depends(require_user)):
         "model": model,
         "messages": messages,
         "max_completion_tokens": int(body.get("maxTokens") or 800),
-        "reasoning_effort": body.get("reasoning") or "minimal",
+        # gpt-5.4 family rejects "minimal" — it accepts "none", "low",
+        # "medium", "high", "xhigh". "low" works on both 5.x and 5.4+,
+        # so we normalise any client-supplied "minimal" to "low".
+        "reasoning_effort": _normalise_reasoning(body.get("reasoning")),
     }
     if body.get("json"):
         payload["response_format"] = {"type": "json_object"}
@@ -327,7 +340,7 @@ async def ocr(body: dict, user=Depends(require_user)):
             },
         ],
         "max_completion_tokens": 4000,
-        "reasoning_effort": "minimal",
+        "reasoning_effort": "low",
     }
     data = await _openai_json("/chat/completions", payload, user["id"], timeout=180.0)
     text = ((data.get("choices") or [{}])[0].get("message") or {}).get("content") or ""

@@ -538,7 +538,7 @@
         const r = await window.AI.complete({
           kind: "exam-lezen-gen",
           system: sys, user: "Genereer een nieuw passage. Sessie-id: " + exam.id.slice(-6),
-          maxTokens: 2200, json: true, reasoning: "minimal", noCache: true,
+          maxTokens: 2200, json: true, reasoning: "low", noCache: true,
         });
         const content = JSON.parse(r.text);
         window.ExamStore.updateSection(exam.id, "lezen", { status: "generated", content });
@@ -559,7 +559,7 @@
       try {
         const r = await window.AI.complete({
           kind: "exam-lezen-grade",
-          system: sys, user, maxTokens: 1500, json: true, reasoning: "minimal", noCache: true,
+          system: sys, user, maxTokens: 1500, json: true, reasoning: "low", noCache: true,
         });
         const grading = JSON.parse(r.text);
         window.ExamStore.updateSection(exam.id, "lezen", { status: "graded", grading });
@@ -580,7 +580,7 @@
         const r = await window.AI.complete({
           kind: "exam-luisteren-gen",
           system: sys, user: "Genereer luistermateriaal. Sessie-id: " + exam.id.slice(-6),
-          maxTokens: 2000, json: true, reasoning: "minimal", noCache: true,
+          maxTokens: 2000, json: true, reasoning: "low", noCache: true,
         });
         const content = JSON.parse(r.text);
         window.ExamStore.updateSection(exam.id, "luisteren", { status: "generated", content, audioDataUrl: null });
@@ -617,7 +617,7 @@
       try {
         const r = await window.AI.complete({
           kind: "exam-luisteren-grade",
-          system: sys, user, maxTokens: 1500, json: true, reasoning: "minimal", noCache: true,
+          system: sys, user, maxTokens: 1500, json: true, reasoning: "low", noCache: true,
         });
         const grading = JSON.parse(r.text);
         window.ExamStore.updateSection(exam.id, "luisteren", { status: "graded", grading });
@@ -638,7 +638,7 @@
         const r = await window.AI.complete({
           kind: "exam-schrijven-gen",
           system: sys, user: "Geef een nieuwe schrijfopdracht. Sessie-id: " + exam.id.slice(-6),
-          maxTokens: 700, json: true, reasoning: "minimal", noCache: true,
+          maxTokens: 700, json: true, reasoning: "low", noCache: true,
         });
         const content = JSON.parse(r.text);
         window.ExamStore.updateSection(exam.id, "schrijven", { status: "generated", content, response: "" });
@@ -663,7 +663,7 @@
       try {
         const r = await window.AI.complete({
           kind: "exam-schrijven-grade",
-          system: sys, user, maxTokens: 1800, json: true, reasoning: "minimal", noCache: true,
+          system: sys, user, maxTokens: 1800, json: true, reasoning: "low", noCache: true,
         });
         const grading = JSON.parse(r.text);
         window.ExamStore.updateSection(exam.id, "schrijven", { status: "graded", grading });
@@ -684,7 +684,7 @@
         const r = await window.AI.complete({
           kind: "exam-spreken-gen",
           system: sys, user: "Geef een nieuwe spreekopdracht. Sessie-id: " + exam.id.slice(-6),
-          maxTokens: 500, json: true, reasoning: "minimal", noCache: true,
+          maxTokens: 500, json: true, reasoning: "low", noCache: true,
         });
         const content = JSON.parse(r.text);
         window.ExamStore.updateSection(exam.id, "spreken", { status: "generated", content, transcription: null });
@@ -714,7 +714,7 @@
         const user = "Opdracht:\n" + JSON.stringify(sec.content) + "\n\nTranscriptie:\n" + tr.text;
         const r = await window.AI.complete({
           kind: "exam-spreken-grade",
-          system: sys, user, maxTokens: 1500, json: true, reasoning: "minimal", noCache: true,
+          system: sys, user, maxTokens: 1500, json: true, reasoning: "low", noCache: true,
         });
         const grading = JSON.parse(r.text);
         window.ExamStore.updateSection(exam.id, "spreken", { status: "graded", grading });

@@ -376,7 +376,7 @@
       kind: "ocr",
       messages,
       maxTokens: 3000,
-      reasoning: "minimal",
+      reasoning: "low",
       noCache: true,
     });
     return r.text;
