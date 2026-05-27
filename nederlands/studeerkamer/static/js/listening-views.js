@@ -899,19 +899,15 @@
       const steps = host.querySelectorAll(".gen-step");
       if (steps.length) steps[steps.length - 1].innerHTML = '<span style="color:var(--groen)">✓ Script + ' + ((content.vocab || []).length) + ' vocab + ' + ((content.questions || []).length) + ' vragen</span>';
 
-      // ---- Self-critique pass: catch AI-invented non-words in the script ----
-      // (e.g. "baanrekeneprojecten" instead of "baanbrekende projecten").
-      // Has to happen BEFORE audio is generated so TTS reads the cleaned text
-      // and BEFORE word-timing transcription so karaoke sync matches.
-      setActive("Spelling controleren");
-      let fixes = [];
-      try {
-        fixes = await window.AI.validateDutchSpelling(content.script || "");
-      } catch (e) { /* non-fatal */ }
-      if (fixes.length) {
+      // ---- Two self-critique passes: spelling, then grammar/usage ----
+      // Must happen BEFORE audio + before word-timing transcription so
+      // TTS reads the cleaned text and karaoke sync matches.
+      // Both passes use gpt-5 regardless of user's chosen chat model.
+
+      // Helper: apply a fix-array to script + vocab + questions in one go.
+      function applyToAll(fixes) {
+        if (!fixes.length) return;
         content.script = window.AI.applySpellingFixes(content.script, fixes);
-        // Vocab and question text also reference the same words; fix them too
-        // so the corpus and quiz align with the cleaned script.
         content.vocab = (content.vocab || []).map((v) => ({
           ...v,
           dutch: window.AI.applySpellingFixes(v.dutch || "", fixes),
@@ -923,21 +919,38 @@
           options: (q.options || []).map((o) => window.AI.applySpellingFixes(o, fixes)),
           explanation: q.explanation ? {
             nl: window.AI.applySpellingFixes(q.explanation.nl || "", fixes),
-            en: q.explanation.en || "",  // English untouched
+            en: q.explanation.en || "",
           } : q.explanation,
         }));
       }
-      const sSteps = host.querySelectorAll(".gen-step");
-      if (sSteps.length) {
-        const last = sSteps[sSteps.length - 1];
+      function markCheckResult(fixes, kind) {
+        const steps = host.querySelectorAll(".gen-step");
+        if (!steps.length) return;
+        const last = steps[steps.length - 1];
         if (fixes.length) {
           const sample = fixes.slice(0, 3).map((f) => `<em>${escapeHTML(f.original)}</em>→${escapeHTML(f.fix)}`).join(" · ");
-          last.innerHTML = '<span style="color:var(--groen)">✓ ' + fixes.length + ' spelfout' + (fixes.length === 1 ? "" : "en") + ' opgeruimd</span> ' +
+          last.innerHTML = '<span style="color:var(--groen)">✓ ' + fixes.length + ' ' + kind + (fixes.length === 1 ? "" : "en") + ' opgeruimd</span> ' +
                            '<span style="color:var(--ink-faint);font-size:.8rem">— ' + sample + (fixes.length > 3 ? " …" : "") + '</span>';
         } else {
-          last.innerHTML = '<span style="color:var(--ink-faint)">— geen spelfouten</span>';
+          last.innerHTML = '<span style="color:var(--ink-faint)">— geen ' + kind + 'en gevonden</span>';
         }
       }
+
+      // Pass 1: spelling (non-existent words, typos)
+      setActive("Spelling controleren (gpt-5)");
+      let spellingFixes = [];
+      try { spellingFixes = await window.AI.validateDutchSpelling(content.script || ""); }
+      catch (e) { /* non-fatal */ }
+      applyToAll(spellingFixes);
+      markCheckResult(spellingFixes, "spelfout");
+
+      // Pass 2: grammar / usage (declension, wrong-word, capitalization, particles)
+      setActive("Grammatica & woordkeuze controleren (gpt-5)");
+      let usageFixes = [];
+      try { usageFixes = await window.AI.validateDutchUsage(content.script || ""); }
+      catch (e) { /* non-fatal */ }
+      applyToAll(usageFixes);
+      markCheckResult(usageFixes, "usage-fout");
 
       const title = content.title && content.title.trim() ? content.title.trim() : ex.title;
       window.ListeningStore.update(exId, {

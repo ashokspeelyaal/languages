@@ -21,7 +21,8 @@ DEFAULTS = {
     "coreOnly": False,
     # AI
     "apiKey": "",
-    "aiModel": "gpt-5-mini",
+    "aiModel": "gpt-5.4-mini",           # chat / light tasks
+    "aiContentModel": "gpt-5.4",         # heavy generation / correction / validation
     "aiEnabled": True,
     "aiSoftLimit": 50,
     # TTS / STT

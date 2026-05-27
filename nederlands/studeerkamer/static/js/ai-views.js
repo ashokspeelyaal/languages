@@ -214,24 +214,39 @@
     // reject custom temperature. Keeping the codepath uniform avoids edge cases.
     // ★ = my recommendation for this app.
     const MODEL_FAMILIES = [
-      { label: "GPT-5 family", models: [
-        { id: "gpt-5-nano",  in: 0.05,  out: 0.40,   note: "★ goedkoopste solide keuze — voor licht werk" },
-        { id: "gpt-5-mini",  in: 0.25,  out: 2.00,   note: "★ aanbevolen — sweet spot voor coaching" },
-        { id: "gpt-5",       in: 1.25,  out: 10.00,  note: "★ ideaal voor essay-beoordeling" },
-        { id: "gpt-5.1",     in: 1.25,  out: 10.00,  note: "incrementele tweak van gpt-5" },
-        { id: "gpt-5.2",     in: 1.75,  out: 14.00,  note: "nieuwste 5-serie" },
-        { id: "gpt-5-pro",   in: 15.00, out: 120.00, note: "overkill voor vocab" },
-        { id: "gpt-5.2-pro", in: 21.00, out: 168.00, note: "agentic / zware taken — extreem duur" },
+      { label: "GPT-5.4 family (latest)", models: [
+        { id: "gpt-5.4-nano",  in: 0.20,  out: 1.25,   note: "snelste, goedkoopste — voor licht werk" },
+        { id: "gpt-5.4-mini",  in: 0.75,  out: 4.50,   note: "★ chat / lichte taken — sweet spot" },
+        { id: "gpt-5.4",       in: 2.50,  out: 15.00,  note: "★ generatie + correctie — aanbevolen content-model" },
+        { id: "gpt-5.4-pro",   in: 30.00, out: 180.00, note: "agentic / zwaar — overkill voor vocab" },
+      ]},
+      { label: "GPT-5.5 family", models: [
+        { id: "gpt-5.5",       in: 5.00,  out: 30.00,  note: "topkwaliteit, 2× duurder dan 5.4 voor marginale winst" },
+        { id: "gpt-5.5-pro",   in: 30.00, out: 180.00, note: "agentic flagship — extreem duur" },
+      ]},
+      { label: "GPT-5 family (vorige generatie)", models: [
+        { id: "gpt-5-nano",    in: 0.05,  out: 0.40,   note: "goedkoopste solide keuze" },
+        { id: "gpt-5-mini",    in: 0.25,  out: 2.00,   note: "ouder dan 5.4-mini, vergelijkbare prijs" },
+        { id: "gpt-5",         in: 1.25,  out: 10.00,  note: "stabiel — 5.4 is nieuwer, scherper" },
+        { id: "gpt-5.1",       in: 1.25,  out: 10.00,  note: "tweak van gpt-5" },
+        { id: "gpt-5.2",       in: 1.75,  out: 14.00,  note: "voorlaatste 5-serie" },
+        { id: "gpt-5-pro",     in: 15.00, out: 120.00, note: "agentic" },
+        { id: "gpt-5.2-pro",   in: 21.00, out: 168.00, note: "agentic" },
       ]},
     ];
     const MODEL_LOOKUP = {};
     MODEL_FAMILIES.forEach((f) => f.models.forEach((m) => { MODEL_LOOKUP[m.id] = m; }));
 
-    // Migrate any pre-existing setting that points to a non-5 model.
+    // Migrate any pre-existing setting that points to an unknown model.
     if (!MODEL_LOOKUP[s.aiModel]) {
-      window.Store.state.settings.aiModel = "gpt-5-mini";
+      window.Store.state.settings.aiModel = "gpt-5.4-mini";
       window.Store.save();
-      s.aiModel = "gpt-5-mini";
+      s.aiModel = "gpt-5.4-mini";
+    }
+    if (!s.aiContentModel || !MODEL_LOOKUP[s.aiContentModel]) {
+      window.Store.state.settings.aiContentModel = "gpt-5.4";
+      window.Store.save();
+      s.aiContentModel = "gpt-5.4";
     }
 
     function fmtPrice(p) {
@@ -242,23 +257,31 @@
       return `${m.id}  ·  in ${fmtPrice(m.in)} / out ${fmtPrice(m.out)}${note}`;
     }
 
-    const modelSel = el("select", { class: "select-input", id: "model-select", onChange: (e) => {
-      window.Store.state.settings.aiModel = e.target.value;
-      window.Store.save();
-      updateCostEstimate();
-    } });
-    MODEL_FAMILIES.forEach((fam) => {
-      const og = document.createElement("optgroup");
-      og.label = fam.label;
-      fam.models.forEach((m) => {
-        const opt = document.createElement("option");
-        opt.value = m.id;
-        opt.textContent = modelLabel(m);
-        if (m.id === s.aiModel) opt.selected = true;
-        og.appendChild(opt);
+    // Build a model picker bound to a given settings key. The cost estimate
+    // refreshes off the CHAT model only — that's the one that runs in most
+    // interactive paths.
+    function buildModelSelect(settingsKey, currentValue, onChangeExtra) {
+      const sel = el("select", { class: "select-input", onChange: (e) => {
+        window.Store.state.settings[settingsKey] = e.target.value;
+        window.Store.save();
+        if (onChangeExtra) onChangeExtra();
+      } });
+      MODEL_FAMILIES.forEach((fam) => {
+        const og = document.createElement("optgroup");
+        og.label = fam.label;
+        fam.models.forEach((m) => {
+          const opt = document.createElement("option");
+          opt.value = m.id;
+          opt.textContent = modelLabel(m);
+          if (m.id === currentValue) opt.selected = true;
+          og.appendChild(opt);
+        });
+        sel.appendChild(og);
       });
-      modelSel.appendChild(og);
-    });
+      return sel;
+    }
+    const modelSel        = buildModelSelect("aiModel",        s.aiModel,        updateCostEstimate);
+    const contentModelSel = buildModelSelect("aiContentModel", s.aiContentModel, null);
 
     // Live cost estimate based on typical Dutch-coaching call shapes.
     // Numbers based on observed token counts in our prompts.
@@ -312,10 +335,19 @@
         el("p", { class: "hint" }, "Aanmaken: platform.openai.com/api-keys"),
       ),
       el("div", { class: "field" },
-        el("label", null, "Model"),
+        el("label", null, "Chat-model"),
         modelSel,
         costMount,
-        el("p", { class: "hint" }, "Alleen de GPT-5-familie. Andere modellen vragen een ander API-formaat. Voor 90% van de coaching: gpt-5-mini. Voor heel licht werk: gpt-5-nano. Voor essay-beoordeling: gpt-5."),
+        el("p", { class: "hint" },
+          "Voor lichte taken: chat, woord-uitleg via selectie, vertalen. Voor gewone gebruikers volstaat gpt-5.4-mini. " +
+          "De kostenschatting hieronder gebruikt dit model."),
+      ),
+      el("div", { class: "field" },
+        el("label", null, "Content-model"),
+        contentModelSel,
+        el("p", { class: "hint" },
+          "Voor zware generatie: Luisteren-script schrijven, spelling- en grammaticacontrole, essay-correctie. " +
+          "Hier wint kwaliteit van prijs — aanbevolen: gpt-5.4. Werkt onafhankelijk van het chat-model."),
       ),
       el("div", { class: "field" },
         el("label", null, "AI ingeschakeld"),

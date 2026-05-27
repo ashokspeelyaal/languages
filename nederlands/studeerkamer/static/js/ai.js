@@ -198,6 +198,10 @@
       maxTokens: 13000,
       json: true,
       noCache: true,
+      // Heavy generation runs on the user's chosen aiContentModel, which
+      // defaults to gpt-5.4 (the current sweet-spot). Independent of the
+      // chat model so users can mix cheap chat + premium generation.
+      model: settings().aiContentModel || "gpt-5.4",
     });
     return JSON.parse(r.text);
   }
@@ -314,6 +318,8 @@
       maxTokens: 15000,
       json: true,
       noCache: true,
+      // Heavy correction path — content model, not chat model.
+      model: settings().aiContentModel || "gpt-5.4",
     });
     return JSON.parse(r.text);
   }
@@ -332,12 +338,13 @@
     if (!text || text.length < 20) return [];
     const system = [
       "Je bent een strenge Nederlandse spellingcontroleur.",
-      "Bekijk de tekst en vind UITSLUITEND objectieve spelfouten:",
-      "- Niet-bestaande woorden (verzonnen samenstellingen, typfouten, verkeerde verbuigingen)",
-      "- Letterlijke spelfouten (ontbrekende of verkeerde letters)",
+      "Bekijk de tekst zin per zin en vind ALLE objectieve spelfouten:",
+      "- Niet-bestaande woorden (verzonnen samenstellingen, typfouten)",
+      "- Letterlijke spelfouten: ontbrekende, dubbele of verkeerde letters",
+      "- Niet-bestaande werkwoordvormen of vervoegingen",
+      "- Eigen woorden die geen erkend Nederlands woord zijn (bv. 'zonelijke', 'streekt', 'voogd' waar 'volgt' bedoeld is)",
       "NEGEER:",
-      "- Stijl, register, woordkeuze",
-      "- Grammatica, werkwoordtijden, woordvolgorde",
+      "- Stijl, register",
       "- Belgisch-Nederlands vs Hollands-Nederlands verschillen",
       "- Eigennamen, acroniemen, leenwoorden",
       "Antwoord ALLEEN met geldige JSON, geen markdown:",
@@ -347,10 +354,18 @@
       '  "baanrekeneprojecten" → "baanbrekende projecten"',
       '  "lijft" (waar bedoeld blijft) → "blijft"',
       '  "defineert" → "definieert"',
+      '  "rijkt" (waar reikt bedoeld) → "reikt"',
+      '  "ontsag" → "ontzag"',
+      '  "zonelijke" → "ongekende"',
+      '  "Sponsordeels" → "Sponsordeals"',
+      '  "streekt" (waar spreekt bedoeld) → "spreekt"',
+      '  "voogd" (waar volgt bedoeld) → "volgt"',
+      '  "resteerde" (waar presteerde) → "presteerde"',
       "Voorbeelden van wat NIET gefixt mag worden (laat met rust):",
       "  'middenklasse' (correct samenstelling)",
       "  'CNaVT' (acroniem)",
       "  'India' (eigennaam)",
+      "Wees grondig — als je twijfelt of een woord bestaat, kijk er naar in mentale woordenboek. Liever te veel dan te weinig fixes.",
     ].join("\n");
     const r = await complete({
       kind: "spelling-check",
@@ -358,10 +373,10 @@
         { role: "system", content: system },
         { role: "user", content: text },
       ],
-      maxTokens: 1500,
+      maxTokens: 2500,
       json: true,
       noCache: true,
-      model: settings().aiModel || "gpt-5-mini",  // a focused call — keep on user's normal model so it understands Dutch idioms
+      model: settings().aiContentModel || "gpt-5.4",   // critical quality path
     });
     try {
       const parsed = JSON.parse(r.text);
@@ -371,14 +386,64 @@
     }
   }
 
-  /* Apply spelling fixes (whole-word, case-sensitive) to a string. */
+  /* ============ Dutch usage validation (second self-critique pass) ============
+   * Complements validateDutchSpelling: catches errors a spelling check
+   * deliberately doesn't (grammar declension, wrong-word-but-spelled-correctly,
+   * weird capitalization, particle/pronoun misuse).
+   */
+  async function validateDutchUsage(text) {
+    if (!text || text.length < 20) return [];
+    const system = [
+      "Je bent een strenge Nederlandse taalkundige (CNaVT C1-niveau).",
+      "Bekijk de tekst en vind UITSLUITEND deze categorieën fouten:",
+      "1. Verkeerde adjectiefverbuiging (bv. 'ijzere discipline' → 'ijzeren discipline')",
+      "2. Werkwoorden die correct gespeld zijn maar de verkeerde betekenis hebben in deze context (bv. 'beten' waar 'batten' bedoeld is)",
+      "3. Verkeerde of ontbrekende voornaamwoorden / partikels (bv. 'verwacht dat te uitblinkt' → 'verwacht dat je uitblinkt')",
+      "4. Onnodige hoofdletters middenin de zin (bv. 'bij Roem' → 'bij roem'). Eigennamen en taalnamen mogen wel hoofdletters hebben.",
+      "5. Verkeerde collocaties of voorzetselgebruik (bv. 'denken voor' → 'denken aan')",
+      "NEGEER:",
+      "- Stijl, register, woordkeuze die niet objectief fout is",
+      "- Pure spelfouten (die gebeuren in een andere pas)",
+      "- Belgisch-Nederlands vs Hollands-Nederlands verschillen",
+      "Antwoord ALLEEN met geldige JSON, geen markdown. ELKE fix moet kort genoeg zijn voor whole-word substitutie:",
+      '{ "fixes": [ { "original": "<exacte frase zoals geschreven, max 5 woorden>", "fix": "<correcte vorm>" } ] }',
+      "Als er geen fouten zijn, antwoord met { \"fixes\": [] }.",
+      "Wees grondig. Lees elke zin twee keer. Liever te veel dan te weinig fixes.",
+    ].join("\n");
+    const r = await complete({
+      kind: "usage-check",
+      messages: [
+        { role: "system", content: system },
+        { role: "user", content: text },
+      ],
+      maxTokens: 2500,
+      json: true,
+      noCache: true,
+      model: settings().aiContentModel || "gpt-5.4",
+    });
+    try {
+      const parsed = JSON.parse(r.text);
+      return Array.isArray(parsed.fixes) ? parsed.fixes.filter((f) => f && f.original && f.fix && f.original !== f.fix) : [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  /* Apply spelling/usage fixes to a string.
+   * - Single-word fixes use word-boundary regex so substrings don't bleed.
+   * - Multi-word fixes (from validateDutchUsage) match the whole phrase
+   *   literally so we don't accidentally rewrite text that just shares a
+   *   prefix.
+   */
   function applySpellingFixes(text, fixes) {
     if (!text || !fixes || !fixes.length) return text;
     let out = text;
     for (const { original, fix } of fixes) {
-      // Word-boundary match avoids fixing substrings of unrelated words.
       const safe = original.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-      const re = new RegExp("\\b" + safe + "\\b", "g");
+      // Multi-word phrases skip the \b prefix so they match phrasing
+      // that starts mid-clause.
+      const isPhrase = /\s/.test(original);
+      const re = new RegExp(isPhrase ? safe : "\\b" + safe + "\\b", "g");
       out = out.replace(re, fix);
     }
     return out;
@@ -429,6 +494,7 @@
     extractVocab,
     transcribeWithTimestamps,
     validateDutchSpelling,
+    validateDutchUsage,
     applySpellingFixes,
   };
 })();
