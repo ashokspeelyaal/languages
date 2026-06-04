@@ -12,7 +12,7 @@
 
   const ROUTES = ["dashboard", "browse", "flashcards", "typed", "cloze", "mixed",
                   "metrics", "chat", "schrijven", "exam", "luisteren", "spreken",
-                  "grammatica", "settings", "help", "logout"];
+                  "grammatica", "werkwoorden", "settings", "help", "logout"];
   let cleanupFn = null;
   let booted = false;
 
@@ -27,6 +27,34 @@
   function navHighlight(route) {
     document.querySelectorAll(".nav a").forEach((a) => {
       a.classList.toggle("active", a.dataset.route === route);
+    });
+    // Highlight the parent group of the active link so users see WHICH
+    // group their current page lives in even when the dropdown is closed.
+    document.querySelectorAll(".nav-group").forEach((g) => {
+      g.classList.toggle("has-active", !!g.querySelector("a.active"));
+    });
+  }
+
+  // Hamburger toggle + auto-close on navigation.
+  function setupNavToggle() {
+    const btn = document.getElementById("nav-toggle");
+    const nav = document.getElementById("main-nav");
+    if (!btn || !nav) return;
+    btn.addEventListener("click", () => nav.classList.toggle("open"));
+    // Touch-friendly dropdown: tap the group button toggles it open on mobile.
+    document.querySelectorAll(".nav-group-btn").forEach((b) => {
+      b.addEventListener("click", (e) => {
+        if (window.matchMedia("(min-width: 881px)").matches) return; // desktop uses hover
+        e.preventDefault();
+        b.parentElement.classList.toggle("open");
+      });
+    });
+    // Any nav link click closes the mobile drawer.
+    nav.addEventListener("click", (e) => {
+      if (e.target.tagName === "A") {
+        nav.classList.remove("open");
+        document.querySelectorAll(".nav-group.open").forEach((g) => g.classList.remove("open"));
+      }
     });
   }
 
@@ -111,7 +139,10 @@
   window.addEventListener("orientationchange", updateTopbarHeight);
 
   window.addEventListener("hashchange", render);
-  document.addEventListener("DOMContentLoaded", boot);
+  document.addEventListener("DOMContentLoaded", () => {
+    setupNavToggle();
+    boot();
+  });
 
   // Global keyboard: ? opens shortcuts dialog.
   document.addEventListener("keydown", (e) => {
