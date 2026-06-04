@@ -12,13 +12,15 @@
 
   const ROUTES = ["dashboard", "browse", "flashcards", "typed", "cloze", "mixed",
                   "metrics", "chat", "schrijven", "exam", "luisteren", "spreken",
-                  "settings", "help", "logout"];
+                  "grammatica", "settings", "help", "logout"];
   let cleanupFn = null;
   let booted = false;
 
   function currentRoute() {
     const h = location.hash || "#/dashboard";
-    const r = h.replace(/^#\//, "");
+    // Sub-paths allowed: e.g. #/grammatica/a1-lidwoorden → "grammatica".
+    // The full hash stays in location.hash for the view to read.
+    const r = h.replace(/^#\//, "").split("/")[0];
     return ROUTES.includes(r) ? r : "dashboard";
   }
 

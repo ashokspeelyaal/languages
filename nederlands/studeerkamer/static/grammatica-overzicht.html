@@ -1,0 +1,1758 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<title>Grammatica-overzicht · A1 → C1</title>
+<style>
+  /* =========================================================
+     Print-vriendelijk grammatica-overzicht.
+     - A4-formaat, 18 mm marges
+     - Serif voor leesbaarheid op papier
+     - Geen externe afhankelijkheden (offline printbaar)
+     ========================================================= */
+  @page {
+    size: A4;
+    margin: 18mm 18mm 18mm 18mm;
+  }
+  :root {
+    --ink: #1a1a1a;
+    --ink-soft: #444;
+    --rule: #cfcfcf;
+    --paper: #fdfcf8;
+    --accent: #8b0000;
+    --serif: Georgia, "Times New Roman", serif;
+    --sans: -apple-system, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    --mono: "SFMono-Regular", Menlo, Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  html, body { background: var(--paper); color: var(--ink); }
+  body {
+    font-family: var(--serif);
+    font-size: 10.5pt;
+    line-height: 1.45;
+    max-width: 180mm;
+    margin: 0 auto;
+    padding: 0 0 30mm;
+  }
+  h1, h2, h3, h4 { font-family: var(--sans); color: var(--accent); }
+  h1 { font-size: 24pt; margin: 0 0 .1em; letter-spacing: -0.01em; }
+  h2 { font-size: 16pt; margin: 1.6em 0 .5em; border-bottom: 2px solid var(--accent); padding-bottom: .15em; }
+  h3 { font-size: 12.5pt; margin: 1.2em 0 .35em; }
+  h4 { font-size: 11pt; margin: .9em 0 .25em; color: var(--ink); font-weight: 700; }
+  p  { margin: .25em 0 .7em; }
+  em.regel { font-style: italic; color: var(--accent); font-weight: 600; }
+  strong   { color: var(--ink); }
+  .nl      { font-style: italic; }
+  .uitleg  { color: var(--ink-soft); font-size: .92em; }
+  small    { color: var(--ink-soft); font-size: .85em; }
+
+  /* Tabellen */
+  table { width: 100%; border-collapse: collapse; margin: .4em 0 1em; font-size: 9.8pt; page-break-inside: avoid; }
+  th, td { border: 1px solid var(--rule); padding: 3.5px 7px; text-align: left; vertical-align: top; }
+  th { background: #efe9e0; font-family: var(--sans); font-weight: 600; }
+  td.nl, .ex td:first-child { font-style: italic; }
+  td.tag { font-family: var(--mono); font-size: 8.8pt; color: var(--ink-soft); }
+  caption { caption-side: top; text-align: left; font-style: italic; color: var(--ink-soft); padding-bottom: 3px; }
+
+  /* Voorbeeld-blokken */
+  .vb {
+    background: #f4efe6;
+    border-left: 3px solid var(--accent);
+    padding: 6px 12px;
+    margin: .4em 0 .9em;
+    page-break-inside: avoid;
+  }
+  .vb p { margin: .15em 0; }
+  .vb .nl { font-style: italic; }
+  .let {
+    background: #fff7d6;
+    border: 1px solid #d6c87a;
+    border-radius: 2px;
+    padding: 6px 10px;
+    margin: .4em 0 .9em;
+    font-size: 9.8pt;
+    page-break-inside: avoid;
+  }
+  .let::before {
+    content: "⚠ Let op  ";
+    font-family: var(--sans);
+    font-weight: 700;
+    color: #8a6d00;
+    font-size: 9pt;
+    letter-spacing: .04em;
+  }
+
+  ul, ol { margin: .2em 0 .8em 1.2em; padding-left: .6em; }
+  li { margin-bottom: .15em; }
+
+  /* Pagina-overgangen */
+  .hoofdstuk { page-break-before: always; }
+  .hoofdstuk:first-of-type { page-break-before: auto; }
+
+  /* Inhoudsopgave */
+  nav.toc { font-family: var(--sans); font-size: 10pt; column-count: 2; column-gap: 12mm; column-rule: 1px dashed var(--rule); margin-top: 1.5em; }
+  nav.toc h3 { color: var(--accent); margin: 0 0 .3em; break-after: avoid; }
+  nav.toc ol { list-style: none; padding-left: 0; margin: 0 0 1em; }
+  nav.toc li { margin-bottom: 2px; }
+  nav.toc a { color: var(--ink); text-decoration: none; }
+
+  /* Niveau-tag bij hoofdstukken */
+  .niveau {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 8.5pt;
+    background: var(--accent);
+    color: white;
+    padding: 1px 7px;
+    border-radius: 2px;
+    margin-right: 8px;
+    vertical-align: middle;
+    letter-spacing: .06em;
+  }
+
+  /* Voorpagina */
+  .voorpagina {
+    text-align: center;
+    margin-top: 60mm;
+    page-break-after: always;
+  }
+  .voorpagina h1 { font-size: 36pt; color: var(--accent); }
+  .voorpagina .ondertitel { font-family: var(--sans); font-size: 14pt; color: var(--ink-soft); margin-top: 0; }
+  .voorpagina .info { font-family: var(--sans); font-size: 10pt; color: var(--ink-soft); margin-top: 40mm; }
+
+  /* Screen-only: leeshulp */
+  @media screen {
+    body { padding: 2rem; }
+    .hoofdstuk { box-shadow: 0 1px 4px rgba(0,0,0,.06); background: white; padding: 1.5em 2em; margin-bottom: 1em; border-radius: 4px; }
+  }
+  @media print {
+    nav.toc a::after { content: leader('. ') target-counter(attr(href), page); color: var(--ink-soft); }
+    .let, .vb { break-inside: avoid; }
+    h2, h3 { break-after: avoid; }
+    table { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ======================== VOORPAGINA ======================== -->
+<section class="voorpagina">
+  <h1>Grammatica-overzicht</h1>
+  <p class="ondertitel">Nederlands voor A1 tot C1</p>
+  <p class="info">Een compact naslagwerk · Vlaams-Belgisch register<br>
+    Geschikt om te printen en als referentie te gebruiken</p>
+</section>
+
+<!-- ======================== INHOUDSOPGAVE ======================== -->
+<section>
+  <h2>Inhoudsopgave</h2>
+  <nav class="toc">
+    <div>
+      <h3>A1 · Fundamenten</h3>
+      <ol>
+        <li><a href="#a1-lidwoorden">Lidwoorden — <em>de, het, een</em></a></li>
+        <li><a href="#a1-pronomina">Persoonlijke voornaamwoorden</a></li>
+        <li><a href="#a1-bezit">Bezittelijke voornaamwoorden</a></li>
+        <li><a href="#a1-tt">Tegenwoordige tijd</a></li>
+        <li><a href="#a1-zijn-hebben">Zijn en hebben</a></li>
+        <li><a href="#a1-volgorde">Basis woordvolgorde</a></li>
+        <li><a href="#a1-vragen">Vragen vormen</a></li>
+        <li><a href="#a1-ontkenning">Ontkenning — <em>niet / geen</em></a></li>
+        <li><a href="#a1-meervoud">Meervoud van zelfstandige naamwoorden</a></li>
+        <li><a href="#a1-getallen">Getallen, tijd en datum</a></li>
+      </ol>
+      <h3>A2 · Uitbreiden</h3>
+      <ol start="11">
+        <li><a href="#a2-imperfectum">Imperfectum (onvoltooid verleden tijd)</a></li>
+        <li><a href="#a2-perfectum">Perfectum — <em>ge-</em> + <em>d/t</em></a></li>
+        <li><a href="#a2-zonder-ge">Werkwoorden zonder <em>ge-</em></a></li>
+        <li><a href="#a2-scheidbaar">Scheidbare en onscheidbare werkwoorden</a></li>
+        <li><a href="#a2-verkleinwoord">Verkleinwoorden</a></li>
+        <li><a href="#a2-bijvoeglijk">Bijvoeglijk naamwoord + verbuiging</a></li>
+        <li><a href="#a2-trappen">Comparatief en superlatief</a></li>
+        <li><a href="#a2-modaal">Modale werkwoorden</a></li>
+        <li><a href="#a2-voorzetsel">Voorzetsels (basis)</a></li>
+        <li><a href="#a2-er">De <em>er</em>-constructie (intro)</a></li>
+      </ol>
+    </div>
+    <div>
+      <h3>B1 · Middenniveau</h3>
+      <ol start="21">
+        <li><a href="#b1-bijzin">Bijzinnen en werkwoord op het einde</a></li>
+        <li><a href="#b1-inversie">Inversie na zinsdeel-eerst</a></li>
+        <li><a href="#b1-conditioneel">Voorwaardelijke wijs — <em>zou</em></a></li>
+        <li><a href="#b1-reflexief">Wederkerende werkwoorden</a></li>
+        <li><a href="#b1-plusquam">Plusquamperfectum</a></li>
+        <li><a href="#b1-passief">Lijdende vorm — <em>worden</em></a></li>
+        <li><a href="#b1-te">Te + infinitief en om te + infinitief</a></li>
+        <li><a href="#b1-relatief">Relatieve bijzinnen — <em>die / dat / waar / wat</em></a></li>
+        <li><a href="#b1-voegwoord">Voegwoorden: neven- of onderschikkend</a></li>
+      </ol>
+      <h3>B2 · Gevorderd</h3>
+      <ol start="30">
+        <li><a href="#b2-er">De vier functies van <em>er</em></a></li>
+        <li><a href="#b2-partikels">Modale partikels</a></li>
+        <li><a href="#b2-indirect">Indirecte rede</a></li>
+        <li><a href="#b2-voegwoord">Geavanceerde voegwoorden</a></li>
+        <li><a href="#b2-volgorde">Werkwoordsvolgorde — rood / groen</a></li>
+        <li><a href="#b2-vaste">Vaste voorzetselcombinaties</a></li>
+      </ol>
+      <h3>C1 · Verfijnd</h3>
+      <ol start="36">
+        <li><a href="#c1-afleiding">Afleidingen en samenstellingen</a></li>
+        <li><a href="#c1-nominaal">Nominale stijl</a></li>
+        <li><a href="#c1-tang">Tangconstructies</a></li>
+        <li><a href="#c1-register">Register en stijl</a></li>
+        <li><a href="#c1-connector">Academische connectoren</a></li>
+        <li><a href="#c1-zekerheid">Mate van zekerheid en nuancering</a></li>
+      </ol>
+      <h3>Bijlages</h3>
+      <ol start="42">
+        <li><a href="#bijlage-onregelmatig">Onregelmatige werkwoorden</a></li>
+        <li><a href="#bijlage-voorzetsel">Vaste voorzetsels per werkwoord</a></li>
+        <li><a href="#bijlage-dehet">Heuristieken voor <em>de</em> of <em>het</em></a></li>
+      </ol>
+    </div>
+  </nav>
+</section>
+
+<!-- ====================================================================
+     A1 — FUNDAMENTEN
+     ==================================================================== -->
+
+<article class="hoofdstuk" id="a1-lidwoorden">
+<h2><span class="niveau">A1</span> 1. Lidwoorden — <em>de, het, een</em></h2>
+<p>Er zijn drie lidwoorden in het Nederlands. <strong>De</strong> en <strong>het</strong> zijn bepaalde lidwoorden ("de specifieke"); <strong>een</strong> is het onbepaalde lidwoord ("een willekeurige").</p>
+
+<table>
+  <thead><tr><th>Soort</th><th>Lidwoord</th><th>Voorbeeld</th></tr></thead>
+  <tbody>
+    <tr><td>mannelijk / vrouwelijk (de-woord)</td><td>de</td><td class="nl">de man, de vrouw, de stoel, de tafel</td></tr>
+    <tr><td>onzijdig (het-woord)</td><td>het</td><td class="nl">het kind, het huis, het meisje</td></tr>
+    <tr><td>onbepaald (alle geslachten)</td><td>een</td><td class="nl">een man, een huis, een kind</td></tr>
+    <tr><td>meervoud bepaald</td><td>de</td><td class="nl">de mannen, de huizen, de kinderen</td></tr>
+    <tr><td>meervoud onbepaald</td><td>— (geen lidwoord)</td><td class="nl">mannen, huizen, kinderen</td></tr>
+  </tbody>
+</table>
+
+<h4>Wanneer "de" of "het"?</h4>
+<p>Er bestaat geen waterdichte regel — het geslacht moet je per woord onthouden. Er zijn wel patronen die je helpen (zie ook bijlage 44):</p>
+<ul>
+  <li><strong>De</strong>-woorden: alle personen (de leraar, de zus), de meeste dieren, de meeste planten, woorden op <em>-ing</em>, <em>-heid</em>, <em>-de</em>, <em>-te</em>, <em>-ie</em>, <em>-iek</em>, <em>-isme</em>.</li>
+  <li><strong>Het</strong>-woorden: verkleinwoorden (<em>het meisje, het boekje</em>), woorden op <em>-isme</em> kunnen, namen van talen en sporten (<em>het Nederlands, het voetbal</em>), woorden op <em>-um</em>, <em>-ment</em>, <em>-sel</em>, verzamelnamen die je niet kan tellen (<em>het verkeer, het weer, het geld</em>).</li>
+</ul>
+<div class="let">Een verkleinwoord is <em>altijd</em> een het-woord, ongeacht het origineel: <span class="nl">de man → het mannetje, de tafel → het tafeltje</span>.</div>
+</article>
+
+<!-- ===== A1 — Persoonlijke voornaamwoorden ===== -->
+<article class="hoofdstuk" id="a1-pronomina">
+<h2><span class="niveau">A1</span> 2. Persoonlijke voornaamwoorden</h2>
+<p>Persoonlijke voornaamwoorden vervangen een persoon of zaak. Er zijn aparte vormen voor onderwerp (de doener) en voorwerp (de ontvanger).</p>
+<table>
+  <thead><tr><th>Persoon</th><th>Onderwerp</th><th>Voorwerp</th><th>Beklemtoond</th></tr></thead>
+  <tbody>
+    <tr><td>1e enkelvoud</td><td>ik</td><td>me / mij</td><td>mij</td></tr>
+    <tr><td>2e enkelvoud informeel</td><td>jij / je</td><td>jou / je</td><td>jou</td></tr>
+    <tr><td>2e enkelvoud formeel</td><td>u</td><td>u</td><td>u</td></tr>
+    <tr><td>3e enkelvoud (man)</td><td>hij</td><td>hem</td><td>hem</td></tr>
+    <tr><td>3e enkelvoud (vrouw)</td><td>zij / ze</td><td>haar</td><td>haar</td></tr>
+    <tr><td>3e enkelvoud (ding)</td><td>het</td><td>het</td><td>—</td></tr>
+    <tr><td>1e meervoud</td><td>wij / we</td><td>ons</td><td>ons</td></tr>
+    <tr><td>2e meervoud informeel</td><td>jullie</td><td>jullie</td><td>jullie</td></tr>
+    <tr><td>2e meervoud formeel</td><td>u</td><td>u</td><td>u</td></tr>
+    <tr><td>3e meervoud</td><td>zij / ze</td><td>hen / ze (direct)<br>hun / ze (indirect)</td><td>hen / hun</td></tr>
+  </tbody>
+</table>
+<div class="vb">
+  <p class="nl">Ik geef hem het boek. Hij geeft het aan haar. Wij zien hen op straat.</p>
+  <p class="uitleg">Let op het verschil tussen direct (<em>ik zie hen</em>) en indirect (<em>ik geef hun een boek</em>) voorwerp in de 3e persoon meervoud. In spreektaal gebruikt men vaak <em>ze</em> voor beide.</p>
+</div>
+<h4>Beleefdheidsvorm "u"</h4>
+<p>De vorm <em>u</em> wordt gebruikt voor: onbekenden, ouderen, in formele situaties, bij klanten. Werkwoord krijgt dezelfde vorm als bij <em>hij/zij</em>: <span class="nl">u heeft / u hebt</span> (beide zijn correct).</p>
+</article>
+
+<!-- ===== A1 — Bezittelijke voornaamwoorden ===== -->
+<article class="hoofdstuk" id="a1-bezit">
+<h2><span class="niveau">A1</span> 3. Bezittelijke voornaamwoorden</h2>
+<table>
+  <thead><tr><th>Persoon</th><th>Bezittelijk vnw.</th><th>Voorbeeld</th></tr></thead>
+  <tbody>
+    <tr><td>ik</td><td>mijn / m'n</td><td class="nl">mijn boek, m'n moeder</td></tr>
+    <tr><td>jij</td><td>jouw / je</td><td class="nl">jouw fiets, je huis</td></tr>
+    <tr><td>u</td><td>uw</td><td class="nl">uw paspoort</td></tr>
+    <tr><td>hij</td><td>zijn / z'n</td><td class="nl">zijn vader, z'n auto</td></tr>
+    <tr><td>zij (enkelvoud)</td><td>haar</td><td class="nl">haar zus</td></tr>
+    <tr><td>wij</td><td>ons (het-woorden) / onze (de-woorden, meervoud)</td><td class="nl">ons huis, onze tuin, onze kinderen</td></tr>
+    <tr><td>jullie</td><td>jullie</td><td class="nl">jullie school</td></tr>
+    <tr><td>zij (meervoud)</td><td>hun</td><td class="nl">hun ouders</td></tr>
+  </tbody>
+</table>
+<div class="let">Alleen <em>ons / onze</em> verandert mee met het zelfstandig naamwoord. Bij een het-woord: <em>ons</em>. Bij een de-woord (enkelvoud of meervoud): <em>onze</em>. <span class="nl">ons kind</span>, maar <span class="nl">onze dochter</span>, <span class="nl">onze kinderen</span>.</div>
+</article>
+
+<!-- ===== A1 — Tegenwoordige tijd ===== -->
+<article class="hoofdstuk" id="a1-tt">
+<h2><span class="niveau">A1</span> 4. Tegenwoordige tijd</h2>
+<p>De tegenwoordige tijd druk je uit met de <strong>stam</strong> (= infinitief minus <em>-en</em>) en een uitgang die afhangt van de persoon.</p>
+
+<h3>4.1 De regel: stam + uitgang</h3>
+<table>
+  <thead><tr><th>Persoon</th><th>Uitgang</th><th>werken → werk</th><th>wonen → woon</th></tr></thead>
+  <tbody>
+    <tr><td>ik</td><td>stam</td><td class="nl">ik werk</td><td class="nl">ik woon</td></tr>
+    <tr><td>jij / u / hij / zij / het</td><td>stam + <strong>t</strong></td><td class="nl">jij werkt, hij werkt</td><td class="nl">u woont, zij woont</td></tr>
+    <tr><td>wij / jullie / zij (mv)</td><td>infinitief</td><td class="nl">wij werken</td><td class="nl">jullie wonen</td></tr>
+  </tbody>
+</table>
+
+<div class="let">Bij inversie (werkwoord vóór <em>jij/je</em>) vervalt de <strong>t</strong>: <span class="nl">jij werkt</span> → <span class="nl">werk jij?</span> &nbsp;·&nbsp; <span class="nl">jij komt</span> → <span class="nl">kom jij?</span> Dit geldt <em>alleen</em> voor <em>je/jij</em>, niet voor <em>u</em>: <span class="nl">werkt u?</span></div>
+
+<h3>4.2 Spellingsregels bij de stam</h3>
+<ul>
+  <li><strong>Korte/lange klinker behouden</strong>: schrijven → ik schrijf (niet "schrijv"). Lange klinkers blijven dubbel als de lettergreep open is: <em>wonen → ik woon</em> (dubbele <em>o</em>), maar <em>wonen → wij wonen</em> (open lettergreep, één <em>o</em> in spelling is volwaardig).</li>
+  <li><strong>V → f, z → s</strong> aan het einde: <span class="nl">leven → ik leef · lezen → ik lees</span>.</li>
+  <li><strong>Geen dubbele t</strong>: als de stam al op een <em>t</em> eindigt, voeg geen extra <em>t</em> toe: <span class="nl">zitten → jij zit, hij zit</span> (niet "zitt").</li>
+  <li><strong>Dubbele medeklinker bij korte klinker</strong>: zwemmen → ik zwem (één <em>m</em> aan het einde van een woord).</li>
+</ul>
+
+<h3>4.3 Onregelmatige stam: zijn, hebben, kunnen, gaan, zullen</h3>
+<table>
+  <thead><tr><th></th><th>zijn</th><th>hebben</th><th>kunnen</th><th>gaan</th><th>zullen</th></tr></thead>
+  <tbody>
+    <tr><td>ik</td><td>ben</td><td>heb</td><td>kan</td><td>ga</td><td>zal</td></tr>
+    <tr><td>jij/u/hij/zij</td><td>bent / is</td><td>hebt / heeft</td><td>kunt / kan</td><td>gaat</td><td>zult / zal</td></tr>
+    <tr><td>wij/jullie/zij</td><td>zijn</td><td>hebben</td><td>kunnen</td><td>gaan</td><td>zullen</td></tr>
+  </tbody>
+</table>
+<p class="uitleg"><strong>Hij</strong> + <strong>heeft</strong>, <strong>is</strong>, <strong>kan</strong>, <strong>gaat</strong>, <strong>zal</strong>. <strong>Jij</strong> + <strong>hebt</strong>, <strong>bent</strong>, <strong>kunt</strong> (formeel) of <strong>kan</strong> (informeel).</p>
+</article>
+
+<!-- ===== A1 — Zijn en hebben ===== -->
+<article class="hoofdstuk" id="a1-zijn-hebben">
+<h2><span class="niveau">A1</span> 5. <em>Zijn</em> en <em>hebben</em></h2>
+<p>De twee meest gebruikte werkwoorden. Ze zijn onregelmatig en dienen ook als <strong>hulpwerkwoord</strong> bij het perfectum.</p>
+
+<h3>5.1 Vormen</h3>
+<table>
+  <thead><tr><th></th><th>zijn (tt)</th><th>zijn (verl.)</th><th>hebben (tt)</th><th>hebben (verl.)</th></tr></thead>
+  <tbody>
+    <tr><td>ik</td><td>ben</td><td>was</td><td>heb</td><td>had</td></tr>
+    <tr><td>jij/u</td><td>bent</td><td>was</td><td>hebt / heeft</td><td>had</td></tr>
+    <tr><td>hij/zij/het</td><td>is</td><td>was</td><td>heeft</td><td>had</td></tr>
+    <tr><td>wij/jullie/zij</td><td>zijn</td><td>waren</td><td>hebben</td><td>hadden</td></tr>
+  </tbody>
+</table>
+
+<h3>5.2 Hulpwerkwoord bij voltooide tijd</h3>
+<p>Beweging en verandering → <strong>zijn</strong>. De rest → <strong>hebben</strong>.</p>
+<table class="ex">
+  <thead><tr><th>Werkwoord</th><th>Hulpww.</th><th>Voltooide tijd</th></tr></thead>
+  <tbody>
+    <tr><td>gaan</td><td>zijn</td><td>ik ben gegaan</td></tr>
+    <tr><td>komen</td><td>zijn</td><td>hij is gekomen</td></tr>
+    <tr><td>blijven</td><td>zijn</td><td>wij zijn gebleven</td></tr>
+    <tr><td>worden</td><td>zijn</td><td>zij is moe geworden</td></tr>
+    <tr><td>werken</td><td>hebben</td><td>ik heb gewerkt</td></tr>
+    <tr><td>eten</td><td>hebben</td><td>jij hebt gegeten</td></tr>
+    <tr><td>lezen</td><td>hebben</td><td>wij hebben gelezen</td></tr>
+  </tbody>
+</table>
+</article>
+
+<!-- ===== A1 — Woordvolgorde ===== -->
+<article class="hoofdstuk" id="a1-volgorde">
+<h2><span class="niveau">A1</span> 6. Basis woordvolgorde</h2>
+<p>Het Nederlands is een <strong>V2-taal</strong>: in een hoofdzin staat de persoonsvorm (vervoegd werkwoord) altijd op de <strong>tweede positie</strong>.</p>
+
+<table>
+  <thead><tr><th>Positie 1</th><th>Positie 2 (PV)</th><th>Rest</th></tr></thead>
+  <tbody>
+    <tr><td>Ik</td><td>werk</td><td>elke dag in Hasselt.</td></tr>
+    <tr><td>Elke dag</td><td>werk</td><td>ik in Hasselt.</td></tr>
+    <tr><td>In Hasselt</td><td>werk</td><td>ik elke dag.</td></tr>
+    <tr><td>Vandaag</td><td>ga</td><td>ik niet naar het werk.</td></tr>
+  </tbody>
+</table>
+
+<div class="let">Als iets anders dan het onderwerp op positie 1 staat, komt het onderwerp <em>na</em> de persoonsvorm. Dit heet <strong>inversie</strong> (zie B1, §22).</div>
+
+<h3>6.1 De tweedelige werkwoordsgroep</h3>
+<p>Als er een hulpwerkwoord + hoofdwerkwoord is, blijft de persoonsvorm op positie 2 en gaat het andere werkwoord naar het <strong>einde</strong> van de zin.</p>
+<div class="vb">
+  <p class="nl">Ik wil morgen naar Antwerpen gaan.</p>
+  <p class="nl">Hij heeft gisteren een boek gelezen.</p>
+  <p class="nl">Wij zullen de kinderen ophalen.</p>
+  <p class="uitleg">Persoonsvorm op positie 2; infinitief of voltooid deelwoord helemaal achteraan.</p>
+</div>
+</article>
+
+<!-- ===== A1 — Vragen ===== -->
+<article class="hoofdstuk" id="a1-vragen">
+<h2><span class="niveau">A1</span> 7. Vragen vormen</h2>
+<h3>7.1 Ja/nee-vragen</h3>
+<p>Begin met de persoonsvorm. Onderwerp komt op positie 2.</p>
+<table class="ex">
+  <thead><tr><th>Stelling</th><th>Vraag</th></tr></thead>
+  <tbody>
+    <tr><td class="nl">Jij woont in Genk.</td><td class="nl">Woon jij in Genk?</td></tr>
+    <tr><td class="nl">Wij gaan naar de winkel.</td><td class="nl">Gaan wij naar de winkel?</td></tr>
+    <tr><td class="nl">Hij heeft een hond.</td><td class="nl">Heeft hij een hond?</td></tr>
+  </tbody>
+</table>
+
+<h3>7.2 Vraagwoorden</h3>
+<table>
+  <thead><tr><th>Vraagwoord</th><th>Betekenis</th><th>Voorbeeld</th></tr></thead>
+  <tbody>
+    <tr><td>wie</td><td>persoon</td><td class="nl">Wie is dat?</td></tr>
+    <tr><td>wat</td><td>ding</td><td class="nl">Wat doe je?</td></tr>
+    <tr><td>waar</td><td>plaats</td><td class="nl">Waar woon je?</td></tr>
+    <tr><td>wanneer</td><td>tijd</td><td class="nl">Wanneer komt hij?</td></tr>
+    <tr><td>waarom</td><td>reden</td><td class="nl">Waarom huil je?</td></tr>
+    <tr><td>hoe</td><td>wijze</td><td class="nl">Hoe gaat het?</td></tr>
+    <tr><td>hoeveel</td><td>aantal</td><td class="nl">Hoeveel kost dat?</td></tr>
+    <tr><td>welk(e)</td><td>keuze</td><td class="nl">Welke kleur wil je?</td></tr>
+    <tr><td>waar + voorzetsel</td><td>combinatie</td><td class="nl">Waarover praat hij? Waarmee schrijf je?</td></tr>
+  </tbody>
+</table>
+<div class="let"><strong>Waar</strong> wordt vaak gecombineerd met een voorzetsel als één woord: <span class="nl">waarover, waarmee, waaraan, waardoor</span>. Voor zaken: gebruik <em>waar</em>, voor personen: gebruik het voorzetsel + <em>wie</em>: <span class="nl">met wie ga je mee?</span></div>
+</article>
+
+<!-- ===== A1 — Ontkenning ===== -->
+<article class="hoofdstuk" id="a1-ontkenning">
+<h2><span class="niveau">A1</span> 8. Ontkenning — <em>niet</em> en <em>geen</em></h2>
+<p>Voor een werkwoord, bijvoeglijk naamwoord of bepaling: <strong>niet</strong>. Voor een zelfstandig naamwoord zonder lidwoord of met <em>een</em>: <strong>geen</strong>.</p>
+<table>
+  <thead><tr><th>Regel</th><th>Voorbeeld</th></tr></thead>
+  <tbody>
+    <tr><td>niet + werkwoord/bijvoeglijk naamwoord</td><td class="nl">Ik werk niet. Het is niet duur.</td></tr>
+    <tr><td>geen + zelfstandig naamwoord (zonder lw of met "een")</td><td class="nl">Ik heb geen geld. Hij heeft geen auto.</td></tr>
+    <tr><td>niet + (bep. lidwoord) zelfstandig naamwoord</td><td class="nl">Ik wil het boek niet. Ik zie de man niet.</td></tr>
+  </tbody>
+</table>
+<h3>8.1 Positie van <em>niet</em> in de zin</h3>
+<p><em>Niet</em> staat meestal aan het <strong>einde</strong>, maar vóór: een tweede werkwoord, een voorzetselbepaling die bij het werkwoord hoort, een bijwoord van plaats/tijd dat ontkend wordt.</p>
+<div class="vb">
+  <p class="nl">Ik kom morgen niet. (eind)</p>
+  <p class="nl">Ik heb hem niet gezien. (voor voltooid deelwoord)</p>
+  <p class="nl">Ik woon niet in Brussel. (voor voorzetselbepaling)</p>
+  <p class="nl">Hij is niet ziek. (voor bijvoeglijk naamwoord)</p>
+</div>
+</article>
+
+<!-- ===== A1 — Meervoud ===== -->
+<article class="hoofdstuk" id="a1-meervoud">
+<h2><span class="niveau">A1</span> 9. Meervoud van zelfstandige naamwoorden</h2>
+<p>Twee basisregels:</p>
+<table>
+  <thead><tr><th>Regel</th><th>Voorbeeld</th></tr></thead>
+  <tbody>
+    <tr><td><strong>-en</strong> bij de meeste woorden</td><td class="nl">boek → boeken, vrouw → vrouwen, kind → kinderen</td></tr>
+    <tr><td><strong>-s</strong> bij woorden op <em>-el, -em, -en, -er, -aar, -ie, -je</em> en bij leenwoorden</td><td class="nl">tafel → tafels, broer → broers, meisje → meisjes, foto → foto's</td></tr>
+  </tbody>
+</table>
+
+<h3>9.1 Spellingsregels bij <em>-en</em></h3>
+<ul>
+  <li><strong>Korte klinker behouden</strong>: dubbel de medeklinker. <span class="nl">man → mannen, bal → ballen</span>.</li>
+  <li><strong>Lange klinker</strong>: enkel laten. <span class="nl">boom → bomen, voet → voeten</span>.</li>
+  <li><strong>F → v, s → z</strong>: <span class="nl">brief → brieven, huis → huizen</span>.</li>
+  <li><strong>-heid → -heden</strong>: <span class="nl">moeilijkheid → moeilijkheden</span>.</li>
+</ul>
+
+<h3>9.2 Onregelmatige meervouden</h3>
+<table>
+  <thead><tr><th>Enkelvoud</th><th>Meervoud</th></tr></thead>
+  <tbody>
+    <tr><td class="nl">kind</td><td class="nl">kinderen</td></tr>
+    <tr><td class="nl">ei</td><td class="nl">eieren</td></tr>
+    <tr><td class="nl">koe</td><td class="nl">koeien</td></tr>
+    <tr><td class="nl">stad</td><td class="nl">steden</td></tr>
+    <tr><td class="nl">schip</td><td class="nl">schepen</td></tr>
+    <tr><td class="nl">lid</td><td class="nl">leden</td></tr>
+    <tr><td class="nl">museum</td><td class="nl">musea / museums</td></tr>
+    <tr><td class="nl">crisis</td><td class="nl">crises</td></tr>
+  </tbody>
+</table>
+
+<h3>9.3 Apostrof bij <em>-s</em></h3>
+<p>Bij woorden die eindigen op een <strong>lange klinkerklank</strong> (<em>a, o, u, i, y</em>) gebruik je een apostrof: <span class="nl">foto → foto's, baby → baby's, taxi → taxi's, menu → menu's</span>. Niet bij <em>-e</em>: <span class="nl">groente → groentes</span>.</p>
+</article>
+
+<!-- ===== A1 — Getallen ===== -->
+<article class="hoofdstuk" id="a1-getallen">
+<h2><span class="niveau">A1</span> 10. Getallen, tijd en datum</h2>
+<table>
+  <thead><tr><th>Cijfer</th><th>Woord</th></tr></thead>
+  <tbody>
+    <tr><td>0–10</td><td class="nl">nul, een, twee, drie, vier, vijf, zes, zeven, acht, negen, tien</td></tr>
+    <tr><td>11–20</td><td class="nl">elf, twaalf, dertien, veertien, vijftien, zestien, zeventien, achttien, negentien, twintig</td></tr>
+    <tr><td>21–29</td><td class="nl">eenentwintig, tweeëntwintig, drieëntwintig, …</td></tr>
+    <tr><td>tientallen</td><td class="nl">dertig, veertig, vijftig, zestig, zeventig, tachtig, negentig, honderd, duizend</td></tr>
+  </tbody>
+</table>
+<p class="uitleg">Bij getallen <em>21–99</em> komt de eenheid eerst: <span class="nl">vierentwintig</span> (= 24), niet "twintigvier".</p>
+
+<h3>10.1 Tijd</h3>
+<table>
+  <thead><tr><th>Tijd</th><th>Uitdrukking</th></tr></thead>
+  <tbody>
+    <tr><td>9:00</td><td class="nl">negen uur</td></tr>
+    <tr><td>9:15</td><td class="nl">kwart over negen</td></tr>
+    <tr><td>9:30</td><td class="nl">half tien <small>(let op: half tien = halverwege tien!)</small></td></tr>
+    <tr><td>9:45</td><td class="nl">kwart voor tien</td></tr>
+    <tr><td>9:20</td><td class="nl">tien voor half tien</td></tr>
+    <tr><td>9:40</td><td class="nl">tien over half tien</td></tr>
+  </tbody>
+</table>
+<div class="let">Het Nederlandse "half tien" betekent <strong>09:30</strong>, niet 10:30! Denk aan: "half-weg naar tien".</div>
+
+<h3>10.2 Dagen en maanden</h3>
+<p><strong>Dagen:</strong> maandag, dinsdag, woensdag, donderdag, vrijdag, zaterdag, zondag.</p>
+<p><strong>Maanden:</strong> januari, februari, maart, april, mei, juni, juli, augustus, september, oktober, november, december.</p>
+<p>Geen hoofdletter bij dagen en maanden (in tegenstelling tot het Engels).</p>
+</article>
+
+
+<!-- ====================================================================
+     A2 — UITBREIDEN
+     ==================================================================== -->
+
+<article class="hoofdstuk" id="a2-imperfectum">
+<h2><span class="niveau">A2</span> 11. Imperfectum (onvoltooid verleden tijd)</h2>
+<p>De <em>imperfectum</em> beschrijft een handeling in het verleden zonder verbinding met nu. Vergelijk met perfectum (§12), dat handelingen verbindt met het heden.</p>
+
+<h3>11.1 Zwakke werkwoorden: stam + <em>-te(n) / -de(n)</em></h3>
+<p>Eindigt de stam op een stemloze medeklinker (<em>'t kofschip</em>: t, k, f, s, ch, p), dan: <strong>-te(n)</strong>.<br>
+Anders: <strong>-de(n)</strong>.</p>
+<table>
+  <thead><tr><th>Infinitief</th><th>Stam</th><th>Verleden tijd</th></tr></thead>
+  <tbody>
+    <tr><td class="nl">werken</td><td>werk</td><td class="nl">ik werkte, wij werkten</td></tr>
+    <tr><td class="nl">koken</td><td>kook</td><td class="nl">ik kookte, wij kookten</td></tr>
+    <tr><td class="nl">fietsen</td><td>fiets</td><td class="nl">ik fietste, wij fietsten</td></tr>
+    <tr><td class="nl">stoppen</td><td>stop</td><td class="nl">ik stopte, wij stopten</td></tr>
+    <tr><td class="nl">wonen</td><td>woon</td><td class="nl">ik woonde, wij woonden</td></tr>
+    <tr><td class="nl">spelen</td><td>speel</td><td class="nl">ik speelde, wij speelden</td></tr>
+    <tr><td class="nl">leren</td><td>leer</td><td class="nl">ik leerde, wij leerden</td></tr>
+  </tbody>
+</table>
+<div class="let">Ezelsbruggetje <strong>'t kofschip</strong>: bij stam op <em>t, k, f, s, ch, p</em> → <em>-te(n)</em>. Anders → <em>-de(n)</em>. Werkt voor zwakke werkwoorden in verleden tijd én voor het voltooid deelwoord (§12).</div>
+
+<h3>11.2 Sterke werkwoorden: klinkerwisseling</h3>
+<p>Sterke werkwoorden veranderen hun klinker in de stam. Geen vaste regel — je moet ze leren. Zie ook bijlage 42 voor een uitgebreide lijst.</p>
+<table>
+  <thead><tr><th>Infinitief</th><th>Verl. tijd</th><th>Voltooid deelwoord</th></tr></thead>
+  <tbody>
+    <tr><td class="nl">lopen</td><td class="nl">liep</td><td class="nl">gelopen</td></tr>
+    <tr><td class="nl">eten</td><td class="nl">at</td><td class="nl">gegeten</td></tr>
+    <tr><td class="nl">drinken</td><td class="nl">dronk</td><td class="nl">gedronken</td></tr>
+    <tr><td class="nl">geven</td><td class="nl">gaf</td><td class="nl">gegeven</td></tr>
+    <tr><td class="nl">schrijven</td><td class="nl">schreef</td><td class="nl">geschreven</td></tr>
+    <tr><td class="nl">lezen</td><td class="nl">las</td><td class="nl">gelezen</td></tr>
+    <tr><td class="nl">spreken</td><td class="nl">sprak</td><td class="nl">gesproken</td></tr>
+    <tr><td class="nl">helpen</td><td class="nl">hielp</td><td class="nl">geholpen</td></tr>
+    <tr><td class="nl">vinden</td><td class="nl">vond</td><td class="nl">gevonden</td></tr>
+    <tr><td class="nl">nemen</td><td class="nl">nam</td><td class="nl">genomen</td></tr>
+  </tbody>
+</table>
+<p class="uitleg">Meervoud verleden tijd: gewoon <em>-en</em> toevoegen bij sterke werkwoorden. <span class="nl">ik liep → wij liepen, ik gaf → wij gaven, ik nam → wij namen</span>.</p>
+</article>
+
+<!-- ===== A2 — Perfectum ===== -->
+<article class="hoofdstuk" id="a2-perfectum">
+<h2><span class="niveau">A2</span> 12. Perfectum — <em>ge-</em> + <em>d/t</em></h2>
+<p>Het <strong>perfectum</strong> (voltooid tegenwoordige tijd) gebruik je voor afgesloten handelingen die nog relevant zijn voor nu. In spreektaal vervangt het vaak het imperfectum.</p>
+
+<h3>12.1 Vorm: hebben/zijn + voltooid deelwoord</h3>
+<p>Voltooid deelwoord van zwakke werkwoorden = <strong>ge- + stam + -d/-t</strong>. De keuze tussen <em>d</em> en <em>t</em> volgt opnieuw <em>'t kofschip</em>.</p>
+<table>
+  <thead><tr><th>Infinitief</th><th>Stam</th><th>Voltooid deelwoord</th><th>Hele zin</th></tr></thead>
+  <tbody>
+    <tr><td class="nl">werken</td><td>werk (op k)</td><td class="nl">gewerk<strong>t</strong></td><td class="nl">ik heb gewerkt</td></tr>
+    <tr><td class="nl">stoppen</td><td>stop (op p)</td><td class="nl">gestop<strong>t</strong></td><td class="nl">hij heeft gestopt</td></tr>
+    <tr><td class="nl">fietsen</td><td>fiets (op s)</td><td class="nl">gefiets<strong>t</strong></td><td class="nl">wij hebben gefietst</td></tr>
+    <tr><td class="nl">wonen</td><td>woon (op n)</td><td class="nl">gewoon<strong>d</strong></td><td class="nl">zij heeft gewoond</td></tr>
+    <tr><td class="nl">leren</td><td>leer (op r)</td><td class="nl">geleer<strong>d</strong></td><td class="nl">ik heb geleerd</td></tr>
+    <tr><td class="nl">spelen</td><td>speel (op l)</td><td class="nl">gespeel<strong>d</strong></td><td class="nl">wij hebben gespeeld</td></tr>
+  </tbody>
+</table>
+<div class="let">Bij de stam mag je <strong>geen</strong> v of z houden — die worden f en s. Maar het voltooid deelwoord behoudt de oorspronkelijke v/z omdat ze tussen klinkers staan: <span class="nl">leven → ik leef → ik heb geleefd</span>, <span class="nl">reizen → ik reis → ik heb gereisd</span>.</div>
+
+<h3>12.2 Voltooid deelwoord van sterke werkwoorden</h3>
+<p>Vorm: <strong>ge- + stam met klinkerwissel + -en</strong>. Zie tabel in §11.2 en bijlage 42.</p>
+<div class="vb">
+  <p class="nl">Ik heb het boek gelezen. (lezen → gelezen)</p>
+  <p class="nl">Wij zijn vroeg gekomen. (komen → gekomen)</p>
+  <p class="nl">Hij heeft een brief geschreven. (schrijven → geschreven)</p>
+</div>
+
+<h3>12.3 Hulpwerkwoord: hebben of zijn?</h3>
+<p>Zoals in §5.2: handelingen met <strong>beweging</strong> of <strong>verandering van toestand</strong> krijgen <em>zijn</em>; alle andere krijgen <em>hebben</em>.</p>
+<table>
+  <thead><tr><th>Hulpwerkwoord</th><th>Werkwoorden</th></tr></thead>
+  <tbody>
+    <tr><td><strong>zijn</strong></td><td>gaan, komen, blijven, worden, gebeuren, beginnen, stoppen (met intentie), sterven, vallen, vluchten, vertrekken, aankomen</td></tr>
+    <tr><td><strong>hebben</strong></td><td>werken, eten, drinken, lezen, schrijven, kopen, verkopen, helpen, lachen, slapen, wonen</td></tr>
+  </tbody>
+</table>
+</article>
+
+<!-- ===== A2 — zonder ge- ===== -->
+<article class="hoofdstuk" id="a2-zonder-ge">
+<h2><span class="niveau">A2</span> 13. Werkwoorden zonder <em>ge-</em></h2>
+<p>Het voltooid deelwoord krijgt <strong>geen</strong> <em>ge-</em> in twee gevallen:</p>
+
+<h3>13.1 Werkwoorden met een onbeklemtoond voorvoegsel</h3>
+<p>Voorvoegsels die <em>geen klemtoon</em> krijgen: <strong>be-, ge-, her-, ont-, ver-, er-</strong>.</p>
+<table>
+  <thead><tr><th>Voorvoegsel</th><th>Infinitief</th><th>Voltooid deelwoord</th></tr></thead>
+  <tbody>
+    <tr><td>be-</td><td class="nl">betalen</td><td class="nl">betaald (geen ge-)</td></tr>
+    <tr><td>be-</td><td class="nl">beginnen</td><td class="nl">begonnen</td></tr>
+    <tr><td>ge-</td><td class="nl">geloven</td><td class="nl">geloofd</td></tr>
+    <tr><td>her-</td><td class="nl">herhalen</td><td class="nl">herhaald</td></tr>
+    <tr><td>ont-</td><td class="nl">ontmoeten</td><td class="nl">ontmoet</td></tr>
+    <tr><td>ver-</td><td class="nl">vertellen</td><td class="nl">verteld</td></tr>
+    <tr><td>ver-</td><td class="nl">verkopen</td><td class="nl">verkocht</td></tr>
+    <tr><td>ver-</td><td class="nl">vergeten</td><td class="nl">vergeten</td></tr>
+    <tr><td>er-</td><td class="nl">erkennen</td><td class="nl">erkend</td></tr>
+  </tbody>
+</table>
+
+<h3>13.2 Veel voorkomende valstrik: <em>-eren</em> werkwoorden krijgen WEL <em>ge-</em></h3>
+<p>Een veel gehoorde mythe is dat werkwoorden op <em>-eren</em> geen <em>ge-</em> zouden krijgen. Dat klopt niet. Ze krijgen het wél, en ze worden zwak vervoegd met <em>-d</em>.</p>
+<table>
+  <thead><tr><th>Infinitief</th><th>Voltooid deelwoord</th></tr></thead>
+  <tbody>
+    <tr><td class="nl">studeren</td><td class="nl">gestudeerd</td></tr>
+    <tr><td class="nl">telefoneren</td><td class="nl">getelefoneerd</td></tr>
+    <tr><td class="nl">organiseren</td><td class="nl">georganiseerd</td></tr>
+    <tr><td class="nl">proberen</td><td class="nl">geprobeerd</td></tr>
+    <tr><td class="nl">presenteren</td><td class="nl">gepresenteerd</td></tr>
+    <tr><td class="nl">reageren</td><td class="nl">gereageerd</td></tr>
+  </tbody>
+</table>
+<div class="let">De uitzondering geldt alleen als zo'n werkwoord óók een onbeklemtoond voorvoegsel uit §13.1 heeft. Vergelijk: <span class="nl">presenteren → gepresenteerd</span> (wel <em>ge-</em>) versus <span class="nl">verpresenteren</span> bestaat niet, maar <span class="nl">verkopen → verkocht</span> (geen <em>ge-</em>).</div>
+</article>
+
+<!-- ===== A2 — Scheidbare ww ===== -->
+<article class="hoofdstuk" id="a2-scheidbaar">
+<h2><span class="niveau">A2</span> 14. Scheidbare en onscheidbare werkwoorden</h2>
+<p>Veel Nederlandse werkwoorden bestaan uit een voorvoegsel + een hoofdwerkwoord. Of het voorvoegsel <strong>splitst</strong>, hangt af van de klemtoon.</p>
+
+<h3>14.1 Scheidbare werkwoorden — klemtoon op het voorvoegsel</h3>
+<p>Voorvoegsel = <strong>beklemtoond</strong>. In de hoofdzin gaat het voorvoegsel naar het einde.</p>
+<table>
+  <thead><tr><th>Infinitief</th><th>Tegenwoordige tijd</th><th>Voltooid deelwoord</th></tr></thead>
+  <tbody>
+    <tr><td class="nl">ópstaan</td><td class="nl">ik sta om 7 uur op</td><td class="nl">opgestaan</td></tr>
+    <tr><td class="nl">áfsluiten</td><td class="nl">ik sluit het programma af</td><td class="nl">afgesloten</td></tr>
+    <tr><td class="nl">úitgaan</td><td class="nl">wij gaan vanavond uit</td><td class="nl">uitgegaan</td></tr>
+    <tr><td class="nl">áankomen</td><td class="nl">de trein komt om 8 uur aan</td><td class="nl">aangekomen</td></tr>
+    <tr><td class="nl">méenemen</td><td class="nl">neem je paraplu mee</td><td class="nl">meegenomen</td></tr>
+    <tr><td class="nl">vóórstellen</td><td class="nl">ik stel mij voor</td><td class="nl">voorgesteld</td></tr>
+  </tbody>
+</table>
+<div class="let">Bij scheidbare werkwoorden komt <em>ge-</em> <strong>tussen</strong> het voorvoegsel en de stam: <span class="nl">opgestaan</span>, niet "geopstaan". Hetzelfde voor <em>te</em>: <span class="nl">om op te staan</span>.</div>
+
+<h3>14.2 Onscheidbare werkwoorden — klemtoon op de stam</h3>
+<p>Voorvoegsel = <strong>onbeklemtoond</strong>. Het werkwoord blijft als één woord.</p>
+<table>
+  <thead><tr><th>Infinitief</th><th>Tegenwoordige tijd</th><th>Voltooid deelwoord</th></tr></thead>
+  <tbody>
+    <tr><td class="nl">vertéllen</td><td class="nl">ik vertel een verhaal</td><td class="nl">verteld</td></tr>
+    <tr><td class="nl">begríjpen</td><td class="nl">ik begrijp het</td><td class="nl">begrepen</td></tr>
+    <tr><td class="nl">ontvángen</td><td class="nl">ik ontvang een brief</td><td class="nl">ontvangen</td></tr>
+    <tr><td class="nl">herhálen</td><td class="nl">hij herhaalt de zin</td><td class="nl">herhaald</td></tr>
+  </tbody>
+</table>
+
+<h3>14.3 Bijzin: alles blijft samen</h3>
+<p>In een bijzin gaat het hele werkwoord naar het einde, scheidbaar of niet:</p>
+<div class="vb">
+  <p class="nl">… omdat ik om 7 uur opsta.</p>
+  <p class="nl">… terwijl hij het verhaal vertelt.</p>
+</div>
+</article>
+
+<!-- ===== A2 — Verkleinwoorden ===== -->
+<article class="hoofdstuk" id="a2-verkleinwoord">
+<h2><span class="niveau">A2</span> 15. Verkleinwoorden</h2>
+<p>Verkleinwoorden zijn extreem productief in het Nederlands. Ze drukken kleinheid uit, maar ook genegenheid, ironie, of categoriewissel ("een koffietje" = een kopje koffie).</p>
+
+<h3>15.1 Vijf basisvormen</h3>
+<table>
+  <thead><tr><th>Uitgang</th><th>Wanneer</th><th>Voorbeeld</th></tr></thead>
+  <tbody>
+    <tr><td><strong>-je</strong></td><td>na <em>b, d, f, g, k, p, s, t, ch</em></td><td class="nl">boek → boekje, kop → kopje, vis → visje, lach → lachje</td></tr>
+    <tr><td><strong>-tje</strong></td><td>na lange klinker, tweeklank, l, n, r</td><td class="nl">auto → autootje, ei → eitje, bal → balletje, vrouw → vrouwtje</td></tr>
+    <tr><td><strong>-etje</strong></td><td>na korte klinker + l, m, n, ng, r (verdubbeling)</td><td class="nl">bal → balletje, kam → kammetje, kar → karretje, man → mannetje</td></tr>
+    <tr><td><strong>-pje</strong></td><td>na lange klinker + m, of na ander samengesteld einde</td><td class="nl">boom → boompje, raam → raampje, riem → riempje</td></tr>
+    <tr><td><strong>-kje</strong></td><td>na <em>-ing</em> met klemtoon erbuiten</td><td class="nl">koning → koninkje, woning → woninkje</td></tr>
+  </tbody>
+</table>
+
+<h3>15.2 Spellings­details</h3>
+<ul>
+  <li><strong>Lange klinker + losse medeklinker → klinker verdubbelt</strong>: <span class="nl">auto → autootje</span> (geen "autotje").</li>
+  <li><strong>Korte klinker → medeklinker verdubbelt</strong>: <span class="nl">bal → balletje</span> (niet "baltje").</li>
+  <li><strong>Verkleinwoorden zijn altijd het-woorden</strong>, en altijd onzijdig.</li>
+</ul>
+
+<h3>15.3 Veelvoorkomende vaste verkleinwoorden</h3>
+<table>
+  <thead><tr><th>Verkleinwoord</th><th>Betekenis</th></tr></thead>
+  <tbody>
+    <tr><td class="nl">een biertje</td><td>een glas bier</td></tr>
+    <tr><td class="nl">een koffietje</td><td>een kopje koffie</td></tr>
+    <tr><td class="nl">een wandelingetje</td><td>een korte wandeling</td></tr>
+    <tr><td class="nl">het meisje</td><td>jong meisje (NB: enkele vorm met natuurlijk vrouwelijk geslacht)</td></tr>
+    <tr><td class="nl">het kindje</td><td>kindje (vaak met affectie)</td></tr>
+  </tbody>
+</table>
+</article>
+
+<!-- ===== A2 — Bijvoeglijk naamwoord ===== -->
+<article class="hoofdstuk" id="a2-bijvoeglijk">
+<h2><span class="niveau">A2</span> 16. Bijvoeglijk naamwoord + verbuiging</h2>
+<p>Het bijvoeglijk naamwoord krijgt meestal een <strong>-e</strong>. Behalve in één specifieke combinatie.</p>
+
+<h3>16.1 De <em>-e</em>-regel</h3>
+<table>
+  <thead><tr><th>Constructie</th><th>Met -e?</th><th>Voorbeeld</th></tr></thead>
+  <tbody>
+    <tr><td>de + adjectief + de-woord</td><td>ja</td><td class="nl">de mooie tafel</td></tr>
+    <tr><td>de + adjectief + het-woord</td><td>ja</td><td class="nl">het mooie huis</td></tr>
+    <tr><td>de + adjectief + meervoud</td><td>ja</td><td class="nl">de mooie tafels</td></tr>
+    <tr><td>een + adjectief + de-woord</td><td>ja</td><td class="nl">een mooie tafel</td></tr>
+    <tr><td><strong>een + adjectief + het-woord</strong></td><td><strong>nee</strong></td><td class="nl">een mooi huis</td></tr>
+    <tr><td>adjectief + meervoud zonder lidwoord</td><td>ja</td><td class="nl">mooie tafels, mooie huizen</td></tr>
+  </tbody>
+</table>
+<div class="let">De <strong>enige uitzondering</strong>: <em>een + adjectief + het-woord</em> → géén <em>-e</em>. <span class="nl">een groot huis</span> (niet "een grote huis").</div>
+
+<h3>16.2 Predicatief gebruik: nooit <em>-e</em></h3>
+<p>Als het bijvoeglijk naamwoord <strong>na</strong> het werkwoord staat (predicatief), krijgt het nooit een <em>-e</em>:</p>
+<div class="vb">
+  <p class="nl">De tafel is mooi. (nooit "mooie")</p>
+  <p class="nl">Het huis is groot.</p>
+  <p class="nl">Mijn kinderen zijn slim.</p>
+</div>
+
+<h3>16.3 Uitzonderingen op de <em>-e</em></h3>
+<ul>
+  <li>Materiaalbijvoeglijk naamwoord eindigt op <em>-en</em> en krijgt nooit extra <em>-e</em>: <span class="nl">een houten tafel, een gouden ring, een ijzeren bed</span>.</li>
+  <li>Bijvoeglijke naamwoorden eindigend op <em>-a, -en</em> al, of geografisch met hoofdletter: <span class="nl">een prima film, een Vlaams gerecht, een Antwerps café</span>.</li>
+</ul>
+</article>
+
+<!-- ===== A2 — Trappen van vergelijking ===== -->
+<article class="hoofdstuk" id="a2-trappen">
+<h2><span class="niveau">A2</span> 17. Comparatief en superlatief</h2>
+<table>
+  <thead><tr><th>Soort</th><th>Vorming</th><th>Voorbeeld</th></tr></thead>
+  <tbody>
+    <tr><td>positief</td><td>adjectief</td><td class="nl">groot, klein, mooi</td></tr>
+    <tr><td>comparatief</td><td>+ <strong>-er</strong></td><td class="nl">groter, kleiner, mooier</td></tr>
+    <tr><td>superlatief</td><td>+ <strong>-st</strong>, met "het"</td><td class="nl">het grootst, het kleinst, het mooist</td></tr>
+  </tbody>
+</table>
+
+<h3>17.1 Onregelmatige vormen</h3>
+<table>
+  <thead><tr><th>Positief</th><th>Comparatief</th><th>Superlatief</th></tr></thead>
+  <tbody>
+    <tr><td class="nl">goed</td><td class="nl">beter</td><td class="nl">het best</td></tr>
+    <tr><td class="nl">veel</td><td class="nl">meer</td><td class="nl">het meest</td></tr>
+    <tr><td class="nl">weinig</td><td class="nl">minder</td><td class="nl">het minst</td></tr>
+    <tr><td class="nl">graag</td><td class="nl">liever</td><td class="nl">het liefst</td></tr>
+  </tbody>
+</table>
+
+<h3>17.2 Spellingsregels</h3>
+<ul>
+  <li><strong>Lange klinker behouden</strong>: <span class="nl">groot → groter → het grootst</span>.</li>
+  <li><strong>Korte klinker → medeklinker verdubbelt</strong>: <span class="nl">dik → dikker → het dikst</span>.</li>
+  <li><strong>Stam op -r</strong>: comparatief krijgt <em>-der</em> in plaats van <em>-er</em>: <span class="nl">duur → duurder, zwaar → zwaarder, lekker → lekkerder</span>.</li>
+  <li><strong>Stam op -s</strong>: superlatief met <em>-t</em>: <span class="nl">fris → het frist, vies → het viest</span>.</li>
+</ul>
+
+<h3>17.3 Vergelijken met <em>dan</em> en <em>als</em></h3>
+<p><strong>Comparatief + dan</strong> · <strong>positief + als</strong>.</p>
+<div class="vb">
+  <p class="nl">Jan is groter dan Piet.</p>
+  <p class="nl">Jan is even groot als Piet.</p>
+  <p class="nl">Marie is niet zo groot als Sara.</p>
+</div>
+</article>
+
+<!-- ===== A2 — Modale werkwoorden ===== -->
+<article class="hoofdstuk" id="a2-modaal">
+<h2><span class="niveau">A2</span> 18. Modale werkwoorden</h2>
+<p>Modale werkwoorden geven een houding van de spreker weer: kunnen, moeten, mogen, willen, zullen, hoeven. Ze worden gevolgd door een infinitief.</p>
+
+<table>
+  <thead><tr><th>Werkwoord</th><th>ik</th><th>jij / u / hij / zij</th><th>wij / jullie / zij</th><th>Betekenis</th></tr></thead>
+  <tbody>
+    <tr><td class="nl">kunnen</td><td>kan</td><td>kunt / kan</td><td>kunnen</td><td>mogelijkheid, vermogen</td></tr>
+    <tr><td class="nl">moeten</td><td>moet</td><td>moet</td><td>moeten</td><td>verplichting, advies</td></tr>
+    <tr><td class="nl">mogen</td><td>mag</td><td>mag</td><td>mogen</td><td>toestemming</td></tr>
+    <tr><td class="nl">willen</td><td>wil</td><td>wilt / wil</td><td>willen</td><td>wens, verlangen</td></tr>
+    <tr><td class="nl">zullen</td><td>zal</td><td>zult / zal</td><td>zullen</td><td>toekomst, voorstel</td></tr>
+    <tr><td class="nl">hoeven</td><td>hoef</td><td>hoeft</td><td>hoeven</td><td>niet hoeven = geen verplichting</td></tr>
+  </tbody>
+</table>
+
+<div class="let"><strong>Hoeven</strong> wordt alleen ontkennend gebruikt: <span class="nl">je hoeft niet te komen</span>. Voor positieve verplichting: <em>moeten</em>.</div>
+
+<h3>18.1 Modaal + infinitief (zonder <em>te</em>)</h3>
+<div class="vb">
+  <p class="nl">Ik kan zwemmen.</p>
+  <p class="nl">Hij moet vandaag werken.</p>
+  <p class="nl">Mag ik hier roken?</p>
+  <p class="nl">Wij willen naar Antwerpen gaan.</p>
+  <p class="nl">Zullen we koffie drinken?</p>
+</div>
+
+<h3>18.2 Hoeven + te + infinitief (mét <em>te</em>!)</h3>
+<div class="vb">
+  <p class="nl">Je hoeft niet te komen.</p>
+  <p class="nl">Ik hoef het niet meer te doen.</p>
+</div>
+
+<h3>18.3 In het verleden</h3>
+<table>
+  <thead><tr><th>Modaal</th><th>Verleden (imperfectum)</th></tr></thead>
+  <tbody>
+    <tr><td class="nl">kunnen</td><td class="nl">kon, konden</td></tr>
+    <tr><td class="nl">moeten</td><td class="nl">moest, moesten</td></tr>
+    <tr><td class="nl">mogen</td><td class="nl">mocht, mochten</td></tr>
+    <tr><td class="nl">willen</td><td class="nl">wilde / wou, wilden</td></tr>
+    <tr><td class="nl">zullen</td><td class="nl">zou, zouden</td></tr>
+  </tbody>
+</table>
+</article>
+
+<!-- ===== A2 — Voorzetsels ===== -->
+<article class="hoofdstuk" id="a2-voorzetsel">
+<h2><span class="niveau">A2</span> 19. Voorzetsels (basis)</h2>
+<table>
+  <thead><tr><th>Voorzetsel</th><th>Betekenis</th><th>Voorbeeld</th></tr></thead>
+  <tbody>
+    <tr><td>in</td><td>binnen</td><td class="nl">in de tas, in Genk, in mei</td></tr>
+    <tr><td>op</td><td>boven op een oppervlak</td><td class="nl">op de tafel, op straat</td></tr>
+    <tr><td>aan</td><td>vastgemaakt, gericht op</td><td class="nl">aan de muur, aan de telefoon</td></tr>
+    <tr><td>naar</td><td>richting</td><td class="nl">naar huis, naar school</td></tr>
+    <tr><td>van</td><td>herkomst, bezit</td><td class="nl">van Brussel, het boek van Jan</td></tr>
+    <tr><td>voor</td><td>tijd of plaats vóór</td><td class="nl">voor het huis, voor zeven uur</td></tr>
+    <tr><td>achter</td><td>plaats achter</td><td class="nl">achter de deur</td></tr>
+    <tr><td>onder</td><td>plaats onder</td><td class="nl">onder de tafel</td></tr>
+    <tr><td>boven</td><td>plaats boven</td><td class="nl">boven het bed</td></tr>
+    <tr><td>tussen</td><td>tussen twee dingen</td><td class="nl">tussen de stoelen</td></tr>
+    <tr><td>met</td><td>samen met, met behulp van</td><td class="nl">met vrienden, met de auto</td></tr>
+    <tr><td>zonder</td><td>zonder iets</td><td class="nl">zonder geld, zonder mij</td></tr>
+    <tr><td>na</td><td>na in tijd</td><td class="nl">na het eten</td></tr>
+    <tr><td>door</td><td>doorheen, oorzaak</td><td class="nl">door de tuin, door de regen</td></tr>
+    <tr><td>over</td><td>boven, betreffende</td><td class="nl">over de brug, praten over politiek</td></tr>
+    <tr><td>uit</td><td>vanuit</td><td class="nl">uit de doos, uit België</td></tr>
+    <tr><td>bij</td><td>bij iemand, in de buurt</td><td class="nl">bij oma, bij het station</td></tr>
+    <tr><td>om</td><td>tijdstip, doel</td><td class="nl">om acht uur, om te helpen</td></tr>
+    <tr><td>tot</td><td>tot een grens</td><td class="nl">tot morgen, tot vijf uur</td></tr>
+  </tbody>
+</table>
+<div class="let">Verschillende werkwoorden hebben een <strong>vast voorzetsel</strong> dat je moet leren: <span class="nl">denken aan, kijken naar, luisteren naar, wachten op, vragen naar/aan, beginnen met, eindigen met</span>. Zie bijlage 43.</div>
+</article>
+
+<!-- ===== A2 — er ===== -->
+<article class="hoofdstuk" id="a2-er">
+<h2><span class="niveau">A2</span> 20. De <em>er</em>-constructie (intro)</h2>
+<p>Het kleine woordje <em>er</em> is een van de moeilijkste delen van het Nederlands. Op A2-niveau leer je twee functies; de rest volgt op B2 (§30).</p>
+
+<h3>20.1 <em>Er</em> als plaatsaanduiding ("daar")</h3>
+<div class="vb">
+  <p class="nl">Ik ga naar Brussel. Ik werk er. (= daar)</p>
+  <p class="nl">Ben je in Antwerpen geweest? — Ja, ik ben er gisteren geweest.</p>
+</div>
+
+<h3>20.2 <em>Er</em> + onbepaald onderwerp ("er is/zijn …")</h3>
+<p>Equivalent aan het Engelse "there is / there are".</p>
+<div class="vb">
+  <p class="nl">Er is een man in de tuin. (= There is a man in the garden.)</p>
+  <p class="nl">Er zijn drie kinderen aanwezig.</p>
+  <p class="nl">Er staat een fiets bij de deur.</p>
+</div>
+<div class="let">Bij <strong>bepaalde</strong> onderwerpen (met "de", "het", of een naam) gebruik je géén <em>er</em>: <span class="nl">De man is in de tuin</span>, niet "Er is de man in de tuin".</div>
+</article>
+
+
+<!-- ====================================================================
+     B1 — MIDDENNIVEAU
+     ==================================================================== -->
+
+<article class="hoofdstuk" id="b1-bijzin">
+<h2><span class="niveau">B1</span> 21. Bijzinnen en werkwoord op het einde</h2>
+<p>Een <strong>bijzin</strong> is een afhankelijke zin die met een onderschikkend voegwoord begint (<em>dat, omdat, als, hoewel, terwijl, …</em>). In een bijzin gaat <strong>alle vervoegde werkwoorden naar het einde</strong>.</p>
+
+<h3>21.1 Voorbeelden</h3>
+<table>
+  <thead><tr><th>Hoofdzin</th><th>Bijzin</th></tr></thead>
+  <tbody>
+    <tr><td class="nl">Ik weet het.</td><td class="nl">Ik weet dat hij komt.</td></tr>
+    <tr><td class="nl">Ik ben moe.</td><td class="nl">Ik blijf thuis omdat ik moe ben.</td></tr>
+    <tr><td class="nl">Het regent.</td><td class="nl">We gaan niet uit als het regent.</td></tr>
+    <tr><td class="nl">Hij is jong.</td><td class="nl">Hoewel hij jong is, werkt hij hard.</td></tr>
+  </tbody>
+</table>
+
+<h3>21.2 Werkwoordsgroep op het einde</h3>
+<p>Bij meerdere werkwoorden gaan ze <strong>allemaal</strong> naar het einde — meestal in de volgorde: hulpwerkwoord eerst, dan voltooid deelwoord of infinitief.</p>
+<div class="vb">
+  <p class="nl">Ik weet dat hij morgen komt.</p>
+  <p class="nl">Ik weet dat hij gisteren is gekomen.</p>
+  <p class="nl">Ik weet dat hij morgen niet kan komen.</p>
+  <p class="nl">Ik weet dat hij het boek heeft willen lezen.</p>
+</div>
+
+<h3>21.3 Belangrijke onderschikkende voegwoorden</h3>
+<table>
+  <thead><tr><th>Voegwoord</th><th>Betekenis</th></tr></thead>
+  <tbody>
+    <tr><td>dat</td><td>introduceert een mededeling: <em>Ik denk dat …</em></td></tr>
+    <tr><td>omdat</td><td>reden</td></tr>
+    <tr><td>als / wanneer</td><td>voorwaarde of tijd</td></tr>
+    <tr><td>toen</td><td>één specifiek moment in verleden</td></tr>
+    <tr><td>terwijl</td><td>gelijktijdigheid</td></tr>
+    <tr><td>hoewel / ofschoon</td><td>tegenstelling</td></tr>
+    <tr><td>zodat</td><td>gevolg, doel</td></tr>
+    <tr><td>voordat / nadat</td><td>tijd</td></tr>
+    <tr><td>tenzij</td><td>tenzij = behalve als (B2)</td></tr>
+  </tbody>
+</table>
+<div class="let">Verschil <strong>als</strong> vs <strong>toen</strong>: <em>als</em> = telkens / voorwaardelijk in tegenwoordige of toekomst. <em>Toen</em> = één specifiek moment in het verleden. <span class="nl">Toen ik klein was, … (één periode in het verleden) · Als het regent, blijf ik thuis (herhalend).</span></div>
+</article>
+
+<!-- ===== B1 — Inversie ===== -->
+<article class="hoofdstuk" id="b1-inversie">
+<h2><span class="niveau">B1</span> 22. Inversie na zinsdeel-eerst</h2>
+<p>Als iets anders dan het onderwerp op positie 1 staat, schuift het onderwerp <strong>na</strong> de persoonsvorm. Dit is <em>inversie</em>.</p>
+
+<table>
+  <thead><tr><th>Standaard</th><th>Inversie</th></tr></thead>
+  <tbody>
+    <tr><td class="nl">Ik ga vandaag naar Brussel.</td><td class="nl">Vandaag ga ik naar Brussel.</td></tr>
+    <tr><td class="nl">Wij kopen morgen een nieuwe auto.</td><td class="nl">Morgen kopen wij een nieuwe auto.</td></tr>
+    <tr><td class="nl">Jan blijft thuis omdat hij ziek is.</td><td class="nl">Omdat Jan ziek is, blijft hij thuis.</td></tr>
+  </tbody>
+</table>
+
+<h3>22.1 Inversie na een bijzin op positie 1</h3>
+<p>Als een complete bijzin op positie 1 staat, telt die als één geheel — daarna komt de persoonsvorm van de hoofdzin, gevolgd door het onderwerp.</p>
+<div class="vb">
+  <p class="nl"><strong>Omdat het regent</strong>, blijf ik thuis. <small>(bijzin → komma → werkwoord hoofdzin → onderwerp)</small></p>
+  <p class="nl"><strong>Als je tijd hebt</strong>, kunnen we afspreken.</p>
+  <p class="nl"><strong>Hoewel hij moe was</strong>, ging hij toch werken.</p>
+</div>
+<div class="let">Komma <em>tussen</em> bijzin en hoofdzin als de bijzin <strong>voor</strong> staat. Als de hoofdzin eerst komt, is de komma optioneel: <span class="nl">Ik blijf thuis omdat het regent</span> (komma kan weg).</div>
+</article>
+
+<!-- ===== B1 — Conditioneel ===== -->
+<article class="hoofdstuk" id="b1-conditioneel">
+<h2><span class="niveau">B1</span> 23. Voorwaardelijke wijs — <em>zou</em></h2>
+<p>Voor hypothesen, beleefdheid, of toekomst-in-het-verleden gebruik je <strong>zou(den)</strong> + infinitief.</p>
+
+<h3>23.1 Beleefdheid</h3>
+<div class="vb">
+  <p class="nl">Zou je me kunnen helpen?</p>
+  <p class="nl">Ik zou graag een koffie willen.</p>
+  <p class="nl">Zou u dat eens kunnen herhalen?</p>
+</div>
+
+<h3>23.2 Hypothese (irreële voorwaarde)</h3>
+<table>
+  <thead><tr><th>Voorwaarde</th><th>Hoofdzin</th></tr></thead>
+  <tbody>
+    <tr><td class="nl">Als ik tijd had, …</td><td class="nl">… zou ik komen.</td></tr>
+    <tr><td class="nl">Als hij rijk was, …</td><td class="nl">… zou hij een huis kopen.</td></tr>
+    <tr><td class="nl">Als het mooi weer was geweest, …</td><td class="nl">… zouden we gegaan zijn. <small>(irreëel in verleden)</small></td></tr>
+  </tbody>
+</table>
+
+<h3>23.3 Toekomst in het verleden</h3>
+<div class="vb">
+  <p class="nl">Hij zei dat hij zou komen.</p>
+  <p class="nl">Ik dacht dat het zou regenen.</p>
+</div>
+</article>
+
+<!-- ===== B1 — Reflexieve ww ===== -->
+<article class="hoofdstuk" id="b1-reflexief">
+<h2><span class="niveau">B1</span> 24. Wederkerende werkwoorden</h2>
+<p>Bij wederkerende (reflexieve) werkwoorden verwijst het object naar het onderwerp zelf. Je gebruikt een <strong>wederkerend voornaamwoord</strong>.</p>
+
+<table>
+  <thead><tr><th>Persoon</th><th>Wederkerend vnw.</th></tr></thead>
+  <tbody>
+    <tr><td>ik</td><td>me</td></tr>
+    <tr><td>jij / u</td><td>je / u</td></tr>
+    <tr><td>hij / zij / het</td><td>zich</td></tr>
+    <tr><td>wij</td><td>ons</td></tr>
+    <tr><td>jullie</td><td>je</td></tr>
+    <tr><td>zij (mv)</td><td>zich</td></tr>
+  </tbody>
+</table>
+
+<h3>24.1 Vaste wederkerende werkwoorden</h3>
+<table>
+  <thead><tr><th>Werkwoord</th><th>Voorbeeld</th></tr></thead>
+  <tbody>
+    <tr><td class="nl">zich vergissen</td><td class="nl">Ik vergis me. Hij vergist zich.</td></tr>
+    <tr><td class="nl">zich herinneren</td><td class="nl">Herinner je je dat nog?</td></tr>
+    <tr><td class="nl">zich vervelen</td><td class="nl">De kinderen vervelen zich.</td></tr>
+    <tr><td class="nl">zich voorstellen</td><td class="nl">Ik stel me voor. <small>(introductie)</small></td></tr>
+    <tr><td class="nl">zich haasten</td><td class="nl">Wij haasten ons.</td></tr>
+    <tr><td class="nl">zich schamen</td><td class="nl">Hij schaamt zich voor zijn fout.</td></tr>
+    <tr><td class="nl">zich aanmelden</td><td class="nl">Je moet je aanmelden op de site.</td></tr>
+    <tr><td class="nl">zich wassen</td><td class="nl">Ik was me elke ochtend. <small>(reflexief gebruik)</small></td></tr>
+  </tbody>
+</table>
+
+<div class="let">Sommige werkwoorden bestaan ook zonder <em>zich</em>, met andere betekenis: <span class="nl">wassen = iemand anders wassen · zich wassen = zelf wassen</span>.</div>
+</article>
+
+<!-- ===== B1 — Plusquamperfectum ===== -->
+<article class="hoofdstuk" id="b1-plusquam">
+<h2><span class="niveau">B1</span> 25. Plusquamperfectum (voltooid verleden tijd)</h2>
+<p>Gebruik je voor een handeling die <em>vóór</em> een ander moment in het verleden plaatsvond. Vorm: <strong>had(den) / was(en) + voltooid deelwoord</strong>.</p>
+
+<div class="vb">
+  <p class="nl">Toen ik thuiskwam, had hij al gegeten.</p>
+  <p class="nl">Voordat de film begon, hadden we koffie gedronken.</p>
+  <p class="nl">Hij vertelde dat hij in Brussel had gewoond.</p>
+  <p class="nl">Ze was al vertrokken voordat ik aankwam.</p>
+</div>
+
+<table>
+  <thead><tr><th>Tijdsverhouding</th><th>Voorbeeld</th></tr></thead>
+  <tbody>
+    <tr><td>Plusquamperfectum komt vóór imperfectum/perfectum</td><td class="nl">Hij had het boek gelezen voordat hij sliep.</td></tr>
+    <tr><td>Vaak met "voordat", "nadat", "toen"</td><td class="nl">Nadat ze gegeten hadden, gingen ze wandelen.</td></tr>
+  </tbody>
+</table>
+</article>
+
+<!-- ===== B1 — Passief ===== -->
+<article class="hoofdstuk" id="b1-passief">
+<h2><span class="niveau">B1</span> 26. Lijdende vorm — <em>worden</em></h2>
+<p>De lijdende vorm zet het lijdend voorwerp op de plaats van het onderwerp. Vorm: <strong>worden + voltooid deelwoord</strong> (tegenwoordige tijd) of <strong>zijn + voltooid deelwoord</strong> (voltooide tijd).</p>
+
+<table>
+  <thead><tr><th>Tijd</th><th>Bedrijvend</th><th>Lijdend</th></tr></thead>
+  <tbody>
+    <tr><td>tt</td><td class="nl">De man bouwt een huis.</td><td class="nl">Het huis wordt gebouwd (door de man).</td></tr>
+    <tr><td>imperf.</td><td class="nl">De man bouwde een huis.</td><td class="nl">Het huis werd gebouwd.</td></tr>
+    <tr><td>perfectum</td><td class="nl">De man heeft een huis gebouwd.</td><td class="nl">Het huis is gebouwd.</td></tr>
+    <tr><td>plusquam.</td><td class="nl">De man had een huis gebouwd.</td><td class="nl">Het huis was gebouwd.</td></tr>
+    <tr><td>toekomst</td><td class="nl">De man zal een huis bouwen.</td><td class="nl">Het huis zal gebouwd worden.</td></tr>
+  </tbody>
+</table>
+
+<div class="let">In het perfectum gebruikt de lijdende vorm <strong>zijn</strong>, niet "geworden". <span class="nl">De brief is geschreven</span> (niet "is geschreven geworden" — dat is overbodig).</div>
+
+<h3>26.1 Door wie?</h3>
+<p>Vermeld de dader met <strong>door</strong> + persoon:</p>
+<div class="vb">
+  <p class="nl">De brief wordt door Jan geschreven.</p>
+  <p class="nl">Het probleem werd door de manager opgelost.</p>
+</div>
+</article>
+
+<!-- ===== B1 — te en om te ===== -->
+<article class="hoofdstuk" id="b1-te">
+<h2><span class="niveau">B1</span> 27. Te + infinitief en om te + infinitief</h2>
+
+<h3>27.1 Werkwoorden die <em>te + infinitief</em> vragen</h3>
+<table>
+  <thead><tr><th>Werkwoord</th><th>Voorbeeld</th></tr></thead>
+  <tbody>
+    <tr><td class="nl">proberen</td><td class="nl">Ik probeer Nederlands te leren.</td></tr>
+    <tr><td class="nl">beginnen</td><td class="nl">Hij begint te schrijven.</td></tr>
+    <tr><td class="nl">durven</td><td class="nl">Zij durft niet te vliegen.</td></tr>
+    <tr><td class="nl">vergeten</td><td class="nl">Vergeet niet te bellen.</td></tr>
+    <tr><td class="nl">beloven</td><td class="nl">Hij belooft te komen.</td></tr>
+    <tr><td class="nl">hopen</td><td class="nl">Ik hoop je snel te zien.</td></tr>
+    <tr><td class="nl">van plan zijn</td><td class="nl">Ik ben van plan te verhuizen.</td></tr>
+  </tbody>
+</table>
+
+<h3>27.2 <em>Om te + infinitief</em> — doel uitdrukken</h3>
+<p>Voor "om iets te doen" (= in order to do).</p>
+<div class="vb">
+  <p class="nl">Ik leer Nederlands om in België te kunnen werken.</p>
+  <p class="nl">Hij belt om een afspraak te maken.</p>
+  <p class="nl">We sparen om een huis te kopen.</p>
+</div>
+
+<h3>27.3 <em>Te</em> bij scheidbare werkwoorden</h3>
+<p>Bij scheidbare werkwoorden komt <em>te</em> <strong>tussen</strong> het voorvoegsel en de stam:</p>
+<div class="vb">
+  <p class="nl">Het is tijd om op te staan.</p>
+  <p class="nl">Ik probeer mijn boek mee te nemen.</p>
+  <p class="nl">Hij vergat de deur dicht te doen.</p>
+</div>
+</article>
+
+<!-- ===== B1 — Relatieve bijzin ===== -->
+<article class="hoofdstuk" id="b1-relatief">
+<h2><span class="niveau">B1</span> 28. Relatieve bijzinnen — <em>die / dat / waar / wat</em></h2>
+<p>Relatieve bijzinnen geven extra informatie over een woord uit de hoofdzin.</p>
+
+<h3>28.1 Keuze tussen <em>die</em> en <em>dat</em></h3>
+<table>
+  <thead><tr><th>Woordsoort</th><th>Relatief</th><th>Voorbeeld</th></tr></thead>
+  <tbody>
+    <tr><td>de-woord (enkelvoud + mv)</td><td>die</td><td class="nl">de man die daar staat · de kinderen die spelen</td></tr>
+    <tr><td>het-woord (enkelvoud)</td><td>dat</td><td class="nl">het huis dat ik kocht</td></tr>
+    <tr><td>onbepaald (alles, iets, niets, …)</td><td>wat</td><td class="nl">alles wat ik wil · iets wat ik niet wist</td></tr>
+  </tbody>
+</table>
+
+<h3>28.2 <em>Waar</em> + voorzetsel</h3>
+<p>Bij <strong>voorzetsels</strong> en een zaak gebruik je <em>waar</em> + voorzetsel (vaak als één woord):</p>
+<table>
+  <thead><tr><th>Combinatie</th><th>Voorbeeld</th></tr></thead>
+  <tbody>
+    <tr><td>waarover</td><td class="nl">het boek waarover ik je vertelde</td></tr>
+    <tr><td>waarmee</td><td class="nl">de pen waarmee ik schrijf</td></tr>
+    <tr><td>waaraan</td><td class="nl">het project waaraan ik werk</td></tr>
+    <tr><td>waarvan</td><td class="nl">de stad waarvan hij houdt</td></tr>
+    <tr><td>waarin</td><td class="nl">de doos waarin de spullen zitten</td></tr>
+    <tr><td>waarvoor</td><td class="nl">de reden waarvoor ik kom</td></tr>
+  </tbody>
+</table>
+<div class="let">Bij <strong>personen</strong> gebruik je het voorzetsel + <em>wie</em>: <span class="nl">de vrouw met wie ik praat · de man over wie wij spraken</span>.</div>
+</article>
+
+<!-- ===== B1 — Voegwoorden ===== -->
+<article class="hoofdstuk" id="b1-voegwoord">
+<h2><span class="niveau">B1</span> 29. Voegwoorden: neven- of onderschikkend</h2>
+
+<h3>29.1 Nevenschikkend (verbinden gelijkwaardige zinnen)</h3>
+<table>
+  <thead><tr><th>Voegwoord</th><th>Functie</th></tr></thead>
+  <tbody>
+    <tr><td>en</td><td>toevoeging</td></tr>
+    <tr><td>maar</td><td>tegenstelling</td></tr>
+    <tr><td>of</td><td>keuze</td></tr>
+    <tr><td>want</td><td>reden (geeft een verklaring)</td></tr>
+    <tr><td>dus</td><td>gevolg</td></tr>
+  </tbody>
+</table>
+<p>Bij nevenschikkende voegwoorden <strong>blijft de woordvolgorde gewoon</strong> (geen werkwoord op het einde):</p>
+<div class="vb">
+  <p class="nl">Ik blijf thuis, want ik ben ziek. <small>(geen inversie, geen werkwoord op einde)</small></p>
+  <p class="nl">Hij is rijk, dus hij koopt een nieuwe auto.</p>
+</div>
+
+<h3>29.2 Onderschikkend (vormen een bijzin)</h3>
+<p>Bij onderschikkende voegwoorden <strong>gaat het werkwoord naar het einde</strong> (zie §21).</p>
+<div class="vb">
+  <p class="nl">Ik blijf thuis omdat ik ziek ben. <small>(bijzin)</small></p>
+  <p class="nl">Hij is rijk, zodat hij een nieuwe auto kan kopen.</p>
+</div>
+
+<h3>29.3 Vergelijking <em>want</em> vs <em>omdat</em></h3>
+<table>
+  <thead><tr><th></th><th>want</th><th>omdat</th></tr></thead>
+  <tbody>
+    <tr><td>Type</td><td>nevenschikkend</td><td>onderschikkend</td></tr>
+    <tr><td>Werkwoord op einde?</td><td>nee</td><td>ja</td></tr>
+    <tr><td>Kan zin beginnen?</td><td>nee</td><td>ja</td></tr>
+    <tr><td>Stijl</td><td>spreektaal vaak</td><td>neutraal, ook schrijftaal</td></tr>
+  </tbody>
+</table>
+</article>
+
+
+<!-- ====================================================================
+     B2 — GEVORDERD
+     ==================================================================== -->
+
+<article class="hoofdstuk" id="b2-er">
+<h2><span class="niveau">B2</span> 30. De vier functies van <em>er</em></h2>
+<p>Het woordje <em>er</em> heeft vier verschillende functies. Een C1-spreker gebruikt ze allemaal automatisch — leer ze stuk voor stuk herkennen.</p>
+
+<h3>30.1 Plaats-<em>er</em> (= daar, vervangt voorbije plaats)</h3>
+<div class="vb">
+  <p class="nl">Ben je naar Brussel geweest? — Ja, ik ben er gisteren geweest.</p>
+  <p class="nl">In de keuken? Ik kom er net vandaan.</p>
+</div>
+
+<h3>30.2 Voorlopig onderwerp (= "there is/are")</h3>
+<p>Bij onbepaalde onderwerpen.</p>
+<div class="vb">
+  <p class="nl">Er ligt een boek op de tafel.</p>
+  <p class="nl">Er komen drie gasten vanavond.</p>
+  <p class="nl">Er wordt veel gediscussieerd over dit onderwerp.</p>
+</div>
+
+<h3>30.3 Voornaamwoordelijk bijwoord (er + voorzetsel)</h3>
+<p>Vervangt een zaak in een voorzetselgroep. Voorzetsel komt achteraan:</p>
+<table>
+  <thead><tr><th>Vol</th><th>Met <em>er</em></th></tr></thead>
+  <tbody>
+    <tr><td class="nl">Ik denk aan de vakantie.</td><td class="nl">Ik denk eraan. / Ik denk er vaak aan.</td></tr>
+    <tr><td class="nl">Hij houdt van die muziek.</td><td class="nl">Hij houdt ervan.</td></tr>
+    <tr><td class="nl">Wij praten over het probleem.</td><td class="nl">Wij praten erover.</td></tr>
+    <tr><td class="nl">Zij wacht op de bus.</td><td class="nl">Zij wacht erop.</td></tr>
+  </tbody>
+</table>
+<div class="let">Personen vervang je niet met <em>er</em>: <span class="nl">Ik denk aan Jan</span> → <span class="nl">Ik denk aan hem</span> (niet "Ik denk eraan" voor een persoon).</div>
+
+<h3>30.4 Getal-<em>er</em> (kwantitatief)</h3>
+<p>Vervangt een hoeveelheid bij een getal of veel/weinig.</p>
+<div class="vb">
+  <p class="nl">Hoeveel boeken heb je? — Ik heb er drie.</p>
+  <p class="nl">Heb je nog koekjes? — Ja, ik heb er nog twee.</p>
+  <p class="nl">Wij hebben geen geld meer. — Heb je er echt geen?</p>
+</div>
+
+<h3>30.5 Combinaties</h3>
+<p>Soms krijg je twee of meer functies in dezelfde zin. De volgorde is dan: <em>er</em> + plaats + tijd + manier + voorzetsel.</p>
+<div class="vb">
+  <p class="nl">Er liggen er nog drie in de doos. <small>(voorlopig onderwerp + getal)</small></p>
+</div>
+</article>
+
+<!-- ===== B2 — Modale partikels ===== -->
+<article class="hoofdstuk" id="b2-partikels">
+<h2><span class="niveau">B2</span> 31. Modale partikels</h2>
+<p>Kleine woordjes die de houding van de spreker weergeven. Onvertaalbaar woord-voor-woord, maar essentieel voor natuurlijk Nederlands.</p>
+
+<table>
+  <thead><tr><th>Partikel</th><th>Effect</th><th>Voorbeeld</th></tr></thead>
+  <tbody>
+    <tr><td>toch</td><td>tegen verwachting in / aansporing</td><td class="nl">Het regent toch! · Doe het toch.</td></tr>
+    <tr><td>maar</td><td>vriendelijke aansporing / bagatelliserend</td><td class="nl">Ga maar zitten. · Doe het maar.</td></tr>
+    <tr><td>eens</td><td>vrijblijvendheid / probeer eens</td><td class="nl">Kijk eens. · Probeer dat eens.</td></tr>
+    <tr><td>even</td><td>kort / oppervlakkig</td><td class="nl">Wacht even. · Bel me even.</td></tr>
+    <tr><td>wel</td><td>tegen ontkenning / bevestigend</td><td class="nl">Het is wel waar. · Ik kom wel.</td></tr>
+    <tr><td>nou / nu</td><td>aanloop, ongeduld</td><td class="nl">Kom nou! · Wat moet je nu?</td></tr>
+    <tr><td>dan</td><td>logisch gevolg in vraag</td><td class="nl">Wat doe je dan? · Wie was dat dan?</td></tr>
+    <tr><td>hoor</td><td>aansporing / geruststelling</td><td class="nl">Doe maar voorzichtig hoor. · Geen probleem hoor.</td></tr>
+    <tr><td>zeker</td><td>verzoek om bevestiging</td><td class="nl">Je komt toch zeker?</td></tr>
+  </tbody>
+</table>
+
+<h3>31.1 Combinaties</h3>
+<p>Partikels stapelen vaak. Volgorde: <em>maar</em> / <em>toch</em> / <em>wel</em> + <em>eens</em> / <em>even</em>.</p>
+<div class="vb">
+  <p class="nl">Doe het maar eens. <small>(vriendelijke uitnodiging om te proberen)</small></p>
+  <p class="nl">Kom toch eens langs. <small>(zachte uitnodiging)</small></p>
+  <p class="nl">Probeer het toch maar even. <small>(zachte aansporing)</small></p>
+</div>
+<div class="let">Een spreker die geen partikels gebruikt, klinkt afstandelijk of robotachtig. Een goed niveau van partikels onderscheidt B2 van C1. Luister bewust naar Vlaamse sprekers en imiteer hun gebruik.</div>
+</article>
+
+<!-- ===== B2 — Indirecte rede ===== -->
+<article class="hoofdstuk" id="b2-indirect">
+<h2><span class="niveau">B2</span> 32. Indirecte rede</h2>
+<p>In het Nederlands schuift de tijd één stap terug bij indirecte rede in het verleden (zoals in het Engels).</p>
+
+<table>
+  <thead><tr><th>Directe rede</th><th>Indirecte rede</th></tr></thead>
+  <tbody>
+    <tr><td class="nl">"Ik werk vandaag."</td><td class="nl">Hij zei dat hij die dag werkte.</td></tr>
+    <tr><td class="nl">"Ik heb het gedaan."</td><td class="nl">Zij zei dat ze het had gedaan.</td></tr>
+    <tr><td class="nl">"Ik kom morgen."</td><td class="nl">Hij zei dat hij de volgende dag zou komen.</td></tr>
+    <tr><td class="nl">"Kom je?"</td><td class="nl">Hij vroeg of ik kwam.</td></tr>
+  </tbody>
+</table>
+
+<h3>32.1 Verschuivingen</h3>
+<table>
+  <thead><tr><th>Direct</th><th>Indirect (verleden)</th></tr></thead>
+  <tbody>
+    <tr><td>tegenwoordige tijd</td><td>imperfectum</td></tr>
+    <tr><td>imperfectum / perfectum</td><td>plusquamperfectum</td></tr>
+    <tr><td>toekomst (zal/zullen)</td><td>conditioneel (zou/zouden)</td></tr>
+    <tr><td>vandaag → die dag</td><td></td></tr>
+    <tr><td>morgen → de volgende dag</td><td></td></tr>
+    <tr><td>gisteren → de dag ervoor</td><td></td></tr>
+    <tr><td>nu → toen</td><td></td></tr>
+    <tr><td>hier → daar</td><td></td></tr>
+  </tbody>
+</table>
+
+<h3>32.2 Ja/nee-vraag in indirecte rede</h3>
+<p>Gebruik <strong>of</strong>:</p>
+<div class="vb">
+  <p class="nl">"Wil je koffie?" → Hij vroeg of ik koffie wilde.</p>
+  <p class="nl">"Heb je geld?" → Ze vroeg of ik geld had.</p>
+</div>
+</article>
+
+<!-- ===== B2 — Voegwoorden geavanceerd ===== -->
+<article class="hoofdstuk" id="b2-voegwoord">
+<h2><span class="niveau">B2</span> 33. Geavanceerde voegwoorden</h2>
+<table>
+  <thead><tr><th>Voegwoord</th><th>Betekenis</th><th>Voorbeeld</th></tr></thead>
+  <tbody>
+    <tr><td>nadat</td><td>tijd: na</td><td class="nl">Nadat hij gegeten had, ging hij wandelen.</td></tr>
+    <tr><td>voordat</td><td>tijd: voor</td><td class="nl">Voordat ik vertrek, sluit ik de deur.</td></tr>
+    <tr><td>zodra</td><td>onmiddellijk wanneer</td><td class="nl">Zodra ik aankom, bel ik je.</td></tr>
+    <tr><td>zolang</td><td>tijd: zolang als</td><td class="nl">Zolang het regent, blijven we binnen.</td></tr>
+    <tr><td>naarmate</td><td>geleidelijke evolutie</td><td class="nl">Naarmate hij ouder werd, werd hij wijzer.</td></tr>
+    <tr><td>indien</td><td>voorwaarde (formeel)</td><td class="nl">Indien u akkoord gaat, … </td></tr>
+    <tr><td>mits</td><td>op voorwaarde dat</td><td class="nl">We gaan, mits het weer meezit.</td></tr>
+    <tr><td>tenzij</td><td>behalve als</td><td class="nl">Ik kom, tenzij ik ziek word.</td></tr>
+    <tr><td>aangezien</td><td>aangezien dat (formele reden)</td><td class="nl">Aangezien hij geen tijd had, vertrok hij snel.</td></tr>
+    <tr><td>opdat</td><td>doel (formeel)</td><td class="nl">Opdat iedereen kan deelnemen, …</td></tr>
+    <tr><td>doordat</td><td>oorzaak (geen handelaar)</td><td class="nl">Doordat het regende, verloren we tijd.</td></tr>
+  </tbody>
+</table>
+
+<h3>33.1 <em>Doordat</em> versus <em>omdat</em></h3>
+<p><em>Omdat</em>: reden (met een bewuste oorzaak of intentie). <em>Doordat</em>: oorzaak zonder intentie of zonder verantwoordelijke. <em>Aangezien</em>: formeler.</p>
+<div class="vb">
+  <p class="nl">Ik kom te laat omdat ik mij verslapen heb. <small>(verantwoordelijkheid bij mij)</small></p>
+  <p class="nl">Ik kom te laat doordat de bus te laat was. <small>(externe oorzaak)</small></p>
+  <p class="nl">Aangezien u nieuw bent, leg ik het uit. <small>(formeel)</small></p>
+</div>
+</article>
+
+<!-- ===== B2 — Werkwoordsvolgorde groen-rood ===== -->
+<article class="hoofdstuk" id="b2-volgorde">
+<h2><span class="niveau">B2</span> 34. Werkwoordsvolgorde — rood of groen</h2>
+<p>In samengestelde tijden in <strong>bijzinnen</strong> bestaat keuze in volgorde. Beide zijn correct.</p>
+
+<table>
+  <thead><tr><th>Variant</th><th>Volgorde</th><th>Voorbeeld</th></tr></thead>
+  <tbody>
+    <tr><td>Rood</td><td>hulpwerkwoord + voltooid deelwoord</td><td class="nl">… omdat hij heeft gewerkt.</td></tr>
+    <tr><td>Groen</td><td>voltooid deelwoord + hulpwerkwoord</td><td class="nl">… omdat hij gewerkt heeft.</td></tr>
+  </tbody>
+</table>
+<p class="uitleg">In Vlaanderen overheerst <strong>groen</strong> in spreektaal. In Nederland is <strong>rood</strong> iets gangbaarder. Beide zijn standaardtaal.</p>
+
+<h3>34.1 Bij drie werkwoorden</h3>
+<p>Bij langere werkwoordsgroepen wordt het complexer. Een veelvoorkomende volgorde:</p>
+<div class="vb">
+  <p class="nl">… omdat hij het had willen lezen.</p>
+  <p class="nl">… omdat het boek door hem moet worden gelezen.</p>
+  <p class="nl">… omdat zij dat had moeten doen.</p>
+</div>
+</article>
+
+<!-- ===== B2 — Vaste voorzetsels ===== -->
+<article class="hoofdstuk" id="b2-vaste">
+<h2><span class="niveau">B2</span> 35. Vaste voorzetselcombinaties</h2>
+<p>Veel werkwoorden vereisen een specifiek voorzetsel. Dit moet je per geval leren — er is geen logica vanuit andere talen.</p>
+
+<table>
+  <thead><tr><th>Werkwoord + voorzetsel</th><th>Voorbeeld</th></tr></thead>
+  <tbody>
+    <tr><td class="nl">denken aan</td><td class="nl">Ik denk vaak aan mijn jeugd.</td></tr>
+    <tr><td class="nl">kijken naar</td><td class="nl">Hij kijkt naar de wedstrijd.</td></tr>
+    <tr><td class="nl">luisteren naar</td><td class="nl">Wij luisteren naar muziek.</td></tr>
+    <tr><td class="nl">wachten op</td><td class="nl">Zij wacht op de bus.</td></tr>
+    <tr><td class="nl">geloven in</td><td class="nl">Ik geloof in dat plan.</td></tr>
+    <tr><td class="nl">houden van</td><td class="nl">Hij houdt van zijn werk.</td></tr>
+    <tr><td class="nl">praten met / over</td><td class="nl">Ik praat met haar over politiek.</td></tr>
+    <tr><td class="nl">vragen aan / om / naar</td><td class="nl">Vraag aan Jan om hulp. · Vraag naar het adres.</td></tr>
+    <tr><td class="nl">vertellen aan / over</td><td class="nl">Hij vertelt aan ons over zijn reis.</td></tr>
+    <tr><td class="nl">beginnen met / aan</td><td class="nl">Wij beginnen met de les. · Hij begint aan een nieuw boek.</td></tr>
+    <tr><td class="nl">stoppen met</td><td class="nl">Ik stop met roken.</td></tr>
+    <tr><td class="nl">eindigen op</td><td class="nl">De film eindigt op een twist.</td></tr>
+    <tr><td class="nl">bestaan uit / in</td><td class="nl">Het team bestaat uit zes mensen. · Geluk bestaat in kleine dingen.</td></tr>
+    <tr><td class="nl">lijden aan / onder</td><td class="nl">Hij lijdt aan diabetes. · Wij lijden onder de hitte.</td></tr>
+    <tr><td class="nl">verwachten van</td><td class="nl">Wat verwacht je van mij?</td></tr>
+    <tr><td class="nl">bang zijn voor</td><td class="nl">Het kind is bang voor de hond.</td></tr>
+    <tr><td class="nl">tevreden zijn over / met</td><td class="nl">Ik ben tevreden over het resultaat.</td></tr>
+    <tr><td class="nl">trots zijn op</td><td class="nl">Wij zijn trots op onze dochter.</td></tr>
+    <tr><td class="nl">gewend zijn aan</td><td class="nl">Ik ben gewend aan het Vlaamse klimaat.</td></tr>
+    <tr><td class="nl">deelnemen aan</td><td class="nl">Hij neemt deel aan de wedstrijd.</td></tr>
+    <tr><td class="nl">leiden tot</td><td class="nl">Dat leidt tot grote problemen.</td></tr>
+    <tr><td class="nl">slagen voor / in</td><td class="nl">Hij slaagde voor zijn examen. · Hij slaagde erin het te doen.</td></tr>
+  </tbody>
+</table>
+<p>Volledige lijst: zie bijlage 43.</p>
+</article>
+
+
+<!-- ====================================================================
+     C1 — VERFIJND
+     ==================================================================== -->
+
+<article class="hoofdstuk" id="c1-afleiding">
+<h2><span class="niveau">C1</span> 36. Afleidingen en samenstellingen</h2>
+<p>Op C1-niveau moet je productief kunnen variëren met achtervoegsels en voorvoegsels om je woordenschat zelf uit te breiden.</p>
+
+<h3>36.1 Achtervoegsels die bijvoeglijke naamwoorden vormen</h3>
+<table>
+  <thead><tr><th>Suffix</th><th>Betekenis</th><th>Voorbeelden</th></tr></thead>
+  <tbody>
+    <tr><td>-ig</td><td>eigenschap</td><td class="nl">handig, slordig, mistig, geestig, prachtig</td></tr>
+    <tr><td>-lijk</td><td>kenmerk, mogelijkheid</td><td class="nl">vriendelijk, eerlijk, mogelijk, nuttig, gewoonlijk</td></tr>
+    <tr><td>-baar</td><td>"kan ge-X worden"</td><td class="nl">eetbaar, leesbaar, betaalbaar, draagbaar</td></tr>
+    <tr><td>-loos</td><td>"zonder X"</td><td class="nl">werkloos, hopeloos, eindeloos, dakloos</td></tr>
+    <tr><td>-achtig</td><td>"lijkt op X"</td><td class="nl">kinderachtig, bosachtig, prachtachtig</td></tr>
+    <tr><td>-isch</td><td>"van het soort X"</td><td class="nl">historisch, politiek/politisch, kritisch</td></tr>
+    <tr><td>-iek</td><td>verzameling, gebied</td><td class="nl">techniek, fysiek, kritiek</td></tr>
+  </tbody>
+</table>
+
+<h3>36.2 Achtervoegsels die zelfstandige naamwoorden vormen</h3>
+<table>
+  <thead><tr><th>Suffix</th><th>Betekenis</th><th>Voorbeelden</th></tr></thead>
+  <tbody>
+    <tr><td>-ing</td><td>handeling, resultaat</td><td class="nl">opleiding, vergadering, opening, verbinding</td></tr>
+    <tr><td>-heid</td><td>abstract begrip</td><td class="nl">vrijheid, schoonheid, mogelijkheid, gelijkheid</td></tr>
+    <tr><td>-tie / -atie</td><td>handeling (Latijn)</td><td class="nl">organisatie, presentatie, ontwikkeling</td></tr>
+    <tr><td>-isme</td><td>leer, beweging</td><td class="nl">kapitalisme, racisme, optimisme</td></tr>
+    <tr><td>-iteit</td><td>kwaliteit</td><td class="nl">activiteit, mobiliteit, identiteit</td></tr>
+    <tr><td>-aar / -er</td><td>persoon die X doet</td><td class="nl">leraar, schrijver, werker, fietser</td></tr>
+    <tr><td>-ster</td><td>vrouwelijke vorm</td><td class="nl">schrijfster, verpleegster, werkster</td></tr>
+    <tr><td>-erij</td><td>plaats of bedrijf</td><td class="nl">drukkerij, slagerij, bakkerij</td></tr>
+  </tbody>
+</table>
+
+<h3>36.3 Voorvoegsels die werkwoorden veranderen</h3>
+<table>
+  <thead><tr><th>Prefix</th><th>Effect</th><th>Voorbeelden</th></tr></thead>
+  <tbody>
+    <tr><td>be-</td><td>met object</td><td class="nl">betalen, beschrijven, behandelen</td></tr>
+    <tr><td>ver-</td><td>verandering, andere richting</td><td class="nl">verhuizen, verkopen, vergroten, vertellen</td></tr>
+    <tr><td>ont-</td><td>weghalen, beginnen</td><td class="nl">ontdekken, ontstaan, ontmoeten, ontwerpen</td></tr>
+    <tr><td>her-</td><td>opnieuw</td><td class="nl">herhalen, herstellen, herzien</td></tr>
+    <tr><td>over-</td><td>over, overdreven</td><td class="nl">overschrijven, overdrijven, overvallen</td></tr>
+    <tr><td>onder-</td><td>onder, onvolledig</td><td class="nl">ondersteunen, onderdrukken, onderzoeken</td></tr>
+    <tr><td>tegen-</td><td>tegen iets in</td><td class="nl">tegenwerken, tegenkomen</td></tr>
+  </tbody>
+</table>
+</article>
+
+<!-- ===== C1 — Nominale stijl ===== -->
+<article class="hoofdstuk" id="c1-nominaal">
+<h2><span class="niveau">C1</span> 37. Nominale stijl</h2>
+<p>In formeel schrijven (academisch, juridisch, bestuurlijk) zet je een handeling vaak om in een zelfstandig naamwoord. Dit heet <strong>nominaal</strong>.</p>
+
+<table>
+  <thead><tr><th>Verbale stijl</th><th>Nominale stijl</th></tr></thead>
+  <tbody>
+    <tr><td class="nl">De minister besluit te hervormen.</td><td class="nl">Het besluit van de minister tot hervorming.</td></tr>
+    <tr><td class="nl">Wij ontwikkelden het product om sneller te kunnen reageren.</td><td class="nl">De ontwikkeling van het product met het oog op snellere reactietijden.</td></tr>
+    <tr><td class="nl">Mensen vragen naar transparantie.</td><td class="nl">De vraag naar transparantie.</td></tr>
+  </tbody>
+</table>
+
+<div class="let">Nominale stijl maakt teksten compact en formeel, maar ook abstract en zwaar. In schrijftaal kan het effectief zijn; in spreektaal vermijden. Te veel nominalisaties → onbegrijpelijk juridisch jargon.</div>
+
+<h3>37.1 Patronen</h3>
+<ul>
+  <li>werkwoord + <em>-ing</em> → <em>de ontwikkeling, de uitbreiding, de versterking</em></li>
+  <li>werkwoord → infinitief als zelfstandig naamwoord → <em>het leren, het ontwikkelen, het inzicht verwerven</em></li>
+  <li>werkwoord + <em>-atie</em> (Latijn) → <em>de organisatie, de presentatie, de implementatie</em></li>
+</ul>
+</article>
+
+<!-- ===== C1 — Tangconstructies ===== -->
+<article class="hoofdstuk" id="c1-tang">
+<h2><span class="niveau">C1</span> 38. Tangconstructies</h2>
+<p>Een <strong>tangconstructie</strong> is een lange afstand tussen twee samenhorende woorden — typisch het hulpwerkwoord en het hoofdwerkwoord, of tussen lidwoord en hoofdwoord.</p>
+
+<div class="vb">
+  <p class="nl">De minister <strong>heeft</strong> tijdens het debat van gisteren over de hervorming van het belastingstelsel <strong>gesproken</strong>.</p>
+  <p class="uitleg">Tussen "heeft" en "gesproken" zit veel materiaal. Dit is grammaticaal correct, maar moeilijk te lezen.</p>
+</div>
+
+<h3>38.1 Wanneer breken?</h3>
+<p>Bij C1-niveau leer je tangconstructies te <em>vermijden</em> als ze te lang worden:</p>
+<table>
+  <thead><tr><th>Tangconstructie</th><th>Verbeterd</th></tr></thead>
+  <tbody>
+    <tr><td class="nl">Het bedrijf heeft afgelopen jaar ondanks de uitdagingen een uitstekende prestatie geleverd.</td><td class="nl">Het bedrijf heeft afgelopen jaar een uitstekende prestatie geleverd, ondanks de uitdagingen.</td></tr>
+  </tbody>
+</table>
+</article>
+
+<!-- ===== C1 — Register ===== -->
+<article class="hoofdstuk" id="c1-register">
+<h2><span class="niveau">C1</span> 39. Register en stijl</h2>
+<p>Op C1 moet je flexibel kunnen schakelen tussen spreektaal en schrijftaal, tussen informeel en formeel.</p>
+
+<table>
+  <thead><tr><th>Spreektaal</th><th>Schrijftaal / formeel</th></tr></thead>
+  <tbody>
+    <tr><td class="nl">veel</td><td class="nl">aanzienlijk, een groot aantal</td></tr>
+    <tr><td class="nl">krijgen</td><td class="nl">ontvangen, verkrijgen</td></tr>
+    <tr><td class="nl">zeggen</td><td class="nl">stellen, beweren, aangeven</td></tr>
+    <tr><td class="nl">denken</td><td class="nl">van mening zijn, oordelen</td></tr>
+    <tr><td class="nl">snel</td><td class="nl">spoedig, op korte termijn</td></tr>
+    <tr><td class="nl">eerst</td><td class="nl">in eerste instantie, allereerst</td></tr>
+    <tr><td class="nl">daarna</td><td class="nl">vervolgens, daarop volgend</td></tr>
+    <tr><td class="nl">maar</td><td class="nl">echter, daarentegen</td></tr>
+    <tr><td class="nl">want</td><td class="nl">omdat, aangezien</td></tr>
+    <tr><td class="nl">dus</td><td class="nl">derhalve, bijgevolg</td></tr>
+    <tr><td class="nl">over</td><td class="nl">aangaande, met betrekking tot</td></tr>
+    <tr><td class="nl">helemaal niet</td><td class="nl">geenszins</td></tr>
+    <tr><td class="nl">bijna</td><td class="nl">nagenoeg, vrijwel</td></tr>
+    <tr><td class="nl">vaak</td><td class="nl">geregeld, frequent</td></tr>
+    <tr><td class="nl">graag</td><td class="nl">met genoegen</td></tr>
+  </tbody>
+</table>
+
+<h3>39.1 Specifieke registerwoorden in Vlaanderen</h3>
+<p>Sommige uitdrukkingen worden in België anders gebruikt dan in Nederland. Op C1 leer je beide registers herkennen.</p>
+<table>
+  <thead><tr><th>Vlaams</th><th>Nederlands</th></tr></thead>
+  <tbody>
+    <tr><td class="nl">een appartement huren</td><td class="nl">een flat huren</td></tr>
+    <tr><td class="nl">de gemeente</td><td class="nl">de gemeente / het stadhuis</td></tr>
+    <tr><td class="nl">het frigo / de frigo</td><td class="nl">de koelkast</td></tr>
+    <tr><td class="nl">de zetel</td><td class="nl">de bank</td></tr>
+    <tr><td class="nl">de regenscherm</td><td class="nl">de paraplu</td></tr>
+    <tr><td class="nl">poetsen</td><td class="nl">schoonmaken</td></tr>
+    <tr><td class="nl">de croque</td><td class="nl">de tosti</td></tr>
+  </tbody>
+</table>
+</article>
+
+<!-- ===== C1 — Connectoren ===== -->
+<article class="hoofdstuk" id="c1-connector">
+<h2><span class="niveau">C1</span> 40. Academische connectoren</h2>
+<p>Voor academisch schrijven en formele teksten gebruik je rijkere verbindingswoorden dan in spreektaal.</p>
+
+<table>
+  <thead><tr><th>Functie</th><th>Connector</th><th>Voorbeeld</th></tr></thead>
+  <tbody>
+    <tr><td>toevoeging</td><td class="nl">bovendien · daarnaast · voorts · tevens · overigens</td><td class="nl">Bovendien dient men rekening te houden met …</td></tr>
+    <tr><td>tegenstelling</td><td class="nl">echter · daarentegen · niettemin · desondanks · evenwel</td><td class="nl">De resultaten zijn positief; echter, er blijven vragen.</td></tr>
+    <tr><td>oorzaak / reden</td><td class="nl">aangezien · doordat · omdat · vanwege · omwille van</td><td class="nl">Aangezien de tijd beperkt is, …</td></tr>
+    <tr><td>gevolg</td><td class="nl">derhalve · bijgevolg · dientengevolge · dus · zodat</td><td class="nl">De cijfers daalden; derhalve werd een nieuw beleid ingevoerd.</td></tr>
+    <tr><td>voorwaarde</td><td class="nl">indien · mits · tenzij · op voorwaarde dat</td><td class="nl">Indien u akkoord gaat, ondertekenen we morgen.</td></tr>
+    <tr><td>doel</td><td class="nl">teneinde · met het oog op · ter</td><td class="nl">Teneinde de kwaliteit te waarborgen, …</td></tr>
+    <tr><td>voorbeeld</td><td class="nl">bijvoorbeeld · zo · ter illustratie · namelijk</td><td class="nl">Zo blijkt uit het rapport dat …</td></tr>
+    <tr><td>conclusie</td><td class="nl">kortom · samenvattend · al met al · uiteindelijk</td><td class="nl">Kortom, een doordachte aanpak is essentieel.</td></tr>
+    <tr><td>tijdelijke ordening</td><td class="nl">vervolgens · daarop · daarna · ten slotte</td><td class="nl">Vervolgens wordt de hypothese getoetst.</td></tr>
+  </tbody>
+</table>
+</article>
+
+<!-- ===== C1 — Zekerheid ===== -->
+<article class="hoofdstuk" id="c1-zekerheid">
+<h2><span class="niveau">C1</span> 41. Mate van zekerheid en nuancering</h2>
+<p>Op C1 moet je je standpunt kunnen nuanceren. Onderscheid tussen wat zeker is, mogelijk is, of slechts vermoeden.</p>
+
+<table>
+  <thead><tr><th>Zekerheid</th><th>Uitdrukkingen</th></tr></thead>
+  <tbody>
+    <tr><td>volkomen zeker</td><td class="nl">zeker · ongetwijfeld · zonder twijfel · het staat vast dat</td></tr>
+    <tr><td>vrij zeker</td><td class="nl">waarschijnlijk · vermoedelijk · naar alle waarschijnlijkheid</td></tr>
+    <tr><td>mogelijkheid</td><td class="nl">mogelijk · misschien · wellicht · het kan zijn dat</td></tr>
+    <tr><td>twijfel</td><td class="nl">vermoedelijk niet · ik betwijfel of · er is geen zekerheid</td></tr>
+    <tr><td>onmogelijk</td><td class="nl">onmogelijk · uitgesloten · ondenkbaar</td></tr>
+  </tbody>
+</table>
+
+<h3>41.1 Beleefdheid en hedging</h3>
+<p>Om een mening voorzichtig te brengen, gebruik je:</p>
+<ul>
+  <li><em>Ik zou zeggen dat …</em> · <em>Het lijkt mij dat …</em> · <em>Naar mijn idee …</em></li>
+  <li><em>Misschien is het beter om …</em> · <em>Zou het niet beter zijn om …?</em></li>
+  <li><em>Ik vraag mij af of …</em> · <em>Het is de vraag of …</em></li>
+  <li><em>In zekere zin</em> · <em>tot op zekere hoogte</em> · <em>relatief gezien</em></li>
+</ul>
+
+<h3>41.2 Veelgebruikte stijlmiddelen op C1</h3>
+<ul>
+  <li><strong>Litotes</strong> (ontkennende verzachting): <span class="nl">niet onbelangrijk</span> = belangrijk; <span class="nl">niet onaardig</span> = aardig.</li>
+  <li><strong>Voorzichtige aanname</strong>: <span class="nl">In het algemeen geldt dat …</span> · <span class="nl">Onder normale omstandigheden …</span></li>
+  <li><strong>Concessie + tegenstelling</strong>: <span class="nl">Hoewel … toch …</span> · <span class="nl">Ondanks het feit dat …</span></li>
+</ul>
+</article>
+
+
+<!-- ====================================================================
+     BIJLAGES
+     ==================================================================== -->
+
+<article class="hoofdstuk" id="bijlage-onregelmatig">
+<h2>Bijlage 42 · Onregelmatige werkwoorden (kernlijst)</h2>
+<table>
+  <thead><tr><th>Infinitief</th><th>Verleden tijd</th><th>Voltooid deelwoord</th><th>Hulpww.</th></tr></thead>
+  <tbody>
+    <tr><td class="nl">beginnen</td><td>begon, begonnen</td><td>begonnen</td><td>zijn</td></tr>
+    <tr><td class="nl">bidden</td><td>bad, baden</td><td>gebeden</td><td>hebben</td></tr>
+    <tr><td class="nl">bieden</td><td>bood, boden</td><td>geboden</td><td>hebben</td></tr>
+    <tr><td class="nl">binden</td><td>bond, bonden</td><td>gebonden</td><td>hebben</td></tr>
+    <tr><td class="nl">blijken</td><td>bleek, bleken</td><td>gebleken</td><td>zijn</td></tr>
+    <tr><td class="nl">blijven</td><td>bleef, bleven</td><td>gebleven</td><td>zijn</td></tr>
+    <tr><td class="nl">breken</td><td>brak, braken</td><td>gebroken</td><td>hebben/zijn</td></tr>
+    <tr><td class="nl">brengen</td><td>bracht, brachten</td><td>gebracht</td><td>hebben</td></tr>
+    <tr><td class="nl">denken</td><td>dacht, dachten</td><td>gedacht</td><td>hebben</td></tr>
+    <tr><td class="nl">doen</td><td>deed, deden</td><td>gedaan</td><td>hebben</td></tr>
+    <tr><td class="nl">dragen</td><td>droeg, droegen</td><td>gedragen</td><td>hebben</td></tr>
+    <tr><td class="nl">drinken</td><td>dronk, dronken</td><td>gedronken</td><td>hebben</td></tr>
+    <tr><td class="nl">eten</td><td>at, aten</td><td>gegeten</td><td>hebben</td></tr>
+    <tr><td class="nl">gaan</td><td>ging, gingen</td><td>gegaan</td><td>zijn</td></tr>
+    <tr><td class="nl">geven</td><td>gaf, gaven</td><td>gegeven</td><td>hebben</td></tr>
+    <tr><td class="nl">hangen</td><td>hing, hingen</td><td>gehangen</td><td>hebben</td></tr>
+    <tr><td class="nl">hebben</td><td>had, hadden</td><td>gehad</td><td>hebben</td></tr>
+    <tr><td class="nl">helpen</td><td>hielp, hielpen</td><td>geholpen</td><td>hebben</td></tr>
+    <tr><td class="nl">houden</td><td>hield, hielden</td><td>gehouden</td><td>hebben</td></tr>
+    <tr><td class="nl">kiezen</td><td>koos, kozen</td><td>gekozen</td><td>hebben</td></tr>
+    <tr><td class="nl">kijken</td><td>keek, keken</td><td>gekeken</td><td>hebben</td></tr>
+    <tr><td class="nl">komen</td><td>kwam, kwamen</td><td>gekomen</td><td>zijn</td></tr>
+    <tr><td class="nl">kopen</td><td>kocht, kochten</td><td>gekocht</td><td>hebben</td></tr>
+    <tr><td class="nl">krijgen</td><td>kreeg, kregen</td><td>gekregen</td><td>hebben</td></tr>
+    <tr><td class="nl">kunnen</td><td>kon, konden</td><td>gekund</td><td>hebben</td></tr>
+    <tr><td class="nl">laten</td><td>liet, lieten</td><td>gelaten</td><td>hebben</td></tr>
+    <tr><td class="nl">lezen</td><td>las, lazen</td><td>gelezen</td><td>hebben</td></tr>
+    <tr><td class="nl">liggen</td><td>lag, lagen</td><td>gelegen</td><td>hebben</td></tr>
+    <tr><td class="nl">lopen</td><td>liep, liepen</td><td>gelopen</td><td>hebben/zijn</td></tr>
+    <tr><td class="nl">moeten</td><td>moest, moesten</td><td>gemoeten</td><td>hebben</td></tr>
+    <tr><td class="nl">mogen</td><td>mocht, mochten</td><td>gemogen / gemocht</td><td>hebben</td></tr>
+    <tr><td class="nl">nemen</td><td>nam, namen</td><td>genomen</td><td>hebben</td></tr>
+    <tr><td class="nl">rijden</td><td>reed, reden</td><td>gereden</td><td>hebben/zijn</td></tr>
+    <tr><td class="nl">roepen</td><td>riep, riepen</td><td>geroepen</td><td>hebben</td></tr>
+    <tr><td class="nl">schrijven</td><td>schreef, schreven</td><td>geschreven</td><td>hebben</td></tr>
+    <tr><td class="nl">slapen</td><td>sliep, sliepen</td><td>geslapen</td><td>hebben</td></tr>
+    <tr><td class="nl">sluiten</td><td>sloot, sloten</td><td>gesloten</td><td>hebben</td></tr>
+    <tr><td class="nl">spreken</td><td>sprak, spraken</td><td>gesproken</td><td>hebben</td></tr>
+    <tr><td class="nl">staan</td><td>stond, stonden</td><td>gestaan</td><td>hebben</td></tr>
+    <tr><td class="nl">sterven</td><td>stierf, stierven</td><td>gestorven</td><td>zijn</td></tr>
+    <tr><td class="nl">trekken</td><td>trok, trokken</td><td>getrokken</td><td>hebben</td></tr>
+    <tr><td class="nl">vallen</td><td>viel, vielen</td><td>gevallen</td><td>zijn</td></tr>
+    <tr><td class="nl">vangen</td><td>ving, vingen</td><td>gevangen</td><td>hebben</td></tr>
+    <tr><td class="nl">vergelijken</td><td>vergeleek, vergeleken</td><td>vergeleken</td><td>hebben</td></tr>
+    <tr><td class="nl">vergeten</td><td>vergat, vergaten</td><td>vergeten</td><td>zijn/hebben</td></tr>
+    <tr><td class="nl">verliezen</td><td>verloor, verloren</td><td>verloren</td><td>hebben</td></tr>
+    <tr><td class="nl">vinden</td><td>vond, vonden</td><td>gevonden</td><td>hebben</td></tr>
+    <tr><td class="nl">vliegen</td><td>vloog, vlogen</td><td>gevlogen</td><td>hebben/zijn</td></tr>
+    <tr><td class="nl">vragen</td><td>vroeg, vroegen</td><td>gevraagd</td><td>hebben</td></tr>
+    <tr><td class="nl">wassen</td><td>waste, wasten</td><td>gewassen</td><td>hebben</td></tr>
+    <tr><td class="nl">weten</td><td>wist, wisten</td><td>geweten</td><td>hebben</td></tr>
+    <tr><td class="nl">willen</td><td>wilde / wou, wilden</td><td>gewild</td><td>hebben</td></tr>
+    <tr><td class="nl">worden</td><td>werd, werden</td><td>geworden</td><td>zijn</td></tr>
+    <tr><td class="nl">zeggen</td><td>zei, zeiden</td><td>gezegd</td><td>hebben</td></tr>
+    <tr><td class="nl">zien</td><td>zag, zagen</td><td>gezien</td><td>hebben</td></tr>
+    <tr><td class="nl">zijn</td><td>was, waren</td><td>geweest</td><td>zijn</td></tr>
+    <tr><td class="nl">zingen</td><td>zong, zongen</td><td>gezongen</td><td>hebben</td></tr>
+    <tr><td class="nl">zitten</td><td>zat, zaten</td><td>gezeten</td><td>hebben</td></tr>
+    <tr><td class="nl">zoeken</td><td>zocht, zochten</td><td>gezocht</td><td>hebben</td></tr>
+    <tr><td class="nl">zullen</td><td>zou, zouden</td><td>—</td><td>—</td></tr>
+    <tr><td class="nl">zwemmen</td><td>zwom, zwommen</td><td>gezwommen</td><td>hebben/zijn</td></tr>
+  </tbody>
+</table>
+</article>
+
+<!-- ===== Bijlage 43 - vaste voorzetsels ===== -->
+<article class="hoofdstuk" id="bijlage-voorzetsel">
+<h2>Bijlage 43 · Vaste voorzetsels per werkwoord</h2>
+<table>
+  <thead><tr><th>Werkwoord + vz.</th><th>Voorbeeld</th></tr></thead>
+  <tbody>
+    <tr><td>denken aan</td><td class="nl">Ik denk aan jou.</td></tr>
+    <tr><td>denken over</td><td class="nl">Ik denk erover na.</td></tr>
+    <tr><td>denken aan + om te</td><td class="nl">Denk eraan om te bellen.</td></tr>
+    <tr><td>geloven in</td><td class="nl">Hij gelooft in zichzelf.</td></tr>
+    <tr><td>houden van</td><td class="nl">Wij houden van muziek.</td></tr>
+    <tr><td>kijken naar</td><td class="nl">Kijk naar de zon.</td></tr>
+    <tr><td>luisteren naar</td><td class="nl">Luister naar mij.</td></tr>
+    <tr><td>praten over / met</td><td class="nl">Praat met haar over politiek.</td></tr>
+    <tr><td>vragen aan / om / naar</td><td class="nl">Vraag aan Jan om hulp. Vraag naar het pad.</td></tr>
+    <tr><td>wachten op</td><td class="nl">Wacht op de bus.</td></tr>
+    <tr><td>uitkijken naar</td><td class="nl">Ik kijk uit naar je antwoord.</td></tr>
+    <tr><td>genieten van</td><td class="nl">Geniet van het weer.</td></tr>
+    <tr><td>kiezen voor / tussen</td><td class="nl">Kies voor het beste. Kies tussen A en B.</td></tr>
+    <tr><td>besluiten tot</td><td class="nl">Wij besloten tot een nieuw beleid.</td></tr>
+    <tr><td>beginnen met / aan</td><td class="nl">Begin met de inleiding. Begin aan een nieuw boek.</td></tr>
+    <tr><td>stoppen met</td><td class="nl">Hij stopte met roken.</td></tr>
+    <tr><td>eindigen op</td><td class="nl">Het woord eindigt op een -t.</td></tr>
+    <tr><td>bestaan uit</td><td class="nl">De groep bestaat uit zes leden.</td></tr>
+    <tr><td>bestaan in</td><td class="nl">Het verschil bestaat in de uitspraak.</td></tr>
+    <tr><td>lijden aan / onder</td><td class="nl">Hij lijdt aan diabetes. Wij lijden onder de stress.</td></tr>
+    <tr><td>verwachten van</td><td class="nl">Wat verwacht je van mij?</td></tr>
+    <tr><td>blij zijn met / om / voor</td><td class="nl">Blij met het cadeau. Blij om je te zien. Blij voor jou.</td></tr>
+    <tr><td>boos zijn op</td><td class="nl">Ik ben boos op hem.</td></tr>
+    <tr><td>bang zijn voor</td><td class="nl">Bang voor spinnen.</td></tr>
+    <tr><td>tevreden zijn met / over</td><td class="nl">Tevreden met de uitkomst.</td></tr>
+    <tr><td>trots zijn op</td><td class="nl">Trots op mijn werk.</td></tr>
+    <tr><td>gewend zijn aan</td><td class="nl">Gewend aan de hitte.</td></tr>
+    <tr><td>gericht zijn op</td><td class="nl">Gericht op kwaliteit.</td></tr>
+    <tr><td>zorgen voor</td><td class="nl">Wie zorgt voor de kinderen?</td></tr>
+    <tr><td>zorgen dat / om te</td><td class="nl">Zorg dat je op tijd bent. Zorg om te helpen.</td></tr>
+    <tr><td>deelnemen aan</td><td class="nl">Wij namen deel aan de wedstrijd.</td></tr>
+    <tr><td>twijfelen aan / over</td><td class="nl">Ik twijfel aan de uitslag.</td></tr>
+    <tr><td>profiteren van</td><td class="nl">Profiteer van de aanbieding.</td></tr>
+    <tr><td>leiden tot</td><td class="nl">Dat leidt tot misverstanden.</td></tr>
+    <tr><td>slagen voor / in</td><td class="nl">Slagen voor het examen. Slagen in een project.</td></tr>
+    <tr><td>rekenen op</td><td class="nl">Reken op mij.</td></tr>
+    <tr><td>rekening houden met</td><td class="nl">Houd rekening met de regels.</td></tr>
+    <tr><td>vertrouwen op</td><td class="nl">Ik vertrouw op je woord.</td></tr>
+    <tr><td>geïnteresseerd zijn in</td><td class="nl">Geïnteresseerd in geschiedenis.</td></tr>
+    <tr><td>verantwoordelijk zijn voor</td><td class="nl">Verantwoordelijk voor het team.</td></tr>
+    <tr><td>afhankelijk zijn van</td><td class="nl">Afhankelijk van de weersomstandigheden.</td></tr>
+    <tr><td>verschillen van / met</td><td class="nl">Hij verschilt van zijn broer. Verschillen met andere modellen.</td></tr>
+    <tr><td>overeenkomen met</td><td class="nl">Overeenkomen met de afspraak.</td></tr>
+    <tr><td>opletten op</td><td class="nl">Let op de trap.</td></tr>
+    <tr><td>oppassen voor</td><td class="nl">Pas op voor de hond.</td></tr>
+  </tbody>
+</table>
+</article>
+
+<!-- ===== Bijlage 44 - de of het ===== -->
+<article class="hoofdstuk" id="bijlage-dehet">
+<h2>Bijlage 44 · Heuristieken voor <em>de</em> of <em>het</em></h2>
+<p>Er is geen waterdichte regel, maar deze patronen helpen ~70% van de tijd.</p>
+
+<h3>44.1 <em>De</em>-woorden</h3>
+<ul>
+  <li>Alle <strong>personen</strong>: de man, de vrouw, de leraar, de kok, de dokter.</li>
+  <li>De meeste <strong>dieren</strong>: de hond, de kat, de vogel, de leeuw.</li>
+  <li>De meeste <strong>planten en bomen</strong>: de roos, de eik, de plant.</li>
+  <li>Woorden op <strong>-ing</strong>: de regering, de ontwikkeling, de mening.</li>
+  <li>Woorden op <strong>-heid</strong>: de vrijheid, de mogelijkheid, de schoonheid.</li>
+  <li>Woorden op <strong>-de / -te</strong>: de hoogte, de lengte, de breedte.</li>
+  <li>Woorden op <strong>-tie / -atie</strong>: de organisatie, de presentatie.</li>
+  <li>Woorden op <strong>-ie</strong>: de fantasie, de poëzie.</li>
+  <li>Woorden op <strong>-iek / -ica</strong>: de muziek, de techniek, de fysica.</li>
+  <li>Woorden op <strong>-isme / -iteit</strong>: het socialisme uitgezonderd, meestal de: de mobiliteit, de activiteit.</li>
+  <li>Woorden op <strong>-aar / -er / -or</strong> (persoon of object): de schrijver, de motor.</li>
+  <li>Woorden op <strong>-ster</strong>: de schrijfster.</li>
+</ul>
+
+<h3>44.2 <em>Het</em>-woorden</h3>
+<ul>
+  <li>Alle <strong>verkleinwoorden</strong>: het boekje, het meisje, het tafeltje.</li>
+  <li>Talen en sporten: <span class="nl">het Nederlands, het Frans, het voetbal, het schaken</span>.</li>
+  <li>Woorden op <strong>-um</strong>: het museum, het maximum, het centrum.</li>
+  <li>Woorden op <strong>-ment</strong>: het instrument, het moment, het departement.</li>
+  <li>Woorden op <strong>-sel</strong>: het bedoelsel, het beletsel, het deksel.</li>
+  <li>Woorden op <strong>-isme</strong> (in modern Nederlands inconsistent, soms de): meestal <strong>het</strong>: het socialisme, het kapitalisme.</li>
+  <li>Verzamelnamen / niet-telbaar: het verkeer, het weer, het geld, het personeel.</li>
+  <li>Infinitief als zelfstandig naamwoord: <span class="nl">het lezen, het schrijven, het leren</span>.</li>
+  <li>Letterwoorden en afkortingen die met een klinker beginnen: <span class="nl">het iPad</span> (soms ook de).</li>
+</ul>
+
+<h3>44.3 Strategie voor twijfelgevallen</h3>
+<ol>
+  <li>Probeer de verkleinvorm: als die natuurlijk klinkt zonder hertaling, is het origineel waarschijnlijk een het-woord (verkleinwoord = altijd het).</li>
+  <li>Kijk naar het achtervoegsel (zie boven).</li>
+  <li>Bij onbekendheid: kies <em>de</em>. Twee derde van de Nederlandse zelfstandige naamwoorden is een de-woord.</li>
+  <li>Markeer twijfelgevallen om later in een woordenboek op te zoeken.</li>
+</ol>
+</article>
+
+
+<!-- ===== Voetnoot ===== -->
+<section style="margin-top: 3em; padding-top: 1em; border-top: 1px solid var(--rule); color: var(--ink-soft); font-size: 9pt;">
+  <p>Dit overzicht is samengesteld voor zelfstudie en voorbereiding op CNaVT-examens.
+     Het is bedoeld als snelle naslag — niet als volledige grammatica. Voor diepere uitleg:
+     consulteer de <em>Algemene Nederlandse Spraakkunst (ANS)</em> of <em>De referentiegrammatica van het Nederlands</em>.</p>
+  <p><em>Studiemateriaal · Studeerkamer · </em>juni 2026</p>
+</section>
+
+</body>
+</html>

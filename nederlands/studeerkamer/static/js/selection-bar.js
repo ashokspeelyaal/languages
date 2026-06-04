@@ -180,11 +180,35 @@
 
     try {
       if (action === "explain") {
-        const sys = "Je bent een Nederlandse taalcoach voor Vlaams-België (CNaVT C1). Leg de geselecteerde tekst uit in 2-3 korte zinnen: betekenis, nuance, gebruik, register. Antwoord in geldige JSON: {\"nl\": \"...uitleg in helder Nederlands...\", \"en\": \"...same explanation in clear English...\"}. ALLEEN JSON terug.";
+        // Context-bewust: in de Grammatica-sectie wordt de uitleg
+        // grammaticaal gericht — de AI weet welk hoofdstuk je leest en
+        // wat het onderwerp is.
+        const grammarCh = (window.GrammaticaViews && window.GrammaticaViews.getActiveChapter)
+          ? window.GrammaticaViews.getActiveChapter()
+          : null;
+
+        let sys, userMsg;
+        if (grammarCh) {
+          sys = [
+            "Je bent een Nederlandse grammatica-leraar voor een leerder die CNaVT C1 voorbereidt.",
+            `De leerder leest nu hoofdstuk "${grammarCh.title}" (niveau ${grammarCh.level}).`,
+            `Focus van het hoofdstuk: ${grammarCh.topic}.`,
+            "Leg de geselecteerde tekst uit met NADRUK OP GRAMMATICA:",
+            "- Welke grammaticale categorie/functie heeft het (werkwoord, voegwoord, wederkerend vnw, …)?",
+            "- Welke regel is hier van toepassing (sluit aan bij het hoofdstuk)?",
+            "- Concreet voorbeeld of subtiele uitzondering als die er is.",
+            "Beperk je tot 2-3 zinnen per taal.",
+            "Antwoord in geldige JSON: {\"nl\": \"...\", \"en\": \"...same explanation in clear English...\"}. ALLEEN JSON terug.",
+          ].join("\n");
+          userMsg = text;
+        } else {
+          sys = "Je bent een Nederlandse taalcoach voor Vlaams-België (CNaVT C1). Leg de geselecteerde tekst uit in 2-3 korte zinnen: betekenis, nuance, gebruik, register. Antwoord in geldige JSON: {\"nl\": \"...uitleg in helder Nederlands...\", \"en\": \"...same explanation in clear English...\"}. ALLEEN JSON terug.";
+          userMsg = text;
+        }
         const r = await window.AI.complete({
-          kind: "sel-explain",
+          kind: grammarCh ? "sel-explain-grammar" : "sel-explain",
           system: sys,
-          user: text,
+          user: userMsg,
           maxTokens: 700,
           json: true,
           reasoning: "low",
