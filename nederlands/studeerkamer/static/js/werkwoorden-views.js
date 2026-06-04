@@ -126,8 +126,9 @@
       el("option", { value: "zwak-vz" }, "zwak (v/z)"),
       el("option", { value: "sterk" }, "sterk"),
       el("option", { value: "onreg" }, "onregelmatig"));
+    const grammarBtn = el("button", { class: "subtle", onClick: () => openVerbGrammar() }, "📖 Grammatica");
     const drillBtn = el("button", { onClick: () => openDrill() }, "🎯 Oefenen");
-    toolbar.append(search, levelSel, typeSel, drillBtn);
+    toolbar.append(search, levelSel, typeSel, grammarBtn, drillBtn);
     wrap.append(toolbar);
 
     const status = el("p", { class: "stat-note", id: "verb-status" }, "");
@@ -251,18 +252,18 @@
   function openDrill() {
     if (!VERBS.length) { alert("Werkwoorden nog niet geladen."); return; }
     const ov = el("div", {
-      style: "position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9999;display:flex;align-items:center;justify-content:center;padding:1.5rem",
+      style: "position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:9999;display:flex;align-items:center;justify-content:center;padding:1.5rem;backdrop-filter:blur(2px)",
       onClick: (e) => { if (e.target === ov) document.body.removeChild(ov); },
     });
     const panel = el("div", {
-      style: "background:var(--paper);border-radius:6px;max-width:560px;width:100%;max-height:90vh;overflow:auto;padding:1.4rem 1.6rem",
+      style: "background:var(--paper);border-radius:6px;max-width:640px;width:100%;max-height:90vh;overflow:auto;padding:1.4rem 1.8rem;box-shadow:0 16px 48px -8px rgba(0,0,0,.4)",
     });
     ov.append(panel);
     document.body.append(ov);
 
     panel.innerHTML = `
-      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:.6rem">
-        <h3 style="margin:0;font-family:var(--serif);font-weight:600">Oefenen · werkwoordvormen</h3>
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:.4rem">
+        <h3 style="margin:0;font-family:var(--serif);font-weight:600">Werkwoorden oefenen</h3>
         <button class="subtle" id="drill-close" style="font-size:.85rem">sluiten ✕</button>
       </div>
       <div id="drill-body"></div>
@@ -275,7 +276,156 @@
       body.innerHTML = '<p class="ai-error">Niet genoeg werkwoorden in de huidige filter. Zet "Alle niveaus" en "Alle types" aan.</p>';
       return;
     }
-    runDrill(body, pool);
+    // Mode picker
+    body.innerHTML = `
+      <p class="stat-note" style="margin-top:.4rem">Kies een oefenmodus:</p>
+      <div style="display:flex;gap:.6rem;flex-wrap:wrap;margin-top:.5rem">
+        <button id="mode-context" style="flex:1;min-width:200px;padding:.7rem 1rem;text-align:left;background:var(--paper-2);border:1.5px solid var(--rood);border-radius:4px;cursor:pointer;font-family:var(--sans)">
+          <div style="font-weight:600;color:var(--ink)">🤖 Met context (aanbevolen)</div>
+          <div style="font-size:.78rem;color:var(--ink-soft);margin-top:.2rem">AI maakt 10 echte Nederlandse zinnen met blanco's — alle tijden en personen door elkaar. Ongeveer 3 seconden wachttijd.</div>
+        </button>
+        <button id="mode-quick" style="flex:1;min-width:200px;padding:.7rem 1rem;text-align:left;background:var(--paper-2);border:1px solid var(--rule);border-radius:4px;cursor:pointer;font-family:var(--sans)">
+          <div style="font-weight:600;color:var(--ink)">⚡ Snelle vragen</div>
+          <div style="font-size:.78rem;color:var(--ink-soft);margin-top:.2rem">Directe vormvragen zonder zinscontext. Geen AI, instant.</div>
+        </button>
+      </div>
+    `;
+    body.querySelector("#mode-context").addEventListener("click", () => runContextDrill(body, pool));
+    body.querySelector("#mode-quick").addEventListener("click", () => runDrill(body, pool));
+  }
+
+  async function runContextDrill(host, pool) {
+    if (!window.AI || !window.AI.isConfigured()) {
+      host.innerHTML = '<p class="ai-error">AI nog niet geconfigureerd (Instellingen → API-sleutel). Probeer "Snelle vragen" in plaats daarvan.</p>';
+      return;
+    }
+    // Pick 10 random verbs, prefer those with non-trivial conjugation
+    const shuffled = pool.slice().sort(() => Math.random() - 0.5);
+    const chosen = shuffled.slice(0, 10);
+    host.innerHTML = '<p class="stat-note"><span class="ai-loading">10 contextzinnen genereren met AI…</span></p>';
+
+    const verbList = chosen.map((v) => `- ${v.inf} (${v.tr || "?"}) — ${v.tp}, ${v.aux}, vd=${v.vd}, imp=${v.imp[0]}/${v.imp[4]}`).join("\n");
+    const sys = [
+      "Je bent een Nederlandse grammatica-leraar voor CNaVT-niveau.",
+      "Maak EXACT 10 oefeningen — één per werkwoord uit de lijst. Voor elk werkwoord:",
+      "- Schrijf één NATUURLIJKE, INHOUDELIJK ZINVOLLE Nederlandse zin die past bij de betekenis van het werkwoord.",
+      "- De zin moet EXACT één ____ bevatten op de plek van de vervoegde werkwoordsvorm.",
+      "- Varieer per oefening de tijd (mix: tegenwoordige tijd, imperfectum, perfectum) en de persoon (ik / jij / hij / wij / zij).",
+      "- Voor PERFECTUM: schrijf het hulpwerkwoord apart in de zin (bv. 'Ik heb ____ gisteren.') zodat de leerder alleen het voltooid deelwoord invult.",
+      "- Vermijd triviale gevallen zoals 'wij ____ vandaag' bij tegenwoordige tijd (antwoord = infinitief, te makkelijk).",
+      "- Zorg dat de zin BETEKENISVOL is voor het werkwoord — gebruik geen 'ik ____' filler.",
+      "",
+      "Antwoord ALLEEN met geldige JSON, geen markdown:",
+      "{",
+      '  "oefeningen": [',
+      "    {",
+      '      "inf": "<infinitief uit de lijst>",',
+      '      "zin": "<volledige Nederlandse zin met ____ op één plek>",',
+      '      "antwoord": "<exact het correcte ingevulde woord (zonder spaties errond)>",',
+      '      "persoon": "ik|jij|u|hij|wij|jullie|zij",',
+      '      "tijd": "tegenwoordige tijd|imperfectum|perfectum",',
+      '      "uitleg": "<1 korte zin uitleg waarom deze vorm: bv. \'1e persoon ev = stam zonder -t\' of \'sterk: vond is imperfectum singular\'>"',
+      "    }",
+      "  ]",
+      "}",
+      "",
+      "Houd elke zin onder 14 woorden. Antwoorden moeten één woord zijn (of een korte werkwoordsgroep bij scheidbare werkwoorden).",
+    ].join("\n");
+
+    let items;
+    try {
+      const r = await window.AI.complete({
+        kind: "verb-context-drill",
+        system: sys,
+        user: "Werkwoorden:\n" + verbList,
+        maxTokens: 2500,
+        json: true,
+        noCache: true,
+      });
+      const parsed = JSON.parse(r.text);
+      items = (parsed.oefeningen || []).filter((q) => q && q.zin && q.antwoord && q.zin.includes("____"));
+    } catch (e) {
+      host.innerHTML = '<p class="ai-error">Kon oefeningen niet genereren: ' + esc(e.message) + '</p>';
+      return;
+    }
+    if (!items.length) {
+      host.innerHTML = '<p class="ai-error">AI gaf geen bruikbare zinnen terug. Probeer opnieuw.</p>';
+      return;
+    }
+    runContextQuiz(host, items, pool);
+  }
+
+  function runContextQuiz(host, items, pool) {
+    let idx = 0, right = 0;
+
+    function paint() {
+      if (idx >= items.length) return finish();
+      const item = items[idx];
+      const parts = item.zin.split("____");
+      host.innerHTML = "";
+      // Progress bar
+      const bar = el("div", { style: "height:3px;background:var(--rule);border-radius:2px;margin-bottom:.7rem;overflow:hidden" },
+        el("div", { style: "height:100%;width:" + ((idx / items.length) * 100) + "%;background:var(--rood);transition:width .2s" }));
+      host.append(bar);
+      host.append(el("p", { style: "font-family:var(--mono);font-size:.72rem;color:var(--ink-faint);letter-spacing:.06em;margin:0 0 .2rem" },
+        "VRAAG " + (idx + 1) + " van " + items.length + "  ·  " + (item.tijd || "?") + "  ·  " + (item.persoon || "?")));
+      host.append(el("p", { style: "font-family:var(--mono);font-size:.75rem;color:var(--ink-faint);margin:0 0 .9rem" },
+        "werkwoord: ", el("strong", { style: "color:var(--ink)" }, item.inf)));
+
+      const inputBox = el("input", { type: "text",
+        style: "border:1.5px solid var(--rood);background:var(--paper-2);padding:.45rem .7rem;border-radius:3px;min-width:160px;font-family:var(--serif);font-size:1.05rem" });
+      const sentenceWrap = el("p", { style: "font-family:var(--serif);font-size:1.15rem;line-height:1.9;margin:.4rem 0 .9rem" });
+      sentenceWrap.append(document.createTextNode(parts[0] || ""), inputBox, document.createTextNode(parts[1] || ""));
+      host.append(sentenceWrap);
+      const submit = el("button", { onClick: () => check(inputBox.value, item) }, "Controleer");
+      const feedback = el("div", { id: "fb", style: "margin-top:.6rem" });
+      host.append(submit, feedback);
+      inputBox.addEventListener("keydown", (e) => { if (e.key === "Enter") submit.click(); });
+      setTimeout(() => inputBox.focus(), 30);
+    }
+
+    function check(answer, item) {
+      const norm = (s) => String(s || "").toLowerCase().trim().replace(/[.,;:!?'"]/g, "");
+      const ok = norm(answer) === norm(item.antwoord);
+      if (ok) right += 1;
+      const v = pool.find((vv) => vv.inf === item.inf);
+      const fullForms = v ? `tt: ${v.pres.split(",")[0]}/${v.pres.split(",")[1]}  ·  imp: ${v.imp[0]}/${v.imp[4]}  ·  vd: ${v.vd}` : "";
+      const fb = host.querySelector("#fb");
+      fb.innerHTML = `
+        <div style="padding:.55rem .8rem;border-radius:3px;background:${ok ? "rgba(0,128,0,.08)" : "rgba(176,0,32,.08)"};border-left:3px solid ${ok ? "var(--groen)" : "var(--rood)"}">
+          <strong style="color:${ok ? "var(--groen)" : "var(--rood)"}">${ok ? "✓ Goed!" : "✗ Niet correct"}</strong>
+          ${ok ? "" : `<div style="margin-top:.2rem"><strong>Antwoord:</strong> ${esc(item.antwoord)}</div>`}
+          <div style="margin-top:.25rem;font-size:.86rem;color:var(--ink-soft)">${esc(item.uitleg || "")}</div>
+          ${fullForms ? `<div style="margin-top:.35rem;font-family:var(--mono);font-size:.7rem;color:var(--ink-faint);letter-spacing:.04em">${esc(fullForms)}</div>` : ""}
+        </div>
+      `;
+      host.querySelectorAll("button").forEach((b) => { if (!b.matches("[data-next]")) b.disabled = true; });
+      host.querySelectorAll("input").forEach((i) => { i.disabled = true; });
+      const next = el("button", { "data-next": "1", style: "margin-top:.6rem", onClick: () => { idx += 1; paint(); } },
+        idx + 1 >= items.length ? "Resultaat" : "Volgende →");
+      host.append(next);
+      setTimeout(() => next.focus(), 30);
+    }
+
+    function finish() {
+      const pct = Math.round((right / items.length) * 100);
+      const c = pct >= 80 ? "var(--groen)" : pct >= 60 ? "var(--geel)" : "var(--rood)";
+      host.innerHTML = "";
+      host.append(
+        el("h3", { style: "margin:0 0 .5rem;font-family:var(--serif);font-weight:600" }, "Klaar!"),
+        el("p", { style: "font-family:var(--serif);font-size:2rem;font-weight:600;color:" + c + ";margin:.1rem 0" },
+          right + " / " + items.length + "  (" + pct + "%)"),
+        el("div", { style: "margin-top:.7rem;display:flex;gap:.5rem;flex-wrap:wrap" },
+          el("button", { onClick: () => runContextDrill(host, pool) }, "Nieuwe AI-set"),
+          el("button", { class: "subtle", onClick: () => runDrill(host, pool) }, "⚡ Snelle ronde"),
+          el("button", { class: "subtle", onClick: () => {
+            const ov = host.closest("[style*='position:fixed']");
+            if (ov && ov.parentNode) ov.parentNode.removeChild(ov);
+          } }, "Sluiten"),
+        ));
+    }
+
+    paint();
   }
 
   function filterPool() {
@@ -290,49 +440,97 @@
 
   function makeQuestion(pool) {
     const v = pick(pool);
-    const types = ["form", "vd", "type", "identify"];
-    const t = pick(types);
-    if (t === "form") {
-      const tenseIdx = Math.random() < 0.5 ? "pres" : "imp";
-      const personIdx = Math.floor(Math.random() * PERSONS.length);
-      const answer = v[tenseIdx][personIdx];
-      if (!answer || answer === "—") return makeQuestion(pool);
-      return {
-        type: "fill",
-        prompt: `Vorm: ${v.inf} (${v.tr})  ·  ${PERSONS[personIdx].label}, ${tenseIdx === "pres" ? "tegenwoordige tijd" : "imperfectum"}`,
-        answer,
-        explain: "Stam: " + v.stem + (v.tp.startsWith("zwak") ? " (zwak, " + (KOFSCHIP.test(v.stem) && v.tp !== "zwak-vz" ? "kofschip → -te" : "→ -de") + ")" : (v.tp === "sterk" ? " (sterk)" : " (onregelmatig)")),
-      };
-    }
+    // Gewogen vraagtype-selectie: focus op wat moeilijk is (vd + imperfectum),
+    // minder op trivial gevallen (wij/jullie/zij in tegenwoordige tijd = infinitief).
+    const r = Math.random();
+    let t;
+    if      (r < 0.35) t = "vd";          // voltooid deelwoord — moeilijkst, hoogste gewicht
+    else if (r < 0.55) t = "imp_sing";    // imperfectum singular (ik/hij)
+    else if (r < 0.70) t = "imp_pl";      // imperfectum plural (wij/zij)
+    else if (r < 0.85) t = "pres_sing";   // tt singular — alleen ik/jij/hij (waar stam+t kwestie speelt)
+    else if (r < 0.95) t = "aux";         // hebben of zijn
+    else               t = "type";        // zwak/sterk/onreg
+
     if (t === "vd") {
       return {
         type: "fill",
         prompt: `Voltooid deelwoord van: ${v.inf}  (${v.tr})`,
         answer: v.vd,
-        explain: v.tp === "zwak" || v.tp === "zwak-vz"
-          ? `Zwak werkwoord. Stam=${v.stem}, ${KOFSCHIP.test(v.stem) && v.tp !== "zwak-vz" ? "stem eindigt op kofschip-letter → -t" : "→ -d"}.`
-          : v.tp === "sterk" ? "Sterk werkwoord: leer de vorm uit het hoofd." : "Onregelmatig werkwoord.",
+        explain: v.tp === "zwak"
+          ? `Zwak. Stam=${v.stem}, ${KOFSCHIP.test(v.stem.split(" ")[0]) ? "kofschip → ge-...-t" : "→ ge-...-d"}.`
+          : v.tp === "zwak-vz" ? `Zwak met onderliggende v/z → -d (geen -t ondanks oppervlaktevorm).`
+          : v.tp === "sterk" ? "Sterk werkwoord — leer de vorm uit het hoofd."
+          : "Onregelmatig werkwoord.",
       };
     }
-    if (t === "type") {
+
+    if (t === "imp_sing") {
+      const ans = v.imp[0]; // alle singular forms zijn identiek (ik/jij/u/hij)
+      if (!ans || ans === "—") return makeQuestion(pool);
+      const lbl = pick(["ik", "jij", "u", "hij"]);
+      return {
+        type: "fill",
+        prompt: `Imperfectum: ${v.inf} (${v.tr})  ·  ${lbl}`,
+        answer: ans,
+        explain: v.tp === "zwak" ? `Zwak. Stam+${KOFSCHIP.test(v.stem.split(" ")[0]) ? "te" : "de"}.`
+          : v.tp === "zwak-vz" ? `Zwak (v/z): stam+de.` : `${v.tp} werkwoord.`,
+      };
+    }
+
+    if (t === "imp_pl") {
+      const ans = v.imp[4]; // wij/jullie/zij — alle plural forms identiek
+      if (!ans || ans === "—") return makeQuestion(pool);
+      const lbl = pick(["wij", "jullie", "zij (mv.)"]);
+      return {
+        type: "fill",
+        prompt: `Imperfectum: ${v.inf} (${v.tr})  ·  ${lbl}`,
+        answer: ans,
+        explain: `Meervoudsvorm = singular + n.`,
+      };
+    }
+
+    if (t === "pres_sing") {
+      // Alleen ik/jij/hij — wij/jullie/zij is gewoon de infinitief (trivial).
+      const persons = [
+        { i: 0, lbl: "ik" },
+        { i: 1, lbl: "jij" },
+        { i: 3, lbl: "hij / zij / het" },
+      ];
+      const p = pick(persons);
+      const ans = v.pres.split(",")[p.i];
+      if (!ans || ans === "—") return makeQuestion(pool);
+      return {
+        type: "fill",
+        prompt: `Tegenwoordige tijd: ${v.inf} (${v.tr})  ·  ${p.lbl}`,
+        answer: ans,
+        explain: p.i === 0 ? "1e persoon = stam (zonder -t)." : "2e/3e persoon = stam + t.",
+      };
+    }
+
+    if (t === "aux") {
+      // hebben of zijn voor perfectum
+      const auxFirst = v.aux.split("/")[0];
+      const opt = ["hebben", "zijn"];
+      // Sommige werkwoorden zijn "—" (zullen) — skip
+      if (!["hebben", "zijn"].includes(auxFirst)) return makeQuestion(pool);
       return {
         type: "mc",
-        prompt: `Wat voor type werkwoord is "${v.inf}"?`,
-        options: ["zwak", "sterk", "onregelmatig"],
-        answer: v.tp === "zwak-vz" ? "zwak" : (v.tp === "onreg" ? "onregelmatig" : v.tp),
-        explain: "Werkwoord: " + v.inf + " · vd: " + v.vd + " · imperf: " + v.imp[0] + " / " + v.imp[4],
+        prompt: `Welk hulpwerkwoord bij "${v.inf}" in het perfectum?`,
+        options: opt,
+        answer: auxFirst,
+        explain: v.aux.includes("/")
+          ? `Beide kunnen (${v.aux}). Bij beweging/verandering: zijn. Anders: hebben.`
+          : (v.aux === "zijn" ? "Beweging of verandering → zijn." : "Standaard → hebben."),
       };
     }
-    // identify: given a form, name infinitive + tense
-    const tenseIdx2 = Math.random() < 0.5 ? "pres" : "imp";
-    const personIdx2 = Math.floor(Math.random() * PERSONS.length);
-    const form = v[tenseIdx2][personIdx2];
-    if (!form || form === "—") return makeQuestion(pool);
+
+    // type
     return {
-      type: "fill",
-      prompt: `Welke infinitief hoort bij "${form}" ?`,
-      answer: v.inf,
-      explain: `${form} = ${v.inf}, ${PERSONS[personIdx2].label}, ${tenseIdx2 === "pres" ? "tegenwoordige tijd" : "imperfectum"}.`,
+      type: "mc",
+      prompt: `Wat voor type werkwoord is "${v.inf}"?`,
+      options: ["zwak", "sterk", "onregelmatig"],
+      answer: v.tp === "zwak-vz" ? "zwak" : (v.tp === "onreg" ? "onregelmatig" : v.tp),
+      explain: "vd: " + v.vd + "  ·  imperf: " + v.imp[0] + " / " + v.imp[4],
     };
   }
 
@@ -405,6 +603,116 @@
     }
 
     paint();
+  }
+
+  /* ---------- Verb grammar primer (modal) ----------
+   * Curated subset of /grammatica chapters focused on werkwoorden:
+   * vervoeging, ge-/d/t, prefix-regels, scheidbaarheid, modale ww,
+   * passive, infinitief-constructies, plusquamperfectum, onregelmatige.
+   * Content gefetched uit /static/grammatica-overzicht.html zodat de
+   * single source of truth daar blijft.
+   */
+  const VERB_GRAMMAR_CHAPTERS = [
+    { id: "a1-tt",            lvl: "A1", title: "Tegenwoordige tijd",                     subtitle: "Stam + uitgang, onregelmatige zijn/hebben/kunnen" },
+    { id: "a1-zijn-hebben",   lvl: "A1", title: "Zijn en hebben",                         subtitle: "Vervoeging + hulpwerkwoordkeuze bij perfectum" },
+    { id: "a2-imperfectum",   lvl: "A2", title: "Imperfectum",                            subtitle: "Zwak (-te/-de) en sterk (klinkerwisseling), 't kofschip" },
+    { id: "a2-perfectum",     lvl: "A2", title: "Perfectum — ge- + d/t",                  subtitle: "Voltooid deelwoord, hulpwerkwoord hebben/zijn" },
+    { id: "a2-zonder-ge",     lvl: "A2", title: "Werkwoorden zonder ge-",                 subtitle: "be-, ge-, her-, ont-, ver-, er- voorvoegsels" },
+    { id: "a2-scheidbaar",    lvl: "A2", title: "Scheidbare / onscheidbare werkwoorden",  subtitle: "Klemtoonregel, opstaan vs vertellen" },
+    { id: "a2-modaal",        lvl: "A2", title: "Modale werkwoorden",                     subtitle: "kunnen/moeten/mogen/willen/zullen/hoeven" },
+    { id: "b1-conditioneel",  lvl: "B1", title: "Voorwaardelijke wijs — zou",             subtitle: "Beleefdheid, hypothese, toekomst-in-verleden" },
+    { id: "b1-reflexief",     lvl: "B1", title: "Wederkerende werkwoorden",               subtitle: "zich vergissen/herinneren/vervelen" },
+    { id: "b1-plusquam",      lvl: "B1", title: "Plusquamperfectum",                      subtitle: "had/was + voltooid deelwoord (verleden vóór verleden)" },
+    { id: "b1-passief",       lvl: "B1", title: "Lijdende vorm — worden",                 subtitle: "worden + vd / zijn + vd in perfectum" },
+    { id: "b1-te",            lvl: "B1", title: "Te + infinitief / om te + infinitief",   subtitle: "proberen/beginnen/durven + te; doel met om te" },
+    { id: "bijlage-onregelmatig", lvl: "Bijlage", title: "Onregelmatige werkwoorden",     subtitle: "Volledige lijst sterk + onregelmatig" },
+  ];
+
+  let _activeGrammarChapter = null;
+
+  function openVerbGrammar() {
+    const ov = el("div", {
+      class: "verb-grammar-overlay",
+      style: "position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:9999;display:flex;align-items:center;justify-content:center;padding:1.2rem;backdrop-filter:blur(2px)",
+      onClick: (e) => { if (e.target === ov) document.body.removeChild(ov); },
+    });
+    const isNarrow = window.matchMedia && window.matchMedia("(max-width: 760px)").matches;
+    const panel = el("div", {
+      style: "background:var(--paper);border-radius:6px;width:100%;" +
+             (isNarrow ? "max-width:100%;max-height:100vh;height:100vh;" : "max-width:820px;max-height:90vh;") +
+             "overflow:hidden;display:flex;flex-direction:column;box-shadow:0 16px 48px -8px rgba(0,0,0,.4)",
+    });
+    ov.append(panel);
+    document.body.append(ov);
+
+    function close() { if (ov.parentNode) document.body.removeChild(ov); }
+    document.addEventListener("keydown", function esc(e) { if (e.key === "Escape") { close(); document.removeEventListener("keydown", esc); } });
+
+    // Header
+    const header = el("div", { style: "padding:1rem 1.4rem;border-bottom:1px solid var(--rule);display:flex;align-items:baseline;justify-content:space-between;gap:1rem;flex-shrink:0" });
+    const title = el("h3", { style: "margin:0;font-family:var(--serif);font-weight:600;font-size:1.2rem" }, "Werkwoord-grammatica");
+    const back = el("button", { class: "subtle", style: "font-size:.85rem;display:none", onClick: () => paintList() }, "← terug");
+    const closeBtn = el("button", { class: "subtle", style: "font-size:.85rem", onClick: close }, "sluiten ✕");
+    header.append(title, back, closeBtn);
+    panel.append(header);
+
+    const body = el("div", { style: "padding:1rem 1.4rem;overflow-y:auto;flex:1;min-height:0" });
+    panel.append(body);
+
+    function paintList() {
+      back.style.display = "none";
+      title.textContent = "Werkwoord-grammatica";
+      _activeGrammarChapter = null;
+      body.innerHTML = "";
+      body.append(el("p", { class: "stat-note", style: "margin:0 0 .7rem" },
+        "Snelle naslag — kies een hoofdstuk om te bekijken. Voor alles in één doorlopend document: ",
+        el("a", { href: "#/grammatica", onClick: close, style: "color:var(--rood)" }, "open volledige grammatica"), "."));
+
+      const groups = {};
+      VERB_GRAMMAR_CHAPTERS.forEach((c) => { (groups[c.lvl] = groups[c.lvl] || []).push(c); });
+      ["A1", "A2", "B1", "Bijlage"].forEach((lvl) => {
+        if (!groups[lvl]) return;
+        body.append(el("div", { style: "font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);margin:1rem 0 .35rem" }, lvl));
+        groups[lvl].forEach((c) => {
+          const card = el("button", {
+            style: "display:block;width:100%;text-align:left;padding:.7rem .9rem;border:1px solid var(--rule);border-radius:4px;margin-bottom:.35rem;background:var(--paper-2);cursor:pointer;font-family:var(--sans);transition:border-color .12s",
+            onClick: () => paintChapter(c),
+            onMouseEnter: function() { this.style.borderColor = "var(--rood)"; },
+            onMouseLeave: function() { this.style.borderColor = "var(--rule)"; },
+          });
+          card.append(
+            el("div", { style: "font-family:var(--serif);font-size:1rem;color:var(--ink);font-weight:600" }, c.title),
+            el("div", { style: "color:var(--ink-soft);font-size:.82rem;margin-top:.15rem" }, c.subtitle),
+          );
+          body.append(card);
+        });
+      });
+    }
+
+    async function paintChapter(c) {
+      back.style.display = "inline-block";
+      title.textContent = c.title;
+      _activeGrammarChapter = c.id;
+      body.innerHTML = '<p class="stat-note"><span class="ai-loading">Laden…</span></p>';
+      try {
+        if (!window.GrammaticaViews || !window.GrammaticaViews.getChapterContent) {
+          throw new Error("Grammatica-module nog niet geladen.");
+        }
+        const article = await window.GrammaticaViews.getChapterContent(c.id);
+        if (!article) { body.innerHTML = '<p class="ai-error">Hoofdstuk niet gevonden in grammatica-overzicht.html</p>'; return; }
+        body.innerHTML = "";
+        const firstH2 = article.querySelector("h2");
+        if (firstH2) firstH2.remove();
+        body.append(article);
+        // Tap "open volledige" links should close modal first
+        body.querySelectorAll("a[href^='#/']").forEach((a) => a.addEventListener("click", close));
+        body.scrollTop = 0;
+      } catch (e) {
+        body.innerHTML = '<p class="ai-error">' + esc(e.message) + '</p>';
+      }
+    }
+
+    paintList();
   }
 
   window.WerkwoordenViews = { render };

@@ -359,5 +359,7 @@
     return CHAPTERS.find((c) => c.id === m[1]) || null;
   }
 
-  window.GrammaticaViews = { render, getActiveChapter };
+  // Exposed for other modules (e.g. werkwoorden-views) that want to
+  // re-use the chapter loader to embed grammar reference inline.
+  window.GrammaticaViews = { render, getActiveChapter, getChapterContent };
 })();
