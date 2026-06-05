@@ -265,6 +265,98 @@
       "genre": "jazz · soul",
       "description": "Smooth jazz, soul en lounge.",
       "url": "https://playerservices.streamtheworld.com/api/livestream-redirect/SUBLIME.mp3"
+    },
+    {
+      "id": "sublime-jazz",
+      "name": "Sublime Jazz",
+      "broadcaster": "Sublime",
+      "country": "NL",
+      "genre": "jazz puur",
+      "description": "Doorlopend jazz-only subkanaal van Sublime.",
+      "url": "https://stream.sublime.nl/web21_mp3"
+    },
+
+    {
+      "id": "topradio-be",
+      "name": "TopRadio",
+      "broadcaster": "TopRadio",
+      "country": "BE",
+      "genre": "dance · hits",
+      "description": "Vlaamse dance-zender uit Gent (99.4 FM).",
+      "url": "https://str.topradio.be/topradio.mp3"
+    },
+    {
+      "id": "willy-be",
+      "name": "Willy",
+      "broadcaster": "DPG Media",
+      "country": "BE",
+      "genre": "rock · alternatief",
+      "description": "Rock en alternatief, voor wie zijn klassiekers met smaak wil.",
+      "url": "https://icecast-qmusicbe-cdp.triple-it.nl/willy.mp3"
+    },
+    {
+      "id": "nostalgie-be-waf",
+      "name": "Nostalgie What a Feeling",
+      "broadcaster": "Mediahuis",
+      "country": "BE",
+      "genre": "feelgood oldies",
+      "description": "Themasubkanaal van Nostalgie met de meest feelgood hits.",
+      "url": "https://playerservices.streamtheworld.com/api/livestream-redirect/NOSTALGIEWHATAFEELING.mp3"
+    },
+    {
+      "id": "nostalgie-be-plus",
+      "name": "Nostalgie+",
+      "broadcaster": "Mediahuis",
+      "country": "BE",
+      "genre": "nostalgie · plus",
+      "description": "Premium Nostalgie subkanaal met uitgebreidere selectie.",
+      "url": "https://playerservices.streamtheworld.com/api/livestream-redirect/NOSTALGIEPLUS.mp3"
+    },
+    {
+      "id": "fm-goud-noord-limburg",
+      "name": "FM Goud Noord-Limburg",
+      "broadcaster": "FM Goud",
+      "country": "BE",
+      "genre": "regio · gouden jaren",
+      "description": "Lokale Limburgse zender voor Noord-Limburg — gouden klassiekers en regio-info.",
+      "url": "https://stream.fmgoud.be/fm-goud-noord-limburg"
+    },
+    {
+      "id": "fm-goud-maasland",
+      "name": "FM Goud Maasland",
+      "broadcaster": "FM Goud",
+      "country": "BE",
+      "genre": "regio · gouden jaren",
+      "description": "Lokale Limburgse zender voor het Maasland.",
+      "url": "https://stream.fmgoud.be/fm-goud-maasland"
+    },
+
+    {
+      "id": "qmusic-nl",
+      "name": "Q-Music NL",
+      "broadcaster": "DPG Media",
+      "country": "NL",
+      "genre": "hits · commercieel",
+      "description": "Nederlandse Q-Music — hitformat.",
+      "url": "https://icecast-qmusicnl-cdp.triple-it.nl/Qmusic_nl_live.mp3"
+    },
+    {
+      "id": "wildfm-nl",
+      "name": "Wild FM",
+      "broadcaster": "Wild FM Hitradio",
+      "country": "NL",
+      "genre": "feelgood · hits",
+      "description": "Amsterdamse hitradio (93.6 FM).",
+      "url": "http://radio.wildhitradio.nl/wildfm.mp3"
+    },
+    {
+      "id": "arrow-classic-rock",
+      "name": "Arrow Classic Rock",
+      "broadcaster": "Arrow",
+      "country": "NL",
+      "genre": "classic rock",
+      "description": "Klassieke rock op 192 kbps.",
+      "url": "https://stream.gal.io/arrow"
     }
   ]
 }
