@@ -1,0 +1,169 @@
+{
+  "schema": "studeerkamer-radios",
+  "version": 1,
+  "note": "Publiek bekende MP3-streams van Vlaamse (VRT) en Nederlandse (NPO) omroepen. Commerciële stations gebruiken vaak rotating streamtheworld URLs die niet stabiel zijn — voeg ze handmatig toe als je een werkende URL hebt.",
+  "stations": [
+    {
+      "id": "vrt-radio1",
+      "name": "Radio 1",
+      "broadcaster": "VRT",
+      "country": "BE",
+      "genre": "nieuws · gesprek",
+      "description": "Vlaams publieke zender: nieuws, duiding, gesprekken, sport.",
+      "url": "https://icecast.vrtcdn.be/radio1-high.mp3"
+    },
+    {
+      "id": "vrt-radio2-antwerpen",
+      "name": "Radio 2 Antwerpen",
+      "broadcaster": "VRT",
+      "country": "BE",
+      "genre": "regio · populair",
+      "description": "Regionale Radio 2 voor Antwerpen.",
+      "url": "https://icecast.vrtcdn.be/ra2ant-high.mp3"
+    },
+    {
+      "id": "vrt-radio2-limburg",
+      "name": "Radio 2 Limburg",
+      "broadcaster": "VRT",
+      "country": "BE",
+      "genre": "regio · populair",
+      "description": "Regionale Radio 2 voor Limburg — nieuws en muziek uit jouw streek.",
+      "url": "https://icecast.vrtcdn.be/ra2lim-high.mp3"
+    },
+    {
+      "id": "vrt-radio2-vlaamsbrabant",
+      "name": "Radio 2 Vlaams-Brabant",
+      "broadcaster": "VRT",
+      "country": "BE",
+      "genre": "regio · populair",
+      "description": "Regionale Radio 2 voor Vlaams-Brabant en Brussel.",
+      "url": "https://icecast.vrtcdn.be/ra2vlb-high.mp3"
+    },
+    {
+      "id": "vrt-radio2-oostvlaanderen",
+      "name": "Radio 2 Oost-Vlaanderen",
+      "broadcaster": "VRT",
+      "country": "BE",
+      "genre": "regio · populair",
+      "description": "Regionale Radio 2 voor Oost-Vlaanderen.",
+      "url": "https://icecast.vrtcdn.be/ra2ovl-high.mp3"
+    },
+    {
+      "id": "vrt-radio2-westvlaanderen",
+      "name": "Radio 2 West-Vlaanderen",
+      "broadcaster": "VRT",
+      "country": "BE",
+      "genre": "regio · populair",
+      "description": "Regionale Radio 2 voor West-Vlaanderen.",
+      "url": "https://icecast.vrtcdn.be/ra2wvl-high.mp3"
+    },
+    {
+      "id": "vrt-klara",
+      "name": "Klara",
+      "broadcaster": "VRT",
+      "country": "BE",
+      "genre": "klassiek · cultuur",
+      "description": "Klassieke muziek, jazz, kunst en cultuur.",
+      "url": "https://icecast.vrtcdn.be/klara-high.mp3"
+    },
+    {
+      "id": "vrt-mnm",
+      "name": "MNM",
+      "broadcaster": "VRT",
+      "country": "BE",
+      "genre": "hits · jongeren",
+      "description": "Jongerenzender met hedendaagse hits.",
+      "url": "https://icecast.vrtcdn.be/mnm-high.mp3"
+    },
+    {
+      "id": "vrt-studiobrussel",
+      "name": "Studio Brussel",
+      "broadcaster": "VRT",
+      "country": "BE",
+      "genre": "alternatief · indie",
+      "description": "Alternatieve muziek en nieuwe ontdekkingen.",
+      "url": "https://icecast.vrtcdn.be/stubru-high.mp3"
+    },
+    {
+      "id": "vrt-klaracontinuo",
+      "name": "Klara Continuo",
+      "broadcaster": "VRT",
+      "country": "BE",
+      "genre": "klassiek non-stop",
+      "description": "24/7 klassieke muziek zonder onderbreking.",
+      "url": "https://icecast.vrtcdn.be/klaracontinuo-high.mp3"
+    },
+    {
+      "id": "vrt-vrtnws",
+      "name": "VRT NWS",
+      "broadcaster": "VRT",
+      "country": "BE",
+      "genre": "nieuws non-stop",
+      "description": "Continue nieuwsuitzending.",
+      "url": "https://icecast.vrtcdn.be/vrtnieuwsplus-high.mp3"
+    },
+    {
+      "id": "npo-radio1",
+      "name": "NPO Radio 1",
+      "broadcaster": "NPO",
+      "country": "NL",
+      "genre": "nieuws · sport",
+      "description": "Nederlandse publieke nieuws- en sportzender.",
+      "url": "https://icecast.omroep.nl/radio1-bb-mp3"
+    },
+    {
+      "id": "npo-radio2",
+      "name": "NPO Radio 2",
+      "broadcaster": "NPO",
+      "country": "NL",
+      "genre": "populair",
+      "description": "Pop, oldies en gevarieerde muziek voor breed publiek.",
+      "url": "https://icecast.omroep.nl/radio2-bb-mp3"
+    },
+    {
+      "id": "npo-3fm",
+      "name": "NPO 3FM",
+      "broadcaster": "NPO",
+      "country": "NL",
+      "genre": "alternatief · indie",
+      "description": "Pop, rock, alternatief en nieuwe muziek.",
+      "url": "https://icecast.omroep.nl/3fm-bb-mp3"
+    },
+    {
+      "id": "npo-radio4",
+      "name": "NPO Radio 4",
+      "broadcaster": "NPO",
+      "country": "NL",
+      "genre": "klassiek",
+      "description": "Klassieke muziek, opera en jazz.",
+      "url": "https://icecast.omroep.nl/radio4-bb-mp3"
+    },
+    {
+      "id": "npo-radio5",
+      "name": "NPO Radio 5",
+      "broadcaster": "NPO",
+      "country": "NL",
+      "genre": "oldies · gouden jaren",
+      "description": "Muziek uit de jaren '60, '70 en '80.",
+      "url": "https://icecast.omroep.nl/radio5-bb-mp3"
+    },
+    {
+      "id": "npo-funx",
+      "name": "FunX",
+      "broadcaster": "NPO",
+      "country": "NL",
+      "genre": "urban · hiphop",
+      "description": "Stedelijke muziek, hiphop, R&B voor jongeren.",
+      "url": "https://icecast.omroep.nl/funx-bb-mp3"
+    },
+    {
+      "id": "npo-radio2soulenjazz",
+      "name": "NPO Soul & Jazz",
+      "broadcaster": "NPO",
+      "country": "NL",
+      "genre": "soul · jazz",
+      "description": "Doorlopend soul, funk en jazz.",
+      "url": "https://icecast.omroep.nl/radio6-bb-mp3"
+    }
+  ]
+}

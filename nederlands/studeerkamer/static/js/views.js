@@ -1517,6 +1517,7 @@
     spreken: (mount) => window.SprekenViews.render(mount),
     grammatica: (mount) => window.GrammaticaViews.render(mount),
     werkwoorden: (mount) => window.WerkwoordenViews.render(mount),
+    radio: (mount) => window.RadioViews.render(mount),
     settings: (mount) => window.AIViews.settings(mount),
     help: renderHelp,
   };

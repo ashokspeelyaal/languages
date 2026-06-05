@@ -12,7 +12,7 @@
 
   const ROUTES = ["dashboard", "browse", "flashcards", "typed", "cloze", "mixed",
                   "metrics", "chat", "schrijven", "exam", "luisteren", "spreken",
-                  "grammatica", "werkwoorden", "settings", "help", "logout"];
+                  "grammatica", "werkwoorden", "radio", "settings", "help", "logout"];
   let cleanupFn = null;
   let booted = false;
 
