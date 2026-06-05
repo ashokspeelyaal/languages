@@ -164,6 +164,107 @@
       "genre": "soul · jazz",
       "description": "Doorlopend soul, funk en jazz.",
       "url": "https://icecast.omroep.nl/radio6-bb-mp3"
+    },
+
+    {
+      "id": "qmusic-be",
+      "name": "Q-Music",
+      "broadcaster": "DPG Media",
+      "country": "BE",
+      "genre": "hits · commercieel",
+      "description": "Vlaamse populaire hitsformat.",
+      "url": "https://playerservices.streamtheworld.com/api/livestream-redirect/QMUSIC.mp3"
+    },
+    {
+      "id": "joefm-be",
+      "name": "JOE FM",
+      "broadcaster": "DPG Media",
+      "country": "BE",
+      "genre": "feelgood · classics",
+      "description": "Tijdloze hits voor wie ze van vroeger kent.",
+      "url": "https://playerservices.streamtheworld.com/api/livestream-redirect/JOE.mp3"
+    },
+    {
+      "id": "nostalgie-be",
+      "name": "Nostalgie",
+      "broadcaster": "Mediahuis",
+      "country": "BE",
+      "genre": "nostalgie · oldies",
+      "description": "Klassieke hits uit de jaren '70 tot '90.",
+      "url": "https://playerservices.streamtheworld.com/api/livestream-redirect/NOSTALGIE_BE.mp3"
+    },
+
+    {
+      "id": "radio538",
+      "name": "Radio 538",
+      "broadcaster": "Talpa",
+      "country": "NL",
+      "genre": "hits · dance",
+      "description": "Hitformat met dance en pop.",
+      "url": "https://playerservices.streamtheworld.com/api/livestream-redirect/RADIO538.mp3"
+    },
+    {
+      "id": "skyradio",
+      "name": "Sky Radio",
+      "broadcaster": "Mediahuis",
+      "country": "NL",
+      "genre": "feelgood",
+      "description": "Non-stop muziek zonder DJ-onderbreking.",
+      "url": "https://playerservices.streamtheworld.com/api/livestream-redirect/SKYRADIO.mp3"
+    },
+    {
+      "id": "veronica",
+      "name": "Radio Veronica",
+      "broadcaster": "Talpa",
+      "country": "NL",
+      "genre": "classic rock",
+      "description": "Rockklassiekers en gitaarmuziek.",
+      "url": "https://playerservices.streamtheworld.com/api/livestream-redirect/VERONICA.mp3"
+    },
+    {
+      "id": "100procent-nl",
+      "name": "100% NL",
+      "broadcaster": "100% NL",
+      "country": "NL",
+      "genre": "Nederlandstalig",
+      "description": "Alleen Nederlandstalige muziek — perfect voor je luistervaardigheid.",
+      "url": "https://stream.100p.nl/100pctnl.mp3"
+    },
+    {
+      "id": "bnr",
+      "name": "BNR Nieuwsradio",
+      "broadcaster": "BNR",
+      "country": "NL",
+      "genre": "nieuws · zaken",
+      "description": "Nieuws, beurs en zakelijke achtergrond.",
+      "url": "https://stream.bnr.nl/bnr_mp3_128_03"
+    },
+    {
+      "id": "radio10",
+      "name": "Radio 10",
+      "broadcaster": "Talpa",
+      "country": "NL",
+      "genre": "gouden jaren",
+      "description": "Hits uit de jaren '70 en '80.",
+      "url": "https://playerservices.streamtheworld.com/api/livestream-redirect/RADIO10.mp3"
+    },
+    {
+      "id": "slam",
+      "name": "Slam!",
+      "broadcaster": "Mediahuis",
+      "country": "NL",
+      "genre": "dance · EDM",
+      "description": "Dance, EDM en clubmuziek.",
+      "url": "https://stream.slam.nl/slam_mp3"
+    },
+    {
+      "id": "sublime",
+      "name": "Sublime FM",
+      "broadcaster": "Sublime",
+      "country": "NL",
+      "genre": "jazz · soul",
+      "description": "Smooth jazz, soul en lounge.",
+      "url": "https://playerservices.streamtheworld.com/api/livestream-redirect/SUBLIME.mp3"
     }
   ]
 }
