@@ -202,17 +202,17 @@
 
     async function renderExerciseBody(ex) {
       main.innerHTML = "";
-      // Title row
-      const titleNode = el("h3", { style: "font-family:var(--serif);font-weight:600;font-size:1.3rem;margin:0;flex:1;cursor:pointer", title: "Klik om te hernoemen" }, ex.title || "Naamloos");
+      // Title row — compact, tighter padding than the default exam header.
+      const titleNode = el("h3", { style: "font-family:var(--serif);font-weight:600;font-size:1.15rem;margin:0;flex:1;cursor:pointer;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap", title: "Klik om te hernoemen" }, ex.title || "Naamloos");
       titleNode.addEventListener("click", () => renameTitleInline(titleNode, ex));
       const lvl = (ex.level || "B2").toUpperCase();
-      main.append(el("div", { style: "display:flex;align-items:baseline;gap:.5rem;padding:1.2rem 1.4rem;border-bottom:1px solid var(--rule)" },
+      main.append(el("div", { style: "display:flex;align-items:baseline;gap:.5rem;padding:.7rem 1rem;border-bottom:1px solid var(--rule);flex-wrap:wrap" },
         el("span", { class: "level-badge l-" + lvl, style: "vertical-align:2px" }, lvl),
         titleNode,
-        el("span", { class: "fc-meta", style: "margin:0" }, ex.topic ? "· " + ex.topic : ""),
+        el("span", { class: "fc-meta", style: "margin:0;font-size:.78rem" }, ex.topic ? "· " + ex.topic : ""),
       ));
 
-      const body = el("div", { class: "exam-body" });
+      const body = el("div", { class: "exam-body luisteren-body" });
       main.append(body);
 
       // If still generating or new, run flow
@@ -225,19 +225,20 @@
         return renderExerciseBody(updated);
       }
 
-      // Player + tabs share a single sticky container so the tabs are
-      // never hidden behind the audio controls when you scroll into a
-      // long transcript. tabBody scrolls underneath as expected.
+      // Player + tabs in één compacte sticky container — geen ruimte ertussen,
+      // voelt als één controle-strip. tabBody scrolt eronder.
       const stickyWrap = el("div", { class: "audio-tabs-sticky" });
       body.append(stickyWrap);
 
-      const playerHost = el("div", { class: "player", style: "background:var(--card);border:1px solid var(--rule);border-radius:4px;padding:1rem 1.2rem;margin:0 0 .8rem" });
+      const playerHost = el("div", { class: "player", style: "background:var(--card);border:1px solid var(--rule);border-bottom:none;border-radius:4px 4px 0 0;padding:.6rem .9rem" });
       stickyWrap.append(playerHost);
       if (ex.audioKey && window.BlobStore) {
         window.BlobStore.getURL(ex.audioKey).then((url) => {
           if (url) buildPlayer(playerHost, url);
-          else playerHost.innerHTML = '<p class="ai-error">Audio niet gevonden.</p>';
+          else renderRegenAudioPrompt(playerHost, ex);
         });
+      } else {
+        renderRegenAudioPrompt(playerHost, ex);
       }
 
       const tabBar = el("div", { class: "exam-tabs" });
@@ -287,6 +288,41 @@
     }
 
     /* ---- Player ---- */
+    function renderRegenAudioPrompt(host, ex) {
+      // Compact "audio ontbreekt" UI met regenerate-knop.
+      host.innerHTML = "";
+      const row = el("div", { style: "display:flex;align-items:center;gap:.6rem;flex-wrap:wrap" },
+        el("span", { style: "font-family:var(--mono);font-size:.78rem;color:var(--ink-faint);letter-spacing:.04em" },
+          "♪ geen audio · transcript is bijgewerkt"),
+      );
+      const regenBtn = el("button", { style: "min-height:auto;padding:.35rem .9rem;font-size:.82rem", onClick: async () => {
+        regenBtn.disabled = true;
+        regenBtn.textContent = "audio maken…";
+        try {
+          const cur = window.ListeningStore.get(ex.id);
+          if (!cur || !cur.script) throw new Error("Geen script.");
+          const blob = await window.AI.generateSpeech(cur.script);
+          const audioKey = "listening-" + ex.id;
+          if (window.BlobStore) await window.BlobStore.put(audioKey, blob);
+          window.ListeningStore.update(ex.id, { audioKey, userAnswers: cur.userAnswers || [] });
+          regenBtn.textContent = "sync maken…";
+          try {
+            const tr = await window.AI.transcribeWithTimestamps(blob, { language: "nl" });
+            if (tr.words && tr.words.length) {
+              window.ListeningStore.update(ex.id, { wordTimings: tr.words, sttText: tr.text });
+            }
+          } catch (e) { /* sync optional */ }
+          refresh();
+        } catch (e) {
+          alert("Audio mislukt: " + e.message);
+          regenBtn.disabled = false;
+          regenBtn.textContent = "🔊 Genereer audio";
+        }
+      } }, "🔊 Genereer audio");
+      row.append(regenBtn);
+      host.append(row);
+    }
+
     function buildPlayer(host, url) {
       host.innerHTML = "";
       const audio = new Audio(url);
@@ -295,19 +331,18 @@
       // Without controls + display:none it stays invisible.
       audio.style.display = "none";
       host.appendChild(audio);
-      const playBtn = el("button", { class: "danger", style: "width:48px;height:48px;border-radius:50%;font-size:1.2rem;padding:0" }, "▶");
-      const back10 = el("button", { class: "subtle", style: "min-height:auto;padding:.3rem .6rem;font-size:.8rem;font-family:var(--mono)" }, "-10");
-      const back5 = el("button", { class: "subtle", style: "min-height:auto;padding:.3rem .6rem;font-size:.8rem;font-family:var(--mono)" }, "-5");
-      const time = el("span", { style: "font-family:var(--mono);font-size:.85rem;color:var(--ink-faint);margin-left:auto;font-variant-numeric:tabular-nums" }, "0:00 / —");
-      const row = el("div", { style: "display:flex;align-items:center;gap:.6rem;margin-bottom:.7rem" }, playBtn, back10, back5, time);
+      const playBtn = el("button", { class: "danger", style: "width:40px;height:40px;border-radius:50%;font-size:1rem;padding:0;flex-shrink:0" }, "▶");
+      const back10 = el("button", { class: "subtle", style: "min-height:auto;padding:.25rem .55rem;font-size:.75rem;font-family:var(--mono)" }, "-10");
+      const back5 = el("button", { class: "subtle", style: "min-height:auto;padding:.25rem .55rem;font-size:.75rem;font-family:var(--mono)" }, "-5");
+      const time = el("span", { style: "font-family:var(--mono);font-size:.78rem;color:var(--ink-faint);font-variant-numeric:tabular-nums;flex-shrink:0" }, "0:00 / —");
 
-      const progress = el("div", { style: "width:100%;height:6px;background:var(--rule);border-radius:3px;cursor:pointer;overflow:hidden" });
+      const progress = el("div", { style: "flex:1;height:4px;background:var(--rule);border-radius:2px;cursor:pointer;overflow:hidden;min-width:80px" });
       const fill = el("span", { style: "display:block;height:100%;background:var(--rood);width:0" });
       progress.append(fill);
 
-      const speeds = el("div", { style: "display:inline-flex;background:var(--paper-2);border:1px solid var(--rule);border-radius:999px;padding:2px;gap:1px" });
+      const speeds = el("div", { style: "display:inline-flex;background:var(--paper-2);border:1px solid var(--rule);border-radius:999px;padding:1px;gap:1px;flex-shrink:0" });
       [0.75, 1, 1.25, 1.5].forEach((sp) => {
-        const b = el("button", { class: sp === 1 ? "" : "subtle", style: "min-height:auto;padding:.2rem .65rem;font-size:.75rem;border-radius:999px;background:" + (sp===1?"var(--ink)":"transparent") + ";color:" + (sp===1?"var(--paper)":"var(--ink-soft)") + ";border:none" }, sp + "×");
+        const b = el("button", { style: "min-height:auto;padding:.15rem .55rem;font-size:.7rem;border-radius:999px;background:" + (sp===1?"var(--ink)":"transparent") + ";color:" + (sp===1?"var(--paper)":"var(--ink-soft)") + ";border:none;font-family:var(--mono)" }, sp + "×");
         b.addEventListener("click", () => {
           audio.playbackRate = sp;
           speeds.querySelectorAll("button").forEach((x) => {
@@ -317,15 +352,18 @@
         });
         speeds.append(b);
       });
-      const loopBtn = el("button", { class: "subtle", style: "min-height:auto;padding:.3rem .8rem;font-size:.78rem;border-radius:999px" }, "↻ Herhaal");
+      const loopBtn = el("button", { class: "subtle", style: "min-height:auto;padding:.25rem .65rem;font-size:.72rem;border-radius:999px;flex-shrink:0" }, "↻");
+      loopBtn.title = "Herhaal";
       loopBtn.addEventListener("click", () => {
         audio.loop = !audio.loop;
         loopBtn.style.color = audio.loop ? "var(--rood)" : "";
         loopBtn.style.borderColor = audio.loop ? "var(--rood)" : "";
       });
-      const extras = el("div", { style: "display:flex;gap:.5rem;align-items:center;margin-top:.8rem;flex-wrap:wrap" }, speeds, loopBtn);
 
-      host.append(row, progress, extras);
+      // Alles op één rij — geen verticale stack meer.
+      const row = el("div", { style: "display:flex;align-items:center;gap:.5rem;flex-wrap:wrap" },
+        playBtn, back10, back5, progress, time, speeds, loopBtn);
+      host.append(row);
 
       playBtn.addEventListener("click", () => { if (audio.paused) audio.play(); else audio.pause(); });
       back10.addEventListener("click", () => { audio.currentTime = Math.max(0, audio.currentTime - 10); });
@@ -401,14 +439,80 @@
 
     function renderTranscript(ex) {
       const wrap = el("div");
-      // Toolbar — Sync audio button when we don't yet have wordTimings
+      // Toolbar — Sync audio button when we don't yet have wordTimings + re-check button
       const toolbar = el("div", { style: "display:flex;align-items:center;gap:.6rem;padding:.5rem .7rem;margin:0 0 .8rem;background:var(--paper-2);border:1px solid var(--rule);border-radius:4px;flex-wrap:wrap" });
       const status = el("span", { style: "font-family:var(--mono);font-size:.78rem;letter-spacing:.04em;color:var(--ink-faint)" });
       const hasTimings = Array.isArray(ex.wordTimings) && ex.wordTimings.length > 0;
       toolbar.append(el("span", { style: "font-family:var(--mono);font-size:.78rem;color:var(--ink-faint);letter-spacing:.04em" },
         hasTimings ? "✓ audio-sync aan" : "geen audio-sync"));
+
+      // --- Hercontroleer transcript op fouten ---
+      const recheckBtn = el("button", { class: "subtle", style: "font-size:.82rem;padding:.35rem .8rem;min-height:auto;margin-left:auto", onClick: async () => {
+        if (!confirm("Grondige check op spelling en gebruik met gpt-5.5? Dit kost ongeveer een paar cent.")) return;
+        recheckBtn.disabled = true;
+        const old = recheckBtn.textContent;
+        recheckBtn.textContent = "bezig…";
+        status.innerHTML = '<span class="ai-loading">grondige check…</span>';
+        try {
+          const [sp, us] = await Promise.all([
+            window.AI.validateDutchSpelling(ex.script || ""),
+            window.AI.validateDutchUsage(ex.script || ""),
+          ]);
+          const allFixes = [...(sp || []), ...(us || [])];
+          if (!allFixes.length) {
+            status.innerHTML = '<span style="color:var(--groen)">✓ geen fouten gevonden</span>';
+            return;
+          }
+          // Preview + bevestig
+          const preview = allFixes.map((f) => "  • " + f.original + " → " + f.fix).join("\n");
+          if (!confirm(allFixes.length + " mogelijke fouten gevonden:\n\n" + preview + "\n\nToepassen? Audio en sync worden gewist en moeten opnieuw worden gegenereerd.")) {
+            status.innerHTML = '<span style="color:var(--ink-faint)">geannuleerd · ' + allFixes.length + ' fouten klaar om toe te passen</span>';
+            return;
+          }
+          // Apply fixes naar script + vocab + questions
+          const apply = window.AI.applySpellingFixes;
+          const cur = window.ListeningStore.get(ex.id);
+          const newScript = apply(cur.script || "", allFixes);
+          const newVocab = (cur.vocab || []).map((v) => ({
+            ...v,
+            dutch: apply(v.dutch || "", allFixes),
+            note:  apply(v.note  || "", allFixes),
+          }));
+          const newQuestions = (cur.questions || []).map((q) => ({
+            ...q,
+            q: apply(q.q || "", allFixes),
+            options: (q.options || []).map((o) => apply(o, allFixes)),
+            explanation: q.explanation ? {
+              nl: apply(q.explanation.nl || "", allFixes),
+              en: q.explanation.en || "",
+            } : q.explanation,
+          }));
+          // Verouderd audio + sync: wissen zodat speler "Genereer audio" toont
+          window.ListeningStore.update(ex.id, {
+            script: newScript,
+            vocab: newVocab,
+            questions: newQuestions,
+            audioKey: null,
+            wordTimings: null,
+            sttText: null,
+          });
+          if (cur.audioKey && window.BlobStore) {
+            window.BlobStore.remove(cur.audioKey).catch(() => {});
+          }
+          status.innerHTML = '<span style="color:var(--groen)">✓ ' + allFixes.length + ' fixes toegepast · audio gewist</span>';
+          alert("Klaar. Het transcript is bijgewerkt. Klik op 'Genereer audio' (bij de speler) om audio + sync opnieuw te maken.");
+          refresh();
+        } catch (err) {
+          status.innerHTML = '<span class="ai-error">' + escapeHTML(err.message) + '</span>';
+        } finally {
+          recheckBtn.disabled = false;
+          recheckBtn.textContent = old;
+        }
+      } }, "🔎 Hercontroleer");
+      toolbar.append(recheckBtn);
+
       if (!hasTimings && ex.audioKey) {
-        const syncBtn = el("button", { class: "subtle", style: "font-size:.82rem;padding:.35rem .8rem;min-height:auto;margin-left:auto", onClick: async () => {
+        const syncBtn = el("button", { class: "subtle", style: "font-size:.82rem;padding:.35rem .8rem;min-height:auto", onClick: async () => {
           syncBtn.disabled = true;
           status.innerHTML = '<span class="ai-loading">audio synchroniseren…</span>';
           try {

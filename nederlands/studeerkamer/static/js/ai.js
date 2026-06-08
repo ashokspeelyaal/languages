@@ -376,7 +376,7 @@
       maxTokens: 2500,
       json: true,
       noCache: true,
-      model: settings().aiContentModel || "gpt-5.4",   // critical quality path
+      model: "gpt-5.5",   // validation hardcoded to strongest — kosten zijn klein voor zo'n korte call
     });
     try {
       const parsed = JSON.parse(r.text);
@@ -394,17 +394,21 @@
   async function validateDutchUsage(text) {
     if (!text || text.length < 20) return [];
     const system = [
-      "Je bent een strenge Nederlandse taalkundige (CNaVT C1-niveau).",
+      "Je bent een strenge Nederlandse taalkundige (CNaVT C1-niveau). Lees ZIN PER ZIN — eerst grammaticale kern (onderwerp/werkwoord), dan rest.",
       "Bekijk de tekst en vind UITSLUITEND deze categorieën fouten:",
       "1. Verkeerde adjectiefverbuiging (bv. 'ijzere discipline' → 'ijzeren discipline')",
       "2. Werkwoorden die correct gespeld zijn maar de verkeerde betekenis hebben in deze context (bv. 'beten' waar 'batten' bedoeld is)",
       "3. Verkeerde of ontbrekende voornaamwoorden / partikels (bv. 'verwacht dat te uitblinkt' → 'verwacht dat je uitblinkt')",
-      "4. Onnodige hoofdletters middenin de zin (bv. 'bij Roem' → 'bij roem'). Eigennamen en taalnamen mogen wel hoofdletters hebben.",
-      "5. Verkeerde collocaties of voorzetselgebruik (bv. 'denken voor' → 'denken aan')",
+      "4. Subject-verb mismatches: enkelvoudig werkwoord met meervoudig onderwerp of omgekeerd, vooral met onpersoonlijke 'men/je/ze'",
+      "5. Vreemd of niet-natuurlijk gekozen voornaamwoord als onderwerp (bv. 'Als ze in België over X vraagt' — wie is 'ze'? Beter: 'Als men over X spreekt' of 'Als je het over X hebt')",
+      "6. Onnodige hoofdletters middenin de zin (bv. 'bij Roem' → 'bij roem'). Eigennamen en taalnamen mogen wel hoofdletters hebben.",
+      "7. Verkeerde collocaties of voorzetselgebruik (bv. 'denken voor' → 'denken aan')",
+      "8. Werkwoordsvolgorde in bijzinnen (PV moet aan het einde staan)",
+      "9. Verkeerd hulpwerkwoord bij perfectum (hebben vs zijn)",
       "NEGEER:",
-      "- Stijl, register, woordkeuze die niet objectief fout is",
       "- Pure spelfouten (die gebeuren in een andere pas)",
-      "- Belgisch-Nederlands vs Hollands-Nederlands verschillen",
+      "- Belgisch-Nederlands vs Hollands-Nederlands verschillen op woordkeuze-niveau",
+      "- Stilistische voorkeur als de zin grammaticaal juist is",
       "Antwoord ALLEEN met geldige JSON, geen markdown. ELKE fix moet kort genoeg zijn voor whole-word substitutie:",
       '{ "fixes": [ { "original": "<exacte frase zoals geschreven, max 5 woorden>", "fix": "<correcte vorm>" } ] }',
       "Als er geen fouten zijn, antwoord met { \"fixes\": [] }.",
@@ -419,7 +423,7 @@
       maxTokens: 2500,
       json: true,
       noCache: true,
-      model: settings().aiContentModel || "gpt-5.4",
+      model: "gpt-5.5",   // validation hardcoded to strongest
     });
     try {
       const parsed = JSON.parse(r.text);

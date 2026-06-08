@@ -2003,6 +2003,44 @@ dialog td { padding: .35rem 0; color: var(--ink-soft); }
   padding: 1.6rem 1.8rem 2rem;
   overflow-y: auto;
 }
+/* Luisteren-specifiek: minder padding bovenaan zodat de sticky player
+   direct onder de titel klemt zonder gapende leegte. */
+.exam-body.luisteren-body {
+  padding: 0;
+}
+.exam-body.luisteren-body > * + *:not(.audio-tabs-sticky):not(.exam-tabs) {
+  padding: 1rem 1.4rem 1.4rem;
+}
+.exam-body.luisteren-body > .gen-state {
+  margin: 1rem 1.4rem;
+}
+/* Tab content krijgt eigen padding zodat tekst niet flush tegen randen plakt. */
+.exam-body.luisteren-body > div:last-child:not(.audio-tabs-sticky) {
+  padding: 1rem 1.4rem 1.4rem;
+}
+/* Compactere tabs onder de player */
+.audio-tabs-sticky > .exam-tabs {
+  border-radius: 0;
+  border-top: none;
+}
+
+/* Mobiel: sidebar stackt boven main, beperkte hoogte met scroll */
+@media (max-width: 760px) {
+  .exam-page {
+    grid-template-columns: 1fr;
+    gap: .6rem;
+  }
+  .exam-sidebar {
+    max-height: 200px;
+    min-height: 0;
+  }
+  .exam-body.luisteren-body > * + *:not(.audio-tabs-sticky):not(.exam-tabs) {
+    padding: .8rem .9rem 1rem;
+  }
+  .exam-body.luisteren-body > div:last-child:not(.audio-tabs-sticky) {
+    padding: .8rem .9rem 1rem;
+  }
+}
 .exam-section-title {
   font-family: var(--serif);
   font-weight: 600;

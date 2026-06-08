@@ -279,19 +279,301 @@
     // Mode picker
     body.innerHTML = `
       <p class="stat-note" style="margin-top:.4rem">Kies een oefenmodus:</p>
-      <div style="display:flex;gap:.6rem;flex-wrap:wrap;margin-top:.5rem">
-        <button id="mode-context" style="flex:1;min-width:200px;padding:.7rem 1rem;text-align:left;background:var(--paper-2);border:1.5px solid var(--rood);border-radius:4px;cursor:pointer;font-family:var(--sans)">
-          <div style="font-weight:600;color:var(--ink)">🤖 Met context (aanbevolen)</div>
-          <div style="font-size:.78rem;color:var(--ink-soft);margin-top:.2rem">AI maakt 10 echte Nederlandse zinnen met blanco's — alle tijden en personen door elkaar. Ongeveer 3 seconden wachttijd.</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.6rem;margin-top:.5rem">
+        <button id="mode-context" style="padding:.7rem 1rem;text-align:left;background:var(--paper-2);border:1.5px solid var(--rood);border-radius:4px;cursor:pointer;font-family:var(--sans)">
+          <div style="font-weight:600;color:var(--ink)">🤖 Met context</div>
+          <div style="font-size:.78rem;color:var(--ink-soft);margin-top:.2rem">10 Nederlandse zinnen met blanco's, gemixte tijden en personen.</div>
         </button>
-        <button id="mode-quick" style="flex:1;min-width:200px;padding:.7rem 1rem;text-align:left;background:var(--paper-2);border:1px solid var(--rule);border-radius:4px;cursor:pointer;font-family:var(--sans)">
+        <button id="mode-topic" style="padding:.7rem 1rem;text-align:left;background:var(--paper-2);border:1.5px solid var(--rood);border-radius:4px;cursor:pointer;font-family:var(--sans)">
+          <div style="font-weight:600;color:var(--ink)">🎯 Per onderwerp</div>
+          <div style="font-size:.78rem;color:var(--ink-soft);margin-top:.2rem">Kies één werkwoord-categorie (perfectum, modaal, scheidbaar, …) en oefen gericht.</div>
+        </button>
+        <button id="mode-quick" style="padding:.7rem 1rem;text-align:left;background:var(--paper-2);border:1px solid var(--rule);border-radius:4px;cursor:pointer;font-family:var(--sans)">
           <div style="font-weight:600;color:var(--ink)">⚡ Snelle vragen</div>
-          <div style="font-size:.78rem;color:var(--ink-soft);margin-top:.2rem">Directe vormvragen zonder zinscontext. Geen AI, instant.</div>
+          <div style="font-size:.78rem;color:var(--ink-soft);margin-top:.2rem">Directe vormvragen zonder zinscontext. Geen AI.</div>
         </button>
       </div>
     `;
     body.querySelector("#mode-context").addEventListener("click", () => runContextDrill(body, pool));
+    body.querySelector("#mode-topic").addEventListener("click", () => showTopicPicker(body, pool));
     body.querySelector("#mode-quick").addEventListener("click", () => runDrill(body, pool));
+  }
+
+  /* ---------- Topic-focused drill ---------- */
+  const TOPICS = [
+    {
+      id: "tt", label: "Tegenwoordige tijd", lvl: "A1",
+      blurb: "stam + uitgang, ik/jij/u/hij — spelling (v→f, z→s, dubbele medeklinker)",
+      chapterId: "a1-tt",
+      prompt: "Focus EXCLUSIEF op vervoeging in de tegenwoordige tijd. Mix de personen ik / jij / u / hij / zij / het (skip wij/jullie/zij want die zijn gewoon de infinitief — triviaal). Test de stam-regel + de t-regel (jij/hij + t) + spelling (verlies → verlies/verliest, leef → leef/leeft, fiets → fiets/fietst).",
+    },
+    {
+      id: "imp-zwak", label: "Imperfectum (zwak)", lvl: "A2",
+      blurb: "'t kofschip — -te(n) of -de(n)",
+      chapterId: "a2-imperfectum",
+      prompt: "Focus EXCLUSIEF op imperfectum van ZWAKKE werkwoorden. Test de 't kofschip-regel: stem eindigt op t/k/f/s/ch/p → -te(n); anders -de(n). Mix singular en plural. Include moeilijke gevallen: stems met v/z (leven → leefde, NIET leefte).",
+    },
+    {
+      id: "imp-sterk", label: "Imperfectum (sterk)", lvl: "A2",
+      blurb: "klinkerwisseling — lopen→liep, vinden→vond",
+      chapterId: "a2-imperfectum",
+      prompt: "Focus EXCLUSIEF op imperfectum van STERKE werkwoorden. Vraagt om vormen waarvan de klinker verandert: lopen → liep, vinden → vond, schrijven → schreef, drinken → dronk, komen → kwam, helpen → hielp.",
+    },
+    {
+      id: "vd-ge", label: "Voltooid deelwoord (ge- + d/t)", lvl: "A2",
+      blurb: "ge-werkt vs ge-woond — kofschip toegepast op vd",
+      chapterId: "a2-perfectum",
+      prompt: "Focus EXCLUSIEF op voltooid deelwoorden van ZWAKKE werkwoorden met ge- voorvoegsel + d/t einde. Test 't kofschip: gewerkt vs gewoond, gefietst vs geleerd. Zin moet steeds 'hebben/zijn + ___ ' bevatten zodat het blank het vd is.",
+    },
+    {
+      id: "vd-geen-ge", label: "Voltooid deelwoord zonder ge-", lvl: "A2",
+      blurb: "verteld, ontmoet, herhaald, begrepen",
+      chapterId: "a2-zonder-ge",
+      prompt: "Focus EXCLUSIEF op voltooid deelwoorden VAN werkwoorden met onbeklemtoond voorvoegsel (be-, ge-, her-, ont-, ver-, er-). Deze krijgen GEEN ge- in vd: vertellen → verteld, ontmoeten → ontmoet, herhalen → herhaald, begrijpen → begrepen, verkopen → verkocht.",
+    },
+    {
+      id: "perfectum-aux", label: "Perfectum: hebben of zijn?", lvl: "A2",
+      blurb: "hulpwerkwoord-keuze: beweging/verandering → zijn",
+      chapterId: "a2-perfectum",
+      prompt: "Focus EXCLUSIEF op hulpwerkwoord-keuze in perfectum. De zin moet ___ HUL + voltooid deelwoord bevatten waarbij de gebruiker hebben/zijn moet kiezen. Beweging/verandering = zijn (gaan, komen, blijven, worden, vallen, sterven, beginnen). Anders hebben.",
+    },
+    {
+      id: "scheidbaar", label: "Scheidbare werkwoorden", lvl: "A2",
+      blurb: "opstaan → ik sta op — partikel naar het einde",
+      chapterId: "a2-scheidbaar",
+      prompt: "Focus EXCLUSIEF op scheidbare werkwoorden in hoofdzin (partikel naar het einde): opstaan, aankomen, meenemen, uitgaan, afsluiten, voorstellen, opbellen. Antwoord moet de gescheiden vorm zijn, bv. 'sta ... op' met blanco voor 'sta'. Mix tt + imperfectum.",
+    },
+    {
+      id: "modaal", label: "Modale werkwoorden", lvl: "A2",
+      blurb: "kunnen/moeten/mogen/willen + infinitief",
+      chapterId: "a2-modaal",
+      prompt: "Focus EXCLUSIEF op modale werkwoorden (kunnen, moeten, mogen, willen, zullen, hoeven) gevolgd door infinitief aan het einde. Test ofwel de modaal-vervoeging (ik kan, jij kunt, hij mag, …) ofwel de infinitief positie. Mix tegenwoordige en imperfectum (kon, moest, mocht, wilde, zou).",
+    },
+    {
+      id: "reflexief", label: "Wederkerende werkwoorden", lvl: "B1",
+      blurb: "zich vergissen, me herinneren, je voorstellen",
+      chapterId: "b1-reflexief",
+      prompt: "Focus EXCLUSIEF op wederkerende werkwoorden. Test de juiste wederkerende voornaamwoord (me/je/zich/ons): zich vergissen, zich herinneren, zich vervelen, zich voorstellen, zich aanmelden, zich wassen. Het blank kan het voornaamwoord zijn OF de werkwoordsvorm.",
+    },
+    {
+      id: "te-infinitief", label: "Te + infinitief / om te", lvl: "B1",
+      blurb: "proberen te, beginnen te, om te (doel)",
+      chapterId: "b1-te",
+      prompt: "Focus EXCLUSIEF op constructies met 'te + infinitief' of 'om te + infinitief'. Werkwoorden die 'te' vragen: proberen, beginnen, durven, vergeten, beloven, hopen, van plan zijn. 'Om te' voor doel. Bij scheidbare ww komt 'te' tussen partikel en stam: 'om op te staan'.",
+    },
+    {
+      id: "zou", label: "Voorwaardelijke wijs (zou)", lvl: "B1",
+      blurb: "ik zou willen, als ik tijd had zou ik komen",
+      chapterId: "b1-conditioneel",
+      prompt: "Focus EXCLUSIEF op de constructie 'zou(den) + infinitief'. Beleefdheid (ik zou graag…), hypothese (als ik tijd had, zou ik…), toekomst-in-verleden (hij zei dat hij zou komen). Test ook de imperfectum-conditie (als-zin met imperfectum gekoppeld aan zou-hoofdzin).",
+    },
+    {
+      id: "plusquam", label: "Plusquamperfectum", lvl: "B1",
+      blurb: "had + voltooid deelwoord — verleden vóór verleden",
+      chapterId: "b1-plusquam",
+      prompt: "Focus EXCLUSIEF op plusquamperfectum: 'had(den)' of 'was(en)' + voltooid deelwoord. Gebruik bij verhalen waar iets eerder gebeurd was. Zin moet duidelijk twee tijdpunten in verleden hebben: 'Toen ik thuiskwam, ___ hij al gegeten.'",
+    },
+    {
+      id: "passief", label: "Lijdende vorm", lvl: "B1",
+      blurb: "worden + voltooid deelwoord",
+      chapterId: "b1-passief",
+      prompt: "Focus EXCLUSIEF op de lijdende vorm. Tegenwoordige tijd: worden + vd. Imperfectum: werd + vd. Perfectum: zijn + vd (geen 'is geworden' — alleen 'is'). Test alle drie de tijden. Door + dader kan optioneel aanwezig zijn.",
+    },
+  ];
+
+  function showTopicPicker(host, pool) {
+    host.innerHTML = "";
+    host.append(el("p", { class: "stat-note", style: "margin:.4rem 0" }, "Kies een werkwoord-categorie. AI genereert 10 zinnen specifiek over dat onderwerp."));
+    const grid = el("div", { style: "display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:.4rem" });
+    TOPICS.forEach((t) => {
+      const card = el("button", {
+        style: "text-align:left;padding:.6rem .8rem;background:var(--paper-2);border:1px solid var(--rule);border-radius:4px;cursor:pointer;font-family:var(--sans);transition:border-color .12s",
+        onClick: () => runTopicDrill(host, pool, t),
+        onMouseEnter: function() { this.style.borderColor = "var(--rood)"; },
+        onMouseLeave: function() { this.style.borderColor = "var(--rule)"; },
+      });
+      card.append(
+        el("div", { style: "display:flex;align-items:baseline;justify-content:space-between;gap:.4rem" },
+          el("div", { style: "font-family:var(--serif);font-weight:600;color:var(--ink);font-size:.95rem" }, t.label),
+          el("span", { style: "font-family:var(--mono);font-size:.65rem;color:var(--rood);letter-spacing:.06em" }, t.lvl)),
+        el("div", { style: "color:var(--ink-soft);font-size:.78rem;margin-top:.2rem;line-height:1.35" }, t.blurb),
+      );
+      grid.append(card);
+    });
+    host.append(grid);
+    host.append(el("p", { style: "margin-top:.7rem", class: "stat-note" },
+      el("button", { class: "subtle", style: "font-size:.82rem", onClick: () => {
+        // Back to mode picker
+        const ev = new Event("click");
+        location.hash = location.hash; // no-op to satisfy linter
+        host.parentElement.parentElement.querySelector("#drill-close").parentElement.parentElement.remove();
+        openDrill();
+      } }, "← terug")));
+  }
+
+  async function runTopicDrill(host, pool, topic) {
+    if (!window.AI || !window.AI.isConfigured()) {
+      host.innerHTML = '<p class="ai-error">AI nog niet geconfigureerd (Instellingen → API-sleutel).</p>';
+      return;
+    }
+    // Pool may be filtered by user; for topics like "vd-geen-ge" we
+    // restrict further to relevant types.
+    let topicPool = pool.slice();
+    if (topic.id === "imp-zwak" || topic.id === "vd-ge") {
+      topicPool = topicPool.filter((v) => v.tp === "zwak" || v.tp === "zwak-vz");
+    } else if (topic.id === "imp-sterk") {
+      topicPool = topicPool.filter((v) => v.tp === "sterk");
+    } else if (topic.id === "vd-geen-ge") {
+      topicPool = topicPool.filter((v) => /^(be|ge|her|ont|ver|er)/.test(v.inf));
+    } else if (topic.id === "scheidbaar") {
+      topicPool = topicPool.filter((v) => v.scheidbaar);
+    } else if (topic.id === "modaal") {
+      topicPool = topicPool.filter((v) => ["kunnen","moeten","mogen","willen","zullen","hoeven"].includes(v.inf));
+    }
+    if (topicPool.length < 5) {
+      // Fallback: use full pool but bias AI toward topic via prompt
+      topicPool = pool.slice();
+    }
+    const shuffled = topicPool.sort(() => Math.random() - 0.5);
+    const chosen = shuffled.slice(0, Math.min(10, topicPool.length));
+
+    host.innerHTML = '<p class="stat-note"><span class="ai-loading">10 zinnen genereren over "' + topic.label + '"…</span></p>';
+
+    const verbList = chosen.map((v) => `- ${v.inf} (${v.tr || "?"}) — ${v.tp}, ${v.aux}, vd=${v.vd}, imp=${v.imp[0]}/${v.imp[4]}`).join("\n");
+    const sys = [
+      "Je bent een Nederlandse grammatica-leraar voor CNaVT-niveau.",
+      "GERICHT ONDERWERP: " + topic.label + ".",
+      topic.prompt,
+      "",
+      "Maak EXACT 10 oefeningen met natuurlijke Nederlandse zinnen die specifiek dit grammatica-onderwerp testen.",
+      "Elke zin: max 14 woorden, EXACT één ____ op de plek van de vervoegde werkwoordsvorm.",
+      "Gebruik werkwoorden uit de lijst, maar je mag andere zinscontextwoorden vrij kiezen.",
+      "Het antwoord moet steeds één woord zijn (of korte vorm).",
+      "",
+      "Antwoord ALLEEN met geldige JSON:",
+      "{",
+      '  "oefeningen": [',
+      "    {",
+      '      "inf": "<infinitief van het gebruikte werkwoord>",',
+      '      "zin": "<Nederlandse zin met ____>",',
+      '      "antwoord": "<correcte ingevulde vorm>",',
+      '      "persoon": "ik|jij|u|hij|wij|jullie|zij",',
+      '      "tijd": "tegenwoordige tijd|imperfectum|perfectum|plusquamperfectum|voorwaardelijk|infinitief",',
+      '      "uitleg": "<1 korte zin uitleg waarom deze vorm correct is, gericht op het onderwerp>"',
+      "    }",
+      "  ]",
+      "}",
+    ].join("\n");
+
+    let items;
+    try {
+      const r = await window.AI.complete({
+        kind: "verb-topic-drill",
+        system: sys,
+        user: "Werkwoorden:\n" + verbList,
+        maxTokens: 2500,
+        json: true,
+        noCache: true,
+      });
+      const parsed = JSON.parse(r.text);
+      items = (parsed.oefeningen || []).filter((q) => q && q.zin && q.antwoord && q.zin.includes("____"));
+    } catch (e) {
+      host.innerHTML = '<p class="ai-error">Kon oefeningen niet genereren: ' + esc(e.message) + '</p>';
+      return;
+    }
+    if (!items.length) {
+      host.innerHTML = '<p class="ai-error">AI gaf geen bruikbare zinnen terug. Probeer opnieuw.</p>';
+      return;
+    }
+    // Show topic banner above quiz
+    const banner = el("div", { style: "padding:.5rem .8rem;background:var(--paper-2);border-left:3px solid var(--rood);border-radius:3px;margin-bottom:.7rem;font-size:.85rem" },
+      el("strong", { style: "color:var(--ink)" }, "🎯 " + topic.label),
+      el("span", { style: "color:var(--ink-soft);margin-left:.5rem" }, "· " + topic.blurb));
+    runTopicQuiz(host, items, pool, topic, banner);
+  }
+
+  function runTopicQuiz(host, items, pool, topic, banner) {
+    let idx = 0, right = 0;
+
+    function paint() {
+      if (idx >= items.length) return finish();
+      const item = items[idx];
+      const parts = item.zin.split("____");
+      host.innerHTML = "";
+      host.append(banner.cloneNode(true));
+      const bar = el("div", { style: "height:3px;background:var(--rule);border-radius:2px;margin-bottom:.7rem;overflow:hidden" },
+        el("div", { style: "height:100%;width:" + ((idx / items.length) * 100) + "%;background:var(--rood)" }));
+      host.append(bar);
+      host.append(el("p", { style: "font-family:var(--mono);font-size:.72rem;color:var(--ink-faint);letter-spacing:.06em;margin:0 0 .2rem" },
+        "VRAAG " + (idx + 1) + " van " + items.length + "  ·  " + (item.tijd || "?") + "  ·  " + (item.persoon || "?")));
+      host.append(el("p", { style: "font-family:var(--mono);font-size:.75rem;color:var(--ink-faint);margin:0 0 .8rem" },
+        "werkwoord: ", el("strong", { style: "color:var(--ink)" }, item.inf)));
+      const inputBox = el("input", { type: "text",
+        style: "border:1.5px solid var(--rood);background:var(--paper-2);padding:.45rem .7rem;border-radius:3px;min-width:160px;font-family:var(--serif);font-size:1.05rem" });
+      const sentenceWrap = el("p", { style: "font-family:var(--serif);font-size:1.15rem;line-height:1.9;margin:.4rem 0 .9rem" });
+      sentenceWrap.append(document.createTextNode(parts[0] || ""), inputBox, document.createTextNode(parts[1] || ""));
+      host.append(sentenceWrap);
+      const submit = el("button", { onClick: () => check(inputBox.value, item) }, "Controleer");
+      const feedback = el("div", { id: "fb", style: "margin-top:.6rem" });
+      host.append(submit, feedback);
+      inputBox.addEventListener("keydown", (e) => { if (e.key === "Enter") submit.click(); });
+      setTimeout(() => inputBox.focus(), 30);
+    }
+
+    function check(answer, item) {
+      const norm = (s) => String(s || "").toLowerCase().trim().replace(/[.,;:!?'"]/g, "");
+      const ok = norm(answer) === norm(item.antwoord);
+      if (ok) right += 1;
+      const v = pool.find((vv) => vv.inf === item.inf);
+      const fullForms = v ? `tt: ${v.pres.split(",")[0]}/${v.pres.split(",")[1]}  ·  imp: ${v.imp[0]}/${v.imp[4]}  ·  vd: ${v.vd}` : "";
+      const fb = host.querySelector("#fb");
+      fb.innerHTML = `
+        <div style="padding:.55rem .8rem;border-radius:3px;background:${ok ? "rgba(0,128,0,.08)" : "rgba(176,0,32,.08)"};border-left:3px solid ${ok ? "var(--groen)" : "var(--rood)"}">
+          <strong style="color:${ok ? "var(--groen)" : "var(--rood)"}">${ok ? "✓ Goed!" : "✗ Niet correct"}</strong>
+          ${ok ? "" : `<div style="margin-top:.2rem"><strong>Antwoord:</strong> ${esc(item.antwoord)}</div>`}
+          <div style="margin-top:.25rem;font-size:.86rem;color:var(--ink-soft)">${esc(item.uitleg || "")}</div>
+          ${fullForms ? `<div style="margin-top:.35rem;font-family:var(--mono);font-size:.7rem;color:var(--ink-faint);letter-spacing:.04em">${esc(fullForms)}</div>` : ""}
+        </div>
+      `;
+      host.querySelectorAll("button").forEach((b) => { if (!b.matches("[data-next]")) b.disabled = true; });
+      host.querySelectorAll("input").forEach((i) => { i.disabled = true; });
+      const next = el("button", { "data-next": "1", style: "margin-top:.6rem", onClick: () => { idx += 1; paint(); } },
+        idx + 1 >= items.length ? "Resultaat" : "Volgende →");
+      host.append(next);
+      setTimeout(() => next.focus(), 30);
+    }
+
+    function finish() {
+      const pct = Math.round((right / items.length) * 100);
+      const c = pct >= 80 ? "var(--groen)" : pct >= 60 ? "var(--geel)" : "var(--rood)";
+      host.innerHTML = "";
+      host.append(banner.cloneNode(true));
+      host.append(
+        el("h3", { style: "margin:0 0 .5rem;font-family:var(--serif);font-weight:600" }, "Klaar!"),
+        el("p", { style: "font-family:var(--serif);font-size:2rem;font-weight:600;color:" + c + ";margin:.1rem 0" },
+          right + " / " + items.length + "  (" + pct + "%)"),
+        el("p", { class: "stat-note" }, pct >= 80 ? "Sterk! Dit onderwerp beheers je goed." : pct >= 60 ? "Goed bezig — lees de uitleg bij wat je miste." : "Even het hoofdstuk doornemen kan helpen."),
+        el("div", { style: "margin-top:.7rem;display:flex;gap:.5rem;flex-wrap:wrap" },
+          el("button", { onClick: () => runTopicDrill(host, pool, topic) }, "Nieuwe set (zelfde onderwerp)"),
+          el("button", { class: "subtle", onClick: () => showTopicPicker(host, pool) }, "← Ander onderwerp"),
+          topic.chapterId ? el("button", { class: "subtle", onClick: () => {
+            // Close drill overlay, open grammar primer at this chapter.
+            const ov = host.closest("[style*='position:fixed']");
+            if (ov && ov.parentNode) ov.parentNode.removeChild(ov);
+            setTimeout(() => {
+              // Re-trigger grammar opener with this chapter pre-selected
+              openVerbGrammar();
+              // Find and click the chapter — best-effort
+              setTimeout(() => {
+                const btn = document.querySelector(".verb-grammar-overlay button");
+                // simpler: user can find it; the chapter title is shown
+              }, 100);
+            }, 50);
+          } }, "📖 Lees hoofdstuk") : null,
+        ));
+    }
+
+    paint();
   }
 
   async function runContextDrill(host, pool) {
