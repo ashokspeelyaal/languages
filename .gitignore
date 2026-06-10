@@ -1,1 +1,5 @@
 nederlands/.DS_Store
+
+# Playwright MCP artifacts (browser snapshots, screenshots, console logs)
+.playwright-mcp/
+*.png

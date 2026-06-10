@@ -360,6 +360,24 @@ body.simple-ui .nav a[data-route="examen"] { display: none; }
 .drill-hint { color: #5a627a; font-size: 13px; font-style: italic; margin: 6px 0 12px; }
 .drill-actions { margin-top: 10px; }
 
+/* ---------------------------------------------------------------- practice (Generation / Cloze / Mixed) */
+.prac { max-width: 680px; margin: 24px auto; padding: 0 24px; }
+.prac-head { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 18px; flex-wrap: wrap; gap: 12px; }
+.prac-card { background: #fff; border: 1px solid #e3e6f0; border-radius: 14px; padding: 26px 28px; position: relative; max-width: 580px; margin: 0 auto; }
+.prac-progress { position: absolute; top: 12px; right: 16px; background: #eef2ff; color: #1d4ed8; font-size: 11px; padding: 2px 8px; border-radius: 999px; font-weight: 600; }
+.prac-meta { color: #5a627a; font-size: 12px; margin: 0 0 14px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.dir-arrow { background: #eef2ff; color: #1d4ed8; padding: 1px 6px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+.prac-prompt { font-size: 24px; color: #1d4ed8; margin: 8px 0 14px; text-align: center; line-height: 1.4; }
+.prac-cloze { font-size: 19px; color: #2d3344; line-height: 1.6; }
+.prac-cloze input { padding: 4px 10px; border: 1.5px solid #1d4ed8; border-radius: 6px; font-size: 19px; min-width: 140px; }
+.prac-cloze input:focus { outline: none; background: #eef2ff; }
+.prac-hint { color: #5a627a; font-size: 13px; font-style: italic; margin: 6px 0 14px; }
+#prac-form { display: flex; gap: 8px; align-items: center; justify-content: center; flex-wrap: wrap; }
+#prac-form input { padding: 9px 12px; font-size: 16px; border: 1.5px solid #d3d6e2; border-radius: 8px; min-width: 220px; }
+#prac-form input:focus { outline: none; border-color: #1d4ed8; }
+#prac-form .article-chip { font-size: 16px; padding: 6px 10px; }
+.prac-cloze-answer { font-size: 18px; color: #15803d; margin: 14px 0; text-align: center; transition: opacity 240ms; font-style: italic; }
+
 /* ---------------------------------------------------------------- tap-translate */
 .tappable-fr .tap-word { cursor: pointer; padding: 0 1px; border-radius: 3px; }
 .tappable-fr .tap-word:hover { background: rgba(29, 78, 216, 0.08); }

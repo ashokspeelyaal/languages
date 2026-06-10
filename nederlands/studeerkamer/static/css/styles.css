@@ -2004,9 +2004,14 @@ dialog td { padding: .35rem 0; color: var(--ink-soft); }
   overflow-y: auto;
 }
 /* Luisteren-specifiek: minder padding bovenaan zodat de sticky player
-   direct onder de titel klemt zonder gapende leegte. */
+   direct onder de titel klemt zonder gapende leegte.
+   overflow:visible zodat .audio-tabs-sticky aan de WINDOW-viewport plakt
+   ipv aan de exam-body container. Anders forceert top:81px de sticky strip
+   81px naar beneden vanaf zijn natuurlijke positie, en overlapt hij de
+   transcript-toolbar erop volgend. */
 .exam-body.luisteren-body {
   padding: 0;
+  overflow: visible;
 }
 .exam-body.luisteren-body > * + *:not(.audio-tabs-sticky):not(.exam-tabs) {
   padding: 1rem 1.4rem 1.4rem;
