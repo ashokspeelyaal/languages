@@ -132,64 +132,57 @@
       main.innerHTML = "";
       const s = window.Store.state.settings;
       const card = el("div", { class: "card card-pad" });
-      const topicInput = el("textarea", {
-        placeholder: "bv. 'A.R. Rahman's Oscar-moment' of 'de geschiedenis van de Belgische bierbrouwers'",
-        rows: 3,
-        style: "width:100%;font-family:var(--serif);font-size:1rem;padding:.7rem .9rem;background:var(--paper-2);border:1px solid var(--rule-strong);border-radius:4px;color:var(--ink);resize:vertical",
+
+      const titleInput = el("input", {
+        type: "text",
+        placeholder: "bv. Positieve kanten in Avatar",
+        style: "width:100%;font-family:var(--serif);font-size:1rem;padding:.55rem .8rem;background:var(--paper-2);border:1px solid var(--rule-strong);border-radius:4px;color:var(--ink)",
       });
 
-      const langSel = el("select", { class: "select-input" },
-        el("option", { value: "Dutch (Belgian / Standard Dutch register)" }, "Nederlands (BE Standaard)"),
-        el("option", { value: "Dutch (Netherlands register)" }, "Nederlands (NL)"),
-        el("option", { value: "English" }, "English"),
-        el("option", { value: "German" }, "Deutsch"),
-        el("option", { value: "French" }, "Français"),
-      );
-      langSel.value = s.outputLanguage || "Dutch (Belgian / Standard Dutch register)";
-
-      const durSel = el("select", { class: "select-input" },
-        el("option", { value: "1.5" }, "~1,5 min"),
-        el("option", { value: "2" }, "~2 min"),
-        el("option", { value: "2.5" }, "~2,5 min"),
-        el("option", { value: "3" }, "~3 min"),
-        el("option", { value: "4" }, "~4 min"),
-      );
-      durSel.value = String(s.durationMinutes || 2.5);
-
-      // Level picker — affects script complexity and vocab density
       const levelSel = el("select", { class: "select-input" },
-        el("option", { value: "B1" }, "B1 · intermediate (eenvoudiger zinsbouw)"),
-        el("option", { value: "B2" }, "B2 · upper-intermediate (aanbevolen voor CNaVT prep)"),
-        el("option", { value: "C1" }, "C1 · advanced (academisch, idiomatisch)"),
+        el("option", { value: "B1" }, "B1 · intermediate"),
+        el("option", { value: "B2" }, "B2 · upper-intermediate (aanbevolen voor CNaVT)"),
+        el("option", { value: "C1" }, "C1 · advanced"),
       );
       levelSel.value = s.lastExerciseLevel || "B2";
+
+      const scriptInput = el("textarea", {
+        placeholder: "Plak hier je volledige transcript. Lege regel tussen alinea's. We laten je tekst onaangeraakt.",
+        rows: 16,
+        spellcheck: "false",
+        style: "width:100%;font-family:var(--serif);font-size:1rem;line-height:1.7;padding:.8rem 1rem;background:var(--paper-2);border:1px solid var(--rule-strong);border-radius:4px;color:var(--ink);resize:vertical;min-height:280px",
+      });
 
       const status = el("p", { class: "stat-note" });
 
       card.append(
         el("h3", { style: "font-family:var(--serif);font-weight:600;margin:0 0 .3rem" }, "Nieuwe luisteroefening"),
-        el("p", { class: "stat-note", style: "margin-bottom:1rem" }, "Specifiek onderwerp. AI schrijft, spreekt in en stelt vragen op het gekozen niveau."),
-        el("div", { class: "field" }, el("label", null, "Onderwerp"), topicInput),
+        el("p", { class: "stat-note", style: "margin-bottom:1rem" }, "Jij levert het transcript. Wij maken audio, sync, woordenschat, vragen — zonder je tekst aan te raken."),
+        el("div", { class: "field" }, el("label", null, "Titel"), titleInput),
         el("div", { class: "field" }, el("label", null, "Niveau"), levelSel,
-          el("p", { class: "hint" }, "B1 = eenvoudige zinnen + alledaagse woorden. C1 = complexe syntaxis + abstract.")),
-        el("div", { class: "field" }, el("label", null, "Taal"), langSel),
-        el("div", { class: "field" }, el("label", null, "Lengte"), durSel),
+          el("p", { class: "hint" }, "Stuurt vocabulary-extractie en moeilijkheidsgraad van vragen.")),
+        el("div", { class: "field" }, el("label", null, "Transcript"), scriptInput),
         el("div", { style: "display:flex;gap:.5rem;margin-top:.6rem" },
-          el("button", { onClick: () => start() }, "Genereer"),
+          el("button", { onClick: () => start() }, "Aanmaken"),
           el("button", { class: "subtle", onClick: () => { activeEx = getOrCreateActive(); refresh(); } }, "Annuleer"),
         ),
         status,
       );
       main.append(card);
+      setTimeout(() => titleInput.focus(), 30);
 
-      async function start() {
-        const topic = topicInput.value.trim();
-        if (!topic) { status.innerHTML = '<span class="ai-error">Onderwerp is leeg.</span>'; return; }
-        window.Store.state.settings.outputLanguage = langSel.value;
-        window.Store.state.settings.durationMinutes = parseFloat(durSel.value);
+      function start() {
+        const title = titleInput.value.trim();
+        const script = scriptInput.value.trim();
+        if (!title) { status.innerHTML = '<span class="ai-error">Titel is leeg.</span>'; return; }
+        if (!script) { status.innerHTML = '<span class="ai-error">Transcript is leeg.</span>'; return; }
+        if (script.split(/\s+/).filter(Boolean).length < 20) {
+          status.innerHTML = '<span class="ai-error">Transcript te kort (min. 20 woorden).</span>';
+          return;
+        }
         window.Store.state.settings.lastExerciseLevel = levelSel.value;
         window.Store.save();
-        const newEx = window.ListeningStore.create(topic, { level: levelSel.value });
+        const newEx = window.ListeningStore.create({ title, level: levelSel.value, script });
         activeEx = newEx;
         refresh();
       }
@@ -222,26 +215,24 @@
       const body = el("div", { class: "exam-body luisteren-body" });
       main.append(body);
 
-      // Phase 1: needs a script (or script-phase still running). Run script
-      // generation + cleanup, then hand off to the approval view.
-      const needsScriptPhase = !ex.script || ex.status === "new" || ex.status === "generating" || ex.status === "script_pending" || ex.status === "error";
-      if (needsScriptPhase) {
-        const genHost = el("div", { class: "gen-state", style: "background:var(--paper-2);border:1px dashed var(--rule-strong);border-radius:4px;padding:1.6rem;text-align:center;margin:1rem 0" });
-        body.append(genHost);
-        await runScriptPhase(ex.id, genHost);
-        const updated = window.ListeningStore.get(ex.id);
-        if (!updated || updated.status === "error") return;
-        return renderExerciseBody(updated);
+      // No script yet → user lands on the new-exercise form. (Shouldn't
+      // normally happen from this view, but treat as a soft fallback.)
+      if (!ex.script) {
+        body.append(el("div", { class: "empty" },
+          el("h3", null, "Geen transcript"),
+          el("p", null, "Deze oefening heeft nog geen tekst. Maak een nieuwe oefening aan."),
+          el("button", { onClick: showNewExerciseForm }, "+ Nieuwe oefening")));
+        return;
       }
 
-      // Phase between: script is ready, awaiting user approval.
-      if (ex.status === "script_ready") {
+      // Awaiting user approval before kicking off the AI build.
+      if (ex.status === "script_ready" || ex.status === "new" || ex.status === "error" || ex.status === "script_pending") {
         body.append(renderScriptApproval(ex));
         return;
       }
 
-      // Phase 2 build (audio + content) in progress.
-      if (ex.status === "building") {
+      // Build phase (audio + content) in progress.
+      if (ex.status === "building" || ex.status === "generating") {
         const genHost = el("div", { class: "gen-state", style: "background:var(--paper-2);border:1px dashed var(--rule-strong);border-radius:4px;padding:1.6rem;text-align:center;margin:1rem 0" });
         body.append(genHost);
         await runBuildPhase(ex.id, genHost);
@@ -471,11 +462,11 @@
       toolbar.append(el("span", { style: "font-family:var(--mono);font-size:.78rem;color:var(--ink-faint);letter-spacing:.04em" },
         hasTimings ? "✓ audio-sync aan" : "geen audio-sync"));
 
-      // --- Verbeter transcript (open improve modal) ---
-      const improveBtn = el("button", { style: "font-size:.82rem;padding:.35rem .9rem;min-height:auto;margin-left:auto", onClick: () => {
-        openImproveModal(ex, { wipeBuild: true });
-      } }, "✎ Verbeter transcript");
-      toolbar.append(improveBtn);
+      // --- Bewerk transcript (open edit modal) ---
+      const editBtn = el("button", { style: "font-size:.82rem;padding:.35rem .9rem;min-height:auto;margin-left:auto", onClick: () => {
+        openEditModal(ex, { wipeBuild: true });
+      } }, "✎ Bewerk transcript");
+      toolbar.append(editBtn);
 
       if (!hasTimings && ex.audioKey) {
         const syncBtn = el("button", { class: "subtle", style: "font-size:.82rem;padding:.35rem .8rem;min-height:auto", onClick: async () => {
@@ -507,10 +498,11 @@
       if (!hasTimings) {
         body.textContent = ex.script || "—";
       } else {
-        // Walk the punctuated text and wrap each word from the timings array
-        // in a span at its actual position. Everything between words (spaces,
-        // punctuation, line breaks) comes through as plain text.
-        renderTimedSpans(body, ex.sttText || ex.script || "", ex.wordTimings);
+        // Always display the USER's original script. Whisper's STT output
+        // (ex.sttText) is only used by renderTimedSpans to find anchor
+        // positions, never as the visible source of truth — we never want
+        // transcription quirks to surface in the rendered transcript.
+        renderTimedSpans(body, ex.script || "", ex.wordTimings);
       }
       wrap.append(body);
 
@@ -841,18 +833,18 @@
       return v[n];
     }
 
-    /* ---- Improve transcript modal ----
-     * Mode A: paste a corrected version of the whole script → save verbatim.
-     * Mode B: give an instruction like "vervang fiets door auto" → AI revises.
-     * Either way, the modified script gets re-cleaned (spelling + usage)
-     * and the exercise is moved back to status `script_ready` so the user
-     * can review the result.
+    /* ---- Edit transcript modal ----
+     * Single textarea pre-filled with the current script. On save we
+     * persist the user's text verbatim and bounce the exercise back to
+     * the `script_ready` state so they can build/rebuild from the
+     * approval card.
      *
-     * `wipeBuild` should be true when called from an already-built exercise
-     * (status=ready). It clears audio + timings + questions + vocab + grammar
-     * so phase 2 will rebuild them against the new script.
+     * `wipeBuild: true` is used when called from an already-built
+     * exercise (status=ready) — it wipes audio + sync + questions +
+     * vocab + grammar so the build phase regenerates them against the
+     * edited script.
      */
-    function openImproveModal(ex, opts = {}) {
+    function openEditModal(ex, opts = {}) {
       const wipeBuild = !!opts.wipeBuild;
       const overlay = el("div", { class: "hw-overlay" });
       const modal = el("div", { class: "hw-modal improve-modal" });
@@ -860,109 +852,57 @@
       function close() { overlay.remove(); }
 
       modal.append(el("div", { class: "hw-head" },
-        el("h3", null, "Transcript verbeteren"),
+        el("h3", null, "Transcript bewerken"),
         el("button", { class: "hw-close", onClick: close }, "✕"),
       ));
 
-      let mode = "paste";
       const body = el("div", { class: "improve-body" });
-      const tabBar = el("div", { class: "improve-tabs" });
       const textarea = el("textarea", {
         class: "improve-textarea",
         rows: 16,
         spellcheck: "false",
-        placeholder: "",
+        placeholder: "Plak of typ hier de gecorrigeerde versie van het transcript.",
       });
-      const hint = el("p", { class: "improve-hint" });
+      textarea.value = ex.script || "";
       const status = el("p", { class: "stat-note", style: "min-height:1.2em;margin:.4rem 0 0" });
-
-      function paintTabs() {
-        tabBar.innerHTML = "";
-        [
-          { key: "paste", label: "Plak gecorrigeerde tekst" },
-          { key: "prompt", label: "Beschrijf wat moet wijzigen" },
-        ].forEach((t) => {
-          tabBar.append(el("button", {
-            class: "improve-tab" + (mode === t.key ? " active" : ""),
-            onClick: () => { mode = t.key; paintTabs(); paintHint(); },
-          }, t.label));
-        });
-      }
-      function paintHint() {
-        if (mode === "paste") {
-          textarea.placeholder = "Plak hier de volledig gecorrigeerde versie van het transcript. Wij gebruiken precies wat je hier zet.";
-          textarea.value = ex.script || "";
-          hint.textContent = "We voeren daarna nog automatisch een spelling- en grammaticacontrole uit als veiligheidsnet.";
-        } else {
-          textarea.placeholder = "Bijvoorbeeld: 'vervang fiets door auto', 'maak de derde alinea formeler', 'spelling van Antwerpse straatnamen nakijken', …";
-          textarea.value = "";
-          hint.textContent = "De AI past je instructie toe op het bestaande transcript; structuur en lengte blijven gelijk.";
-        }
-      }
-      paintTabs();
-      paintHint();
 
       body.append(
         el("p", { class: "stat-note", style: "margin:0 0 .6rem" },
           wipeBuild
-            ? "Audio, sync, vragen en woordenschat worden opnieuw gemaakt nadat je het nieuwe transcript goedkeurt."
-            : "Na het verbeteren landt het transcript opnieuw in de goedkeuringsstap."),
-        tabBar,
+            ? "Audio, sync, vragen en woordenschat worden opnieuw gemaakt op basis van je bewerkte transcript."
+            : "Je bewerkte transcript landt weer in het bouwscherm."),
         textarea,
-        hint,
+        el("p", { class: "improve-hint" }, "Wij raken je tekst niet aan — wat je hier laat staan, gaat naar TTS en sync."),
         status,
       );
       modal.append(body);
 
-      const applyBtn = el("button", { onClick: () => apply() }, "✓ Toepassen");
+      const applyBtn = el("button", { onClick: () => apply() }, "✓ Opslaan");
       modal.append(el("div", { class: "hw-foot" },
         el("button", { class: "subtle", onClick: close }, "Annuleer"),
         applyBtn,
       ));
+      setTimeout(() => textarea.focus(), 30);
 
-      async function apply() {
-        const input = textarea.value.trim();
-        if (!input) { status.innerHTML = '<span class="ai-error">Tekst is leeg.</span>'; return; }
-        applyBtn.disabled = true;
-        const orig = applyBtn.textContent;
-        try {
-          let nextScript;
-          if (mode === "paste") {
-            nextScript = input;
-          } else {
-            status.innerHTML = '<span class="ai-loading">transcript herschrijven…</span>';
-            const res = await window.AI.reviseListeningScript({
-              originalScript: ex.script || "",
-              instruction: input,
-              level: ex.level || "B2",
-            });
-            nextScript = (res && res.script) ? res.script : (ex.script || "");
-          }
-          // Wipe downstream artefacts that are tied to the script.
-          const wipe = wipeBuild
-            ? { questions: [], vocab: [], grammar: [], audioKey: null, wordTimings: null, sttText: null, userAnswers: [], pushedToCorpus: false }
-            : {};
-          // Drop old blob from storage so the regen path takes over cleanly.
-          if (wipeBuild && ex.audioKey && window.BlobStore) {
-            window.BlobStore.remove(ex.audioKey).catch(() => {});
-          }
-          window.ListeningStore.update(ex.id, Object.assign({ script: nextScript, status: "script_pending", error: null }, wipe));
-
-          // Re-run auto cleanup. We render the status updates into the
-          // modal so the user can see what's happening before the modal closes.
-          status.innerHTML = '<span class="ai-loading">controles uitvoeren…</span>';
-          const stepsHost = el("div", { class: "gen-state", style: "background:var(--paper-2);border:1px dashed var(--rule);border-radius:4px;padding:.7rem 1rem;margin-top:.6rem;text-align:left" });
-          body.append(stepsHost);
-          await autoCleanScript(ex.id, stepsHost, nextScript);
-          window.ListeningStore.update(ex.id, { status: "script_ready" });
-          close();
-          activeEx = window.ListeningStore.get(ex.id);
-          refresh();
-        } catch (err) {
-          status.innerHTML = '<span class="ai-error">' + escapeHTML(err.message) + '</span>';
-          applyBtn.disabled = false;
-          applyBtn.textContent = orig;
+      function apply() {
+        const next = textarea.value.trim();
+        if (!next) { status.innerHTML = '<span class="ai-error">Tekst is leeg.</span>'; return; }
+        if (next.split(/\s+/).filter(Boolean).length < 20) {
+          status.innerHTML = '<span class="ai-error">Transcript te kort (min. 20 woorden).</span>';
+          return;
         }
+        const wipe = wipeBuild
+          ? { questions: [], vocab: [], grammar: [], audioKey: null, wordTimings: null, sttText: null, userAnswers: [], pushedToCorpus: false }
+          : {};
+        if (wipeBuild && ex.audioKey && window.BlobStore) {
+          window.BlobStore.remove(ex.audioKey).catch(() => {});
+        }
+        window.ListeningStore.update(ex.id, Object.assign({
+          script: next, status: "script_ready", error: null,
+        }, wipe));
+        close();
+        activeEx = window.ListeningStore.get(ex.id);
+        refresh();
       }
     }
 
@@ -1074,86 +1014,23 @@
       }
     }
 
-    /* ---- Generation flow — split into two phases ----
-     *  Phase 1 (runScriptPhase): write script, auto-clean it, hand off.
-     *    User then reads, approves OR clicks Verbeter.
-     *  Phase 2 (runBuildPhase): extract questions/vocab/grammar from the
-     *    approved script, generate audio, align word timings.
+    /* ---- Build flow ----
+     *  After the user has typed/pasted their full script and clicked
+     *  Bouw oefening, we run a single phase: extract questions + vocab
+     *  + grammar from the script, generate TTS, transcribe for word
+     *  timings. The script itself is never altered.
      */
 
     function setActiveStep(host, html) {
       host.innerHTML += '<p class="gen-step"><span class="ai-loading">' + html + '</span></p>';
-    }
-    function markStepResult(host, fixes, kind) {
-      const steps = host.querySelectorAll(".gen-step");
-      if (!steps.length) return;
-      const last = steps[steps.length - 1];
-      if (fixes.length) {
-        const sample = fixes.slice(0, 3).map((f) => `<em>${escapeHTML(f.original)}</em>→${escapeHTML(f.fix)}`).join(" · ");
-        last.innerHTML = '<span style="color:var(--groen)">✓ ' + fixes.length + ' ' + kind + (fixes.length === 1 ? "" : "en") + ' opgeruimd</span> ' +
-                         '<span style="color:var(--ink-faint);font-size:.8rem">— ' + sample + (fixes.length > 3 ? " …" : "") + '</span>';
-      } else {
-        last.innerHTML = '<span style="color:var(--ink-faint)">— geen ' + kind + 'en gevonden</span>';
-      }
     }
     function markStepDone(host, html) {
       const steps = host.querySelectorAll(".gen-step");
       if (steps.length) steps[steps.length - 1].innerHTML = html;
     }
 
-    /* Run auto spelling + usage validation on a script and persist the
-     * cleaned text. Returns the cleaned script. Used by phase 1, by the
-     * Improve flow, and by anything else that mutates the script.
-     */
-    async function autoCleanScript(exId, host, script) {
-      setActiveStep(host, "Spelling controleren (gpt-5)");
-      let spellingFixes = [];
-      try { spellingFixes = await window.AI.validateDutchSpelling(script || ""); }
-      catch (e) { /* non-fatal */ }
-      let cleaned = window.AI.applySpellingFixes(script || "", spellingFixes);
-      markStepResult(host, spellingFixes, "spelfout");
-
-      setActiveStep(host, "Grammatica & woordkeuze controleren (gpt-5)");
-      let usageFixes = [];
-      try { usageFixes = await window.AI.validateDutchUsage(cleaned); }
-      catch (e) { /* non-fatal */ }
-      cleaned = window.AI.applySpellingFixes(cleaned, usageFixes);
-      markStepResult(host, usageFixes, "usage-fout");
-
-      window.ListeningStore.update(exId, { script: cleaned });
-      return cleaned;
-    }
-
-    /* Phase 1 — script + auto-cleanup, then awaiting user approval. */
-    async function runScriptPhase(exId, host) {
-      host.innerHTML = '<h3 style="font-family:var(--serif);font-weight:600;margin:0 0 .5rem">Transcript schrijven</h3><p class="stat-note">Stap 1 · de AI schrijft het transcript. Daarna lees jij het door.</p>';
-      window.ListeningStore.update(exId, { status: "script_pending", error: null });
-      let ex = window.ListeningStore.get(exId);
-
-      setActiveStep(host, "Transcript schrijven (" + (ex.level || "B2") + ")");
-      let content;
-      try {
-        content = await window.AI.generateListeningScript({ topic: ex.topic, level: ex.level || "B2" });
-      } catch (err) {
-        host.innerHTML += '<p class="ai-error">' + escapeHTML(err.message) + '</p>';
-        window.ListeningStore.update(exId, { status: "error", error: err.message });
-        return;
-      }
-      markStepDone(host, '<span style="color:var(--groen)">✓ Transcript geschreven (' + (content.script || "").split(/\s+/).filter(Boolean).length + ' woorden)</span>');
-
-      const title = content.title && content.title.trim() ? content.title.trim() : ex.title;
-      window.ListeningStore.update(exId, {
-        title, autoTitled: true,
-        script: content.script || "",
-      });
-
-      await autoCleanScript(exId, host, content.script || "");
-      window.ListeningStore.update(exId, { status: "script_ready" });
-    }
-
-    /* Phase 2 — only runs after the user approves the script. */
     async function runBuildPhase(exId, host) {
-      host.innerHTML = '<h3 style="font-family:var(--serif);font-weight:600;margin:0 0 .5rem">Bouwen</h3><p class="stat-note">Stap 2 · vragen, woordenschat, audio en sync.</p>';
+      host.innerHTML = '<h3 style="font-family:var(--serif);font-weight:600;margin:0 0 .5rem">Bouwen</h3><p class="stat-note">Vragen, woordenschat, audio en sync — op basis van jouw transcript. We wijzigen je tekst niet.</p>';
       window.ListeningStore.update(exId, { status: "building", error: null });
       let ex = window.ListeningStore.get(exId);
 
@@ -1208,24 +1085,29 @@
       window.ListeningStore.update(exId, { status: "ready" });
     }
 
-    /* ---- Script approval card (status = script_ready) ---- */
+    /* ---- Script preview / pre-build card (status = script_ready) ---- */
     function renderScriptApproval(ex) {
+      const wc = (ex.script || "").split(/\s+/).filter(Boolean).length;
       const wrap = el("div", { class: "script-approval" });
+      const isError = ex.status === "error";
       wrap.append(el("div", { class: "script-approval-head" },
-        el("span", { class: "script-approval-step" }, "STAP 1 VAN 2"),
-        el("h3", null, "Transcript klaar — controleer en bevestig"),
-        el("p", { class: "stat-note" }, "Lees het transcript door. Bij ‘Goedkeuren’ gaan we verder met audio, vragen en woordenschat. Bij ‘Verbeter’ open je een venster om correcties of instructies te geven."),
+        el("span", { class: "script-approval-step" }, isError ? "VORIGE BOUW MISLUKT" : "KLAAR OM TE BOUWEN"),
+        el("h3", null, "Jouw transcript — " + wc + " woorden"),
+        el("p", { class: "stat-note" }, "Klik ‘Bouw oefening’ om audio, sync, woordenschat en vragen te genereren. Klik ‘Bewerk’ om je tekst aan te passen. We laten je tekst exact zoals je hem hebt geleverd."),
       ));
 
-      const script = el("article", {
-        class: "script-approval-body",
-      });
+      if (isError && ex.error) {
+        wrap.append(el("p", { class: "ai-error", style: "margin:0 0 .6rem;padding:.55rem .8rem;background:rgba(154,58,44,.08);border:1px solid var(--rood-soft);border-radius:4px" },
+          "Bouwen mislukte: " + ex.error));
+      }
+
+      const script = el("article", { class: "script-approval-body" });
       script.textContent = ex.script || "";
       wrap.append(script);
 
       const actions = el("div", { class: "script-approval-actions" },
-        el("button", { onClick: () => approve(ex.id) }, "✓ Goedkeuren · ga verder"),
-        el("button", { class: "subtle", onClick: () => openImproveModal(ex, { wipeBuild: false }) }, "✎ Verbeter transcript"),
+        el("button", { onClick: () => approve(ex.id) }, isError ? "▶ Probeer opnieuw te bouwen" : "▶ Bouw oefening"),
+        el("button", { class: "subtle", onClick: () => openEditModal(ex, { wipeBuild: false }) }, "✎ Bewerk transcript"),
       );
       wrap.append(actions);
       return wrap;

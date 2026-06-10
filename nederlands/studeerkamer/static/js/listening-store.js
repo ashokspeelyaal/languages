@@ -22,18 +22,25 @@
   }
   function get(id) { return exs.find((e) => e.id === id) || null; }
 
-  function create(topic, opts = {}) {
+  /* Create a new exercise.
+   *  args: { title, level, script }  — script is required in the new flow
+   *         (user provides the full text up front; AI never rewrites it).
+   *  Returns the new exercise object with status="script_ready" if a script
+   *  was supplied, "new" otherwise.
+   */
+  function create(args = {}) {
+    const hasScript = !!(args.script && args.script.trim());
     const ex = {
       id: makeId(),
-      title: "Nieuwe oefening",
-      topic: topic || "",
-      level: opts.level || "B2",
+      title: args.title || "Nieuwe oefening",
+      topic: args.topic || "",
+      level: args.level || "B2",
       createdAt: nowISO(),
       updatedAt: nowISO(),
-      autoTitled: false,
-      status: "new",
+      autoTitled: !!args.title,
+      status: hasScript ? "script_ready" : "new",
       error: null,
-      script: null,
+      script: hasScript ? args.script.trim() : null,
       questions: [],
       vocab: [],
       grammar: [],
@@ -45,7 +52,14 @@
     };
     exs.unshift(ex);
     setActiveId(ex.id);
-    bg(window.API.post("/api/listening", { id: ex.id, title: ex.title, topic: ex.topic, level: ex.level }));
+    bg(window.API.post("/api/listening", {
+      id: ex.id,
+      title: ex.title,
+      topic: ex.topic,
+      level: ex.level,
+      script: ex.script,
+      status: ex.status,
+    }));
     return ex;
   }
 

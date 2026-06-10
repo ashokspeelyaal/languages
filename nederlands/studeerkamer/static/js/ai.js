@@ -150,151 +150,11 @@
     ].join("\n"),
   };
 
-  async function generateListeningExercise({ topic, durationMinutes, language, level }) {
-    const s = settings();
-    const targetLang = language || s.outputLanguage || "Dutch (Belgian / Standard Dutch register)";
-    const lvl = (level || "B2").toUpperCase();
-    const guidance = LEVEL_GUIDANCE[lvl] || LEVEL_GUIDANCE.B2;
-    const dur = durationMinutes || s.durationMinutes || 2.5;
-    const wpm = lvl === "B1" ? 125 : (lvl === "C1" ? 145 : 135);
-    const targetWords = Math.round(dur * wpm);
-
-    const system = [
-      `You are a language-learning content generator. The learner wants to practise LISTENING in ${targetLang} on a topic they choose.`,
-      `Produce a self-contained spoken-style piece of about ${targetWords} words (~${dur} minutes spoken) in ${targetLang}, NATURAL register, written so it reads aloud cleanly.`,
-      "",
-      guidance,
-      "",
-      "Then produce 5 multiple-choice comprehension questions calibrated to the same level, EXHAUSTIVE vocabulary (every word/phrase above A2 level — NO upper limit; could be 50-150 entries), and 3-5 grammar / collocation notes.",
-      "",
-      "Respond ONLY with valid JSON — no markdown, no commentary:",
-      "{",
-      '  "title": "<3-6 word title in ' + targetLang + ', no quotes>",',
-      '  "script": "<the spoken-language text, paragraphs separated by a blank line>",',
-      '  "questions": [',
-      '    {"q":"<question>", "options":["a","b","c","d"], "correctIndex":0, "explanation":{"nl":"...", "en":"..."}}',
-      "    // 5 questions total — mix gist, detail, inference",
-      "  ],",
-      '  "vocab": [',
-      '    {"dutch":"<word/phrase from the script>", "english":"<short English gloss>", "note":"<optional one-line usage note>", "core":true|false, "level":"A2"|"B1"|"B2"|"C1"}',
-      "    // EXHAUSTIVE: every word/phrase above A2 level. Skip only the most basic function words (de, het, een, en, is, was, voor, op, in, aan, met, ...).",
-      "    // 'core': true ONLY for STRUCTURAL/closed-class words — conjunctions, prepositions, pronouns, modal particles, discourse markers, question words, negation, demonstratives, quantifiers, comparison particles, sentential adverbs, time/aspect markers. NOT lexical verbs/nouns/adjectives.",
-      "    // 'level': your honest CEFR estimate.",
-      "  ],",
-      '  "grammar": [',
-      '    {"point":"<short grammar/collocation title>", "explanation":"<2-3 sentence explanation in NL>"}',
-      "  ]",
-      "}",
-      "",
-      "Keep total JSON under 12000 tokens. Prioritise completeness in vocab; concise notes (max 1 line).",
-    ].join("\n");
-
-    const r = await complete({
-      kind: "listening-gen",
-      messages: [
-        { role: "system", content: system },
-        { role: "user", content: "Topic: " + topic },
-      ],
-      maxTokens: 13000,
-      json: true,
-      noCache: true,
-      // Heavy generation runs on the user's chosen aiContentModel, which
-      // defaults to gpt-5.4 (the current sweet-spot). Independent of the
-      // chat model so users can mix cheap chat + premium generation.
-      model: settings().aiContentModel || "gpt-5.4",
-    });
-    return JSON.parse(r.text);
-  }
-
-  /* ============ Script-only generation (phase 1 of new workflow) ============
-   * Generates just the title + script — no questions/vocab/grammar yet.
-   * Those come later via extractListeningContent, AFTER the user has
-   * approved the cleaned transcript.
+  /* ============ Questions + vocab + grammar from a user-provided script ============
+   * The script is authored by the user. We never modify it — we only
+   * read it to produce comprehension questions, an exhaustive vocabulary
+   * list, and a few grammar notes calibrated to the chosen CEFR level.
    */
-  async function generateListeningScript({ topic, durationMinutes, language, level }) {
-    const s = settings();
-    const targetLang = language || s.outputLanguage || "Dutch (Belgian / Standard Dutch register)";
-    const lvl = (level || "B2").toUpperCase();
-    const guidance = LEVEL_GUIDANCE[lvl] || LEVEL_GUIDANCE.B2;
-    const dur = durationMinutes || s.durationMinutes || 2.5;
-    const wpm = lvl === "B1" ? 125 : (lvl === "C1" ? 145 : 135);
-    const targetWords = Math.round(dur * wpm);
-
-    const system = [
-      `You are a language-learning content generator. The learner wants to practise LISTENING in ${targetLang} on a topic they choose.`,
-      `Produce a self-contained spoken-style piece of about ${targetWords} words (~${dur} minutes spoken) in ${targetLang}, NATURAL register, written so it reads aloud cleanly.`,
-      "",
-      guidance,
-      "",
-      "Respond ONLY with valid JSON — no markdown, no commentary:",
-      "{",
-      '  "title": "<3-6 word title in ' + targetLang + ', no quotes>",',
-      '  "script": "<the spoken-language text, paragraphs separated by a blank line>"',
-      "}",
-      "",
-      "Proofread carefully. Every word must be a real, correctly-spelled word in " + targetLang + ".",
-    ].join("\n");
-
-    const r = await complete({
-      kind: "listening-script",
-      messages: [
-        { role: "system", content: system },
-        { role: "user", content: "Topic: " + topic },
-      ],
-      maxTokens: 6000,
-      json: true,
-      noCache: true,
-      model: settings().aiContentModel || "gpt-5.4",
-    });
-    return JSON.parse(r.text);
-  }
-
-  /* ============ Revise script per user feedback ============
-   * The user clicked "Verbeter" and gave either (a) a pasted corrected
-   * version of the whole transcript, or (b) an instruction describing
-   * what should change. (a) is handled in the view layer (no AI call —
-   * just save). This function handles (b): rewrite the script in line
-   * with the instruction, keep everything else (topic, length, level)
-   * stable.
-   */
-  async function reviseListeningScript({ originalScript, instruction, level, language }) {
-    const s = settings();
-    const targetLang = language || s.outputLanguage || "Dutch (Belgian / Standard Dutch register)";
-    const lvl = (level || "B2").toUpperCase();
-    const guidance = LEVEL_GUIDANCE[lvl] || LEVEL_GUIDANCE.B2;
-
-    const system = [
-      `You revise a ${targetLang} listening script based on a user instruction.`,
-      "Keep the topic, structure, paragraph breaks, and approximate length unchanged unless the instruction specifically asks otherwise.",
-      "Apply the user's instruction faithfully — do NOT invent extra changes.",
-      "Preserve any correctness that was already there. Do NOT introduce typos or non-existent words.",
-      "",
-      guidance,
-      "",
-      "Respond ONLY with valid JSON — no markdown, no commentary:",
-      "{",
-      '  "script": "<the revised spoken-language text, paragraphs separated by a blank line>"',
-      "}",
-    ].join("\n");
-
-    const r = await complete({
-      kind: "listening-revise",
-      messages: [
-        { role: "system", content: system },
-        { role: "user", content:
-          "INSTRUCTION FROM USER:\n" + instruction +
-          "\n\nORIGINAL SCRIPT:\n" + originalScript },
-      ],
-      maxTokens: 6000,
-      json: true,
-      noCache: true,
-      model: settings().aiContentModel || "gpt-5.4",
-    });
-    const parsed = JSON.parse(r.text);
-    return { script: parsed.script || originalScript };
-  }
-
-  /* ============ Phase 2: questions + vocab + grammar from a finalised script ============ */
   async function extractListeningContent({ script, level, language }) {
     const s = settings();
     const targetLang = language || s.outputLanguage || "Dutch (Belgian / Standard Dutch register)";
@@ -635,9 +495,6 @@
     azureTTS,
     generateSpeech,
     testAzureKey,
-    generateListeningExercise,
-    generateListeningScript,
-    reviseListeningScript,
     extractListeningContent,
     correctEssay,
     extractVocab,

@@ -67,17 +67,29 @@ def get_ex(ex_id: str, user=Depends(require_user)):
 
 @router.post("")
 def create_ex(body: dict, user=Depends(require_user)):
+    """Create a new listening exercise.
+
+    Accepts optional ``script`` + ``status`` so the new luisteren flow
+    can persist the user-authored transcript in the same call as the
+    row skeleton. Without those, the row starts in ``status='new'``
+    with no script (legacy behaviour).
+    """
     eid = body.get("id") or _make_id()
+    script = body.get("script")
+    status = body.get("status") or ("script_ready" if script else "new")
     with conn() as c:
         c.execute(
-            """INSERT OR REPLACE INTO listening_exercises (id, user_id, title, topic, level, status)
-               VALUES (?, ?, ?, ?, ?, 'new')""",
+            """INSERT OR REPLACE INTO listening_exercises
+                  (id, user_id, title, topic, level, status, script)
+               VALUES (?, ?, ?, ?, ?, ?, ?)""",
             (
                 eid,
                 user["id"],
                 body.get("title") or "Nieuwe oefening",
                 body.get("topic") or "",
                 (body.get("level") or "B2").upper(),
+                status,
+                script,
             ),
         )
         r = c.execute("SELECT * FROM listening_exercises WHERE id = ?", (eid,)).fetchone()
