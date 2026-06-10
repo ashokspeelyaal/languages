@@ -1,0 +1,11 @@
+{
+  "name": "Atelier Immersion",
+  "short_name": "Immersion",
+  "description": "Apprenez le français à partir de vos propres transcrits",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#7c3aed",
+  "lang": "fr-FR"
+}

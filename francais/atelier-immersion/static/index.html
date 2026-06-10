@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#7c3aed">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Immersion">
+<link rel="manifest" href="/manifest.webmanifest">
+<title>Atelier Immersion · Français</title>
+<link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark">IM</span>
+    <div class="brand-text">
+      <h1>Atelier Immersion</h1>
+      <p>Apprenez à partir de vos propres transcrits</p>
+    </div>
+  </div>
+  <nav class="nav">
+    <a href="#/" data-route="list">Mes immersions</a>
+    <a href="#/new" data-route="new">Nouveau</a>
+    <a href="#/logout">Déconnexion</a>
+  </nav>
+</header>
+
+<main id="view">
+  <div class="empty">Chargement…</div>
+</main>
+
+<script src="/static/js/api.js"></script>
+<script src="/static/js/karaoke.js"></script>
+<script src="/static/js/exercise-widgets.js"></script>
+<script src="/static/js/views.js"></script>
+<script src="/static/js/app.js"></script>
+<script>
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("/service-worker.js").catch(() => {});
+    });
+  }
+</script>
+</body>
+</html>

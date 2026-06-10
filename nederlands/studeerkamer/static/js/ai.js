@@ -150,62 +150,195 @@
     ].join("\n"),
   };
 
-  /* ============ Questions + vocab + grammar from a user-provided script ============
+  /* ============ Vocab / questions / grammar from a user-authored script ============
    * The script is authored by the user. We never modify it — we only
-   * read it to produce comprehension questions, an exhaustive vocabulary
-   * list, and a few grammar notes calibrated to the chosen CEFR level.
+   * read it to produce content for studying. Three separate calls so
+   * each stays under Cloudflare's 100s edge timeout and so they can
+   * run in parallel from runBuildPhase for shorter total wall-time.
    */
-  async function extractListeningContent({ script, level, language }) {
+
+  async function extractListeningVocab({ script, level, language }) {
     const s = settings();
     const targetLang = language || s.outputLanguage || "Dutch (Belgian / Standard Dutch register)";
     const lvl = (level || "B2").toUpperCase();
     const guidance = LEVEL_GUIDANCE[lvl] || LEVEL_GUIDANCE.B2;
 
     const system = [
-      `You are a language-learning content generator. The learner has just approved a ${targetLang} listening script.`,
-      "Produce comprehension questions, exhaustive vocabulary, and grammar notes calibrated to the target level.",
+      `You extract vocabulary from a ${targetLang} listening script for a B1-C1 learner.`,
+      "EXHAUSTIVE — every word/phrase above A2. NO upper limit; 50-150 entries is typical.",
       "",
       guidance,
       "",
-      "Produce 5 multiple-choice comprehension questions (mix gist, detail, inference), EXHAUSTIVE vocabulary (every word/phrase above A2 level — NO upper limit; could be 50-150 entries), and 3-5 grammar / collocation notes.",
+      "Skip only the most basic A2 function words (de, het, een, en, of, maar, ook, dat, dit, is, was, voor, op, in, aan, met, om, niet, ja, hij, zij, ik, je, jij, wij, jullie, hun, zo, nu, dan, hier, daar). When in doubt INCLUDE it. Preserve form as it appears in the script.",
       "",
-      "Respond ONLY with valid JSON — no markdown, no commentary:",
+      "Respond ONLY with valid JSON — no markdown:",
       "{",
-      '  "questions": [',
-      '    {"q":"<question>", "options":["a","b","c","d"], "correctIndex":0, "explanation":{"nl":"...", "en":"..."}}',
-      "    // 5 questions total",
-      "  ],",
       '  "vocab": [',
-      '    {"dutch":"<word/phrase from the script>", "english":"<short English gloss>", "note":"<optional one-line usage note>", "core":true|false, "level":"A2"|"B1"|"B2"|"C1"}',
-      "    // EXHAUSTIVE: every word/phrase above A2 level. Skip only the most basic function words.",
-      "    // 'core': true ONLY for STRUCTURAL/closed-class words (conjunctions, prepositions, pronouns, modal particles, discourse markers, question words, negation, demonstratives, quantifiers, comparison particles, sentential adverbs, time/aspect markers).",
-      "    // 'level': honest CEFR estimate.",
-      "  ],",
-      '  "grammar": [',
-      '    {"point":"<short grammar/collocation title>", "explanation":"<2-3 sentence explanation in NL>"}',
+      '    {"dutch":"<word/phrase from script>", "english":"<short gloss>", "note":"<optional one-line note>", "core":true|false, "level":"A2"|"B1"|"B2"|"C1"}',
+      "    // core=true ONLY for STRUCTURAL/closed-class words (conjunctions, prepositions, pronouns, modal particles, discourse markers, question words, negation, demonstratives, quantifiers, comparison particles, sentential adverbs, time/aspect markers).",
       "  ]",
       "}",
-      "",
-      "Keep total JSON under 11000 tokens. Prioritise completeness in vocab; concise notes (max 1 line).",
     ].join("\n");
 
     const r = await complete({
-      kind: "listening-content",
+      kind: "listening-vocab",
       messages: [
         { role: "system", content: system },
         { role: "user", content: "Script:\n\n" + script },
       ],
-      maxTokens: 12000,
+      maxTokens: 9000,
       json: true,
       noCache: true,
       model: settings().aiContentModel || "gpt-5.4",
     });
     const parsed = JSON.parse(r.text);
-    return {
-      questions: Array.isArray(parsed.questions) ? parsed.questions : [],
-      vocab: Array.isArray(parsed.vocab) ? parsed.vocab : [],
-      grammar: Array.isArray(parsed.grammar) ? parsed.grammar : [],
-    };
+    return Array.isArray(parsed.vocab) ? parsed.vocab : [];
+  }
+
+  /* Split the script into sentence chunks (~5 sentences each). The user
+   * wants ~one question per sentence, so we run question generation per
+   * chunk in parallel — single-shot generation for the whole script
+   * would blow past Cloudflare's 100s edge timeout. Splitting on
+   * paragraph + sentence boundaries keeps each chunk locally coherent.
+   */
+  function chunkScriptForQuestions(script, sentencesPerChunk = 5) {
+    if (!script) return [];
+    // Sentence-ish split: keep the punctuation with the sentence, treat
+    // newlines as soft boundaries. Quote-aware enough for B1-C1 prose.
+    const sentences = script
+      .replace(/\s+/g, " ")
+      .split(/(?<=[.!?…])\s+(?=[A-ZÀ-Ý"'„""'(])/g)
+      .map((s) => s.trim())
+      .filter(Boolean);
+    if (!sentences.length) return [];
+    const chunks = [];
+    for (let i = 0; i < sentences.length; i += sentencesPerChunk) {
+      chunks.push(sentences.slice(i, i + sentencesPerChunk).join(" "));
+    }
+    return chunks;
+  }
+
+  async function extractQuestionsForChunk({ fullScript, chunk, chunkIndex, totalChunks, level, language }) {
+    const s = settings();
+    const targetLang = language || s.outputLanguage || "Dutch (Belgian / Standard Dutch register)";
+    const lvl = (level || "B2").toUpperCase();
+    const guidance = LEVEL_GUIDANCE[lvl] || LEVEL_GUIDANCE.B2;
+
+    const system = [
+      `You write multiple-choice comprehension questions in ${targetLang}. Quality matters more than speed.`,
+      "",
+      `You will receive the FULL script (for context — references, anaphora, theme) AND a CURRENT CHUNK of consecutive sentences from it. Generate questions ONLY about the sentences in the CURRENT CHUNK. (You may resolve references using the full script.)`,
+      "",
+      "QUANTITY: aim for ROUGHLY ONE QUESTION PER SENTENCE in the chunk. Skip only purely connective fillers ('Dat is leuk.', 'Oké.'). A 5-sentence chunk should produce 4-6 questions. No upper limit if a sentence is dense.",
+      "",
+      "VARIETY: across the chunk, rotate question types — never two of the same type in a row. Use a mix of:",
+      "  • literal recall (what does the speaker say about X?)",
+      "  • detail (number / where / when / who)",
+      "  • inference (what does the speaker imply?)",
+      "  • cause / consequence ('Waarom …?', 'Daardoor …?')",
+      "  • vocab-in-context (wat betekent <word> in deze zin?)",
+      "  • reference resolution (waar verwijst 'dat' / 'hij' naar?)",
+      "  • paraphrase (welke zin betekent hetzelfde als …?)",
+      "  • speaker attitude / register (hoe staat de spreker tegenover X?)",
+      "",
+      "QUALITY:",
+      "  • Each question must have a single unambiguously correct answer.",
+      "  • Distractors must be PLAUSIBLE — drawn from the script's world, similar in length and register, not obviously wrong.",
+      "  • Avoid trick questions, double negatives, and 'all of the above'.",
+      "  • The question + correct option must NOT verbatim-quote the script — paraphrase.",
+      "  • Explanation cites the specific phrase from the script that supports the answer.",
+      "",
+      guidance,
+      "",
+      "Respond ONLY with valid JSON — no markdown, no commentary:",
+      "{",
+      '  "questions": [',
+      '    {"q":"<question in ' + targetLang + '>",',
+      '     "options":["a","b","c","d"],',
+      '     "correctIndex":0,',
+      '     "explanation":{"nl":"<korte uitleg + de citaat-frase>", "en":"<same in English>"}}',
+      "  ]",
+      "}",
+    ].join("\n");
+
+    const userMsg = [
+      `FULL SCRIPT (chunk ${chunkIndex + 1} of ${totalChunks} — for context only):`,
+      fullScript,
+      "",
+      "CURRENT CHUNK (generate questions about these sentences):",
+      chunk,
+    ].join("\n\n");
+
+    const r = await complete({
+      kind: "listening-questions",
+      messages: [
+        { role: "system", content: system },
+        { role: "user", content: userMsg },
+      ],
+      maxTokens: 4000,
+      json: true,
+      noCache: true,
+      model: settings().aiContentModel || "gpt-5.4",
+    });
+    const parsed = JSON.parse(r.text);
+    return Array.isArray(parsed.questions) ? parsed.questions : [];
+  }
+
+  async function extractListeningQuestions({ script, level, language }) {
+    const chunks = chunkScriptForQuestions(script, 5);
+    if (!chunks.length) return [];
+    // Fan out — each chunk is its own HTTP request, so Cloudflare's 100s
+    // edge timeout applies per-call. Wall-time = slowest single chunk.
+    const results = await Promise.all(chunks.map((chunk, i) =>
+      extractQuestionsForChunk({
+        fullScript: script,
+        chunk,
+        chunkIndex: i,
+        totalChunks: chunks.length,
+        level,
+        language,
+      }).catch((e) => {
+        console.warn("question chunk " + (i + 1) + "/" + chunks.length + " failed:", e.message);
+        return [];   // a single chunk failing shouldn't lose the whole set
+      })
+    ));
+    return results.flat();
+  }
+
+  async function extractListeningGrammar({ script, level, language }) {
+    const s = settings();
+    const targetLang = language || s.outputLanguage || "Dutch (Belgian / Standard Dutch register)";
+    const lvl = (level || "B2").toUpperCase();
+    const guidance = LEVEL_GUIDANCE[lvl] || LEVEL_GUIDANCE.B2;
+
+    const system = [
+      `You write 3-5 short grammar / collocation notes drawn from a ${targetLang} listening script.`,
+      "Each note: a title + a 2-3 sentence explanation referencing the script. Notes calibrated to the learner's level.",
+      "",
+      guidance,
+      "",
+      "Respond ONLY with valid JSON — no markdown:",
+      "{",
+      '  "grammar": [',
+      '    {"point":"<short title>", "explanation":"<2-3 sentence explanation in ' + targetLang + '>"}',
+      "    // 3-5 entries",
+      "  ]",
+      "}",
+    ].join("\n");
+
+    const r = await complete({
+      kind: "listening-grammar",
+      messages: [
+        { role: "system", content: system },
+        { role: "user", content: "Script:\n\n" + script },
+      ],
+      maxTokens: 1800,
+      json: true,
+      noCache: true,
+      model: settings().aiContentModel || "gpt-5.4",
+    });
+    const parsed = JSON.parse(r.text);
+    return Array.isArray(parsed.grammar) ? parsed.grammar : [];
   }
 
   /* ============ STT (Whisper word timestamps) ============ */
@@ -495,7 +628,9 @@
     azureTTS,
     generateSpeech,
     testAzureKey,
-    extractListeningContent,
+    extractListeningVocab,
+    extractListeningQuestions,
+    extractListeningGrammar,
     correctEssay,
     extractVocab,
     transcribeWithTimestamps,

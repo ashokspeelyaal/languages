@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#7c3aed">
+<title>Immersion · connexion</title>
+<link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body class="login-shell">
+  <form class="login-card" id="login-form" autocomplete="on">
+    <div class="brand">
+      <span class="brand-mark" style="background:#7c3aed">IM</span>
+      <div><strong>Atelier Immersion</strong><br><small>Apprenez le français en contexte</small></div>
+    </div>
+    <h1>Connexion</h1>
+    <div class="row">
+      <label for="u">Nom d'utilisateur</label>
+      <input id="u" name="username" autocomplete="username" autofocus required>
+    </div>
+    <div class="row">
+      <label for="p">Mot de passe</label>
+      <input id="p" name="password" type="password" autocomplete="current-password" required>
+    </div>
+    <button type="submit" id="btn">Se connecter</button>
+    <div class="err" id="err"></div>
+  </form>
+<script>
+  const form = document.getElementById("login-form");
+  const btn = document.getElementById("btn");
+  const err = document.getElementById("err");
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    err.textContent = ""; btn.disabled = true; btn.textContent = "Connexion…";
+    try {
+      const resp = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "X-Requested-With": "fetch" },
+        credentials: "same-origin",
+        body: JSON.stringify({
+          username: document.getElementById("u").value.trim(),
+          password: document.getElementById("p").value,
+        }),
+      });
+      if (!resp.ok) {
+        const data = await resp.json().catch(() => ({}));
+        throw new Error(data.detail || ("Erreur " + resp.status));
+      }
+      const params = new URLSearchParams(location.search);
+      location.replace(params.get("next") || "/");
+    } catch (e) {
+      err.textContent = e.message;
+      btn.disabled = false; btn.textContent = "Se connecter";
+    }
+  });
+</script>
+</body>
+</html>

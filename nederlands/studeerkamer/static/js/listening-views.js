@@ -1021,65 +1021,88 @@
      *  timings. The script itself is never altered.
      */
 
-    function setActiveStep(host, html) {
-      host.innerHTML += '<p class="gen-step"><span class="ai-loading">' + html + '</span></p>';
+    /* Add a labelled step row that we can independently mark complete
+     * later. Used because steps run in parallel — we can't just touch
+     * "the last one" the way a serial flow could.
+     */
+    function addStep(host, html) {
+      const p = el("p", { class: "gen-step" });
+      p.innerHTML = '<span class="ai-loading">' + html + '</span>';
+      host.append(p);
+      return p;
     }
-    function markStepDone(host, html) {
-      const steps = host.querySelectorAll(".gen-step");
-      if (steps.length) steps[steps.length - 1].innerHTML = html;
-    }
+    function finishStep(p, html) { p.innerHTML = html; }
 
     async function runBuildPhase(exId, host) {
       host.innerHTML = '<h3 style="font-family:var(--serif);font-weight:600;margin:0 0 .5rem">Bouwen</h3><p class="stat-note">Vragen, woordenschat, audio en sync — op basis van jouw transcript. We wijzigen je tekst niet.</p>';
       window.ListeningStore.update(exId, { status: "building", error: null });
       let ex = window.ListeningStore.get(exId);
+      const script = ex.script || "";
+      const level = ex.level || "B2";
 
-      // Extract questions + vocab + grammar from final script
-      setActiveStep(host, "Vragen + woordenschat + grammatica afleiden");
-      let content;
-      try {
-        content = await window.AI.extractListeningContent({ script: ex.script || "", level: ex.level || "B2" });
-      } catch (err) {
-        host.innerHTML += '<p class="ai-error">' + escapeHTML(err.message) + '</p>';
-        window.ListeningStore.update(exId, { status: "error", error: err.message });
-        return;
-      }
-      markStepDone(host, '<span style="color:var(--groen)">✓ ' + (content.vocab || []).length + ' vocab + ' + (content.questions || []).length + ' vragen + ' + (content.grammar || []).length + ' grammatica-notities</span>');
-      window.ListeningStore.update(exId, {
-        questions: content.questions || [],
-        vocab: content.vocab || [],
-        grammar: content.grammar || [],
-        userAnswers: [],
-      });
-
-      // Audio
       const provider = window.Store.state.settings.ttsProvider || "openai";
-      setActiveStep(host, "Audio inspreken (" + (provider === "azure" ? "Azure · Vlaams" : "OpenAI") + ")");
-      let blob;
-      try {
-        blob = await window.AI.generateSpeech(ex.script);
-      } catch (err) {
-        host.innerHTML += '<p class="ai-error">' + escapeHTML(err.message) + '</p>';
-        window.ListeningStore.update(exId, { status: "error", error: err.message });
+
+      // Three AI extractions + TTS all kick off in parallel. Each is a
+      // separate HTTP request so Cloudflare's per-request timeout (~100s)
+      // doesn't combine — the slowest single call governs wall-time, not
+      // the sum. Each gets its own progress line.
+      const vocabStep   = addStep(host, "Woordenschat afleiden");
+      const qStep       = addStep(host, "Vragen schrijven (één per zin)");
+      const grammarStep = addStep(host, "Grammatica-notities schrijven");
+      const audioStep   = addStep(host, "Audio inspreken (" + (provider === "azure" ? "Azure · Vlaams" : "OpenAI") + ")");
+
+      const vocabP = window.AI.extractListeningVocab({ script, level })
+        .then((v) => { finishStep(vocabStep, '<span style="color:var(--groen)">✓ ' + v.length + ' woordenschat-items</span>'); return v; })
+        .catch((e) => { finishStep(vocabStep, '<span class="ai-error">✗ vocab: ' + escapeHTML(e.message) + '</span>'); throw e; });
+
+      const qP = window.AI.extractListeningQuestions({ script, level })
+        .then((q) => { finishStep(qStep, '<span style="color:var(--groen)">✓ ' + q.length + ' vragen</span>'); return q; })
+        .catch((e) => { finishStep(qStep, '<span class="ai-error">✗ vragen: ' + escapeHTML(e.message) + '</span>'); throw e; });
+
+      const gP = window.AI.extractListeningGrammar({ script, level })
+        .then((g) => { finishStep(grammarStep, '<span style="color:var(--groen)">✓ ' + g.length + ' grammatica-notities</span>'); return g; })
+        .catch((e) => { finishStep(grammarStep, '<span class="ai-error">✗ grammatica: ' + escapeHTML(e.message) + '</span>'); throw e; });
+
+      const ttsP = window.AI.generateSpeech(script)
+        .then(async (blob) => {
+          const audioKey = "listening-" + exId;
+          if (window.BlobStore) await window.BlobStore.put(audioKey, blob);
+          window.ListeningStore.update(exId, { audioKey });
+          finishStep(audioStep, '<span style="color:var(--groen)">✓ Audio opgeslagen</span>');
+          return blob;
+        })
+        .catch((e) => { finishStep(audioStep, '<span class="ai-error">✗ audio: ' + escapeHTML(e.message) + '</span>'); throw e; });
+
+      // Wait for all four. Persist what succeeds; if any single step
+      // failed, mark the whole exercise as error but keep whatever we got.
+      const results = await Promise.allSettled([vocabP, qP, gP, ttsP]);
+      const [vR, qR, gR, ttsR] = results;
+      const patch = { userAnswers: [] };
+      if (vR.status === "fulfilled")    patch.vocab     = vR.value;
+      if (qR.status === "fulfilled")    patch.questions = qR.value;
+      if (gR.status === "fulfilled")    patch.grammar   = gR.value;
+      window.ListeningStore.update(exId, patch);
+
+      const firstFail = results.find((r) => r.status === "rejected");
+      if (firstFail) {
+        window.ListeningStore.update(exId, { status: "error", error: firstFail.reason && firstFail.reason.message || String(firstFail.reason) });
         return;
       }
-      const audioKey = "listening-" + exId;
-      if (window.BlobStore) await window.BlobStore.put(audioKey, blob);
-      markStepDone(host, '<span style="color:var(--groen)">✓ Audio opgeslagen</span>');
-      window.ListeningStore.update(exId, { audioKey });
 
-      // Word-level alignment for karaoke-style transcript highlighting
-      setActiveStep(host, "Audio synchroniseren (woord-tijdstempels)");
-      try {
-        const tr = await window.AI.transcribeWithTimestamps(blob, { language: "nl" });
-        if (tr.words && tr.words.length) {
-          window.ListeningStore.update(exId, { wordTimings: tr.words, sttText: tr.text });
-          markStepDone(host, '<span style="color:var(--groen)">✓ ' + tr.words.length + ' woorden gesynchroniseerd</span>');
-        } else {
-          markStepDone(host, '<span style="color:var(--ink-faint)">— sync overgeslagen, geen woorden terug</span>');
+      // Word-level sync only if TTS succeeded.
+      if (ttsR.status === "fulfilled") {
+        const syncStep = addStep(host, "Audio synchroniseren (woord-tijdstempels)");
+        try {
+          const tr = await window.AI.transcribeWithTimestamps(ttsR.value, { language: "nl" });
+          if (tr.words && tr.words.length) {
+            window.ListeningStore.update(exId, { wordTimings: tr.words, sttText: tr.text });
+            finishStep(syncStep, '<span style="color:var(--groen)">✓ ' + tr.words.length + ' woorden gesynchroniseerd</span>');
+          } else {
+            finishStep(syncStep, '<span style="color:var(--ink-faint)">— sync overgeslagen, geen woorden terug</span>');
+          }
+        } catch (e) {
+          finishStep(syncStep, '<span style="color:var(--ink-faint)">— sync overgeslagen (' + escapeHTML(e.message) + ')</span>');
         }
-      } catch (e) {
-        markStepDone(host, '<span style="color:var(--ink-faint)">— sync overgeslagen (' + escapeHTML(e.message) + ')</span>');
       }
 
       window.ListeningStore.update(exId, { status: "ready" });
