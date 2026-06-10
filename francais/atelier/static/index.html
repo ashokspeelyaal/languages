@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1d4ed8">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Atelier">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/static/icons/icon-180.png">
+<title>Atelier · Français A1 → C1</title>
+<link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark" style="background:#1d4ed8;color:#fff;border-radius:8px;padding:4px 8px;font-weight:700">FR</span>
+    <div class="brand-text">
+      <h1>Atelier</h1>
+      <p><strong>A1</strong> · A2 · B1 · B2 · C1</p>
+    </div>
+  </div>
+  <nav class="nav" id="main-nav">
+    <a class="nav-link" href="#/dashboard" data-route="dashboard">Vue d'ensemble</a>
+    <a class="nav-link" href="#/logout" data-route="logout" id="logout-link">Déconnexion</a>
+  </nav>
+</header>
+
+<main id="view">
+  <div class="empty" style="padding:48px;text-align:center;color:#5a627a">Chargement…</div>
+</main>
+
+<script src="/static/js/api.js"></script>
+<script src="/static/js/app.js"></script>
+<script>
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("/service-worker.js").catch(() => {});
+    });
+  }
+</script>
+</body>
+</html>
