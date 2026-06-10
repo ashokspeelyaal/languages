@@ -9,9 +9,9 @@
   const view = () => document.getElementById("view");
 
   const ROUTES = {
-    dashboard:   renderDashboard,
+    dashboard:   () => window.FlashcardsView.renderDashboard(),
     browse:      renderBrowse,
-    flashcards:  stub("Flashcards",  2,  "Cartes mémoire avec SRS Leitner. Phase 2."),
+    flashcards:  () => window.FlashcardsView.renderFlashcards(),
     genre:       stub("Genre",       3,  "Mini-mode A1 : le ou la ? Phase 3."),
     nombres:     stub("Nombres",     3,  "Mini-mode A1 : chiffres / heures / dates. Phase 3."),
     alphabet:    stub("Alphabet",    3,  "Lettres + IPA + voyelles nasales. Phase 3."),
@@ -55,50 +55,6 @@
     const route = hash.split("/")[0];
     if (route === "browse" || route === "dashboard") navigate();
   });
-
-  // ---------------------------------------------------------------- dashboard
-  function renderDashboard() {
-    const s = window.Store.state;
-    const meta = window.Store.LEVEL_META[s.activeLevel];
-    view().innerHTML = `
-      <section class="dashboard-grid">
-        <article class="card card-hero">
-          <div class="hero-eyebrow" style="color:${meta.color}">Niveau ${meta.label} · ${meta.title}</div>
-          <h2>Bonjour, ${escapeHtml(s.me.username)}.</h2>
-          <p class="card-lead">
-            Phase 1 d'Atelier — le sélecteur de niveau et le vocabulaire
-            fondamental sont en ligne. Choisissez un autre niveau dans
-            la barre du haut pour filtrer ce que vous voyez.
-          </p>
-          <div class="hero-actions">
-            <a class="btn btn-primary" href="#/browse">Parcourir le vocabulaire</a>
-            <a class="btn" href="#/aide">Comment utiliser Atelier</a>
-          </div>
-        </article>
-
-        <article class="card">
-          <h3>Vos paramètres actuels</h3>
-          <ul class="kv-list">
-            <li><span>Niveau actif</span><strong>${meta.label} — ${meta.title}</strong></li>
-            <li><span>Registre</span><strong>${s.register === "tu" ? "tu (informel)" : "vous (formel)"}</strong></li>
-            <li><span>Voix par défaut</span><strong>${escapeHtml(s.voicePref.voice)} (${escapeHtml(s.voicePref.dialect)})</strong></li>
-            <li><span>Objectif quotidien</span><strong>${s.dailyGoal} min</strong></li>
-            <li><span>Mode simple</span><strong>${s.simpleUi ? "activé" : "désactivé"}</strong></li>
-          </ul>
-        </article>
-
-        <article class="card">
-          <h3>Phases à venir</h3>
-          <ul class="roadmap">
-            <li><span class="rm-num">2</span><div><strong>Flashcards + SRS</strong><br><small>Apprentissage espacé Leitner pour A1.</small></div></li>
-            <li><span class="rm-num">3</span><div><strong>Mini-modes A1</strong><br><small>Genre, nombres, alphabet.</small></div></li>
-            <li><span class="rm-num">4</span><div><strong>Conjugaison</strong><br><small>Tableaux + drills par temps.</small></div></li>
-            <li><span class="rm-num">5</span><div><strong>Grammaire</strong><br><small>Curriculum complet A1 → C1.</small></div></li>
-          </ul>
-        </article>
-      </section>
-    `;
-  }
 
   // ---------------------------------------------------------------- browse
   async function renderBrowse() {

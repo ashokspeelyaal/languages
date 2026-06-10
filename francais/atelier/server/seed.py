@@ -14,7 +14,8 @@ from .settings import SEED_USERS, SEEDS_DIR
 
 SEED_FILES = [
     ("vocabulary_core.json", "core"),
-    # Future: ("vocabulary_a1.json", "a1"), ("vocabulary_a2.json", "a2"), …
+    ("vocabulary_a1.json", "a1"),
+    # Future: ("vocabulary_a2.json", "a2"), ("vocabulary_b1.json", "b1"), …
 ]
 
 

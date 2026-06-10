@@ -133,6 +133,25 @@ CREATE TABLE IF NOT EXISTS grammar_progress (
 );
 CREATE INDEX IF NOT EXISTS grammar_progress_level_idx ON grammar_progress(user_id, level);
 
+-- Per-user, per-item Leitner SRS state. item_id can refer to either a
+-- vocab_items.id OR a custom_vocab.id — no FK so rows survive if a custom
+-- item is later deleted (cleanup happens lazily).
+CREATE TABLE IF NOT EXISTS srs_state (
+  user_id    INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  item_id    TEXT NOT NULL,
+  box        INTEGER NOT NULL DEFAULT 1,
+  seen       INTEGER NOT NULL DEFAULT 0,
+  correct    INTEGER NOT NULL DEFAULT 0,
+  wrong      INTEGER NOT NULL DEFAULT 0,
+  last_seen  TEXT,
+  due        TEXT,
+  starred    INTEGER NOT NULL DEFAULT 0,
+  PRIMARY KEY (user_id, item_id)
+);
+CREATE INDEX IF NOT EXISTS srs_due_idx ON srs_state(user_id, due);
+CREATE INDEX IF NOT EXISTS srs_box_idx ON srs_state(user_id, box);
+CREATE INDEX IF NOT EXISTS srs_star_idx ON srs_state(user_id, starred);
+
 -- Aggregated per-day history (for streak + metrics + dashboard).
 CREATE TABLE IF NOT EXISTS history_day (
   user_id     INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,

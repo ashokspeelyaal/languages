@@ -183,7 +183,64 @@ body.simple-ui .nav a[data-route="examen"] { display: none; }
 .streak-flame { color: #f59e0b; }
 .streak-label { color: #92400e; font-weight: 500; font-size: 12px; }
 
+/* ---------------------------------------------------------------- big-stat (dashboard) */
+.big-stat { display: flex; flex-direction: column; align-items: flex-start; margin: 8px 0 12px; }
+.big-stat-num { font-size: 30px; font-weight: 700; color: #1d4ed8; line-height: 1; }
+.big-stat-sub { font-size: 12px; color: #5a627a; margin-top: 2px; letter-spacing: 0.02em; }
+
+/* ---------------------------------------------------------------- Leitner box bars */
+.box-bars { display: flex; flex-direction: column; gap: 5px; }
+.box-row { display: grid; grid-template-columns: 64px 1fr 32px; align-items: center; gap: 8px; font-size: 13px; }
+.box-num { color: #5a627a; }
+.box-bar { background: #eef2ff; border-radius: 999px; height: 8px; overflow: hidden; }
+.box-fill { display: block; height: 100%; border-radius: 999px; transition: width 240ms; }
+.box-fill-1 { background: #ef4444; }
+.box-fill-2 { background: #f97316; }
+.box-fill-3 { background: #eab308; }
+.box-fill-4 { background: #84cc16; }
+.box-fill-5 { background: #22c55e; }
+.box-count { text-align: right; font-weight: 600; color: #2d3344; }
+
+/* ---------------------------------------------------------------- flashcards */
+.fc-session { max-width: 720px; margin: 24px auto; padding: 0 24px; }
+.fc-head { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 18px; flex-wrap: wrap; gap: 12px; }
+.fc-stage { display: flex; justify-content: center; }
+.fc { background: #fff; border: 1px solid #e3e6f0; border-radius: 14px; padding: 28px 28px 22px; width: 100%; max-width: 580px; box-shadow: 0 4px 14px rgba(29,78,216,0.05); position: relative; }
+.fc.back { background: linear-gradient(180deg, #fff 0%, #fafbff 100%); }
+.fc-progress { position: absolute; top: 12px; right: 16px; background: #eef2ff; color: #1d4ed8; font-size: 11px; padding: 2px 8px; border-radius: 999px; font-weight: 600; }
+.fc-meta { color: #5a627a; font-size: 12px; margin: 0 0 14px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.fc-prompt { font-size: 28px; font-weight: 600; color: #1d4ed8; margin: 8px 0 14px; text-align: center; }
+.fc-answer-block { display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; margin: 18px 0 8px; padding-top: 18px; border-top: 1px dashed #e3e6f0; }
+.fc-answer { font-size: 24px; font-weight: 600; color: #2d3344; margin: 0; }
+.fc-examples { margin: 16px 0 8px; padding: 12px 14px; background: #fafbff; border-radius: 8px; border: 1px solid #eef2ff; }
+.fc-example { margin: 6px 0; display: flex; gap: 10px; align-items: baseline; font-size: 14px; flex-wrap: wrap; }
+.fc-example .lab { background: #1d4ed8; color: #fff; font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 4px; }
+.fc-example .ex { color: #2d3344; }
+.fc-example .ex.en { color: #94a3b8; font-style: italic; }
+.fc-actions { display: flex; justify-content: center; gap: 8px; margin-top: 22px; flex-wrap: wrap; }
+.fc-grade { min-width: 110px; }
+.fc-hard { border-color: #ef4444; color: #ef4444; }
+.fc-good { border-color: #eab308; color: #b45309; }
+.fc-easy { border-color: #22c55e; color: #15803d; }
+.fc-hard:hover { background: #fef2f2; }
+.fc-good:hover { background: #fefce8; }
+.fc-easy:hover { background: #f0fdf4; }
+
+.voice-row { display: inline-flex; gap: 6px; justify-content: center; margin: 4px 0; }
+.voice-row-small { font-size: 11px; }
+.voice-btn { background: #fff; border: 1px solid #d3d6e2; padding: 4px 10px; border-radius: 6px; font-size: 12px; cursor: pointer; color: #1d4ed8; }
+.voice-btn:hover { background: #eef2ff; border-color: #1d4ed8; }
+
+.dir-toggle { display: inline-flex; background: #f3f4f9; padding: 3px; border-radius: 8px; border: 1px solid #e3e6f0; }
+.dir-btn { background: transparent; border: 0; padding: 4px 10px; border-radius: 6px; font-size: 12px; cursor: pointer; color: #5a627a; font-weight: 600; }
+.dir-btn.active { background: #fff; color: #1d4ed8; box-shadow: 0 1px 3px rgba(11,17,40,0.08); }
+
+.fc-summary { text-align: center; padding: 32px; }
+.fc-summary .big-num { font-size: 56px; color: #22c55e; margin: 0; }
+
 /* ---------------------------------------------------------------- simple-mode */
 body.simple-ui .btn, body.simple-ui .level-pill { padding: 8px 14px; font-size: 15px; }
 body.simple-ui .vocab-item { padding: 14px 18px; font-size: 16px; }
 body.simple-ui .vocab-fr { font-size: 17px; }
+body.simple-ui .fc-prompt { font-size: 32px; }
+body.simple-ui .fc-grade { font-size: 16px; padding: 10px 16px; min-width: 130px; }

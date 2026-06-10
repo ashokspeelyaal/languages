@@ -19,7 +19,12 @@ from .auth import (
     verify_password,
 )
 from .db import conn, init_schema
-from .routes import settings_routes, vocab_routes
+from .routes import (
+    progress_routes,
+    settings_routes,
+    srs_routes,
+    vocab_routes,
+)
 from .seed import run_seed
 from .settings import ALLOWED_ORIGIN, STATIC_DIR
 
@@ -81,6 +86,8 @@ def create_app() -> FastAPI:
     app.include_router(ai_router)
     app.include_router(settings_routes.router)
     app.include_router(vocab_routes.router)
+    app.include_router(srs_routes.router)
+    app.include_router(progress_routes.router)
 
     # ---- Static SPA ----
     app.mount("/static", StaticFiles(directory=str(STATIC_DIR), html=False), name="static")
