@@ -113,9 +113,81 @@
       rate: opts.rate || s.azureRate || "0%",
     });
   }
+  /* Split a script into TTS-sized chunks. Azure's TTS endpoint drops the
+   * connection on long bodies (peer closed connection / incomplete chunked
+   * read). OpenAI is more lenient but still has a per-request audio
+   * budget. We split on paragraph (double newline), then on sentence,
+   * and only fall through to a hard char-split for pathological cases.
+   *
+   * Target: ~800 chars per chunk — short enough that each call finishes
+   * in a few seconds, long enough that paragraph cadence stays natural.
+   */
+  function chunkScriptForTTS(text, maxLen = 800) {
+    const src = String(text || "").trim();
+    if (!src) return [];
+    if (src.length <= maxLen) return [src];
+
+    const out = [];
+    // First, split on paragraphs (blank line).
+    const paragraphs = src.split(/\n\s*\n/);
+    for (const para of paragraphs) {
+      const trimmed = para.trim();
+      if (!trimmed) continue;
+      if (trimmed.length <= maxLen) { out.push(trimmed); continue; }
+      // Paragraph is too long — split on sentences.
+      const sentences = trimmed.split(/(?<=[.!?…])\s+(?=[A-ZÀ-Ý"'„""'(])/g);
+      let buf = "";
+      for (const s of sentences) {
+        if ((buf + " " + s).trim().length > maxLen && buf) {
+          out.push(buf.trim());
+          buf = "";
+        }
+        if (s.length > maxLen) {
+          // Pathological single "sentence": hard-split on whitespace.
+          if (buf) { out.push(buf.trim()); buf = ""; }
+          for (let i = 0; i < s.length; i += maxLen) {
+            out.push(s.slice(i, i + maxLen).trim());
+          }
+        } else {
+          buf = buf ? (buf + " " + s) : s;
+        }
+      }
+      if (buf.trim()) out.push(buf.trim());
+    }
+    return out;
+  }
+
+  /* Concatenate mp3 blobs by raw byte append. mp3 frames are
+   * independently decodable; browser <audio> plays the joined stream
+   * cleanly. Minor boundary clicks possible but inaudible at normal
+   * speech rates.
+   */
+  function concatMp3Blobs(blobs) {
+    return new Blob(blobs, { type: "audio/mpeg" });
+  }
+
   async function generateSpeech(text) {
     const provider = settings().ttsProvider || "openai";
-    return provider === "azure" ? azureTTS(text) : openaiTTS(text);
+    const synth = provider === "azure" ? azureTTS : openaiTTS;
+
+    const chunks = chunkScriptForTTS(text, 800);
+    if (chunks.length === 0) throw new Error("Geen tekst voor TTS.");
+    if (chunks.length === 1) return synth(chunks[0]);
+
+    // Limited parallelism: 3 simultaneous TTS calls. Keeps wall-time
+    // short without spiking Azure/OpenAI rate limits.
+    const CONCURRENCY = 3;
+    const blobs = new Array(chunks.length);
+    let next = 0;
+    async function worker() {
+      while (true) {
+        const i = next++;
+        if (i >= chunks.length) return;
+        blobs[i] = await synth(chunks[i]);
+      }
+    }
+    await Promise.all(Array.from({ length: Math.min(CONCURRENCY, chunks.length) }, worker));
+    return concatMp3Blobs(blobs);
   }
   async function testAzureKey() {
     const blob = await azureTTS("Hallo.");
