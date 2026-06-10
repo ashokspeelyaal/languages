@@ -2711,3 +2711,113 @@ dialog td { padding: .35rem 0; color: var(--ink-soft); }
   margin: 1rem 0;
 }
 .empty-ai a { color: var(--rood); }
+
+/* ---- Luisteren · script approval (status = script_ready) ---- */
+.script-approval {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+}
+.script-approval-head {
+  background: var(--paper-2);
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--geel);
+  border-radius: 4px;
+  padding: .85rem 1.1rem;
+}
+.script-approval-step {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: .62rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--rood);
+  background: rgba(154,58,44,.08);
+  padding: .1rem .45rem;
+  border-radius: 2px;
+  margin-bottom: .35rem;
+}
+.script-approval-head h3 {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 1.05rem;
+  margin: 0 0 .2rem;
+}
+.script-approval-head .stat-note { margin: 0; font-size: .85rem; }
+.script-approval-body {
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: 1.3rem 1.6rem;
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  line-height: 1.85;
+  white-space: pre-wrap;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+.script-approval-actions {
+  display: flex;
+  gap: .6rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  padding: .2rem 0;
+}
+
+/* ---- Luisteren · improve modal ---- */
+.improve-modal { max-width: 760px; }
+.improve-body {
+  padding: 1rem 1.3rem 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: .4rem;
+}
+.improve-tabs {
+  display: inline-flex;
+  background: var(--paper-2);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: 2px;
+  gap: 2px;
+  margin: .2rem 0 .6rem;
+  align-self: flex-start;
+}
+.improve-tab {
+  min-height: auto;
+  padding: .35rem .85rem;
+  font-size: .82rem;
+  background: transparent;
+  color: var(--ink-soft);
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+.improve-tab.active {
+  background: var(--ink);
+  color: var(--paper);
+}
+.improve-textarea {
+  width: 100%;
+  min-height: 280px;
+  resize: vertical;
+  font-family: var(--serif);
+  font-size: 1rem;
+  line-height: 1.7;
+  padding: .8rem 1rem;
+  background: var(--paper-2);
+  border: 1px solid var(--rule-strong);
+  border-radius: 4px;
+  color: var(--ink);
+}
+.improve-textarea:focus {
+  outline: none;
+  border-color: var(--rood-soft);
+  background: var(--card);
+}
+.improve-hint {
+  margin: .1rem 0 0;
+  font-size: .8rem;
+  color: var(--ink-faint);
+  font-style: italic;
+}

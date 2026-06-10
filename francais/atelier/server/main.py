@@ -20,6 +20,8 @@ from .auth import (
 )
 from .db import conn, init_schema
 from .routes import (
+    conjugation_routes,
+    grammar_routes,
     progress_routes,
     settings_routes,
     srs_routes,
@@ -36,6 +38,8 @@ def create_app() -> FastAPI:
         print(f"[seed] created {summary['users_created']} user(s) from USERS env")
     if summary["vocab_created"]:
         print(f"[seed] loaded {summary['vocab_created']} vocab items into DB")
+    if summary.get("verb_forms_created"):
+        print(f"[seed] loaded {summary['verb_forms_created']} verb forms into DB")
 
     app = FastAPI(title="Atelier", docs_url=None, redoc_url=None)
 
@@ -88,6 +92,8 @@ def create_app() -> FastAPI:
     app.include_router(vocab_routes.router)
     app.include_router(srs_routes.router)
     app.include_router(progress_routes.router)
+    app.include_router(conjugation_routes.router)
+    app.include_router(grammar_routes.router)
 
     # ---- Static SPA ----
     app.mount("/static", StaticFiles(directory=str(STATIC_DIR), html=False), name="static")

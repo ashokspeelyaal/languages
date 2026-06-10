@@ -31,6 +31,13 @@
     return Math.floor(diff / 86400) + "d";
   }
   function shuffleArr(a) { const x = a.slice(); for (let i = x.length-1; i>0; i--) { const j = Math.floor(Math.random()*(i+1)); [x[i],x[j]]=[x[j],x[i]]; } return x; }
+  function statusIcon(s) {
+    if (s === "ready") return "✓";
+    if (s === "script_ready") return "⏸";
+    if (s === "script_pending" || s === "building" || s === "generating") return "⏳";
+    if (s === "error") return "✗";
+    return "○";
+  }
 
   /* ============ Main render ============ */
   function render(mount) {
@@ -91,7 +98,7 @@
             el("span", { class: "level-badge l-" + lvl, style: "margin-right:.45rem;vertical-align:1px" }, lvl),
             e.title || "Naamloos"),
           el("span", { class: "ci-meta" },
-            (e.status === "ready" ? "✓" : (e.status === "generating" ? "⏳" : (e.status === "error" ? "✗" : "○"))) +
+            statusIcon(e.status) +
             " · " + relTime(e.updatedAt) + (e.vocab ? " · " + e.vocab.length + " woorden" : "")),
           el("button", {
             class: "ci-del",
@@ -215,11 +222,29 @@
       const body = el("div", { class: "exam-body luisteren-body" });
       main.append(body);
 
-      // If still generating or new, run flow
-      if (ex.status !== "ready") {
+      // Phase 1: needs a script (or script-phase still running). Run script
+      // generation + cleanup, then hand off to the approval view.
+      const needsScriptPhase = !ex.script || ex.status === "new" || ex.status === "generating" || ex.status === "script_pending" || ex.status === "error";
+      if (needsScriptPhase) {
         const genHost = el("div", { class: "gen-state", style: "background:var(--paper-2);border:1px dashed var(--rule-strong);border-radius:4px;padding:1.6rem;text-align:center;margin:1rem 0" });
         body.append(genHost);
-        await runGeneration(ex.id, genHost);
+        await runScriptPhase(ex.id, genHost);
+        const updated = window.ListeningStore.get(ex.id);
+        if (!updated || updated.status === "error") return;
+        return renderExerciseBody(updated);
+      }
+
+      // Phase between: script is ready, awaiting user approval.
+      if (ex.status === "script_ready") {
+        body.append(renderScriptApproval(ex));
+        return;
+      }
+
+      // Phase 2 build (audio + content) in progress.
+      if (ex.status === "building") {
+        const genHost = el("div", { class: "gen-state", style: "background:var(--paper-2);border:1px dashed var(--rule-strong);border-radius:4px;padding:1.6rem;text-align:center;margin:1rem 0" });
+        body.append(genHost);
+        await runBuildPhase(ex.id, genHost);
         const updated = window.ListeningStore.get(ex.id);
         if (!updated || updated.status !== "ready") return;
         return renderExerciseBody(updated);
@@ -446,70 +471,11 @@
       toolbar.append(el("span", { style: "font-family:var(--mono);font-size:.78rem;color:var(--ink-faint);letter-spacing:.04em" },
         hasTimings ? "✓ audio-sync aan" : "geen audio-sync"));
 
-      // --- Hercontroleer transcript op fouten ---
-      const recheckBtn = el("button", { class: "subtle", style: "font-size:.82rem;padding:.35rem .8rem;min-height:auto;margin-left:auto", onClick: async () => {
-        if (!confirm("Grondige check op spelling en gebruik met gpt-5.5? Dit kost ongeveer een paar cent.")) return;
-        recheckBtn.disabled = true;
-        const old = recheckBtn.textContent;
-        recheckBtn.textContent = "bezig…";
-        status.innerHTML = '<span class="ai-loading">grondige check…</span>';
-        try {
-          const [sp, us] = await Promise.all([
-            window.AI.validateDutchSpelling(ex.script || ""),
-            window.AI.validateDutchUsage(ex.script || ""),
-          ]);
-          const allFixes = [...(sp || []), ...(us || [])];
-          if (!allFixes.length) {
-            status.innerHTML = '<span style="color:var(--groen)">✓ geen fouten gevonden</span>';
-            return;
-          }
-          // Preview + bevestig
-          const preview = allFixes.map((f) => "  • " + f.original + " → " + f.fix).join("\n");
-          if (!confirm(allFixes.length + " mogelijke fouten gevonden:\n\n" + preview + "\n\nToepassen? Audio en sync worden gewist en moeten opnieuw worden gegenereerd.")) {
-            status.innerHTML = '<span style="color:var(--ink-faint)">geannuleerd · ' + allFixes.length + ' fouten klaar om toe te passen</span>';
-            return;
-          }
-          // Apply fixes naar script + vocab + questions
-          const apply = window.AI.applySpellingFixes;
-          const cur = window.ListeningStore.get(ex.id);
-          const newScript = apply(cur.script || "", allFixes);
-          const newVocab = (cur.vocab || []).map((v) => ({
-            ...v,
-            dutch: apply(v.dutch || "", allFixes),
-            note:  apply(v.note  || "", allFixes),
-          }));
-          const newQuestions = (cur.questions || []).map((q) => ({
-            ...q,
-            q: apply(q.q || "", allFixes),
-            options: (q.options || []).map((o) => apply(o, allFixes)),
-            explanation: q.explanation ? {
-              nl: apply(q.explanation.nl || "", allFixes),
-              en: q.explanation.en || "",
-            } : q.explanation,
-          }));
-          // Verouderd audio + sync: wissen zodat speler "Genereer audio" toont
-          window.ListeningStore.update(ex.id, {
-            script: newScript,
-            vocab: newVocab,
-            questions: newQuestions,
-            audioKey: null,
-            wordTimings: null,
-            sttText: null,
-          });
-          if (cur.audioKey && window.BlobStore) {
-            window.BlobStore.remove(cur.audioKey).catch(() => {});
-          }
-          status.innerHTML = '<span style="color:var(--groen)">✓ ' + allFixes.length + ' fixes toegepast · audio gewist</span>';
-          alert("Klaar. Het transcript is bijgewerkt. Klik op 'Genereer audio' (bij de speler) om audio + sync opnieuw te maken.");
-          refresh();
-        } catch (err) {
-          status.innerHTML = '<span class="ai-error">' + escapeHTML(err.message) + '</span>';
-        } finally {
-          recheckBtn.disabled = false;
-          recheckBtn.textContent = old;
-        }
-      } }, "🔎 Hercontroleer");
-      toolbar.append(recheckBtn);
+      // --- Verbeter transcript (open improve modal) ---
+      const improveBtn = el("button", { style: "font-size:.82rem;padding:.35rem .9rem;min-height:auto;margin-left:auto", onClick: () => {
+        openImproveModal(ex, { wipeBuild: true });
+      } }, "✎ Verbeter transcript");
+      toolbar.append(improveBtn);
 
       if (!hasTimings && ex.audioKey) {
         const syncBtn = el("button", { class: "subtle", style: "font-size:.82rem;padding:.35rem .8rem;min-height:auto", onClick: async () => {
@@ -875,6 +841,131 @@
       return v[n];
     }
 
+    /* ---- Improve transcript modal ----
+     * Mode A: paste a corrected version of the whole script → save verbatim.
+     * Mode B: give an instruction like "vervang fiets door auto" → AI revises.
+     * Either way, the modified script gets re-cleaned (spelling + usage)
+     * and the exercise is moved back to status `script_ready` so the user
+     * can review the result.
+     *
+     * `wipeBuild` should be true when called from an already-built exercise
+     * (status=ready). It clears audio + timings + questions + vocab + grammar
+     * so phase 2 will rebuild them against the new script.
+     */
+    function openImproveModal(ex, opts = {}) {
+      const wipeBuild = !!opts.wipeBuild;
+      const overlay = el("div", { class: "hw-overlay" });
+      const modal = el("div", { class: "hw-modal improve-modal" });
+      overlay.append(modal); document.body.append(overlay);
+      function close() { overlay.remove(); }
+
+      modal.append(el("div", { class: "hw-head" },
+        el("h3", null, "Transcript verbeteren"),
+        el("button", { class: "hw-close", onClick: close }, "✕"),
+      ));
+
+      let mode = "paste";
+      const body = el("div", { class: "improve-body" });
+      const tabBar = el("div", { class: "improve-tabs" });
+      const textarea = el("textarea", {
+        class: "improve-textarea",
+        rows: 16,
+        spellcheck: "false",
+        placeholder: "",
+      });
+      const hint = el("p", { class: "improve-hint" });
+      const status = el("p", { class: "stat-note", style: "min-height:1.2em;margin:.4rem 0 0" });
+
+      function paintTabs() {
+        tabBar.innerHTML = "";
+        [
+          { key: "paste", label: "Plak gecorrigeerde tekst" },
+          { key: "prompt", label: "Beschrijf wat moet wijzigen" },
+        ].forEach((t) => {
+          tabBar.append(el("button", {
+            class: "improve-tab" + (mode === t.key ? " active" : ""),
+            onClick: () => { mode = t.key; paintTabs(); paintHint(); },
+          }, t.label));
+        });
+      }
+      function paintHint() {
+        if (mode === "paste") {
+          textarea.placeholder = "Plak hier de volledig gecorrigeerde versie van het transcript. Wij gebruiken precies wat je hier zet.";
+          textarea.value = ex.script || "";
+          hint.textContent = "We voeren daarna nog automatisch een spelling- en grammaticacontrole uit als veiligheidsnet.";
+        } else {
+          textarea.placeholder = "Bijvoorbeeld: 'vervang fiets door auto', 'maak de derde alinea formeler', 'spelling van Antwerpse straatnamen nakijken', …";
+          textarea.value = "";
+          hint.textContent = "De AI past je instructie toe op het bestaande transcript; structuur en lengte blijven gelijk.";
+        }
+      }
+      paintTabs();
+      paintHint();
+
+      body.append(
+        el("p", { class: "stat-note", style: "margin:0 0 .6rem" },
+          wipeBuild
+            ? "Audio, sync, vragen en woordenschat worden opnieuw gemaakt nadat je het nieuwe transcript goedkeurt."
+            : "Na het verbeteren landt het transcript opnieuw in de goedkeuringsstap."),
+        tabBar,
+        textarea,
+        hint,
+        status,
+      );
+      modal.append(body);
+
+      const applyBtn = el("button", { onClick: () => apply() }, "✓ Toepassen");
+      modal.append(el("div", { class: "hw-foot" },
+        el("button", { class: "subtle", onClick: close }, "Annuleer"),
+        applyBtn,
+      ));
+
+      async function apply() {
+        const input = textarea.value.trim();
+        if (!input) { status.innerHTML = '<span class="ai-error">Tekst is leeg.</span>'; return; }
+        applyBtn.disabled = true;
+        const orig = applyBtn.textContent;
+        try {
+          let nextScript;
+          if (mode === "paste") {
+            nextScript = input;
+          } else {
+            status.innerHTML = '<span class="ai-loading">transcript herschrijven…</span>';
+            const res = await window.AI.reviseListeningScript({
+              originalScript: ex.script || "",
+              instruction: input,
+              level: ex.level || "B2",
+            });
+            nextScript = (res && res.script) ? res.script : (ex.script || "");
+          }
+          // Wipe downstream artefacts that are tied to the script.
+          const wipe = wipeBuild
+            ? { questions: [], vocab: [], grammar: [], audioKey: null, wordTimings: null, sttText: null, userAnswers: [], pushedToCorpus: false }
+            : {};
+          // Drop old blob from storage so the regen path takes over cleanly.
+          if (wipeBuild && ex.audioKey && window.BlobStore) {
+            window.BlobStore.remove(ex.audioKey).catch(() => {});
+          }
+          window.ListeningStore.update(ex.id, Object.assign({ script: nextScript, status: "script_pending", error: null }, wipe));
+
+          // Re-run auto cleanup. We render the status updates into the
+          // modal so the user can see what's happening before the modal closes.
+          status.innerHTML = '<span class="ai-loading">controles uitvoeren…</span>';
+          const stepsHost = el("div", { class: "gen-state", style: "background:var(--paper-2);border:1px dashed var(--rule);border-radius:4px;padding:.7rem 1rem;margin-top:.6rem;text-align:left" });
+          body.append(stepsHost);
+          await autoCleanScript(ex.id, stepsHost, nextScript);
+          window.ListeningStore.update(ex.id, { status: "script_ready" });
+          close();
+          activeEx = window.ListeningStore.get(ex.id);
+          refresh();
+        } catch (err) {
+          status.innerHTML = '<span class="ai-error">' + escapeHTML(err.message) + '</span>';
+          applyBtn.disabled = false;
+          applyBtn.textContent = orig;
+        }
+      }
+    }
+
     /* ---- Corpus import modal ---- */
     function openCorpusImport(ex) {
       const overlay = el("div", { class: "hw-overlay" });
@@ -983,93 +1074,113 @@
       }
     }
 
-    /* ---- Generation flow ---- */
-    async function runGeneration(exId, host) {
-      function step(html) { host.innerHTML += '<p class="gen-step">' + html + '</p>'; }
-      function setActive(html) { host.innerHTML += '<p class="gen-step"><span class="ai-loading">' + html + '</span></p>'; }
-      host.innerHTML = '<h3 style="font-family:var(--serif);font-weight:600;margin:0 0 .5rem">Genereren</h3><p class="stat-note">Dit duurt 30-90 seconden.</p>';
-      window.ListeningStore.update(exId, { status: "generating" });
+    /* ---- Generation flow — split into two phases ----
+     *  Phase 1 (runScriptPhase): write script, auto-clean it, hand off.
+     *    User then reads, approves OR clicks Verbeter.
+     *  Phase 2 (runBuildPhase): extract questions/vocab/grammar from the
+     *    approved script, generate audio, align word timings.
+     */
+
+    function setActiveStep(host, html) {
+      host.innerHTML += '<p class="gen-step"><span class="ai-loading">' + html + '</span></p>';
+    }
+    function markStepResult(host, fixes, kind) {
+      const steps = host.querySelectorAll(".gen-step");
+      if (!steps.length) return;
+      const last = steps[steps.length - 1];
+      if (fixes.length) {
+        const sample = fixes.slice(0, 3).map((f) => `<em>${escapeHTML(f.original)}</em>→${escapeHTML(f.fix)}`).join(" · ");
+        last.innerHTML = '<span style="color:var(--groen)">✓ ' + fixes.length + ' ' + kind + (fixes.length === 1 ? "" : "en") + ' opgeruimd</span> ' +
+                         '<span style="color:var(--ink-faint);font-size:.8rem">— ' + sample + (fixes.length > 3 ? " …" : "") + '</span>';
+      } else {
+        last.innerHTML = '<span style="color:var(--ink-faint)">— geen ' + kind + 'en gevonden</span>';
+      }
+    }
+    function markStepDone(host, html) {
+      const steps = host.querySelectorAll(".gen-step");
+      if (steps.length) steps[steps.length - 1].innerHTML = html;
+    }
+
+    /* Run auto spelling + usage validation on a script and persist the
+     * cleaned text. Returns the cleaned script. Used by phase 1, by the
+     * Improve flow, and by anything else that mutates the script.
+     */
+    async function autoCleanScript(exId, host, script) {
+      setActiveStep(host, "Spelling controleren (gpt-5)");
+      let spellingFixes = [];
+      try { spellingFixes = await window.AI.validateDutchSpelling(script || ""); }
+      catch (e) { /* non-fatal */ }
+      let cleaned = window.AI.applySpellingFixes(script || "", spellingFixes);
+      markStepResult(host, spellingFixes, "spelfout");
+
+      setActiveStep(host, "Grammatica & woordkeuze controleren (gpt-5)");
+      let usageFixes = [];
+      try { usageFixes = await window.AI.validateDutchUsage(cleaned); }
+      catch (e) { /* non-fatal */ }
+      cleaned = window.AI.applySpellingFixes(cleaned, usageFixes);
+      markStepResult(host, usageFixes, "usage-fout");
+
+      window.ListeningStore.update(exId, { script: cleaned });
+      return cleaned;
+    }
+
+    /* Phase 1 — script + auto-cleanup, then awaiting user approval. */
+    async function runScriptPhase(exId, host) {
+      host.innerHTML = '<h3 style="font-family:var(--serif);font-weight:600;margin:0 0 .5rem">Transcript schrijven</h3><p class="stat-note">Stap 1 · de AI schrijft het transcript. Daarna lees jij het door.</p>';
+      window.ListeningStore.update(exId, { status: "script_pending", error: null });
       let ex = window.ListeningStore.get(exId);
 
-      setActive("Script + vragen + woordenschat schrijven (" + (ex.level || "B2") + ")");
+      setActiveStep(host, "Transcript schrijven (" + (ex.level || "B2") + ")");
       let content;
       try {
-        content = await window.AI.generateListeningExercise({ topic: ex.topic, level: ex.level || "B2" });
+        content = await window.AI.generateListeningScript({ topic: ex.topic, level: ex.level || "B2" });
       } catch (err) {
         host.innerHTML += '<p class="ai-error">' + escapeHTML(err.message) + '</p>';
         window.ListeningStore.update(exId, { status: "error", error: err.message });
         return;
       }
-      const steps = host.querySelectorAll(".gen-step");
-      if (steps.length) steps[steps.length - 1].innerHTML = '<span style="color:var(--groen)">✓ Script + ' + ((content.vocab || []).length) + ' vocab + ' + ((content.questions || []).length) + ' vragen</span>';
-
-      // ---- Two self-critique passes: spelling, then grammar/usage ----
-      // Must happen BEFORE audio + before word-timing transcription so
-      // TTS reads the cleaned text and karaoke sync matches.
-      // Both passes use gpt-5 regardless of user's chosen chat model.
-
-      // Helper: apply a fix-array to script + vocab + questions in one go.
-      function applyToAll(fixes) {
-        if (!fixes.length) return;
-        content.script = window.AI.applySpellingFixes(content.script, fixes);
-        content.vocab = (content.vocab || []).map((v) => ({
-          ...v,
-          dutch: window.AI.applySpellingFixes(v.dutch || "", fixes),
-          note: window.AI.applySpellingFixes(v.note || "", fixes),
-        }));
-        content.questions = (content.questions || []).map((q) => ({
-          ...q,
-          q: window.AI.applySpellingFixes(q.q || "", fixes),
-          options: (q.options || []).map((o) => window.AI.applySpellingFixes(o, fixes)),
-          explanation: q.explanation ? {
-            nl: window.AI.applySpellingFixes(q.explanation.nl || "", fixes),
-            en: q.explanation.en || "",
-          } : q.explanation,
-        }));
-      }
-      function markCheckResult(fixes, kind) {
-        const steps = host.querySelectorAll(".gen-step");
-        if (!steps.length) return;
-        const last = steps[steps.length - 1];
-        if (fixes.length) {
-          const sample = fixes.slice(0, 3).map((f) => `<em>${escapeHTML(f.original)}</em>→${escapeHTML(f.fix)}`).join(" · ");
-          last.innerHTML = '<span style="color:var(--groen)">✓ ' + fixes.length + ' ' + kind + (fixes.length === 1 ? "" : "en") + ' opgeruimd</span> ' +
-                           '<span style="color:var(--ink-faint);font-size:.8rem">— ' + sample + (fixes.length > 3 ? " …" : "") + '</span>';
-        } else {
-          last.innerHTML = '<span style="color:var(--ink-faint)">— geen ' + kind + 'en gevonden</span>';
-        }
-      }
-
-      // Pass 1: spelling (non-existent words, typos)
-      setActive("Spelling controleren (gpt-5)");
-      let spellingFixes = [];
-      try { spellingFixes = await window.AI.validateDutchSpelling(content.script || ""); }
-      catch (e) { /* non-fatal */ }
-      applyToAll(spellingFixes);
-      markCheckResult(spellingFixes, "spelfout");
-
-      // Pass 2: grammar / usage (declension, wrong-word, capitalization, particles)
-      setActive("Grammatica & woordkeuze controleren (gpt-5)");
-      let usageFixes = [];
-      try { usageFixes = await window.AI.validateDutchUsage(content.script || ""); }
-      catch (e) { /* non-fatal */ }
-      applyToAll(usageFixes);
-      markCheckResult(usageFixes, "usage-fout");
+      markStepDone(host, '<span style="color:var(--groen)">✓ Transcript geschreven (' + (content.script || "").split(/\s+/).filter(Boolean).length + ' woorden)</span>');
 
       const title = content.title && content.title.trim() ? content.title.trim() : ex.title;
       window.ListeningStore.update(exId, {
         title, autoTitled: true,
         script: content.script || "",
+      });
+
+      await autoCleanScript(exId, host, content.script || "");
+      window.ListeningStore.update(exId, { status: "script_ready" });
+    }
+
+    /* Phase 2 — only runs after the user approves the script. */
+    async function runBuildPhase(exId, host) {
+      host.innerHTML = '<h3 style="font-family:var(--serif);font-weight:600;margin:0 0 .5rem">Bouwen</h3><p class="stat-note">Stap 2 · vragen, woordenschat, audio en sync.</p>';
+      window.ListeningStore.update(exId, { status: "building", error: null });
+      let ex = window.ListeningStore.get(exId);
+
+      // Extract questions + vocab + grammar from final script
+      setActiveStep(host, "Vragen + woordenschat + grammatica afleiden");
+      let content;
+      try {
+        content = await window.AI.extractListeningContent({ script: ex.script || "", level: ex.level || "B2" });
+      } catch (err) {
+        host.innerHTML += '<p class="ai-error">' + escapeHTML(err.message) + '</p>';
+        window.ListeningStore.update(exId, { status: "error", error: err.message });
+        return;
+      }
+      markStepDone(host, '<span style="color:var(--groen)">✓ ' + (content.vocab || []).length + ' vocab + ' + (content.questions || []).length + ' vragen + ' + (content.grammar || []).length + ' grammatica-notities</span>');
+      window.ListeningStore.update(exId, {
         questions: content.questions || [],
         vocab: content.vocab || [],
         grammar: content.grammar || [],
+        userAnswers: [],
       });
 
+      // Audio
       const provider = window.Store.state.settings.ttsProvider || "openai";
-      setActive("Audio inspreken (" + (provider === "azure" ? "Azure · Vlaams" : "OpenAI") + ")");
+      setActiveStep(host, "Audio inspreken (" + (provider === "azure" ? "Azure · Vlaams" : "OpenAI") + ")");
       let blob;
       try {
-        blob = await window.AI.generateSpeech(content.script);
+        blob = await window.AI.generateSpeech(ex.script);
       } catch (err) {
         host.innerHTML += '<p class="ai-error">' + escapeHTML(err.message) + '</p>';
         window.ListeningStore.update(exId, { status: "error", error: err.message });
@@ -1077,30 +1188,53 @@
       }
       const audioKey = "listening-" + exId;
       if (window.BlobStore) await window.BlobStore.put(audioKey, blob);
-      const steps2 = host.querySelectorAll(".gen-step");
-      if (steps2.length) steps2[steps2.length - 1].innerHTML = '<span style="color:var(--groen)">✓ Audio opgeslagen</span>';
-
-      window.ListeningStore.update(exId, { audioKey, userAnswers: [] });
+      markStepDone(host, '<span style="color:var(--groen)">✓ Audio opgeslagen</span>');
+      window.ListeningStore.update(exId, { audioKey });
 
       // Word-level alignment for karaoke-style transcript highlighting
-      setActive("Audio synchroniseren (woord-tijdstempels)");
+      setActiveStep(host, "Audio synchroniseren (woord-tijdstempels)");
       try {
         const tr = await window.AI.transcribeWithTimestamps(blob, { language: "nl" });
         if (tr.words && tr.words.length) {
           window.ListeningStore.update(exId, { wordTimings: tr.words, sttText: tr.text });
-          const steps3 = host.querySelectorAll(".gen-step");
-          if (steps3.length) steps3[steps3.length - 1].innerHTML = '<span style="color:var(--groen)">✓ ' + tr.words.length + ' woorden gesynchroniseerd</span>';
+          markStepDone(host, '<span style="color:var(--groen)">✓ ' + tr.words.length + ' woorden gesynchroniseerd</span>');
         } else {
-          const steps3 = host.querySelectorAll(".gen-step");
-          if (steps3.length) steps3[steps3.length - 1].innerHTML = '<span style="color:var(--ink-faint)">— sync overgeslagen, geen woorden terug</span>';
+          markStepDone(host, '<span style="color:var(--ink-faint)">— sync overgeslagen, geen woorden terug</span>');
         }
       } catch (e) {
-        // Sync is non-fatal — exercise is still usable without it
-        const steps3 = host.querySelectorAll(".gen-step");
-        if (steps3.length) steps3[steps3.length - 1].innerHTML = '<span style="color:var(--ink-faint)">— sync overgeslagen (' + escapeHTML(e.message) + ')</span>';
+        markStepDone(host, '<span style="color:var(--ink-faint)">— sync overgeslagen (' + escapeHTML(e.message) + ')</span>');
       }
 
       window.ListeningStore.update(exId, { status: "ready" });
+    }
+
+    /* ---- Script approval card (status = script_ready) ---- */
+    function renderScriptApproval(ex) {
+      const wrap = el("div", { class: "script-approval" });
+      wrap.append(el("div", { class: "script-approval-head" },
+        el("span", { class: "script-approval-step" }, "STAP 1 VAN 2"),
+        el("h3", null, "Transcript klaar — controleer en bevestig"),
+        el("p", { class: "stat-note" }, "Lees het transcript door. Bij ‘Goedkeuren’ gaan we verder met audio, vragen en woordenschat. Bij ‘Verbeter’ open je een venster om correcties of instructies te geven."),
+      ));
+
+      const script = el("article", {
+        class: "script-approval-body",
+      });
+      script.textContent = ex.script || "";
+      wrap.append(script);
+
+      const actions = el("div", { class: "script-approval-actions" },
+        el("button", { onClick: () => approve(ex.id) }, "✓ Goedkeuren · ga verder"),
+        el("button", { class: "subtle", onClick: () => openImproveModal(ex, { wipeBuild: false }) }, "✎ Verbeter transcript"),
+      );
+      wrap.append(actions);
+      return wrap;
+    }
+
+    function approve(exId) {
+      window.ListeningStore.update(exId, { status: "building" });
+      activeEx = window.ListeningStore.get(exId);
+      refresh();
     }
 
     refresh();

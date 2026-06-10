@@ -1,0 +1,189 @@
+{
+  "_meta": {
+    "purpose": "Irregular verb conjugations for the 20 most common French irregular verbs. Covers présent / imparfait / futur simple / conditionnel présent / subjonctif présent + the past participle + the perfect-tense auxiliary. Composite tenses (passé composé, plus-que-parfait, conditionnel passé, futur proche, subjonctif passé) are built at runtime from these primitives + the regular rules engine.",
+    "tenses": ["present", "imparfait", "futur", "conditionnel", "subjonctif_present"],
+    "persons": ["je", "tu", "il", "nous", "vous", "ils"]
+  },
+  "verbs": {
+    "être": {
+      "auxiliary": "avoir",
+      "past_participle": "été",
+      "present":     { "je": "suis",   "tu": "es",     "il": "est",    "nous": "sommes",  "vous": "êtes",   "ils": "sont"    },
+      "imparfait":   { "je": "étais",  "tu": "étais",  "il": "était",  "nous": "étions",  "vous": "étiez",  "ils": "étaient" },
+      "futur":       { "je": "serai",  "tu": "seras",  "il": "sera",   "nous": "serons",  "vous": "serez",  "ils": "seront"  },
+      "conditionnel":{ "je": "serais", "tu": "serais", "il": "serait", "nous": "serions", "vous": "seriez", "ils": "seraient"},
+      "subjonctif_present": { "je": "sois", "tu": "sois", "il": "soit", "nous": "soyons", "vous": "soyez", "ils": "soient" }
+    },
+    "avoir": {
+      "auxiliary": "avoir",
+      "past_participle": "eu",
+      "present":     { "je": "ai",     "tu": "as",     "il": "a",      "nous": "avons",   "vous": "avez",   "ils": "ont"     },
+      "imparfait":   { "je": "avais",  "tu": "avais",  "il": "avait",  "nous": "avions",  "vous": "aviez",  "ils": "avaient" },
+      "futur":       { "je": "aurai",  "tu": "auras",  "il": "aura",   "nous": "aurons",  "vous": "aurez",  "ils": "auront"  },
+      "conditionnel":{ "je": "aurais", "tu": "aurais", "il": "aurait", "nous": "aurions", "vous": "auriez", "ils": "auraient"},
+      "subjonctif_present": { "je": "aie", "tu": "aies", "il": "ait", "nous": "ayons", "vous": "ayez", "ils": "aient" }
+    },
+    "aller": {
+      "auxiliary": "être",
+      "past_participle": "allé",
+      "present":     { "je": "vais",   "tu": "vas",    "il": "va",     "nous": "allons",  "vous": "allez",  "ils": "vont"    },
+      "imparfait":   { "je": "allais", "tu": "allais", "il": "allait", "nous": "allions", "vous": "alliez", "ils": "allaient"},
+      "futur":       { "je": "irai",   "tu": "iras",   "il": "ira",    "nous": "irons",   "vous": "irez",   "ils": "iront"   },
+      "conditionnel":{ "je": "irais",  "tu": "irais",  "il": "irait",  "nous": "irions",  "vous": "iriez",  "ils": "iraient" },
+      "subjonctif_present": { "je": "aille", "tu": "ailles", "il": "aille", "nous": "allions", "vous": "alliez", "ils": "aillent" }
+    },
+    "faire": {
+      "auxiliary": "avoir",
+      "past_participle": "fait",
+      "present":     { "je": "fais",    "tu": "fais",    "il": "fait",    "nous": "faisons",   "vous": "faites",   "ils": "font"     },
+      "imparfait":   { "je": "faisais", "tu": "faisais", "il": "faisait", "nous": "faisions",  "vous": "faisiez",  "ils": "faisaient"},
+      "futur":       { "je": "ferai",   "tu": "feras",   "il": "fera",    "nous": "ferons",    "vous": "ferez",    "ils": "feront"   },
+      "conditionnel":{ "je": "ferais",  "tu": "ferais",  "il": "ferait",  "nous": "ferions",   "vous": "feriez",   "ils": "feraient" },
+      "subjonctif_present": { "je": "fasse", "tu": "fasses", "il": "fasse", "nous": "fassions", "vous": "fassiez", "ils": "fassent" }
+    },
+    "dire": {
+      "auxiliary": "avoir",
+      "past_participle": "dit",
+      "present":     { "je": "dis",    "tu": "dis",    "il": "dit",    "nous": "disons",   "vous": "dites",    "ils": "disent"   },
+      "imparfait":   { "je": "disais", "tu": "disais", "il": "disait", "nous": "disions",  "vous": "disiez",   "ils": "disaient" },
+      "futur":       { "je": "dirai",  "tu": "diras",  "il": "dira",   "nous": "dirons",   "vous": "direz",    "ils": "diront"   },
+      "conditionnel":{ "je": "dirais", "tu": "dirais", "il": "dirait", "nous": "dirions",  "vous": "diriez",   "ils": "diraient" },
+      "subjonctif_present": { "je": "dise", "tu": "dises", "il": "dise", "nous": "disions", "vous": "disiez", "ils": "disent" }
+    },
+    "voir": {
+      "auxiliary": "avoir",
+      "past_participle": "vu",
+      "present":     { "je": "vois",     "tu": "vois",     "il": "voit",     "nous": "voyons",    "vous": "voyez",    "ils": "voient"    },
+      "imparfait":   { "je": "voyais",   "tu": "voyais",   "il": "voyait",   "nous": "voyions",   "vous": "voyiez",   "ils": "voyaient"  },
+      "futur":       { "je": "verrai",   "tu": "verras",   "il": "verra",    "nous": "verrons",   "vous": "verrez",   "ils": "verront"   },
+      "conditionnel":{ "je": "verrais",  "tu": "verrais",  "il": "verrait",  "nous": "verrions",  "vous": "verriez",  "ils": "verraient" },
+      "subjonctif_present": { "je": "voie", "tu": "voies", "il": "voie", "nous": "voyions", "vous": "voyiez", "ils": "voient" }
+    },
+    "savoir": {
+      "auxiliary": "avoir",
+      "past_participle": "su",
+      "present":     { "je": "sais",    "tu": "sais",    "il": "sait",    "nous": "savons",   "vous": "savez",    "ils": "savent"   },
+      "imparfait":   { "je": "savais",  "tu": "savais",  "il": "savait",  "nous": "savions",  "vous": "saviez",   "ils": "savaient" },
+      "futur":       { "je": "saurai",  "tu": "sauras",  "il": "saura",   "nous": "saurons",  "vous": "saurez",   "ils": "sauront"  },
+      "conditionnel":{ "je": "saurais", "tu": "saurais", "il": "saurait", "nous": "saurions", "vous": "sauriez",  "ils": "sauraient"},
+      "subjonctif_present": { "je": "sache", "tu": "saches", "il": "sache", "nous": "sachions", "vous": "sachiez", "ils": "sachent" }
+    },
+    "pouvoir": {
+      "auxiliary": "avoir",
+      "past_participle": "pu",
+      "present":     { "je": "peux",     "tu": "peux",     "il": "peut",     "nous": "pouvons",  "vous": "pouvez",   "ils": "peuvent"   },
+      "imparfait":   { "je": "pouvais",  "tu": "pouvais",  "il": "pouvait",  "nous": "pouvions", "vous": "pouviez",  "ils": "pouvaient" },
+      "futur":       { "je": "pourrai",  "tu": "pourras",  "il": "pourra",   "nous": "pourrons", "vous": "pourrez",  "ils": "pourront"  },
+      "conditionnel":{ "je": "pourrais", "tu": "pourrais", "il": "pourrait", "nous": "pourrions","vous": "pourriez", "ils": "pourraient"},
+      "subjonctif_present": { "je": "puisse", "tu": "puisses", "il": "puisse", "nous": "puissions", "vous": "puissiez", "ils": "puissent" }
+    },
+    "vouloir": {
+      "auxiliary": "avoir",
+      "past_participle": "voulu",
+      "present":     { "je": "veux",     "tu": "veux",     "il": "veut",     "nous": "voulons",  "vous": "voulez",   "ils": "veulent"   },
+      "imparfait":   { "je": "voulais",  "tu": "voulais",  "il": "voulait",  "nous": "voulions", "vous": "vouliez",  "ils": "voulaient" },
+      "futur":       { "je": "voudrai",  "tu": "voudras",  "il": "voudra",   "nous": "voudrons", "vous": "voudrez",  "ils": "voudront"  },
+      "conditionnel":{ "je": "voudrais", "tu": "voudrais", "il": "voudrait", "nous": "voudrions","vous": "voudriez", "ils": "voudraient"},
+      "subjonctif_present": { "je": "veuille", "tu": "veuilles", "il": "veuille", "nous": "voulions", "vous": "vouliez", "ils": "veuillent" }
+    },
+    "devoir": {
+      "auxiliary": "avoir",
+      "past_participle": "dû",
+      "present":     { "je": "dois",    "tu": "dois",    "il": "doit",    "nous": "devons",   "vous": "devez",    "ils": "doivent"  },
+      "imparfait":   { "je": "devais",  "tu": "devais",  "il": "devait",  "nous": "devions",  "vous": "deviez",   "ils": "devaient" },
+      "futur":       { "je": "devrai",  "tu": "devras",  "il": "devra",   "nous": "devrons",  "vous": "devrez",   "ils": "devront"  },
+      "conditionnel":{ "je": "devrais", "tu": "devrais", "il": "devrait", "nous": "devrions", "vous": "devriez",  "ils": "devraient"},
+      "subjonctif_present": { "je": "doive", "tu": "doives", "il": "doive", "nous": "devions", "vous": "deviez", "ils": "doivent" }
+    },
+    "prendre": {
+      "auxiliary": "avoir",
+      "past_participle": "pris",
+      "present":     { "je": "prends",    "tu": "prends",    "il": "prend",    "nous": "prenons",   "vous": "prenez",    "ils": "prennent"   },
+      "imparfait":   { "je": "prenais",   "tu": "prenais",   "il": "prenait",  "nous": "prenions",  "vous": "preniez",   "ils": "prenaient"  },
+      "futur":       { "je": "prendrai",  "tu": "prendras",  "il": "prendra",  "nous": "prendrons", "vous": "prendrez",  "ils": "prendront"  },
+      "conditionnel":{ "je": "prendrais", "tu": "prendrais", "il": "prendrait","nous": "prendrions","vous": "prendriez", "ils": "prendraient"},
+      "subjonctif_present": { "je": "prenne", "tu": "prennes", "il": "prenne", "nous": "prenions", "vous": "preniez", "ils": "prennent" }
+    },
+    "comprendre": {
+      "auxiliary": "avoir",
+      "past_participle": "compris",
+      "present":     { "je": "comprends",    "tu": "comprends",    "il": "comprend",    "nous": "comprenons",   "vous": "comprenez",    "ils": "comprennent"   },
+      "imparfait":   { "je": "comprenais",   "tu": "comprenais",   "il": "comprenait",  "nous": "comprenions",  "vous": "compreniez",   "ils": "comprenaient"  },
+      "futur":       { "je": "comprendrai",  "tu": "comprendras",  "il": "comprendra",  "nous": "comprendrons", "vous": "comprendrez",  "ils": "comprendront"  },
+      "conditionnel":{ "je": "comprendrais", "tu": "comprendrais", "il": "comprendrait","nous": "comprendrions","vous": "comprendriez", "ils": "comprendraient"},
+      "subjonctif_present": { "je": "comprenne", "tu": "comprennes", "il": "comprenne", "nous": "comprenions", "vous": "compreniez", "ils": "comprennent" }
+    },
+    "mettre": {
+      "auxiliary": "avoir",
+      "past_participle": "mis",
+      "present":     { "je": "mets",     "tu": "mets",     "il": "met",     "nous": "mettons",   "vous": "mettez",    "ils": "mettent"   },
+      "imparfait":   { "je": "mettais",  "tu": "mettais",  "il": "mettait", "nous": "mettions",  "vous": "mettiez",   "ils": "mettaient" },
+      "futur":       { "je": "mettrai",  "tu": "mettras",  "il": "mettra",  "nous": "mettrons",  "vous": "mettrez",   "ils": "mettront"  },
+      "conditionnel":{ "je": "mettrais", "tu": "mettrais", "il": "mettrait","nous": "mettrions", "vous": "mettriez",  "ils": "mettraient"},
+      "subjonctif_present": { "je": "mette", "tu": "mettes", "il": "mette", "nous": "mettions", "vous": "mettiez", "ils": "mettent" }
+    },
+    "boire": {
+      "auxiliary": "avoir",
+      "past_participle": "bu",
+      "present":     { "je": "bois",    "tu": "bois",    "il": "boit",    "nous": "buvons",   "vous": "buvez",    "ils": "boivent"  },
+      "imparfait":   { "je": "buvais",  "tu": "buvais",  "il": "buvait",  "nous": "buvions",  "vous": "buviez",   "ils": "buvaient" },
+      "futur":       { "je": "boirai",  "tu": "boiras",  "il": "boira",   "nous": "boirons",  "vous": "boirez",   "ils": "boiront"  },
+      "conditionnel":{ "je": "boirais", "tu": "boirais", "il": "boirait", "nous": "boirions", "vous": "boiriez",  "ils": "boiraient"},
+      "subjonctif_present": { "je": "boive", "tu": "boives", "il": "boive", "nous": "buvions", "vous": "buviez", "ils": "boivent" }
+    },
+    "lire": {
+      "auxiliary": "avoir",
+      "past_participle": "lu",
+      "present":     { "je": "lis",    "tu": "lis",    "il": "lit",    "nous": "lisons",   "vous": "lisez",    "ils": "lisent"   },
+      "imparfait":   { "je": "lisais", "tu": "lisais", "il": "lisait", "nous": "lisions",  "vous": "lisiez",   "ils": "lisaient" },
+      "futur":       { "je": "lirai",  "tu": "liras",  "il": "lira",   "nous": "lirons",   "vous": "lirez",    "ils": "liront"   },
+      "conditionnel":{ "je": "lirais", "tu": "lirais", "il": "lirait", "nous": "lirions",  "vous": "liriez",   "ils": "liraient" },
+      "subjonctif_present": { "je": "lise", "tu": "lises", "il": "lise", "nous": "lisions", "vous": "lisiez", "ils": "lisent" }
+    },
+    "écrire": {
+      "auxiliary": "avoir",
+      "past_participle": "écrit",
+      "present":     { "je": "écris",    "tu": "écris",    "il": "écrit",    "nous": "écrivons",  "vous": "écrivez",   "ils": "écrivent"   },
+      "imparfait":   { "je": "écrivais", "tu": "écrivais", "il": "écrivait", "nous": "écrivions", "vous": "écriviez",  "ils": "écrivaient" },
+      "futur":       { "je": "écrirai",  "tu": "écriras",  "il": "écrira",   "nous": "écrirons",  "vous": "écrirez",   "ils": "écriront"   },
+      "conditionnel":{ "je": "écrirais", "tu": "écrirais", "il": "écrirait", "nous": "écririons", "vous": "écririez",  "ils": "écriraient" },
+      "subjonctif_present": { "je": "écrive", "tu": "écrives", "il": "écrive", "nous": "écrivions", "vous": "écriviez", "ils": "écrivent" }
+    },
+    "partir": {
+      "auxiliary": "être",
+      "past_participle": "parti",
+      "present":     { "je": "pars",    "tu": "pars",    "il": "part",    "nous": "partons",   "vous": "partez",    "ils": "partent"   },
+      "imparfait":   { "je": "partais", "tu": "partais", "il": "partait", "nous": "partions",  "vous": "partiez",   "ils": "partaient" },
+      "futur":       { "je": "partirai","tu": "partiras","il": "partira", "nous": "partirons", "vous": "partirez",  "ils": "partiront" },
+      "conditionnel":{ "je": "partirais","tu": "partirais","il": "partirait","nous": "partirions","vous": "partiriez","ils": "partiraient"},
+      "subjonctif_present": { "je": "parte", "tu": "partes", "il": "parte", "nous": "partions", "vous": "partiez", "ils": "partent" }
+    },
+    "sortir": {
+      "auxiliary": "être",
+      "past_participle": "sorti",
+      "present":     { "je": "sors",    "tu": "sors",    "il": "sort",    "nous": "sortons",   "vous": "sortez",    "ils": "sortent"   },
+      "imparfait":   { "je": "sortais", "tu": "sortais", "il": "sortait", "nous": "sortions",  "vous": "sortiez",   "ils": "sortaient" },
+      "futur":       { "je": "sortirai","tu": "sortiras","il": "sortira", "nous": "sortirons", "vous": "sortirez",  "ils": "sortiront" },
+      "conditionnel":{ "je": "sortirais","tu": "sortirais","il": "sortirait","nous": "sortirions","vous": "sortiriez","ils": "sortiraient"},
+      "subjonctif_present": { "je": "sorte", "tu": "sortes", "il": "sorte", "nous": "sortions", "vous": "sortiez", "ils": "sortent" }
+    },
+    "dormir": {
+      "auxiliary": "avoir",
+      "past_participle": "dormi",
+      "present":     { "je": "dors",    "tu": "dors",    "il": "dort",    "nous": "dormons",    "vous": "dormez",     "ils": "dorment"   },
+      "imparfait":   { "je": "dormais", "tu": "dormais", "il": "dormait", "nous": "dormions",   "vous": "dormiez",    "ils": "dormaient" },
+      "futur":       { "je": "dormirai","tu": "dormiras","il": "dormira", "nous": "dormirons",  "vous": "dormirez",   "ils": "dormiront" },
+      "conditionnel":{ "je": "dormirais","tu": "dormirais","il": "dormirait","nous": "dormirions","vous": "dormiriez","ils": "dormiraient"},
+      "subjonctif_present": { "je": "dorme", "tu": "dormes", "il": "dorme", "nous": "dormions", "vous": "dormiez", "ils": "dorment" }
+    },
+    "venir": {
+      "auxiliary": "être",
+      "past_participle": "venu",
+      "present":     { "je": "viens",     "tu": "viens",     "il": "vient",     "nous": "venons",    "vous": "venez",     "ils": "viennent"   },
+      "imparfait":   { "je": "venais",    "tu": "venais",    "il": "venait",    "nous": "venions",   "vous": "veniez",    "ils": "venaient"   },
+      "futur":       { "je": "viendrai",  "tu": "viendras",  "il": "viendra",   "nous": "viendrons", "vous": "viendrez",  "ils": "viendront"  },
+      "conditionnel":{ "je": "viendrais", "tu": "viendrais", "il": "viendrait", "nous": "viendrions","vous": "viendriez", "ils": "viendraient"},
+      "subjonctif_present": { "je": "vienne", "tu": "viennes", "il": "vienne", "nous": "venions", "vous": "veniez", "ils": "viennent" }
+    }
+  }
+}

@@ -1,0 +1,489 @@
+{
+  "_meta": {
+    "purpose": "Grammar curriculum tree A1 → C1. Each topic has a short French lesson body (markdown-ish) and 5 cloze drills. The grammaire view renders body + embedded drill runner; the SRS-like `grammar_progress` table tracks attempts.",
+    "structure": "topic → {id, level, title, summary, body, items}. Item: {text (with ___ blank), answer, alts (lenient variants), hint}.",
+    "mastery": "seen ≥ 20 attempts AND correct/seen ≥ 0.8 → grammar_progress.mastered_at is stamped."
+  },
+  "topics": [
+    {
+      "id": "a1-articles-definis",
+      "level": "A1",
+      "title": "Le / la / l' / les",
+      "summary": "Désigne un nom précis ou déjà connu.",
+      "body": "## Les articles définis\n\n**Le** (masculin), **la** (féminin), **les** (pluriel). Devant une voyelle ou un *h* muet, on contracte en **l'**.\n\n- *le* chat, *le* livre\n- *la* maison, *la* fille\n- *l'*ami, *l'*enfant, *l'*hôtel\n- *les* enfants, *les* voitures\n\n**Quand l'utiliser ?**\n- Pour un nom précis : *le livre que tu m'as donné*.\n- Pour une généralité : *J'aime le café* (= le café en général).\n- Avec les pays : *la France*, *le Canada*, *les États-Unis*.",
+      "items": [
+        {"text": "Je vois ___ chat dans le jardin.", "answer": "le", "hint": "chat = masculin singulier"},
+        {"text": "___ maison est très grande.", "answer": "La", "hint": "maison = féminin"},
+        {"text": "___ enfants jouent dehors.", "answer": "Les", "hint": "pluriel"},
+        {"text": "Je connais ___ ami de Pierre.", "answer": "l'", "alts": ["l’"], "hint": "ami commence par une voyelle"},
+        {"text": "J'aime ___ café le matin.", "answer": "le", "hint": "généralité — masculin singulier"}
+      ]
+    },
+    {
+      "id": "a1-articles-indefinis",
+      "level": "A1",
+      "title": "Un / une / des",
+      "summary": "Désigne un nom indéterminé ou nouveau.",
+      "body": "## Les articles indéfinis\n\n**Un** (masculin), **une** (féminin), **des** (pluriel des deux genres).\n\n- *un* chat, *un* problème\n- *une* idée, *une* fille\n- *des* amis, *des* livres\n\n**Attention** : à la forme négative, *un / une / des* deviennent **de** (ou **d'** devant voyelle) : *Je n'ai pas **de** voiture.*",
+      "items": [
+        {"text": "J'ai ___ idée intéressante.", "answer": "une", "hint": "idée = féminin"},
+        {"text": "Il y a ___ problème ici.", "answer": "un", "hint": "problème = masculin"},
+        {"text": "Nous voulons ___ enfants.", "answer": "des", "hint": "pluriel"},
+        {"text": "Je n'ai pas ___ frère.", "answer": "de", "alts": ["d'"], "hint": "négation : un → de"},
+        {"text": "Tu as ___ stylo ?", "answer": "un", "hint": "stylo = masculin"}
+      ]
+    },
+    {
+      "id": "a1-etre-avoir",
+      "level": "A1",
+      "title": "Être & avoir au présent",
+      "summary": "Les deux verbes les plus fréquents — à mémoriser sans rechigner.",
+      "body": "## Être (to be)\n\n*je suis · tu es · il/elle est · nous sommes · vous êtes · ils/elles sont*\n\nUsages : identité, profession, lieu, état.\n*Je suis étudiant. Elle est à Paris. Nous sommes fatigués.*\n\n## Avoir (to have)\n\n*j'ai · tu as · il/elle a · nous avons · vous avez · ils/elles ont*\n\nUsages : possession, âge, sensations (avoir faim/soif/peur/chaud/froid).\n*J'ai trois sœurs. Elle a vingt ans. Nous avons faim.*\n\n**Astuce A1** : pour dire son âge, en français on *a* des années, on ne *est* pas X années.",
+      "items": [
+        {"text": "Je ___ étudiant en médecine.", "answer": "suis", "hint": "être · je"},
+        {"text": "Elle ___ trente ans.", "answer": "a", "hint": "avoir + âge"},
+        {"text": "Nous ___ très contents de vous voir.", "answer": "sommes", "hint": "être · nous"},
+        {"text": "Vous ___ une voiture ?", "answer": "avez", "hint": "avoir · vous"},
+        {"text": "Ils ___ à la maison.", "answer": "sont", "hint": "être · ils"}
+      ]
+    },
+    {
+      "id": "a1-verbes-er",
+      "level": "A1",
+      "title": "Verbes en -er au présent",
+      "summary": "80 % des verbes français. Une seule règle à mémoriser.",
+      "body": "## Conjuguer un verbe en -er\n\nPrenez l'infinitif (ex. **parler**), enlevez **-er**, ajoutez les terminaisons :\n\n| Personne | Terminaison | Exemple |\n|---|---|---|\n| je | -e | je parle |\n| tu | -es | tu parles |\n| il/elle/on | -e | il parle |\n| nous | -ons | nous parlons |\n| vous | -ez | vous parlez |\n| ils/elles | -ent | ils parlent |\n\n**Astuce** : les terminaisons -e, -es, -ent se prononcent toutes pareil (silencieuses) — à l'oreille seuls les pronoms les distinguent.\n\n**Cas spéciaux** : *manger* (verbe en -ger) → *nous mangeons* (avec un 'e' pour garder le son /ʒ/).",
+      "items": [
+        {"text": "Tu ___ français ? (parler)", "answer": "parles", "hint": "-er régulier · tu"},
+        {"text": "Nous ___ à midi. (manger)", "answer": "mangeons", "hint": "-ger : on ajoute un 'e'"},
+        {"text": "Il ___ la télévision. (regarder)", "answer": "regarde", "hint": "-er régulier · il"},
+        {"text": "Vous ___ de la musique. (écouter)", "answer": "écoutez", "alts": ["ecoutez"], "hint": "-er régulier · vous"},
+        {"text": "Ils ___ à Lyon. (habiter)", "answer": "habitent", "hint": "-er régulier · ils"}
+      ]
+    },
+    {
+      "id": "a1-negation-simple",
+      "level": "A1",
+      "title": "Ne … pas",
+      "summary": "Encadre le verbe : ne (avant) + pas (après).",
+      "body": "## La négation simple\n\nLa négation française se construit en **deux mots** qui encadrent le verbe : **ne** … **pas**.\n\n- *Je **ne** parle **pas** anglais.*\n- *Il **ne** vient **pas** ce soir.*\n\nDevant voyelle ou *h* muet, **ne** → **n'** :\n- *Je **n'**aime **pas** ça.*\n\n**À l'oral** : les Français omettent souvent le *ne* :\n- *Je sais **pas**. C'est **pas** vrai.*\n\nÀ l'écrit standard, le *ne* est obligatoire.",
+      "items": [
+        {"text": "Je ___ parle pas allemand.", "answer": "ne", "hint": "négation simple"},
+        {"text": "Il n'aime ___ les épinards.", "answer": "pas", "hint": "ne … pas"},
+        {"text": "Tu ___ as pas faim ?", "answer": "n'", "alts": ["n’"], "hint": "élision devant voyelle"},
+        {"text": "Nous ne ___ pas anglais.", "answer": "parlons", "hint": "verbe parler · nous"},
+        {"text": "Elle n'a ___ vingt ans, elle a trente ans.", "answer": "pas", "hint": "ne … pas"}
+      ]
+    },
+    {
+      "id": "a1-questions-est-ce-que",
+      "level": "A1",
+      "title": "Est-ce que … ?",
+      "summary": "La façon la plus simple de poser une question en français.",
+      "body": "## Trois manières de poser une question\n\n1. **Intonation** (familier) : *Tu viens ?*\n2. **Est-ce que** (standard) : ***Est-ce que** tu viens ?*\n3. **Inversion** (formel) : *Viens-tu ?*\n\n**Avec un mot interrogatif** :\n- *Où **est-ce que** tu habites ?*\n- *Quand **est-ce qu'**il arrive ?*\n- *Pourquoi **est-ce que** tu pleures ?*\n\n**Astuce A1** : *est-ce que* fonctionne avec tout — c'est la formule la plus polyvalente.",
+      "items": [
+        {"text": "___ tu parles français ?", "answer": "Est-ce que", "alts": ["est-ce que"], "hint": "question standard"},
+        {"text": "Où ___ tu habites ?", "answer": "est-ce que", "hint": "mot interrogatif + est-ce que"},
+        {"text": "Pourquoi ___ il est en retard ?", "answer": "est-ce qu'", "alts": ["est-ce qu’"], "hint": "élision devant voyelle"},
+        {"text": "Quand ___ vous partez ?", "answer": "est-ce que", "hint": "vous : pas d'élision"},
+        {"text": "Comment ___ tu t'appelles ?", "answer": "est-ce que", "hint": "comment + est-ce que"}
+      ]
+    },
+    {
+      "id": "a1-nombres-1-100",
+      "level": "A1",
+      "title": "Nombres 1–100",
+      "summary": "Les pièges du 70, 80, 90.",
+      "body": "## Les nombres jusqu'à 100\n\n**1–20** : un, deux, trois, … vingt.\n**21, 31, 41, 51, 61** : ajoutent *et un* : *vingt **et** un, trente **et** un …*\n**22–29** : vingt-deux, vingt-trois, …\n\n**70 = soixante-dix** (pas septante)\n*soixante-dix, soixante et onze, soixante-douze, …, soixante-dix-neuf*\n\n**80 = quatre-vingts** (avec un *s*)\n*quatre-vingts, quatre-vingt-un, quatre-vingt-deux, …, quatre-vingt-dix-neuf*\nLe *s* tombe quand un autre nombre suit : *quatre-vingt-un*, *quatre-vingt-trois*.\n\n**90 = quatre-vingt-dix** (pas nonante)\n\n**100 = cent** (s'accorde au pluriel sans nombre après : *deux cents*, mais *deux cent un*).",
+      "items": [
+        {"text": "21 = vingt ___ un", "answer": "et", "hint": "21, 31, 41…"},
+        {"text": "70 = ___-dix", "answer": "soixante", "hint": "septante n'existe pas en français standard"},
+        {"text": "80 = ___-vingts", "answer": "quatre", "hint": "80 = 4 × 20"},
+        {"text": "91 = ___-vingt-onze", "answer": "quatre", "hint": "90 = quatre-vingt-dix, 91 = quatre-vingt-onze"},
+        {"text": "200 = deux ___", "answer": "cents", "hint": "cent + s au pluriel sans nombre après"}
+      ]
+    },
+    {
+      "id": "a1-heure-date",
+      "level": "A1",
+      "title": "L'heure et la date",
+      "summary": "Demander, dire, comprendre l'heure et la date.",
+      "body": "## Quelle heure est-il ?\n\n- *Il est dix heures.*\n- *Il est dix heures et quart.*\n- *Il est dix heures et demie.*\n- *Il est onze heures moins le quart.*\n- *Il est midi / minuit.*\n\nFormel (gares, télévision) : *Il est dix heures trente.*\n\n## Quelle est la date ?\n\nFormule : ***le*** *+ jour + mois + année*.\n- *Aujourd'hui, c'est **le** 15 mars.*\n- *Je suis né(e) **le** premier janvier.*\n\nPour le 1er, on dit ***premier***. Pour les autres, on dit le nombre cardinal : *le deux, le trois, le quatre, le quinze*.",
+      "items": [
+        {"text": "Il est dix heures ___ quart.", "answer": "et", "hint": "10h15 : et quart"},
+        {"text": "Il est ___ heures et demie.", "answer": "trois", "alts": ["3"], "hint": "3h30 : trois heures et demie"},
+        {"text": "Il est midi ___ quart.", "answer": "et", "hint": "12h15"},
+        {"text": "Aujourd'hui, c'est ___ 5 mai.", "answer": "le", "hint": "date : le + nombre + mois"},
+        {"text": "Mon anniversaire est le ___ janvier.", "answer": "premier", "alts": ["1er","1"], "hint": "le 1er → premier"}
+      ]
+    },
+
+    {
+      "id": "a2-passe-compose-avoir",
+      "level": "A2",
+      "title": "Passé composé avec avoir",
+      "summary": "L'auxiliaire **avoir** + le participe passé. Couvre 85 % des verbes.",
+      "body": "## Construction\n\n**Sujet + avoir (présent) + participe passé**\n\n- *J'**ai mangé** une pomme.*\n- *Tu **as fini** ton travail ?*\n- *Il **a perdu** ses clés.*\n\n## Le participe passé\n\n- Verbes en *-er* → *-é* : *parlé, mangé, regardé*\n- Verbes en *-ir* (groupe 2) → *-i* : *fini, choisi*\n- Verbes irréguliers : *eu* (avoir), *été* (être), *fait* (faire), *vu* (voir), *pris* (prendre), *mis* (mettre), *dit* (dire), *écrit* (écrire), *lu* (lire), *bu* (boire) — à mémoriser.\n\n**Sans accord** avec le sujet pour les verbes avec *avoir* (sauf si COD placé avant — voir B2).",
+      "items": [
+        {"text": "J'___ mangé une pomme.", "answer": "ai", "hint": "auxiliaire avoir · je"},
+        {"text": "Nous avons ___ un film. (voir)", "answer": "vu", "hint": "PP de voir"},
+        {"text": "Elle a ___ le métro. (prendre)", "answer": "pris", "hint": "PP de prendre"},
+        {"text": "Tu as ___ tes devoirs. (finir)", "answer": "fini", "hint": "-ir groupe 2 → -i"},
+        {"text": "Ils ont ___ une lettre. (écrire)", "answer": "écrit", "alts": ["ecrit"], "hint": "PP de écrire"}
+      ]
+    },
+    {
+      "id": "a2-passe-compose-etre",
+      "level": "A2",
+      "title": "Passé composé avec être (accord)",
+      "summary": "17 verbes de mouvement + tous les verbes pronominaux. Le PP s'accorde.",
+      "body": "## Les verbes avec être\n\nMnémo *Mrs Vandertramp* : aller, venir, arriver, partir, entrer, sortir, monter, descendre, naître, mourir, retourner, rester, tomber, devenir, revenir, passer, rentrer.\n\nPlus tous les **verbes pronominaux** : *se laver, se lever, s'habiller, …*\n\n## Accord du participe passé\n\nLe PP **s'accorde en genre et en nombre** avec le sujet (comme un adjectif) :\n\n- *Il est all**é** au cinéma.*\n- *Elle est all**ée** au cinéma.*\n- *Ils sont all**és** au cinéma.*\n- *Elles sont all**ées** au cinéma.*\n\n**Attention** : pas d'accord pour les verbes avec *avoir* (sauf cas B2).",
+      "items": [
+        {"text": "Elle est ___ à Paris. (aller)", "answer": "allée", "alts": ["allee"], "hint": "féminin singulier : +e"},
+        {"text": "Ils sont ___ tard. (arriver)", "answer": "arrivés", "alts": ["arrives"], "hint": "masculin pluriel : +s"},
+        {"text": "Marie est ___ chez elle. (rentrer)", "answer": "rentrée", "alts": ["rentree"], "hint": "féminin singulier"},
+        {"text": "Nous sommes ___ ensemble. (venir)", "answer": "venus", "hint": "PP de venir : venu (+s pluriel)"},
+        {"text": "Elles sont ___ dans la maison. (entrer)", "answer": "entrées", "alts": ["entrees"], "hint": "féminin pluriel : +es"}
+      ]
+    },
+    {
+      "id": "a2-imparfait",
+      "level": "A2",
+      "title": "L'imparfait",
+      "summary": "Le passé continu / habituel. Stem = présent-nous moins -ons.",
+      "body": "## Construction\n\nPrenez la forme **nous** du présent, enlevez **-ons**, ajoutez :\n\n*-ais, -ais, -ait, -ions, -iez, -aient*\n\n- *parl(ons)* → je parl**ais**, tu parl**ais**, il parl**ait**, nous parl**ions**, vous parl**iez**, ils parl**aient**\n- *finiss(ons)* → je finiss**ais**, … nous finiss**ions**, …\n\n**Exception** : **être** → j'**étais**, tu étais, il était, nous étions, vous étiez, ils étaient.\n\n## Usage\n\n- **Description** : *Il **faisait** beau. La maison **était** petite.*\n- **Habitude** : *Quand j'**étais** petit, je **jouais** tous les jours.*\n- **Action en cours** : *Il **dormait** quand je suis arrivé.*\n\nContraste avec passé composé : *J'**ai mangé*** (action ponctuelle) vs *Je **mangeais*** (action en cours).",
+      "items": [
+        {"text": "Quand j'étais petit, je ___ tous les jours. (jouer)", "answer": "jouais", "hint": "imparfait · je"},
+        {"text": "Il ___ beau hier. (faire)", "answer": "faisait", "hint": "imparfait de faire"},
+        {"text": "Nous ___ à la mer chaque été. (aller)", "answer": "allions", "hint": "habitude"},
+        {"text": "Vous ___ très jeunes à l'époque. (être)", "answer": "étiez", "alts": ["etiez"], "hint": "être à l'imparfait"},
+        {"text": "Ils ___ ensemble. (parler)", "answer": "parlaient", "hint": "imparfait · ils"}
+      ]
+    },
+    {
+      "id": "a2-futur-proche",
+      "level": "A2",
+      "title": "Futur proche (aller + infinitif)",
+      "summary": "Pour exprimer un projet ou une action proche du présent.",
+      "body": "## Construction\n\n**Sujet + aller (présent) + infinitif**\n\n- *Je **vais** manger.*\n- *Tu **vas** partir bientôt.*\n- *Nous **allons** voir un film.*\n\n## Forme négative\n\n**Ne + aller + pas + infinitif** :\n\n- *Je **ne vais pas** sortir ce soir.*\n\n## Quand l'utiliser\n\n- **Action imminente** : *Le train **va arriver**.*\n- **Projet proche** : *Demain, je **vais voir** mon ami.*\n\nContraste avec **futur simple** (B1) : le futur proche est plus oral et plus sûr.",
+      "items": [
+        {"text": "Je ___ manger une pomme.", "answer": "vais", "hint": "aller · je"},
+        {"text": "Nous ___ partir à dix heures.", "answer": "allons", "hint": "aller · nous"},
+        {"text": "Tu vas ___ ton ami ce soir ? (voir)", "answer": "voir", "hint": "infinitif après aller"},
+        {"text": "Ils ne ___ pas venir.", "answer": "vont", "hint": "aller · ils + négation"},
+        {"text": "Elle ___ étudier le français.", "answer": "va", "hint": "aller · elle"}
+      ]
+    },
+    {
+      "id": "a2-pronoms-cod",
+      "level": "A2",
+      "title": "Pronoms COD : le, la, les",
+      "summary": "Remplacent un complément d'objet direct. Toujours devant le verbe.",
+      "body": "## Les pronoms compléments d'objet direct\n\n- **le** remplace un nom masculin singulier\n- **la** remplace un nom féminin singulier\n- **les** remplace un nom pluriel\n- **l'** devant voyelle (le/la)\n\n*Tu vois **le film** ? → Tu **le** vois ?*\n*Je connais **Marie**. → Je **la** connais.*\n*Il prend **les clés**. → Il **les** prend.*\n*J'aime **Paul**. → Je **l'**aime.*\n\n## Position\n\n**Toujours devant le verbe conjugué** (ou devant l'infinitif si infinitif) :\n- *Je **le** vois.* (présent)\n- *Je vais **le** voir.* (futur proche : devant l'infinitif)\n- *Je **l'**ai vu.* (passé composé : devant l'auxiliaire)",
+      "items": [
+        {"text": "Tu vois le film ? — Oui, je ___ vois.", "answer": "le", "hint": "le film → le"},
+        {"text": "Tu connais Marie ? — Oui, je ___ connais.", "answer": "la", "hint": "Marie → la"},
+        {"text": "Tu prends les clés ? — Oui, je ___ prends.", "answer": "les", "hint": "les clés → les"},
+        {"text": "Tu aimes Paul ? — Oui, je ___ aime.", "answer": "l'", "alts": ["l’"], "hint": "élision devant voyelle"},
+        {"text": "Tu vas regarder ce film ? — Oui, je vais ___ regarder.", "answer": "le", "hint": "ce film → le, devant l'infinitif"}
+      ]
+    },
+    {
+      "id": "a2-pronoms-coi",
+      "level": "A2",
+      "title": "Pronoms COI : lui, leur",
+      "summary": "Remplacent un complément d'objet indirect (à qui ?).",
+      "body": "## Les pronoms compléments d'objet indirect\n\nPour un nom introduit par **à** (à Marie, à Paul, à mes parents) :\n\n- **lui** remplace *à* + une personne (masculin OU féminin singulier)\n- **leur** remplace *à* + plusieurs personnes\n\n*Je parle **à Marie**. → Je **lui** parle.*\n*Je parle **à Paul**. → Je **lui** parle.* (lui = masc OU fém singulier)\n*Je parle **à mes amis**. → Je **leur** parle.*\n\n## Verbes typiquement avec COI\n\n*parler à, téléphoner à, écrire à, dire à, donner à, demander à, répondre à*\n\n**Attention** : *penser à* + personne se construit différemment (*je pense à elle*, pas *je lui pense*).",
+      "items": [
+        {"text": "Je téléphone à Marie. → Je ___ téléphone.", "answer": "lui", "hint": "à Marie → lui"},
+        {"text": "Il parle à ses parents. → Il ___ parle.", "answer": "leur", "hint": "à eux (pluriel) → leur"},
+        {"text": "Tu écris à Paul ? — Oui, je ___ écris.", "answer": "lui", "hint": "à Paul → lui"},
+        {"text": "Elle dit bonjour à ses voisins. → Elle ___ dit bonjour.", "answer": "leur", "hint": "à plusieurs personnes"},
+        {"text": "Je donne le livre à Marie. → Je ___ donne le livre.", "answer": "lui", "hint": "à Marie → lui"}
+      ]
+    },
+    {
+      "id": "a2-partitifs",
+      "level": "A2",
+      "title": "Du, de la, de l', des (partitifs)",
+      "summary": "Pour une quantité indéterminée d'un nom non-comptable.",
+      "body": "## Les articles partitifs\n\n- **du** + masculin : *Je mange **du** pain.*\n- **de la** + féminin : *Je bois **de la** limonade.*\n- **de l'** + voyelle/h muet : *Je bois **de l'**eau.*\n- **des** + pluriel : *Je mange **des** pâtes.*\n\nUsage : quantité indéterminée d'une chose qu'on ne compte pas (*du sucre*, *de la viande*) ou d'éléments comptables au pluriel.\n\n## À la forme négative\n\nTous les partitifs deviennent **de** (ou **d'**) :\n\n- *Je mange **du** pain. → Je ne mange pas **de** pain.*\n- *Tu bois **de la** bière ? → Non, je ne bois pas **de** bière.*\n\n**Exception** : avec *être* (*ce n'est pas de la* … reste *de la*).",
+      "items": [
+        {"text": "Je voudrais ___ pain.", "answer": "du", "hint": "pain = masculin"},
+        {"text": "Tu prends ___ salade ?", "answer": "de la", "hint": "salade = féminin"},
+        {"text": "Je bois ___ eau.", "answer": "de l'", "alts": ["de l’"], "hint": "voyelle"},
+        {"text": "Je n'ai pas ___ argent.", "answer": "d'", "alts": ["d’"], "hint": "négation : du → d'"},
+        {"text": "Vous mangez ___ pâtes.", "answer": "des", "hint": "pâtes = pluriel"}
+      ]
+    },
+    {
+      "id": "a2-comparatif",
+      "level": "A2",
+      "title": "Comparatif : plus / moins / aussi … que",
+      "summary": "Comparer deux éléments.",
+      "body": "## Construction\n\n**Plus / moins / aussi** + adjectif/adverbe + **que**\n\n- *Il est **plus grand que** moi.* (supériorité)\n- *Elle est **moins rapide qu'**Anne.* (infériorité)\n- *Pierre est **aussi sympa que** Paul.* (égalité)\n\n## Avec un nom (quantité)\n\n**Plus de / moins de / autant de** + nom + **que**\n\n- *J'ai **plus d'**amis **que** toi.*\n- *Il a **autant de** patience **que** son frère.*\n\n## Cas spéciaux\n\n- **bon** → **meilleur(e)** (adjectif) : *Ce vin est **meilleur** que l'autre.*\n- **bien** → **mieux** (adverbe) : *Je vais **mieux** qu'hier.*\n- **mauvais** → **pire** (formel) : *C'est **pire** qu'avant.*",
+      "items": [
+        {"text": "Il est ___ grand que moi.", "answer": "plus", "hint": "supériorité"},
+        {"text": "Elle court ___ vite que lui.", "answer": "moins", "alts": ["plus","aussi"], "hint": "comparatif"},
+        {"text": "Ce vin est ___ que l'autre. (bon)", "answer": "meilleur", "hint": "bon → meilleur"},
+        {"text": "Aujourd'hui je vais ___ qu'hier. (bien)", "answer": "mieux", "hint": "bien → mieux"},
+        {"text": "J'ai plus ___ amis que toi.", "answer": "d'", "alts": ["d’"], "hint": "plus de + nom"}
+      ]
+    },
+
+    {
+      "id": "b1-futur-simple",
+      "level": "B1",
+      "title": "Futur simple",
+      "summary": "Pour un futur lointain ou planifié. Stem = infinitif + endings.",
+      "body": "## Construction\n\n**Stem du futur + -ai/-as/-a/-ons/-ez/-ont**\n\n- Verbes en -er/-ir : stem = infinitif (parler-, finir-)\n- Verbes en -re : on enlève le -e final (rendre → rendr-)\n\n*je parler**ai**, tu parler**as**, il parler**a**, nous parler**ons**, vous parler**ez**, ils parler**ont***\n\n## Stems irréguliers à mémoriser\n\n| Infinitif | Stem futur | Exemple |\n|---|---|---|\n| être | ser- | je serai |\n| avoir | aur- | tu auras |\n| aller | ir- | il ira |\n| faire | fer- | nous ferons |\n| voir | verr- | vous verrez |\n| venir | viendr- | ils viendront |\n| pouvoir | pourr- | je pourrai |\n| vouloir | voudr- | tu voudras |\n| devoir | devr- | il devra |\n\n## Quand l'utiliser\n\n- **Plan futur précis** : *L'année prochaine, je **partirai** à Paris.*\n- **Promesse, prédiction** : *Il **fera** beau demain.*\n- **Conditionnel-réel** (si + présent → futur) : *Si tu viens, on **mangera** ensemble.*",
+      "items": [
+        {"text": "Demain, je ___ à Lyon. (aller)", "answer": "irai", "hint": "futur stem irrégulier de aller"},
+        {"text": "Il ___ vingt ans en mai. (avoir)", "answer": "aura", "hint": "stem aur-"},
+        {"text": "Nous ___ ensemble. (manger)", "answer": "mangerons", "hint": "régulier : manger + ons"},
+        {"text": "Vous ___ heureux. (être)", "answer": "serez", "hint": "stem ser-"},
+        {"text": "Ils ___ demain. (venir)", "answer": "viendront", "hint": "stem viendr-"}
+      ]
+    },
+    {
+      "id": "b1-conditionnel-present",
+      "level": "B1",
+      "title": "Conditionnel présent",
+      "summary": "Politesse, hypothèse, désir. Stem du futur + endings de l'imparfait.",
+      "body": "## Construction\n\n**Stem du futur + -ais/-ais/-ait/-ions/-iez/-aient**\n\nC'est exactement le stem du futur simple, mais avec les terminaisons de l'imparfait.\n\n- *Je **voudrais** un café.* (politesse)\n- *Si j'avais le temps, je **viendrais**.* (hypothèse)\n- *Tu **devrais** le faire.* (conseil)\n\n## Usages clefs\n\n1. **Politesse** : *Je **voudrais** … / Pourriez-vous … / Vous **devriez** …*\n2. **Hypothèse** (si + imparfait → conditionnel — voir B2) : *Si j'étais riche, je **voyagerais**.*\n3. **Conseil** : *Tu **devrais** te reposer.*\n4. **Information non vérifiée** : *Le ministre **serait** démissionnaire.* (presse)",
+      "items": [
+        {"text": "Je ___ un café, s'il vous plaît. (vouloir)", "answer": "voudrais", "hint": "politesse"},
+        {"text": "Tu ___ te reposer un peu. (devoir)", "answer": "devrais", "hint": "conseil"},
+        {"text": "Si j'avais le temps, je ___ avec toi. (venir)", "answer": "viendrais", "hint": "hypothèse"},
+        {"text": "Nous ___ heureux de vous aider. (être)", "answer": "serions", "hint": "stem ser- + ions"},
+        {"text": "Vous ___ plus tôt si vous partez maintenant. (arriver)", "answer": "arriveriez", "hint": "régulier"}
+      ]
+    },
+    {
+      "id": "b1-pronom-y",
+      "level": "B1",
+      "title": "Le pronom Y",
+      "summary": "Remplace un lieu ou un complément introduit par à.",
+      "body": "## Deux usages\n\n### 1. Lieu (où l'on va ou où l'on est)\n\n**Y** remplace *à + lieu*, *dans + lieu*, *en + lieu*, *chez + personne (lieu)*.\n\n- *Je vais **à Paris**. → J'**y** vais.*\n- *Il habite **dans cette maison**. → Il **y** habite.*\n- *On dîne **chez Marie**. → On **y** dîne.*\n\n### 2. Complément avec à (chose, idée)\n\nPour les verbes avec *à* + chose (penser à, réfléchir à, répondre à) :\n\n- *Je pense **à mes vacances**. → J'**y** pense.*\n- *Il répond **à la question**. → Il **y** répond.*\n\n**Attention** : *à + personne* devient *lui/leur* (pas *y*) : *Je pense à Marie → Je pense **à elle*** (pas y).\n\n## Position\n\nToujours devant le verbe conjugué (comme COD/COI).",
+      "items": [
+        {"text": "Tu vas à Paris ? — Oui, j'___ vais demain.", "answer": "y", "hint": "à Paris (lieu) → y"},
+        {"text": "Il habite à Lyon. → Il ___ habite depuis dix ans.", "answer": "y", "hint": "lieu"},
+        {"text": "Tu penses à tes vacances ? — Oui, j'___ pense souvent.", "answer": "y", "hint": "à + chose → y"},
+        {"text": "On dîne chez Pierre ce soir. → On ___ dîne à huit heures.", "answer": "y", "hint": "chez (lieu)"},
+        {"text": "Elle a répondu à la lettre. → Elle ___ a répondu hier.", "answer": "y", "hint": "à + chose"}
+      ]
+    },
+    {
+      "id": "b1-pronom-en",
+      "level": "B1",
+      "title": "Le pronom EN",
+      "summary": "Remplace un complément introduit par de — quantité, origine, sujet.",
+      "body": "## Trois usages\n\n### 1. Quantité (de + nom)\n\nRemplace un partitif ou *de + nom* :\n- *Tu veux **du café** ? — Oui, j'**en** veux.*\n- *J'ai **trois enfants**. → J'**en** ai trois.* (on garde la quantité)\n- *Il n'a pas **d'argent**. → Il n'**en** a pas.*\n\n### 2. Origine (de + lieu)\n\n- *Je viens **de Lyon**. → J'**en** viens.*\n\n### 3. Verbes avec de\n\n*parler de, avoir besoin de, se souvenir de, …*\n- *Je parle **de mes vacances**. → J'**en** parle.*\n- *Il a besoin **d'aide**. → Il **en** a besoin.*\n\n**Attention** : *de + personne* devient *de lui/d'elle* : *Je parle de Marie → Je parle **d'elle*** (pas en).\n\n## Position\n\nDevant le verbe, comme les autres pronoms.",
+      "items": [
+        {"text": "Tu veux du café ? — Oui, j'___ veux bien.", "answer": "en", "hint": "du café → en"},
+        {"text": "J'ai trois enfants. → J'___ ai trois.", "answer": "en", "hint": "garde la quantité"},
+        {"text": "Il parle de ses vacances. → Il ___ parle souvent.", "answer": "en", "hint": "de + chose → en"},
+        {"text": "Tu viens d'où ? — J'___ viens de Lyon.", "answer": "en", "alts": [""], "hint": "origine (de + lieu)"},
+        {"text": "Elle a besoin d'argent. → Elle ___ a besoin.", "answer": "en", "hint": "avoir besoin de"}
+      ]
+    },
+    {
+      "id": "b1-pronoms-ordre",
+      "level": "B1",
+      "title": "Ordre des pronoms",
+      "summary": "L'ordre canonique : me/te/se/nous/vous → le/la/les → lui/leur → y → en.",
+      "body": "## L'ordre canonique\n\nQuand plusieurs pronoms se suivent **devant un verbe affirmatif** :\n\n| 1 | 2 | 3 | 4 | 5 |\n|---|---|---|---|---|\n| me / te / se / nous / vous | le / la / les | lui / leur | y | en |\n\n## Exemples\n\n- *Il **me le** donne.* (1 + 2)\n- *Je **le lui** donne.* (2 + 3)\n- *Il y **en** a.* (4 + 5)\n- *Je **le lui en** parle.* (2 + 3 + 5 — théorique, rare à l'oral)\n\n## À l'impératif affirmatif\n\nL'ordre s'inverse et on relie avec des traits d'union :\n*Donne-**le-moi** !* (pas *me-le*)\n\nÀ l'impératif négatif, on revient à l'ordre canonique : *Ne **me le** donne pas.*",
+      "items": [
+        {"text": "Le livre, je ___ donne. (à lui, le)", "answer": "le lui", "hint": "le (COD) avant lui (COI)"},
+        {"text": "Tu ___ donnes ? (à moi, ça)", "answer": "me le", "alts": ["me la","me les"], "hint": "me avant le"},
+        {"text": "Il y ___ trois. (en)", "answer": "en", "hint": "y avant en"},
+        {"text": "Donne-le-___ ! (à moi, impératif)", "answer": "moi", "hint": "impératif affirmatif : moi (pas me)"},
+        {"text": "Ne ___ donne pas. (à moi, le)", "answer": "me le", "hint": "impératif négatif : ordre canonique"}
+      ]
+    },
+    {
+      "id": "b1-relatifs-simples",
+      "level": "B1",
+      "title": "Qui, que, où, dont",
+      "summary": "Les quatre pronoms relatifs essentiels.",
+      "body": "## Qui — sujet du verbe qui suit\n\n*L'homme **qui** parle est mon ami.* (qui parle ← l'homme parle)\n\n## Que — complément d'objet du verbe qui suit\n\n*Le livre **que** je lis est intéressant.* (je lis le livre)\n\n## Où — lieu ou temps\n\n*La ville **où** j'habite est belle.* (lieu)\n*L'année **où** je suis né.* (temps)\n\n## Dont — équivalent à *de qui / de quoi / duquel*\n\nPour les verbes avec *de* (parler de, avoir besoin de) ou les compléments du nom :\n\n*Le film **dont** je te parle.* (parler de)\n*L'auteur **dont** j'ai lu le livre.* (j'ai lu le livre **de** cet auteur)\n*La maison **dont** la porte est rouge.* (la porte **de** la maison est rouge)\n\n**Astuce** : *dont* contient *de* — utilisé quand le verbe ou le nom appelle *de*.",
+      "items": [
+        {"text": "C'est l'ami ___ habite à Paris.", "answer": "qui", "hint": "sujet (qui habite ← l'ami habite)"},
+        {"text": "Le livre ___ je lis est passionnant.", "answer": "que", "alts": ["qu'"], "hint": "COD (je lis le livre)"},
+        {"text": "La ville ___ je suis né est petite.", "answer": "où", "alts": ["ou"], "hint": "lieu (être né dans cette ville)"},
+        {"text": "C'est l'auteur ___ j'ai lu tous les livres.", "answer": "dont", "hint": "les livres de cet auteur"},
+        {"text": "L'homme ___ je vois là-bas est mon frère.", "answer": "que", "alts": ["qu'"], "hint": "COD (je vois cet homme)"}
+      ]
+    },
+    {
+      "id": "b1-si-hypothese-1",
+      "level": "B1",
+      "title": "Si + présent → futur",
+      "summary": "Première hypothèse : situation réaliste.",
+      "body": "## Construction\n\n**Si + verbe au présent, verbe au futur (ou présent, ou impératif)**\n\n- *Si tu **viens** demain, on **ira** au cinéma.* (futur)\n- *Si tu **veux**, je **t'aide**.* (présent)\n- *S'il **pleut**, **prends** un parapluie.* (impératif)\n\n## Quand l'utiliser\n\nPour une **condition réaliste**, possible. Quelque chose qui peut vraiment se produire.\n\n- *Si j'**ai** le temps, je te **téléphonerai**.*\n- *S'il **fait** beau, on **sortira**.*\n\n## Attention\n\n- Pas de futur après *si* dans cette structure (≠ anglais).\n- ***Si*** + il/elle/ils devient *s'* devant *il/ils* seulement : *s'il, s'ils*. Devant *elle/elles* : *si elle, si elles* (pas d'élision).",
+      "items": [
+        {"text": "Si tu viens, je te ___ ce livre. (donner, futur)", "answer": "donnerai", "hint": "si + présent → futur"},
+        {"text": "S'il ___ beau, on sortira. (faire, présent)", "answer": "fait", "hint": "présent après si"},
+        {"text": "Si j'ai le temps, je ___ avec toi. (venir, futur)", "answer": "viendrai", "hint": "futur de venir"},
+        {"text": "Si tu veux, je ___ avec toi. (aller, présent)", "answer": "vais", "hint": "si + présent → présent (offre)"},
+        {"text": "S'il pleut, ___ un parapluie. (prendre, impératif tu)", "answer": "prends", "hint": "impératif après si + présent"}
+      ]
+    },
+
+    {
+      "id": "b2-subjonctif-present",
+      "level": "B2",
+      "title": "Subjonctif présent",
+      "summary": "Mode du subjectif : doute, désir, nécessité, émotion.",
+      "body": "## Construction\n\nStem = forme **ils** du présent moins **-ent** + terminaisons :\n\n*-e, -es, -e, -ions, -iez, -ent*\n\n- *parl(ent)* → que je parl**e**, que tu parl**es**, qu'il parl**e**, que nous parl**ions**, que vous parl**iez**, qu'ils parl**ent**\n\n## Stems irréguliers fréquents\n\n| Infinitif | Subjonctif (je) |\n|---|---|\n| être | que je sois |\n| avoir | que j'aie |\n| aller | que j'aille |\n| faire | que je fasse |\n| pouvoir | que je puisse |\n| savoir | que je sache |\n| vouloir | que je veuille |\n\n## Quand l'utiliser — après \"que\" + :\n\n- **Nécessité** : *Il faut que tu **viennes**.*\n- **Désir** : *Je veux que tu **partes**.*\n- **Doute** : *Je ne crois pas qu'il **soit** là.*\n- **Émotion** : *Je suis content que tu **sois** venu.*\n- **Certaines conjonctions** : *avant que, bien que, pour que, afin que, à condition que*\n\n## Pas de subjonctif après :\n\n- *parce que, puisque, après que* (indicatif)\n- Quand on est **sûr** : *Je sais qu'il **est** là.* (indicatif)",
+      "items": [
+        {"text": "Il faut que tu ___ patient. (être)", "answer": "sois", "hint": "subjonctif de être · tu"},
+        {"text": "Je veux que vous ___ heureux. (être)", "answer": "soyez", "hint": "subjonctif de être · vous"},
+        {"text": "Bien qu'il ___ fatigué, il travaille. (être)", "answer": "soit", "hint": "subjonctif de être · il"},
+        {"text": "Il faut que nous ___ vite. (faire)", "answer": "fassions", "hint": "subjonctif de faire · nous"},
+        {"text": "Je ne crois pas qu'il ___ raison. (avoir)", "answer": "ait", "hint": "subjonctif de avoir · il"}
+      ]
+    },
+    {
+      "id": "b2-plus-que-parfait",
+      "level": "B2",
+      "title": "Plus-que-parfait",
+      "summary": "Le passé du passé : avant une autre action passée.",
+      "body": "## Construction\n\n**Avoir/être à l'imparfait + participe passé**\n\n- *J'**avais mangé*** (avoir-imparfait + PP)\n- *Il **était parti*** (être-imparfait + PP)\n- *Elle **s'était couchée*** (verbe pronominal + accord)\n\n## Usage\n\nMarque une action **antérieure à une autre action passée** :\n\n- *Quand je suis arrivé, il **était déjà parti**.* (parti avant que j'arrive)\n- *Je lui ai dit que j'**avais vu** le film.* (vu avant que je dise)\n\n## Combinaisons fréquentes\n\n- **Récit complexe** : *J'ai compris pourquoi il **n'avait pas répondu**.*\n- **Avec si** (hypothèse irréelle) : *Si tu **avais étudié**, tu aurais réussi.* (voir C1)\n- **Souhait passé** : *J'**aurais aimé** que tu viennes.*",
+      "items": [
+        {"text": "Quand il est arrivé, j'___ déjà parti. (être)", "answer": "étais", "alts": ["etais"], "hint": "être à l'imparfait"},
+        {"text": "Elle a dit qu'elle ___ vu le film. (avoir)", "answer": "avait", "hint": "avoir à l'imparfait"},
+        {"text": "Nous étions ___ la veille. (arriver, accord avec nous)", "answer": "arrivés", "alts": ["arrives"], "hint": "PP de arriver, masc. pluriel"},
+        {"text": "Si tu m'avais ___, je serais venu. (téléphoner)", "answer": "téléphoné", "alts": ["telephone"], "hint": "PP de téléphoner"},
+        {"text": "Ils ___ déjà mangé avant mon arrivée. (avoir)", "answer": "avaient", "hint": "avoir à l'imparfait · ils"}
+      ]
+    },
+    {
+      "id": "b2-discours-rapporte",
+      "level": "B2",
+      "title": "Discours rapporté",
+      "summary": "Transformer un discours direct en discours indirect.",
+      "body": "## Verbe introducteur\n\n*dire que, demander si, répondre que, expliquer que, raconter que, …*\n\n## Concordance des temps\n\nSi le verbe introducteur est au **passé**, les temps reculent :\n\n| Direct | Indirect (intro passé) |\n|---|---|\n| présent | imparfait |\n| passé composé | plus-que-parfait |\n| futur simple | conditionnel présent |\n| futur proche | aller à l'imparfait + inf |\n\n*« Je viens » → Il a dit qu'il **venait**.*\n*« J'ai mangé » → Il a dit qu'il **avait mangé**.*\n*« Je viendrai » → Il a dit qu'il **viendrait**.*\n\n## Questions rapportées\n\n- Oui/non : *« Est-ce que tu viens ? » → Il a demandé **si** je venais.*\n- Mot interrogatif : *« Quand ? » → Il a demandé **quand** je venais.*\n- *qu'est-ce que* → **ce que** : *« Qu'est-ce que tu fais ? » → Il a demandé **ce que** je faisais.*",
+      "items": [
+        {"text": "« Je viens. » → Il a dit qu'il ___.", "answer": "venait", "hint": "présent → imparfait"},
+        {"text": "« J'ai mangé. » → Il a dit qu'il ___ mangé.", "answer": "avait", "hint": "passé composé → plus-que-parfait"},
+        {"text": "« Je viendrai. » → Il a dit qu'il ___.", "answer": "viendrait", "hint": "futur → conditionnel"},
+        {"text": "« Est-ce que tu viens ? » → Il a demandé ___ je venais.", "answer": "si", "hint": "question oui/non"},
+        {"text": "« Qu'est-ce que tu fais ? » → Il a demandé ___ je faisais.", "answer": "ce que", "alts": ["ce qu'"], "hint": "qu'est-ce que → ce que"}
+      ]
+    },
+    {
+      "id": "b2-cause-consequence",
+      "level": "B2",
+      "title": "Cause, conséquence, but",
+      "summary": "Articuler les liens logiques d'un argument.",
+      "body": "## Cause\n\n- **parce que** + indicatif (cause neutre) : *Je reste **parce qu'**il pleut.*\n- **puisque** (cause connue) : ***Puisque** tu insistes, j'accepte.*\n- **comme** (en début de phrase) : ***Comme** il pleut, je reste.*\n- **car** (littéraire) : *Il est parti, **car** il était fatigué.*\n- **à cause de** + nom (cause négative) : *À cause de la grève.*\n- **grâce à** + nom (cause positive) : *Grâce à toi, j'ai réussi.*\n\n## Conséquence\n\n- **donc** : *Il pleut, **donc** je reste.*\n- **alors** : *Il pleut, **alors** je reste.*\n- **par conséquent** (formel)\n- **si … que** : *Il fait **si** chaud **qu'**on ne peut pas dormir.*\n\n## But\n\n- **pour** + infinitif (même sujet) : *Je travaille **pour** gagner ma vie.*\n- **pour que** + subjonctif (sujets différents) : *Je travaille **pour que** ma fille étudie.*\n- **afin que** + subjonctif (formel)",
+      "items": [
+        {"text": "Je reste ___ il pleut. (cause)", "answer": "parce qu'", "alts": ["parce qu’","parce que"], "hint": "cause neutre"},
+        {"text": "___ tu insistes, j'accepte.", "answer": "Puisque", "alts": ["puisque"], "hint": "cause connue"},
+        {"text": "Il fait beau, ___ je sors. (conséquence)", "answer": "donc", "alts": ["alors"], "hint": "conséquence"},
+        {"text": "Je travaille ___ que ma fille puisse étudier. (but)", "answer": "pour", "alts": ["afin"], "hint": "but + subjonctif"},
+        {"text": "___ à toi, j'ai réussi. (cause positive)", "answer": "Grâce", "alts": ["grâce"], "hint": "grâce à + nom"}
+      ]
+    },
+    {
+      "id": "b2-si-hypothese-2",
+      "level": "B2",
+      "title": "Si + imparfait → conditionnel présent",
+      "summary": "Deuxième hypothèse : situation hypothétique au présent.",
+      "body": "## Construction\n\n**Si + imparfait, verbe au conditionnel présent**\n\n- *Si j'**avais** le temps, je **viendrais** avec toi.*\n- *Si tu **étais** plus patient, tu **réussirais**.*\n- *S'il **faisait** beau, on **irait** à la plage.*\n\n## Quand l'utiliser\n\nPour une **hypothèse irréelle au présent** ou peu probable :\n\n- *Si j'**étais** riche, j'**achèterais** une île.* (je ne suis pas riche)\n- *Si tu **savais***, *tu **comprendrais**.* (tu ne sais pas)\n\n## Politesse / conseil\n\n- *Si vous **vouliez** bien …* (formule polie)\n- *À ta place, je **partirais**.* (conseil)\n\nContraste avec le type 1 (B1) : *si + présent → futur* (situation réaliste).\nContraste avec le type 3 (C1) : *si + plus-que-parfait → conditionnel passé* (regret).",
+      "items": [
+        {"text": "Si j'avais le temps, je ___ avec toi. (venir)", "answer": "viendrais", "hint": "conditionnel présent"},
+        {"text": "Si tu ___ riche, qu'est-ce que tu ferais ? (être)", "answer": "étais", "alts": ["etais"], "hint": "imparfait après si"},
+        {"text": "S'il faisait beau, on ___ à la plage. (aller)", "answer": "irait", "hint": "conditionnel · on/il"},
+        {"text": "Si tu étais plus patient, tu ___. (réussir)", "answer": "réussirais", "alts": ["reussirais"], "hint": "conditionnel · tu"},
+        {"text": "Si je ___ riche, j'achèterais une maison. (être)", "answer": "étais", "alts": ["etais"], "hint": "imparfait"}
+      ]
+    },
+
+    {
+      "id": "c1-subjonctif-passe",
+      "level": "C1",
+      "title": "Subjonctif passé",
+      "summary": "Subjonctif d'une action antérieure ou achevée.",
+      "body": "## Construction\n\n**Subjonctif présent de avoir/être + participe passé**\n\n- *que j'**aie mangé*** (avoir)\n- *que je **sois parti*** (être)\n- *que tu **te sois levé*** (pronominal)\n\n## Usage\n\nDans une subordonnée au subjonctif, quand l'action est **antérieure** au verbe principal :\n\n- *Je suis content que tu **sois venu** hier.* (venu avant maintenant)\n- *Bien qu'il **ait travaillé** dur, il n'a pas réussi.*\n- *Il faut que tu **aies fini** avant midi.* (avant midi = futur antérieur exprimé par subjonctif passé)\n\n## Concordance\n\n- Présent du principal + subj. présent (simultanéité) : *Je veux qu'il **vienne**.*\n- Présent du principal + subj. passé (antériorité) : *Je suis content qu'il **soit venu**.*",
+      "items": [
+        {"text": "Je suis content que tu ___ venu. (être)", "answer": "sois", "hint": "subj. de être · tu"},
+        {"text": "Bien qu'il ___ travaillé dur, il a échoué. (avoir)", "answer": "ait", "hint": "subj. de avoir · il"},
+        {"text": "Il faut que vous ___ fini avant midi. (avoir)", "answer": "ayez", "hint": "subj. de avoir · vous"},
+        {"text": "Je doute qu'ils ___ déjà arrivés. (être)", "answer": "soient", "hint": "subj. de être · ils"},
+        {"text": "Je suis ravi que nous ___ pu vous aider. (avoir)", "answer": "ayons", "hint": "subj. de avoir · nous"}
+      ]
+    },
+    {
+      "id": "c1-passe-simple-recog",
+      "level": "C1",
+      "title": "Passé simple (reconnaissance)",
+      "summary": "Temps littéraire : à reconnaître, rarement à produire.",
+      "body": "## Pourquoi reconnaître le passé simple ?\n\nLe passé simple a quasi disparu de l'oral et de l'écrit courant. Mais il reste vivant dans **la littérature, les contes, les biographies, les articles historiques**. Le reconnaître est essentiel à C1.\n\n## Construction\n\n### Verbes en -er (-ai, -as, -a, -âmes, -âtes, -èrent)\n*je parlai, tu parlas, il parla, nous parlâmes, vous parlâtes, ils parlèrent*\n\n### Verbes en -ir, -re standard (-is, -is, -it, -îmes, -îtes, -irent)\n*je finis, tu finis, il finit, nous finîmes, vous finîtes, ils finirent*\n\n### Beaucoup d'irréguliers en -us, -us, -ut, -ûmes, -ûtes, -urent\n*je voulus, je dus, je sus, je connus, j'eus, je fus, je vins (vins/vinrent)*\n\n## Repères visuels\n\n- *Il **fut** (être), il **eut** (avoir), il **fit** (faire), il **vit** (voir), il **vint** (venir), il **prit** (prendre), il **dit** (dire), il **écrivit** (écrire), il **lut** (lire), il **mourut** (mourir).*\n\nÀ l'oral et à l'écrit courant on dit/écrit *il a été, il a eu, il a fait* (passé composé).",
+      "items": [
+        {"text": "« Il ___ une fois un roi. » (être) — formule de conte", "answer": "fut", "hint": "passé simple de être · il"},
+        {"text": "Napoléon ___ la guerre. (perdre — il)", "answer": "perdit", "hint": "passé simple de perdre · il"},
+        {"text": "Ils ___ surpris par la nouvelle. (être)", "answer": "furent", "hint": "passé simple de être · ils"},
+        {"text": "Hugo ___ Les Misérables au XIXe siècle. (écrire — il)", "answer": "écrivit", "alts": ["ecrivit"], "hint": "passé simple de écrire"},
+        {"text": "Elle ___ son chemin sans hésiter. (faire)", "answer": "fit", "hint": "passé simple de faire · elle"}
+      ]
+    },
+    {
+      "id": "c1-conditionnel-passe",
+      "level": "C1",
+      "title": "Conditionnel passé",
+      "summary": "Pour exprimer regret, reproche, irréel du passé.",
+      "body": "## Construction\n\n**Conditionnel présent de avoir/être + participe passé**\n\n- *J'**aurais mangé*** (avoir)\n- *Je **serais parti*** (être)\n- *Je **me serais levé*** (pronominal)\n\n## Usages\n\n### 1. Regret\n*J'**aurais aimé** te voir.* (mais je ne t'ai pas vu)\n*Tu **aurais dû** me prévenir.* (reproche)\n\n### 2. Irréel du passé (avec si)\n*Si j'avais su, je **serais venu**.* (mais je ne savais pas, donc je ne suis pas venu)\n\n### 3. Information non confirmée (presse)\n*Le ministre **aurait démissionné**.* (rumeur — pas confirmé)\n\n### 4. Politesse au passé\n*J'**aurais voulu** vous parler.* (formule très polie)",
+      "items": [
+        {"text": "Tu ___ dû me prévenir. (devoir, conditionnel passé)", "answer": "aurais", "hint": "conditionnel passé de devoir · tu"},
+        {"text": "Si j'avais su, je ___ venu. (être)", "answer": "serais", "hint": "irréel du passé"},
+        {"text": "Le président ___ démissionné. (avoir — rumeur)", "answer": "aurait", "hint": "conditionnel · information non confirmée"},
+        {"text": "Nous ___ aimé vous rencontrer. (avoir, regret)", "answer": "aurions", "hint": "conditionnel · nous"},
+        {"text": "Elle ___ déjà partie quand tu es arrivé. (être — irréel)", "answer": "serait", "hint": "conditionnel passé de être · elle"}
+      ]
+    },
+    {
+      "id": "c1-si-hypothese-3",
+      "level": "C1",
+      "title": "Si + plus-que-parfait → conditionnel passé",
+      "summary": "Troisième hypothèse : irréel du passé. Le grand classique du regret.",
+      "body": "## Construction\n\n**Si + plus-que-parfait, conditionnel passé**\n\n- *Si j'**avais su**, je **serais venu**.*\n- *Si tu **avais étudié**, tu **aurais réussi**.*\n- *Si elle **n'était pas tombée malade**, elle **serait partie** avec nous.*\n\n## Quand l'utiliser\n\nPour un **passé qui n'a pas eu lieu** — pure spéculation rétrospective :\n\n- *Si nous **étions partis** plus tôt, nous **serions arrivés** à temps.* (mais nous sommes partis tard, donc en retard)\n- *Si j'**avais lu** le contrat, je **n'aurais pas signé**.*\n\n## Variations stylistiques\n\nDans un langage soutenu, on peut utiliser le **plus-que-parfait du subjonctif** dans les deux propositions (style très littéraire) :\n*S'il **eût su**, il **fût venu**.* (= s'il avait su, il serait venu)\n\nDans le langage courant, ce type 3 reste la formule la plus utilisée pour le regret.",
+      "items": [
+        {"text": "Si tu avais étudié, tu ___ réussi. (avoir)", "answer": "aurais", "hint": "conditionnel passé · tu"},
+        {"text": "Si j'avais su, je ___ venu. (être)", "answer": "serais", "hint": "conditionnel passé · je"},
+        {"text": "Si nous ___ plus tôt, nous serions arrivés à temps. (partir, plus-que-parfait)", "answer": "étions partis", "alts": ["etions partis"], "hint": "plus-que-parfait · nous"},
+        {"text": "S'il avait fait beau, on ___ allé à la plage. (être)", "answer": "serait", "hint": "conditionnel passé · on"},
+        {"text": "Si j'avais lu le contrat, je n'___ pas signé. (avoir)", "answer": "aurais", "hint": "conditionnel passé négatif"}
+      ]
+    },
+    {
+      "id": "c1-registre-soutenu",
+      "level": "C1",
+      "title": "Registre soutenu",
+      "summary": "Marqueurs du français formel : vocabulaire, syntaxe, inversion.",
+      "body": "## Inversion (à l'écrit)\n\n- *Peut-être **viendra-t-il**.* (au lieu de *Peut-être qu'il viendra.*)\n- *Aussi **dois-je** vous remercier.* (au lieu de *Donc je dois vous remercier.*)\n- *À peine **avait-il** parlé que …*\n\n## Vocabulaire\n\n| Familier | Standard | Soutenu |\n|---|---|---|\n| bouquin | livre | ouvrage |\n| boulot | travail | labeur |\n| copain | ami | compagnon |\n| flic | policier | agent / officier |\n| commencer | commencer | entamer / amorcer |\n| utiliser | utiliser | recourir à |\n\n## Tournures classiques\n\n- *« Veuillez agréer … »* (formule épistolaire)\n- *« Je vous saurais gré de bien vouloir … »* (= je vous serais reconnaissant si vous vouliez)\n- *« Il convient de … »* (= il faut)\n- *« Force est de constater que … »* (= on doit constater que)\n\n## Subjonctif après certains verbes\n\n- *douter que + subj* : *Je doute qu'il **vienne**.*\n- *craindre que + subj* (souvent avec *ne* explétif) : *Je crains qu'il **ne soit** en retard.*\n\nLe *ne* ici n'est pas négatif — c'est une marque de registre soutenu.",
+      "items": [
+        {"text": "Veuillez ___ , Monsieur, mes salutations distinguées.", "answer": "agréer", "alts": ["agreer"], "hint": "formule épistolaire"},
+        {"text": "À peine ___ -il parlé que tout le monde s'est tu. (avoir)", "answer": "avait", "hint": "inversion après à peine"},
+        {"text": "Il ___ de constater que la situation s'est dégradée.", "answer": "convient", "alts": ["faut"], "hint": "il convient de = il faut"},
+        {"text": "Je crains qu'il ___ en retard. (être — soutenu avec ne explétif)", "answer": "ne soit", "alts": ["soit"], "hint": "subjonctif après craindre que"},
+        {"text": "Le directeur ___ vous recevoir à 15 heures. (vouloir — soutenu)", "answer": "voudra", "alts": ["voudrait"], "hint": "futur ou conditionnel"}
+      ]
+    },
+    {
+      "id": "c1-nuances-modales",
+      "level": "C1",
+      "title": "Devoir / pouvoir : nuances",
+      "summary": "Les sens cachés des modaux selon le temps employé.",
+      "body": "## Devoir\n\n### Indicatif\n- **Présent** : obligation forte. *Je **dois** partir.*\n- **Imparfait** : obligation passée non-réalisée. *Je **devais** venir mais je n'ai pas pu.*\n- **Futur** : obligation prévue. *Je **devrai** travailler dimanche.*\n- **Passé composé** : obligation passée réalisée OU forte probabilité. *J'**ai dû** finir tard.* (probable)\n\n### Conditionnel\n- **Présent** : conseil. *Tu **devrais** te reposer.*\n- **Passé** : reproche/regret. *Tu **aurais dû** me prévenir.*\n\n## Pouvoir\n\n### Indicatif\n- **Présent** : capacité OU possibilité. *Je **peux** venir.*\n- **Imparfait** : possibilité passée. *Je **pouvais** venir, mais …*\n- **Passé composé** : capacité réalisée. *J'**ai pu** finir à temps.*\n\n### Conditionnel\n- **Présent** : politesse OU possibilité hypothétique. ***Pourriez**-vous m'aider ?*\n- **Passé** : reproche/possibilité non-réalisée. *Tu **aurais pu** me téléphoner !*\n\n## Astuce C1\n\nLe **passé composé** de *devoir/pouvoir* exprime souvent une **probabilité** :\n- *Il **a dû** oublier.* (= il a probablement oublié)\n- *Elle **a pu** rater le train.* (= peut-être qu'elle a raté le train)",
+      "items": [
+        {"text": "Tu ___ te reposer un peu. (devoir, conseil)", "answer": "devrais", "hint": "conditionnel présent · conseil"},
+        {"text": "Tu ___ me prévenir ! (devoir, reproche au passé)", "answer": "aurais dû", "hint": "conditionnel passé"},
+        {"text": "___ -vous m'aider ? (pouvoir, politesse)", "answer": "Pourriez", "alts": ["pourriez"], "hint": "conditionnel présent · politesse"},
+        {"text": "Il ___ oublier. (devoir, probabilité au passé)", "answer": "a dû", "hint": "passé composé = probabilité"},
+        {"text": "Tu ___ me téléphoner ! (pouvoir, reproche)", "answer": "aurais pu", "hint": "conditionnel passé · reproche"}
+      ]
+    }
+  ]
+}
