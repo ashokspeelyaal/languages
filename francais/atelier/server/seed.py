@@ -68,8 +68,8 @@ def seed_vocab() -> int:
                     """INSERT OR REPLACE INTO vocab_items
                        (id, level, category, subcategory, french, english,
                         example_fr, example_en, gender, article, plural,
-                        pos, verb_group, audio_phon, cognate, core, source_file)
-                       VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+                        pos, verb_group, audio_phon, cognate, emoji, core, source_file)
+                       VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
                     (
                         vid,
                         (it.get("level") or "A1").upper(),
@@ -86,6 +86,7 @@ def seed_vocab() -> int:
                         it.get("verb_group") or it.get("verbGroup"),
                         it.get("audioPhon") or it.get("audio_phon"),
                         1 if it.get("cognate") else 0,
+                        it.get("emoji"),
                         1 if it.get("core") else 0,
                         source_file,
                     ),

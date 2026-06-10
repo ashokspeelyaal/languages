@@ -37,7 +37,7 @@ BASE_COLS = (
     "id, level, category, subcategory, french, english, "
     "example_fr AS exampleFR, example_en AS exampleEN, "
     "gender, article, plural, pos, verb_group, audio_phon AS audioPhon, "
-    "cognate, core"
+    "cognate, emoji, core"
 )
 
 
@@ -171,7 +171,7 @@ def list_vocab(
         d = dict(r)
         if d.pop("is_custom", 0):
             d["custom"] = True
-        for k in ("subcategory", "plural", "verb_group", "audioPhon", "article"):
+        for k in ("subcategory", "plural", "verb_group", "audioPhon", "article", "emoji"):
             if d.get(k) is None:
                 d.pop(k, None)
         items.append(d)

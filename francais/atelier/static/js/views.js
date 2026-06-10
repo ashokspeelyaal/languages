@@ -12,9 +12,10 @@
     dashboard:   () => window.FlashcardsView.renderDashboard(),
     browse:      renderBrowse,
     flashcards:  () => window.FlashcardsView.renderFlashcards(),
-    genre:       stub("Genre",       3,  "Mini-mode A1 : le ou la ? Phase 3."),
-    nombres:     stub("Nombres",     3,  "Mini-mode A1 : chiffres / heures / dates. Phase 3."),
-    alphabet:    stub("Alphabet",    3,  "Lettres + IPA + voyelles nasales. Phase 3."),
+    pictures:    () => window.FlashcardsView.renderPictures(),
+    genre:       () => window.GenderView.render(),
+    nombres:     () => window.NumbersView.render(),
+    alphabet:    () => window.AlphabetView.render(),
     conjugaison: stub("Conjugaison", 4,  "Drill de conjugaison par temps / personne. Phase 4."),
     grammaire:   stub("Grammaire",   5,  "Curriculum A1 → C1 par sujet. Phase 5."),
     typed:       stub("Generation",  6,  "Saisie libre (FR → EN / EN → FR). Phase 6."),
@@ -179,21 +180,25 @@
   }
 
   function renderItem(it) {
+    const emoji = it.emoji ? `<span class="vocab-emoji" aria-hidden="true">${escapeHtml(it.emoji)}</span>` : "";
     const articleChip = it.article ? `<span class="article-chip gender-${it.gender || "x"}">${escapeHtml(it.article)}</span>` : "";
     const genderTag = it.gender && !it.article ? `<span class="gender-tag gender-${it.gender}">${it.gender}</span>` : "";
     const posTag = it.pos ? `<span class="pos-tag">${escapeHtml(it.pos)}</span>` : "";
     const levelTag = `<span class="level-tag" style="background:${(window.Store.LEVEL_META[it.level]||{}).color || "#9ca3af"}">${escapeHtml(it.level)}</span>`;
     const customTag = it.custom ? `<span class="custom-tag">perso</span>` : "";
+    const cognateTag = it.cognate ? `<span class="cognate-tag" title="Mot proche de l'anglais — vous le connaissez peut-être déjà">≈ EN</span>` : "";
     const example = it.exampleFR
       ? `<div class="vocab-ex"><span class="ex-fr">${escapeHtml(it.exampleFR)}</span><span class="ex-en">${escapeHtml(it.exampleEN || "")}</span></div>`
       : "";
     return `
       <li class="vocab-item">
         <div class="vocab-row">
+          ${emoji}
           ${articleChip}
           <span class="vocab-fr">${escapeHtml(it.french)}</span>
           ${genderTag}
           ${posTag}
+          ${cognateTag}
           ${levelTag}
           ${customTag}
           <span class="vocab-en">${escapeHtml(it.english)}</span>

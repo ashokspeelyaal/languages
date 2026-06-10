@@ -74,6 +74,7 @@ CREATE TABLE IF NOT EXISTS vocab_items (
   verb_group   TEXT,           -- '1' (-er) / '2' (-ir/-iss) / '3' (irreg/-re/-oir) / null
   audio_phon   TEXT,           -- IPA transcription
   cognate      INTEGER NOT NULL DEFAULT 0,
+  emoji        TEXT,           -- single emoji glyph for picture-flashcards (A1 only)
   core         INTEGER NOT NULL DEFAULT 0,
   source_file  TEXT
 );
@@ -99,6 +100,7 @@ CREATE TABLE IF NOT EXISTS custom_vocab (
   verb_group   TEXT,
   audio_phon   TEXT,
   cognate      INTEGER NOT NULL DEFAULT 0,
+  emoji        TEXT,
   core         INTEGER NOT NULL DEFAULT 0,
   source       TEXT,
   source_id    TEXT,

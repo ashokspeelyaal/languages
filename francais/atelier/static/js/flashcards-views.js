@@ -193,6 +193,8 @@
         : "";
       const genderTag = it.pos === "noun" && it.gender && !it.article
         ? `<span class="gender-tag gender-${it.gender}">${it.gender}</span>` : "";
+      const cognateTag = it.cognate
+        ? `<span class="cognate-tag" title="Mot proche de l'anglais">≈ EN</span>` : "";
 
       stage.innerHTML = `
         <div class="fc ${flipped ? "back" : "front"}">
@@ -212,6 +214,7 @@
               <p class="fc-answer">${escapeHtml(answer)}</p>
               ${d === "en-fr" ? voiceRow(it.french) : ""}
               ${genderTag}
+              ${cognateTag}
               ${it.pos === "verb" && it.verb_group ? `<span class="pos-tag">groupe ${escapeHtml(it.verb_group)}</span>` : ""}
             </div>
             ${it.exampleFR ? `
@@ -330,5 +333,164 @@
     render();
   }
 
-  window.FlashcardsView = { renderDashboard, renderFlashcards };
+  // ============================================================ Pictures
+  // A1 mini-mode: image-only prompt (emoji as image source), reveal
+  // article + word + audio + example. Uses the same SRS engine and box
+  // logic as flashcards — wrong/good/easy back-syncs identically.
+  function renderPictures() {
+    const view = document.getElementById("view");
+    const s = window.Store.state;
+    // Only items at-or-below active level AND with an emoji.
+    const items = window.Store.vocabFiltered().filter((it) => it.emoji);
+    const sessionSize = Math.min(15, items.length);
+
+    if (items.length === 0) {
+      view.innerHTML = `
+        <section class="stub">
+          <h2>Pas encore d'images à ce niveau</h2>
+          <p>Les flashcards-images ne couvrent actuellement que les noms concrets A1.</p>
+          <p>Passez au niveau <strong>A1</strong> pour les voir, ou utilisez les flashcards classiques.</p>
+          <p><a class="btn btn-primary" href="#/flashcards">Flashcards classiques</a></p>
+        </section>
+      `;
+      return;
+    }
+
+    // Same Leitner picking, but restricted to the emoji-tagged pool.
+    const session = window.SRS.pickDue(items, sessionSize);
+    if (session.length === 0) {
+      view.innerHTML = `
+        <section class="stub">
+          <h2>Rien à réviser en images aujourd'hui</h2>
+          <p>Toutes les cartes-images de votre niveau sont déjà vues.</p>
+          <p><a class="btn btn-primary" href="#/flashcards">Flashcards classiques</a></p>
+        </section>
+      `;
+      return;
+    }
+
+    window.Store.recordSessionStart("pictures");
+
+    let i = 0;
+    let flipped = false;
+
+    view.innerHTML = `
+      <section class="fc-session">
+        <header class="fc-head">
+          <div>
+            <h2 style="margin:0">Cartes-images</h2>
+            <p class="muted">Regardez l'image. Devinez l'article et le mot. Puis retournez.</p>
+          </div>
+        </header>
+        <div id="fc-stage" class="fc-stage"></div>
+      </section>
+    `;
+
+    function render() {
+      const it = session[i];
+      if (!it) return finish();
+      const articleChip = it.article
+        ? `<span class="article-chip gender-${it.gender || "x"}">${escapeHtml(it.article)}</span>`
+        : "";
+
+      const stage = document.getElementById("fc-stage");
+      stage.innerHTML = `
+        <div class="fc ${flipped ? "back" : "front"}">
+          <span class="fc-progress">${i + 1} / ${session.length}</span>
+          <p class="fc-meta">
+            <span class="level-tag" style="background:${(window.Store.LEVEL_META[it.level]||{}).color || "#9ca3af"}">${escapeHtml(it.level)}</span>
+            · ${escapeHtml(it.category || "")}
+          </p>
+          <div class="pic-emoji">${escapeHtml(it.emoji)}</div>
+          ${!flipped ? `
+            <p class="muted" style="text-align:center;margin:14px 0">Qu'est-ce que c'est ?</p>
+            <div class="fc-actions">
+              <button class="btn btn-primary" id="fc-flip">Retourner · Espace</button>
+            </div>
+          ` : `
+            <div class="fc-answer-block">
+              ${articleChip}
+              <p class="fc-answer">${escapeHtml(it.french)}</p>
+              ${voiceRow(it.french)}
+            </div>
+            ${it.exampleFR ? `
+              <div class="fc-examples">
+                <p class="fc-example"><span class="lab">FR</span>
+                  <span class="ex">${escapeHtml(it.exampleFR)}</span>
+                  ${voiceRow(it.exampleFR, "small")}
+                </p>
+                ${it.exampleEN ? `<p class="fc-example"><span class="lab">EN</span>
+                  <span class="ex en">${escapeHtml(it.exampleEN)}</span></p>` : ""}
+              </div>` : ""}
+            <div class="fc-actions">
+              <button class="btn fc-grade fc-hard" data-grade="hard">Difficile (1)</button>
+              <button class="btn fc-grade fc-good" data-grade="good">Bien (2)</button>
+              <button class="btn fc-grade fc-easy" data-grade="easy">Facile (3)</button>
+            </div>
+          `}
+        </div>
+      `;
+
+      if (!flipped) {
+        document.getElementById("fc-flip").addEventListener("click", flip);
+      } else {
+        document.querySelectorAll(".fc-grade").forEach((b) =>
+          b.addEventListener("click", () => rate(b.dataset.grade))
+        );
+      }
+      document.querySelectorAll(".voice-btn").forEach((b) => {
+        b.addEventListener("click", () => {
+          window.Speech.speak(b.dataset.text, { voiceKey: b.dataset.voice });
+        });
+      });
+    }
+
+    function voiceRow(text, size) {
+      const cls = size === "small" ? "voice-row voice-row-small" : "voice-row";
+      return `<span class="${cls}">
+        <button type="button" class="voice-btn" data-voice="nova" data-text="${escapeHtml(text)}" title="Camille · C">▶ Camille</button>
+        <button type="button" class="voice-btn" data-voice="echo" data-text="${escapeHtml(text)}" title="Antoine · A">▶ Antoine</button>
+      </span>`;
+    }
+
+    function flip() { flipped = true; render(); }
+    function rate(outcome) {
+      window.Store.markSeen(session[i].id, outcome);
+      i += 1; flipped = false; render();
+    }
+    function finish() {
+      const stage = document.getElementById("fc-stage");
+      stage.innerHTML = `
+        <div class="fc-summary">
+          <p class="big-num">✓</p>
+          <h3>Session images terminée.</h3>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#/pictures" onclick="setTimeout(()=>location.reload(),50)">Une autre ronde</a>
+            <a class="btn" href="#/dashboard">Tableau de bord</a>
+          </div>
+        </div>
+      `;
+    }
+
+    const onKey = (e) => {
+      if (e.target.matches && e.target.matches("input, textarea")) return;
+      if (e.key === " ") { e.preventDefault(); if (!flipped) flip(); return; }
+      if (flipped) {
+        if (e.key === "1") rate("hard");
+        else if (e.key === "2") rate("good");
+        else if (e.key === "3") rate("easy");
+      }
+      const it = session[i];
+      if (!it) return;
+      if (e.key === "c" || e.key === "C") window.Speech.speak(it.french, { voiceKey: "nova" });
+      else if (e.key === "a" || e.key === "A") window.Speech.speak(it.french, { voiceKey: "echo" });
+    };
+    document.addEventListener("keydown", onKey);
+    if (window.__atelierPicKey) document.removeEventListener("keydown", window.__atelierPicKey);
+    window.__atelierPicKey = onKey;
+
+    render();
+  }
+
+  window.FlashcardsView = { renderDashboard, renderFlashcards, renderPictures };
 })();
