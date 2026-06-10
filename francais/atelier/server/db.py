@@ -1,12 +1,17 @@
 """SQLite schema + connection helper. WAL mode, foreign keys on, JSON columns.
 
-Phase 0 schema covers only the cross-cutting tables:
+Phase 1 schema:
   - users + sessions          → auth
   - user_kv                   → per-user scalars (active_level, register, …)
   - ai_calls                  → AI proxy soft-cap + transparency
+  - vocab_items               → built-in vocabulary (from seeds/*.json)
+  - custom_vocab              → user-added vocabulary
+  - verb_forms                → irregular verb conjugations
+  - grammar_progress          → per-user per-topic progress (Phase 5)
+  - history_day               → per-day right/wrong counts (Phase 2)
 
-Feature tables (vocab_items, custom_vocab, srs_state, history_day,
-chats, essays, writing/listening/spreken/exam) land in Phase 1+.
+SRS state + chats/writing/listening/spreken/exam tables land in their
+respective phases.
 """
 import json
 import sqlite3
@@ -51,6 +56,93 @@ CREATE TABLE IF NOT EXISTS ai_calls (
   PRIMARY KEY (user_id, day, kind)
 );
 CREATE INDEX IF NOT EXISTS ai_calls_day_idx ON ai_calls(user_id, day);
+
+-- Built-in vocabulary (loaded once from seeds/*.json). Identical across users.
+CREATE TABLE IF NOT EXISTS vocab_items (
+  id           TEXT PRIMARY KEY,
+  level        TEXT NOT NULL,
+  category     TEXT,
+  subcategory  TEXT,
+  french       TEXT NOT NULL,
+  english      TEXT NOT NULL,
+  example_fr   TEXT,
+  example_en   TEXT,
+  gender       TEXT,           -- 'm' / 'f' / 'mf' / null
+  article      TEXT,           -- 'le' / 'la' / 'l'' / 'les' / null
+  plural       TEXT,           -- irregular plural form, null otherwise
+  pos          TEXT,           -- 'noun' / 'verb' / 'adj' / 'adv' / 'prep' / 'conj' / 'pron' / 'det' / 'interj'
+  verb_group   TEXT,           -- '1' (-er) / '2' (-ir/-iss) / '3' (irreg/-re/-oir) / null
+  audio_phon   TEXT,           -- IPA transcription
+  cognate      INTEGER NOT NULL DEFAULT 0,
+  core         INTEGER NOT NULL DEFAULT 0,
+  source_file  TEXT
+);
+CREATE INDEX IF NOT EXISTS vocab_level_idx ON vocab_items(level);
+CREATE INDEX IF NOT EXISTS vocab_cat_idx ON vocab_items(category);
+CREATE INDEX IF NOT EXISTS vocab_pos_idx ON vocab_items(pos);
+
+-- User-added vocab (from Écrire/Écouter/Parler "+corpus" flow).
+CREATE TABLE IF NOT EXISTS custom_vocab (
+  id           TEXT PRIMARY KEY,
+  user_id      INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  level        TEXT NOT NULL,
+  category     TEXT,
+  subcategory  TEXT,
+  french       TEXT NOT NULL,
+  english      TEXT NOT NULL,
+  example_fr   TEXT,
+  example_en   TEXT,
+  gender       TEXT,
+  article      TEXT,
+  plural       TEXT,
+  pos          TEXT,
+  verb_group   TEXT,
+  audio_phon   TEXT,
+  cognate      INTEGER NOT NULL DEFAULT 0,
+  core         INTEGER NOT NULL DEFAULT 0,
+  source       TEXT,
+  source_id    TEXT,
+  added_at     TEXT NOT NULL DEFAULT (datetime('now'))
+);
+CREATE INDEX IF NOT EXISTS custom_vocab_user_idx ON custom_vocab(user_id);
+CREATE INDEX IF NOT EXISTS custom_vocab_source_idx ON custom_vocab(user_id, source_id);
+
+-- Irregular verb conjugations. Regular verbs (groups 1+2) are generated
+-- on the fly from rules in static/js/conjugation-rules.js; only irregular
+-- forms persist here. ~50 verbs × 8 tenses × 6 persons ≈ 2400 rows.
+CREATE TABLE IF NOT EXISTS verb_forms (
+  lemma      TEXT NOT NULL,
+  tense      TEXT NOT NULL,           -- 'present', 'passe_compose', 'imparfait', …
+  person     TEXT NOT NULL,           -- 'je', 'tu', 'il', 'nous', 'vous', 'ils'
+  form       TEXT NOT NULL,
+  audio_phon TEXT,
+  PRIMARY KEY (lemma, tense, person)
+);
+CREATE INDEX IF NOT EXISTS verb_forms_lemma_idx ON verb_forms(lemma);
+
+-- Per-user grammar topic progress (Phase 5 uses this).
+CREATE TABLE IF NOT EXISTS grammar_progress (
+  user_id     INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  topic_id    TEXT NOT NULL,
+  level       TEXT NOT NULL,
+  seen        INTEGER NOT NULL DEFAULT 0,
+  correct     INTEGER NOT NULL DEFAULT 0,
+  wrong       INTEGER NOT NULL DEFAULT 0,
+  mastered_at TEXT,
+  PRIMARY KEY (user_id, topic_id)
+);
+CREATE INDEX IF NOT EXISTS grammar_progress_level_idx ON grammar_progress(user_id, level);
+
+-- Aggregated per-day history (for streak + metrics + dashboard).
+CREATE TABLE IF NOT EXISTS history_day (
+  user_id     INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  day         TEXT NOT NULL,
+  right_count INTEGER NOT NULL DEFAULT 0,
+  wrong_count INTEGER NOT NULL DEFAULT 0,
+  sessions    INTEGER NOT NULL DEFAULT 0,
+  modes_json  TEXT NOT NULL DEFAULT '{}',
+  PRIMARY KEY (user_id, day)
+);
 """
 
 

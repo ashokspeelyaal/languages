@@ -11,6 +11,7 @@
 <link rel="apple-touch-icon" href="/static/icons/icon-180.png">
 <title>Atelier · Français A1 → C1</title>
 <link rel="stylesheet" href="/static/css/styles.css">
+<link rel="stylesheet" href="/static/css/atelier.css">
 </head>
 <body>
 <header class="topbar">
@@ -18,13 +19,61 @@
     <span class="brand-mark" style="background:#1d4ed8;color:#fff;border-radius:8px;padding:4px 8px;font-weight:700">FR</span>
     <div class="brand-text">
       <h1>Atelier</h1>
-      <p><strong>A1</strong> · A2 · B1 · B2 · C1</p>
+      <p>A1 · A2 · B1 · B2 · C1</p>
     </div>
   </div>
+
+  <div id="level-picker" role="radiogroup" aria-label="Niveau actif"></div>
+
   <nav class="nav" id="main-nav">
     <a class="nav-link" href="#/dashboard" data-route="dashboard">Vue d'ensemble</a>
-    <a class="nav-link" href="#/logout" data-route="logout" id="logout-link">Déconnexion</a>
+    <div class="nav-group">
+      <button class="nav-group-btn">Apprendre <span class="nav-caret">▾</span></button>
+      <div class="nav-dropdown">
+        <a href="#/browse"      data-route="browse">Parcourir</a>
+        <a href="#/flashcards"  data-route="flashcards">Flashcards</a>
+        <a href="#/genre"       data-route="genre">Genre (le / la)</a>
+        <a href="#/nombres"     data-route="nombres">Nombres</a>
+        <a href="#/alphabet"    data-route="alphabet">Alphabet</a>
+        <a href="#/conjugaison" data-route="conjugaison">Conjugaison</a>
+        <a href="#/grammaire"   data-route="grammaire">Grammaire</a>
+      </div>
+    </div>
+    <div class="nav-group">
+      <button class="nav-group-btn">Pratiquer <span class="nav-caret">▾</span></button>
+      <div class="nav-dropdown">
+        <a href="#/typed"  data-route="typed">Generation</a>
+        <a href="#/cloze"  data-route="cloze">Cloze</a>
+        <a href="#/mixed"  data-route="mixed">Mélangé</a>
+        <a href="#/examen" data-route="examen">Examen DELF / DALF</a>
+      </div>
+    </div>
+    <div class="nav-group">
+      <button class="nav-group-btn">IA <span class="nav-caret">▾</span></button>
+      <div class="nav-dropdown">
+        <a href="#/chat"    data-route="chat">Chat</a>
+        <a href="#/ecrire"  data-route="ecrire">Écrire</a>
+        <a href="#/ecouter" data-route="ecouter">Écouter</a>
+        <a href="#/parler"  data-route="parler">Parler</a>
+      </div>
+    </div>
+    <div class="nav-group">
+      <button class="nav-group-btn">Plus <span class="nav-caret">▾</span></button>
+      <div class="nav-dropdown">
+        <a href="#/radio"      data-route="radio">Radio</a>
+        <a href="#/metrics"    data-route="metrics">Métriques</a>
+        <a href="#/aide"       data-route="aide">Aide</a>
+        <a href="#/parametres" data-route="parametres">Paramètres</a>
+        <a href="#/logout"     data-route="logout">Déconnexion</a>
+      </div>
+    </div>
   </nav>
+
+  <div class="streak" id="streak-chip" title="Série quotidienne" style="display:none">
+    <span class="streak-flame">●</span>
+    <span id="streak-count">0</span>
+    <span class="streak-label">jours</span>
+  </div>
 </header>
 
 <main id="view">
@@ -32,6 +81,10 @@
 </main>
 
 <script src="/static/js/api.js"></script>
+<script src="/static/js/state.js"></script>
+<script src="/static/js/level-picker.js"></script>
+<script src="/static/js/views.js"></script>
+<script src="/static/js/onboarding.js"></script>
 <script src="/static/js/app.js"></script>
 <script>
   if ("serviceWorker" in navigator) {

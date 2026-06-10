@@ -19,6 +19,7 @@ from .auth import (
     verify_password,
 )
 from .db import conn, init_schema
+from .routes import settings_routes, vocab_routes
 from .seed import run_seed
 from .settings import ALLOWED_ORIGIN, STATIC_DIR
 
@@ -28,6 +29,8 @@ def create_app() -> FastAPI:
     summary = run_seed()
     if summary["users_created"]:
         print(f"[seed] created {summary['users_created']} user(s) from USERS env")
+    if summary["vocab_created"]:
+        print(f"[seed] loaded {summary['vocab_created']} vocab items into DB")
 
     app = FastAPI(title="Atelier", docs_url=None, redoc_url=None)
 
@@ -74,8 +77,10 @@ def create_app() -> FastAPI:
     def me(user=Depends(require_user)):
         return {"username": user["username"]}
 
-    # ---- Routers (Phase 0: AI only; feature routers land in Phase 1+) ----
+    # ---- Routers ----
     app.include_router(ai_router)
+    app.include_router(settings_routes.router)
+    app.include_router(vocab_routes.router)
 
     # ---- Static SPA ----
     app.mount("/static", StaticFiles(directory=str(STATIC_DIR), html=False), name="static")

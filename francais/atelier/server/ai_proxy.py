@@ -30,12 +30,8 @@ from fastapi.responses import Response
 
 from .auth import require_user
 from .db import conn
-from .settings import (
-    AI_SOFT_LIMIT,
-    AZURE_SPEECH_KEY,
-    AZURE_SPEECH_REGION,
-    OPENAI_API_KEY,
-)
+from .routes.settings_routes import get_user_keys
+from .settings import AI_SOFT_LIMIT
 
 router = APIRouter(prefix="/api/ai", tags=["ai"])
 
@@ -65,17 +61,8 @@ def bump_counter(user_id: int, kind: str) -> None:
         )
 
 
-def _user_keys(user_id: int) -> dict:
-    """Phase 0: env-only. Phase 1+: prefer user_kv overrides."""
-    return {
-        "openai_key": OPENAI_API_KEY,
-        "azure_key": AZURE_SPEECH_KEY,
-        "azure_region": AZURE_SPEECH_REGION,
-    }
-
-
 def _resolve_openai_key(user_id: int) -> str:
-    key = _user_keys(user_id)["openai_key"]
+    key = get_user_keys(user_id)["openai_key"]
     if not key:
         raise HTTPException(503,
             "Pas de clé OpenAI. Ajoutez-en une dans Paramètres → Clé API, ou dans .env.")
@@ -178,7 +165,7 @@ def _escape_xml(s: str) -> str:
 
 
 async def _azure_tts(text: str, body: dict, user: dict) -> Response:
-    keys = _user_keys(user["id"])
+    keys = get_user_keys(user["id"])
     az_key = keys["azure_key"]
     if not az_key:
         raise HTTPException(503,
@@ -282,7 +269,7 @@ async def pronounce(
 
     Returns the raw NBest[0] payload from Azure (we surface scores +
     per-word breakdown to the UI as-is)."""
-    keys = _user_keys(user["id"])
+    keys = get_user_keys(user["id"])
     az_key = keys["azure_key"]
     if not az_key:
         raise HTTPException(503,
@@ -391,9 +378,10 @@ def usage(days: int = 14, user=Depends(require_user)):
 
 @router.get("/config")
 def ai_config(user=Depends(require_user)):
-    """Tell the frontend which providers are wired up. In Phase 0 keys are
-    env-only, so this just reflects the .env presence."""
-    keys = _user_keys(user["id"])
+    """Tell the frontend which providers are wired up (per-user override
+    OR .env default). Used by the chat / écouter / parler views to decide
+    whether to surface 'configure a key' nudges."""
+    keys = get_user_keys(user["id"])
     return {
         "openai": bool(keys["openai_key"]),
         "azure":  bool(keys["azure_key"]),
