@@ -532,6 +532,9 @@
         const a = mount.querySelector("audio");
         if (a) { a.currentTime = Math.max(0, start - 0.05); a.play().catch(() => {}); }
       };
+      // Cache a lowercased copy so case-insensitive fallback matching
+      // doesn't allocate on every word.
+      const textLower = text.toLowerCase();
       let cursor = 0;
       let placed = 0;
       timings.forEach((w, idx) => {
@@ -539,20 +542,40 @@
         // Whisper sometimes prefixes a space; trim.
         const raw = String(w.word).replace(/^\s+|\s+$/g, "");
         if (!raw) return;
-        // Try to find this exact substring in text starting at cursor
+
+        // Try in order of specificity:
+        //  1. exact match (preserves capitalisation, fastest path)
+        //  2. exact match with punctuation stripped from the Whisper token
+        //  3. case-insensitive match — catches "Ik" (script) ↔ "ik" (whisper)
+        //  4. case-insensitive match with punctuation stripped
         let at = text.indexOf(raw, cursor);
+        let matchLen = raw.length;
         if (at < 0) {
-          // Maybe punctuation around the word doesn't match exactly; try a stripped form
           const core = raw.replace(/^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu, "");
-          if (!core) return;
-          at = text.indexOf(core, cursor);
-          if (at < 0) return; // give up on this word; it'll just not be clickable/highlighted
+          if (core) {
+            at = text.indexOf(core, cursor);
+            if (at >= 0) matchLen = core.length;
+          }
         }
+        if (at < 0) {
+          const lowRaw = raw.toLowerCase();
+          at = textLower.indexOf(lowRaw, cursor);
+          if (at >= 0) matchLen = lowRaw.length;
+        }
+        if (at < 0) {
+          const core = raw.replace(/^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu, "").toLowerCase();
+          if (core) {
+            at = textLower.indexOf(core, cursor);
+            if (at >= 0) matchLen = core.length;
+          }
+        }
+        if (at < 0) return; // give up on this word; plain text fallback handles the gap
+
         // Emit text between cursor and the match (preserves punctuation, spaces)
         if (at > cursor) {
           body.appendChild(document.createTextNode(text.slice(cursor, at)));
         }
-        const matched = text.slice(at, at + raw.length);
+        const matched = text.slice(at, at + matchLen);
         const span = el("span", {
           class: "ts-word",
           "data-start": String(w.start),
@@ -562,7 +585,7 @@
           onClick: () => seek(w.start),
         }, matched);
         body.appendChild(span);
-        cursor = at + raw.length;
+        cursor = at + matchLen;
         placed += 1;
       });
       // Emit anything after the last placed word
