@@ -498,10 +498,11 @@
       if (!hasTimings) {
         body.textContent = ex.script || "—";
       } else {
-        // Always display the USER's original script. Whisper's STT output
-        // (ex.sttText) is only used by renderTimedSpans to find anchor
-        // positions, never as the visible source of truth — we never want
-        // transcription quirks to surface in the rendered transcript.
+        // Display the user's authored script (Whisper's STT has Dutch
+        // spelling quirks we don't want surfacing). renderTimedSpans
+        // position-aligns Whisper words to script tokens, then
+        // interpolates timestamps for the un-aligned tokens so EVERY
+        // word in the script becomes a highlight target.
         renderTimedSpans(body, ex.script || "", ex.wordTimings);
       }
       wrap.append(body);
@@ -524,79 +525,115 @@
       return wrap;
     }
 
-    // Render timed transcript: walk `text` (with punctuation) and wrap each
-    // word from `timings` in a span at its actual character position.
-    // Whitespace, commas, periods, line breaks all preserved as plain text.
+    // Render timed transcript: position-align Whisper word timings to the
+    // user's script tokens, INTERPOLATE timestamps for un-aligned tokens,
+    // then emit one <span> per script word — every word in the script
+    // becomes a highlightable, click-to-seek anchor.
+    //
+    // Why not display Whisper's sttText? Because it surfaces STT spelling
+    // quirks (Dutch proper nouns get butchered). The user authored the
+    // script and wants their text shown verbatim. We just borrow Whisper's
+    // timing information.
+    //
+    // Why interpolate? Position alignment misses ~5-10% of tokens around
+    // STT hallucinations and chunk boundaries. Without interpolation those
+    // tokens would be plain text — un-highlightable and un-clickable. With
+    // interpolation, they take fractional timestamps inside the gap
+    // between their aligned neighbours, so the highlight cursor passes
+    // through them smoothly while the audio plays.
     function renderTimedSpans(body, text, timings) {
       const seek = (start) => {
         const a = mount.querySelector("audio");
         if (a) { a.currentTime = Math.max(0, start - 0.05); a.play().catch(() => {}); }
       };
-      // Cache a lowercased copy so case-insensitive fallback matching
-      // doesn't allocate on every word.
-      const textLower = text.toLowerCase();
-      let cursor = 0;
-      let placed = 0;
-      timings.forEach((w, idx) => {
-        if (!w.word) return;
-        // Whisper sometimes prefixes a space; trim.
-        const raw = String(w.word).replace(/^\s+|\s+$/g, "");
-        if (!raw) return;
+      const stripEdges = (s) => s.replace(/^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu, "").toLowerCase();
 
-        // Try in order of specificity:
-        //  1. exact match (preserves capitalisation, fastest path)
-        //  2. exact match with punctuation stripped from the Whisper token
-        //  3. case-insensitive match — catches "Ik" (script) ↔ "ik" (whisper)
-        //  4. case-insensitive match with punctuation stripped
-        let at = text.indexOf(raw, cursor);
-        let matchLen = raw.length;
-        if (at < 0) {
-          const core = raw.replace(/^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu, "");
-          if (core) {
-            at = text.indexOf(core, cursor);
-            if (at >= 0) matchLen = core.length;
+      // 1. Tokenise script.
+      const tokenRe = /\S+/g;
+      const scriptTokens = [];
+      let m;
+      while ((m = tokenRe.exec(text)) !== null) {
+        const core = stripEdges(m[0]);
+        if (core) scriptTokens.push({ word: m[0], lower: core, pos: m.index, end: m.index + m[0].length });
+      }
+      if (!scriptTokens.length || !timings || !timings.length) {
+        body.textContent = text || "";
+        return;
+      }
+
+      // 2. Align Whisper → script. WINDOW kept small so a chunk-boundary
+      //    glitch can't silently re-anchor to a much later word.
+      const WINDOW = 10;
+      const aligned = new Array(scriptTokens.length).fill(null);
+      let sIdx = 0;
+      timings.forEach((w) => {
+        if (sIdx >= scriptTokens.length) return;
+        const lowW = stripEdges(String(w.word || ""));
+        if (!lowW) return;
+        for (let j = sIdx; j < Math.min(sIdx + WINDOW, scriptTokens.length); j++) {
+          if (scriptTokens[j].lower === lowW) {
+            aligned[j] = { start: w.start, end: w.end, exact: true };
+            sIdx = j + 1;
+            return;
           }
         }
-        if (at < 0) {
-          const lowRaw = raw.toLowerCase();
-          at = textLower.indexOf(lowRaw, cursor);
-          if (at >= 0) matchLen = lowRaw.length;
-        }
-        if (at < 0) {
-          const core = raw.replace(/^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu, "").toLowerCase();
-          if (core) {
-            at = textLower.indexOf(core, cursor);
-            if (at >= 0) matchLen = core.length;
-          }
-        }
-        if (at < 0) return; // give up on this word; plain text fallback handles the gap
-
-        // Emit text between cursor and the match (preserves punctuation, spaces)
-        if (at > cursor) {
-          body.appendChild(document.createTextNode(text.slice(cursor, at)));
-        }
-        const matched = text.slice(at, at + matchLen);
-        const span = el("span", {
-          class: "ts-word",
-          "data-start": String(w.start),
-          "data-end": String(w.end),
-          "data-idx": String(idx),
-          title: w.start.toFixed(2) + "s",
-          onClick: () => seek(w.start),
-        }, matched);
-        body.appendChild(span);
-        cursor = at + matchLen;
-        placed += 1;
       });
-      // Emit anything after the last placed word
-      if (cursor < text.length) {
-        body.appendChild(document.createTextNode(text.slice(cursor)));
+
+      // 3. Interpolate timestamps for un-aligned tokens. For each gap
+      //    between aligned tokens, distribute time linearly across the
+      //    missing positions. Boundary tokens use the global audio bounds.
+      const totalDur = timings[timings.length - 1].end;
+      let prevEnd = 0;
+      let i = 0;
+      while (i < aligned.length) {
+        if (aligned[i]) { prevEnd = aligned[i].end; i++; continue; }
+        // Find the next aligned token to bound the gap.
+        let nextI = i + 1;
+        while (nextI < aligned.length && !aligned[nextI]) nextI++;
+        const nextStart = nextI < aligned.length ? aligned[nextI].start : Math.max(prevEnd + 0.3, totalDur);
+        const gapSize = nextI - i;
+        const slice = (nextStart - prevEnd) / gapSize;
+        for (let k = 0; k < gapSize; k++) {
+          aligned[i + k] = {
+            start: prevEnd + k * slice,
+            end: prevEnd + (k + 1) * slice,
+            exact: false,
+          };
+        }
+        prevEnd = nextStart;
+        i = nextI;
       }
-      // Defensive fallback: if for some reason no words could be placed,
-      // fall back to plain text so the user at least sees the transcript.
-      if (placed === 0) {
-        body.textContent = text;
+
+      // 4. Emit DOM. Every script token becomes a span; whitespace +
+      //    punctuation between tokens render as plain text. data-idx is
+      //    the script token index — the highlighter uses it to find the
+      //    span it just activated.
+      let cursorChar = 0;
+      for (let j = 0; j < scriptTokens.length; j++) {
+        const tk = scriptTokens[j];
+        if (tk.pos > cursorChar) {
+          body.appendChild(document.createTextNode(text.slice(cursorChar, tk.pos)));
+        }
+        const t = aligned[j];
+        const span = el("span", {
+          class: "ts-word" + (t.exact ? "" : " ts-word-interp"),
+          "data-start": String(t.start),
+          "data-end": String(t.end),
+          "data-idx": String(j),
+          title: t.start.toFixed(2) + "s" + (t.exact ? "" : " · interpolated"),
+          onClick: () => seek(t.start),
+        }, tk.word);
+        body.appendChild(span);
+        cursorChar = tk.end;
       }
+      if (cursorChar < text.length) {
+        body.appendChild(document.createTextNode(text.slice(cursorChar)));
+      }
+
+      // Stash the per-script-token timings on the body so the highlighter
+      // can use them instead of the original Whisper `timings` array
+      // (which is keyed by Whisper index, not script index).
+      body.__scriptTimings = aligned;
     }
 
     function attachHighlighter(audio, body, timings) {
@@ -604,23 +641,27 @@
       // when the user switches tabs and triggers another render.
       if (audio.__tsHookedBody === body) return;
       audio.__tsHookedBody = body;
+      // Prefer the per-script-token timings stashed on the body by
+      // renderTimedSpans. They cover EVERY visible span (including
+      // interpolated ones). Falls back to the raw Whisper timings for
+      // legacy bodies that didn't go through the new aligner.
+      const tArr = body.__scriptTimings || timings;
       let lastIdx = -1;
 
       function tick() {
         const t = audio.currentTime;
-        // Binary search for current word
-        let lo = 0, hi = timings.length - 1, found = -1;
+        let lo = 0, hi = tArr.length - 1, found = -1;
         while (lo <= hi) {
           const mid = (lo + hi) >> 1;
-          const w = timings[mid];
+          const w = tArr[mid];
           if (t < w.start) hi = mid - 1;
           else if (t > w.end) lo = mid + 1;
           else { found = mid; break; }
         }
-        // If between words, hold the most recent one
+        // If between entries, hold the most recent one
         if (found < 0 && t > 0) {
-          let i = timings.length - 1;
-          while (i >= 0 && timings[i].start > t) i--;
+          let i = tArr.length - 1;
+          while (i >= 0 && tArr[i].start > t) i--;
           found = i;
         }
         if (found === lastIdx) return;
