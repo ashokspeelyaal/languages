@@ -1,0 +1,2684 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>French Grammar Bible · A1 + A2</title>
+<style>
+  /* =========================================================
+     Print-friendly French grammar reference for English speakers.
+     - A4, 18 mm margins
+     - Serif body for paper readability
+     - No external dependencies (works offline)
+     ========================================================= */
+  @page { size: A4; margin: 18mm 18mm 20mm 18mm; }
+  :root {
+    --ink: #1a1a1a;
+    --ink-soft: #4a4a4a;
+    --rule: #d4d4d8;
+    --paper: #fdfcf8;
+    --accent: #1e3a8a;          /* deep French blue */
+    --accent-soft: #e0e7ff;
+    --note-bg: #fff8e1;
+    --note-border: #f59e0b;
+    --note-ink: #92400e;
+    --serif: Georgia, "Times New Roman", serif;
+    --sans: -apple-system, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    --mono: "SFMono-Regular", Menlo, Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  html, body { background: var(--paper); color: var(--ink); }
+  body {
+    font-family: var(--serif);
+    font-size: 10.5pt;
+    line-height: 1.5;
+    max-width: 180mm;
+    margin: 0 auto;
+    padding: 0 0 30mm;
+  }
+  h1, h2, h3, h4 { font-family: var(--sans); color: var(--accent); }
+  h1 { font-size: 24pt; margin: 0 0 .1em; letter-spacing: -0.01em; }
+  h2 { font-size: 16pt; margin: 1.6em 0 .5em; border-bottom: 2px solid var(--accent); padding-bottom: .15em; }
+  h3 { font-size: 12pt; margin: 1.2em 0 .35em; }
+  h4 { font-size: 11pt; margin: .9em 0 .25em; color: var(--ink); font-weight: 700; }
+  p  { margin: .25em 0 .7em; }
+  strong { color: var(--ink); }
+  em.rule { font-style: italic; color: var(--accent); font-weight: 600; }
+  .fr { font-style: italic; }
+  .en { color: var(--ink-soft); font-size: .94em; }
+  .ipa { font-family: var(--mono); color: var(--ink-soft); font-size: .9em; }
+  small { color: var(--ink-soft); font-size: .85em; }
+
+  /* Tables */
+  table { width: 100%; border-collapse: collapse; margin: .4em 0 1em;
+          font-size: 9.8pt; page-break-inside: avoid; }
+  th, td { border: 1px solid var(--rule); padding: 4px 8px;
+           text-align: left; vertical-align: top; }
+  th { background: var(--accent-soft); font-family: var(--sans); font-weight: 600; color: var(--accent); }
+  td.fr, td.lemma { font-style: italic; }
+  td.en, td.gloss { color: var(--ink-soft); font-size: .92em; }
+  td.tag { font-family: var(--mono); font-size: 8.8pt; color: var(--ink-soft); }
+  caption { caption-side: top; text-align: left;
+            font-style: italic; color: var(--ink-soft); padding-bottom: 3px; }
+
+  /* Example blocks */
+  .ex {
+    background: var(--accent-soft);
+    border-left: 3px solid var(--accent);
+    padding: 7px 12px;
+    margin: .4em 0 .9em;
+    page-break-inside: avoid;
+  }
+  .ex p { margin: .15em 0; }
+  .ex .fr { font-style: italic; color: var(--ink); }
+  .ex .en { display: block; color: var(--ink-soft); font-size: .9em; margin-left: 14px; }
+  .ex .arrow { color: var(--accent); font-weight: 700; }
+
+  /* Note / warning boxes */
+  .note {
+    background: var(--note-bg);
+    border: 1px solid var(--note-border);
+    border-radius: 2px;
+    padding: 7px 11px;
+    margin: .5em 0 1em;
+    font-size: 9.9pt;
+    page-break-inside: avoid;
+  }
+  .note::before {
+    content: "⚠  Note  ";
+    font-family: var(--sans);
+    font-weight: 700;
+    color: var(--note-ink);
+    font-size: 9pt;
+    letter-spacing: .04em;
+  }
+  .tip {
+    background: #ecfeff;
+    border: 1px solid #06b6d4;
+    border-radius: 2px;
+    padding: 7px 11px;
+    margin: .5em 0 1em;
+    font-size: 9.9pt;
+  }
+  .tip::before {
+    content: "✻  Tip  ";
+    font-family: var(--sans);
+    font-weight: 700;
+    color: #0e7490;
+    font-size: 9pt;
+    letter-spacing: .04em;
+  }
+
+  ul, ol { margin: .2em 0 .8em 1.2em; padding-left: .6em; }
+  li { margin-bottom: .15em; }
+
+  /* Chapter breaks */
+  .chapter { page-break-before: always; }
+  .chapter:first-of-type { page-break-before: auto; }
+
+  /* TOC */
+  nav.toc { font-family: var(--sans); font-size: 10pt;
+            column-count: 2; column-gap: 12mm;
+            column-rule: 1px dashed var(--rule); margin-top: 1.5em; }
+  nav.toc h3 { color: var(--accent); margin: 0 0 .3em; break-after: avoid; }
+  nav.toc ol { list-style: none; padding-left: 0; margin: 0 0 1em; }
+  nav.toc li { margin-bottom: 2px; }
+  nav.toc a { color: var(--ink); text-decoration: none; }
+
+  /* Level tag on chapters */
+  .level {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 8.5pt;
+    background: var(--accent);
+    color: white;
+    padding: 1px 7px;
+    border-radius: 2px;
+    margin-right: 8px;
+    vertical-align: middle;
+    letter-spacing: .06em;
+  }
+  .level.a2 { background: #b45309; }
+
+  /* Cover page */
+  .cover {
+    text-align: center;
+    margin-top: 60mm;
+    page-break-after: always;
+  }
+  .cover h1 { font-size: 38pt; color: var(--accent); }
+  .cover .subtitle { font-family: var(--sans); font-size: 14pt;
+                     color: var(--ink-soft); margin-top: 0; }
+  .cover .info { font-family: var(--sans); font-size: 10pt;
+                 color: var(--ink-soft); margin-top: 40mm; line-height: 1.7; }
+
+  /* Screen reading polish */
+  @media screen {
+    body { padding: 2rem; }
+    .chapter { box-shadow: 0 1px 4px rgba(0,0,0,.06);
+               background: white; padding: 1.5em 2em;
+               margin-bottom: 1em; border-radius: 4px; }
+  }
+  @media print {
+    nav.toc a::after { content: leader('. ') target-counter(attr(href), page);
+                       color: var(--ink-soft); }
+    .note, .tip, .ex { break-inside: avoid; }
+    h2, h3 { break-after: avoid; }
+    table { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ======================== COVER ======================== -->
+<section class="cover">
+  <h1>French Grammar Bible</h1>
+  <p class="subtitle">A1 + A2 · Combined reference</p>
+  <p class="info">
+    A compact, comprehensive guide for English-speaking learners<br>
+    All rules in English · French examples with English translations<br>
+    Designed to be printed and kept on hand
+  </p>
+</section>
+
+<!-- ======================== TABLE OF CONTENTS ======================== -->
+<section>
+  <h2>Table of contents</h2>
+  <nav class="toc">
+    <div>
+      <h3>A1 · Foundations</h3>
+      <ol>
+        <li><a href="#a1-articles">Articles — le, la, l', les; un, une, des; du, de la</a></li>
+        <li><a href="#a1-pronouns">Subject pronouns</a></li>
+        <li><a href="#a1-etre">The verb <em>être</em> (to be)</a></li>
+        <li><a href="#a1-avoir">The verb <em>avoir</em> (to have)</a></li>
+        <li><a href="#a1-er-verbs">Regular <em>-er</em> verbs · présent</a></li>
+        <li><a href="#a1-negation">Negation — <em>ne … pas</em></a></li>
+        <li><a href="#a1-questions">Forming questions</a></li>
+        <li><a href="#a1-question-words">Question words</a></li>
+        <li><a href="#a1-nouns">Noun gender and plurals</a></li>
+        <li><a href="#a1-adjectives">Adjective agreement</a></li>
+        <li><a href="#a1-possessives">Possessive adjectives</a></li>
+        <li><a href="#a1-demonstratives">Demonstrative adjectives</a></li>
+        <li><a href="#a1-numbers">Numbers, time, date, days, months</a></li>
+        <li><a href="#a1-prepositions">Common prepositions</a></li>
+        <li><a href="#a1-il-y-a">Three building blocks: <em>il y a</em>, <em>c'est</em>, <em>il est</em></a></li>
+      </ol>
+    </div>
+    <div>
+      <h3>A2 · Expansion</h3>
+      <ol start="16">
+        <li><a href="#a2-ir-verbs">Regular <em>-ir</em> verbs (group 2)</a></li>
+        <li><a href="#a2-re-verbs">Regular <em>-re</em> verbs</a></li>
+        <li><a href="#a2-modals">Modal verbs — pouvoir, vouloir, devoir, savoir</a></li>
+        <li><a href="#a2-reflexives">Reflexive (pronominal) verbs</a></li>
+        <li><a href="#a2-pc-avoir">Passé composé with <em>avoir</em></a></li>
+        <li><a href="#a2-pc-etre">Passé composé with <em>être</em> + agreement</a></li>
+        <li><a href="#a2-imparfait">Imparfait</a></li>
+        <li><a href="#a2-pc-vs-imp">Passé composé vs imparfait</a></li>
+        <li><a href="#a2-futur">Futur proche and futur simple (intro)</a></li>
+        <li><a href="#a2-cod">Direct object pronouns (COD)</a></li>
+        <li><a href="#a2-coi">Indirect object pronouns (COI)</a></li>
+        <li><a href="#a2-y-en">Pronouns <em>y</em> and <em>en</em></a></li>
+        <li><a href="#a2-pronoun-order">Pronoun order</a></li>
+        <li><a href="#a2-comparative">Comparative and superlative</a></li>
+        <li><a href="#a2-adverbs">Adverbs — formation in <em>-ment</em></a></li>
+        <li><a href="#a2-imperative">Imperative (impératif)</a></li>
+        <li><a href="#a2-connectors">Connectors and linking words</a></li>
+      </ol>
+      <h3>Appendices</h3>
+      <ol start="33">
+        <li><a href="#app-irregular">Common irregular verbs · full tables</a></li>
+        <li><a href="#app-etre-verbs">Verbs that take <em>être</em> in passé composé</a></li>
+        <li><a href="#app-gender">Heuristics for guessing noun gender</a></li>
+        <li><a href="#app-pronunciation">Pronunciation traps for English speakers</a></li>
+      </ol>
+    </div>
+  </nav>
+</section>
+
+<!-- =========================================================
+     CHAPTERS INSERTED BELOW IN SEQUENCE
+     ========================================================= -->
+
+<!-- ============================================================
+     CHAPTER 1 — ARTICLES
+     ============================================================ -->
+<article class="chapter" id="a1-articles">
+<h2><span class="level">A1</span> 1. Articles — <em>le, la, l', les · un, une, des · du, de la</em></h2>
+
+<p>Every French noun has a <strong>gender</strong> (masculine or feminine) and a <strong>number</strong> (singular or plural). The article in front of the noun changes to match both. There are three families of articles: <em>definite</em>, <em>indefinite</em>, and <em>partitive</em>.</p>
+
+<h3>1.1 Definite articles — <em>"the"</em></h3>
+<table>
+  <thead><tr><th>Form</th><th>Used for</th><th>Examples</th></tr></thead>
+  <tbody>
+    <tr><td><strong>le</strong></td><td>masculine singular, consonant start</td><td class="fr">le livre, le garçon, le chat</td></tr>
+    <tr><td><strong>la</strong></td><td>feminine singular, consonant start</td><td class="fr">la table, la fille, la maison</td></tr>
+    <tr><td><strong>l'</strong></td><td>singular before vowel or mute <em>h</em> (m. or f.)</td><td class="fr">l'ami, l'amie, l'eau, l'hôtel</td></tr>
+    <tr><td><strong>les</strong></td><td>plural (any gender)</td><td class="fr">les livres, les tables, les amis</td></tr>
+  </tbody>
+</table>
+
+<div class="ex">
+  <p><span class="fr">Le chat dort sur la table.</span><span class="en">The cat is sleeping on the table.</span></p>
+  <p><span class="fr">L'enfant joue avec les amis de sa sœur.</span><span class="en">The child is playing with his/her sister's friends.</span></p>
+</div>
+
+<p>Use the definite article in three situations:</p>
+<ol>
+  <li>A specific, known noun: <span class="fr">le livre que tu m'as donné</span> — <span class="en">the book you gave me</span>.</li>
+  <li>A generality (English drops the article here): <span class="fr">J'aime <strong>le</strong> café.</span> — <span class="en">I like coffee.</span></li>
+  <li>Countries, languages, dates, days (when habitual): <span class="fr">la France, le français, le lundi</span> (on Mondays).</li>
+</ol>
+
+<h3>1.2 Indefinite articles — <em>"a / an / some"</em></h3>
+<table>
+  <thead><tr><th>Form</th><th>Used for</th><th>Examples</th></tr></thead>
+  <tbody>
+    <tr><td><strong>un</strong></td><td>masculine singular</td><td class="fr">un homme, un problème, un livre</td></tr>
+    <tr><td><strong>une</strong></td><td>feminine singular</td><td class="fr">une femme, une idée, une voiture</td></tr>
+    <tr><td><strong>des</strong></td><td>plural (any gender)</td><td class="fr">des hommes, des idées, des livres</td></tr>
+  </tbody>
+</table>
+
+<div class="ex">
+  <p><span class="fr">J'ai <strong>un</strong> chien et <strong>une</strong> chatte.</span><span class="en">I have a dog and a (female) cat.</span></p>
+  <p><span class="fr">Il y a <strong>des</strong> enfants dans le jardin.</span><span class="en">There are (some) children in the garden.</span></p>
+</div>
+
+<h3>1.3 Partitive articles — <em>"some / any"</em> for uncountable things</h3>
+<p>French uses a special article when you mean an <strong>unspecified quantity</strong> of something — typically food, drink, or abstract qualities. English usually omits this ("I drink coffee") but French requires it ("I drink <em>some</em> coffee").</p>
+<table>
+  <thead><tr><th>Form</th><th>Used for</th><th>Examples</th></tr></thead>
+  <tbody>
+    <tr><td><strong>du</strong></td><td>masculine singular</td><td class="fr">du pain, du vin, du courage</td></tr>
+    <tr><td><strong>de la</strong></td><td>feminine singular</td><td class="fr">de la salade, de la patience</td></tr>
+    <tr><td><strong>de l'</strong></td><td>before vowel or mute h</td><td class="fr">de l'eau, de l'huile</td></tr>
+    <tr><td><strong>des</strong></td><td>plural (countable)</td><td class="fr">des pâtes, des frites</td></tr>
+  </tbody>
+</table>
+
+<div class="ex">
+  <p><span class="fr">Je voudrais <strong>du</strong> pain et <strong>de la</strong> confiture.</span><span class="en">I'd like (some) bread and (some) jam.</span></p>
+  <p><span class="fr">Tu bois <strong>de l'</strong>eau ?</span><span class="en">Do you drink water?</span></p>
+</div>
+
+<h3>1.4 The big rule: negation turns everything into <em>de / d'</em></h3>
+<p>After a negation (<em>ne … pas</em>), all indefinite and partitive articles become <strong>de</strong> (or <strong>d'</strong> before a vowel). Definite articles do <em>not</em> change.</p>
+<table>
+  <thead><tr><th>Affirmative</th><th>Negative</th></tr></thead>
+  <tbody>
+    <tr><td class="fr">J'ai <strong>un</strong> stylo.</td><td class="fr">Je n'ai pas <strong>de</strong> stylo.</td></tr>
+    <tr><td class="fr">Il mange <strong>de la</strong> viande.</td><td class="fr">Il ne mange pas <strong>de</strong> viande.</td></tr>
+    <tr><td class="fr">Nous avons <strong>des</strong> enfants.</td><td class="fr">Nous n'avons pas <strong>d'</strong>enfants.</td></tr>
+    <tr><td class="fr">J'aime <strong>le</strong> café.</td><td class="fr">Je n'aime pas <strong>le</strong> café. (no change!)</td></tr>
+  </tbody>
+</table>
+
+<div class="note">Exception: after <em>être</em>, partitives/indefinites keep their normal form even in negation. <span class="fr">Ce n'est pas <strong>un</strong> problème.</span> — <span class="en">It's not a problem.</span></div>
+
+<h3>1.5 Contractions: <em>à</em> and <em>de</em> + definite article</h3>
+<p>When the prepositions <strong>à</strong> (to/at) or <strong>de</strong> (of/from) meet <em>le</em> or <em>les</em>, they fuse:</p>
+<table>
+  <thead><tr><th>Preposition</th><th>+ le</th><th>+ la</th><th>+ l'</th><th>+ les</th></tr></thead>
+  <tbody>
+    <tr><td><strong>à</strong></td><td><strong>au</strong></td><td>à la</td><td>à l'</td><td><strong>aux</strong></td></tr>
+    <tr><td><strong>de</strong></td><td><strong>du</strong></td><td>de la</td><td>de l'</td><td><strong>des</strong></td></tr>
+  </tbody>
+</table>
+<div class="ex">
+  <p><span class="fr">Je vais <strong>au</strong> cinéma.</span><span class="en">I'm going to the cinema. (à + le → au)</span></p>
+  <p><span class="fr">Elle parle <strong>aux</strong> enfants.</span><span class="en">She's talking to the children. (à + les → aux)</span></p>
+  <p><span class="fr">C'est la voiture <strong>du</strong> voisin.</span><span class="en">It's the neighbour's car. (de + le → du)</span></p>
+</div>
+</article>
+
+<!-- ============================================================
+     CHAPTER 2 — SUBJECT PRONOUNS
+     ============================================================ -->
+<article class="chapter" id="a1-pronouns">
+<h2><span class="level">A1</span> 2. Subject pronouns</h2>
+
+<p>Every conjugated French verb needs a subject. Subject pronouns are the "doer" of the action.</p>
+
+<table>
+  <thead><tr><th>Who it refers to</th><th>Pronoun</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td>I (the speaker)</td><td><strong>je</strong> (j')</td><td>shrinks to <em>j'</em> before a vowel: <span class="fr">j'ai, j'habite</span></td></tr>
+    <tr><td>you (one person, informal)</td><td><strong>tu</strong></td><td>friends, family, children, animals, peers</td></tr>
+    <tr><td>he / a masculine thing</td><td><strong>il</strong></td><td>any masculine noun or person</td></tr>
+    <tr><td>she / a feminine thing</td><td><strong>elle</strong></td><td>any feminine noun or person</td></tr>
+    <tr><td>we / one / people in general</td><td><strong>on</strong></td><td>extremely common in spoken French — see 2.1</td></tr>
+    <tr><td>we (the group I belong to)</td><td><strong>nous</strong></td><td>formal or written; spoken French prefers <em>on</em></td></tr>
+    <tr><td>you (a group, OR one person formally)</td><td><strong>vous</strong></td><td>plural always, or singular polite</td></tr>
+    <tr><td>they (men, or a mixed group)</td><td><strong>ils</strong></td><td>used as soon as at least one is masculine</td></tr>
+    <tr><td>they (women only)</td><td><strong>elles</strong></td><td>only when every member is feminine</td></tr>
+  </tbody>
+</table>
+
+<h3>2.1 The chameleon pronoun <em>on</em></h3>
+<p><strong>On</strong> always takes a 3rd-person singular verb (<em>on est, on a, on parle</em>) but has three meanings depending on context:</p>
+<ol>
+  <li><strong>"We"</strong> in everyday speech — <em>much more common than nous</em>: <span class="fr">On y va ?</span> — <span class="en">Shall we go?</span></li>
+  <li><strong>"One / people in general"</strong>: <span class="fr">En France, on mange à 20 heures.</span> — <span class="en">In France, people eat at 8 pm.</span></li>
+  <li><strong>"They (unknown)"</strong>: <span class="fr">On a sonné à la porte.</span> — <span class="en">Someone rang the bell.</span></li>
+</ol>
+
+<h3>2.2 <em>tu</em> vs <em>vous</em> — when to use which</h3>
+<table>
+  <thead><tr><th>Use <em>tu</em></th><th>Use <em>vous</em></th></tr></thead>
+  <tbody>
+    <tr><td>friends, family, kids, animals</td><td>strangers, older people, professionals</td></tr>
+    <tr><td>colleagues your age (in many workplaces)</td><td>customers, doctors, teachers (in formal settings)</td></tr>
+    <tr><td>online forums, social media</td><td>business correspondence, polite requests</td></tr>
+  </tbody>
+</table>
+<div class="tip">When unsure, start with <em>vous</em>. The other person may invite you to <em>tu</em> with the phrase <span class="fr">On peut se tutoyer ?</span> — <span class="en">Can we use "tu"?</span></div>
+
+<h3>2.3 <em>il/elle</em> for things, not just people</h3>
+<p>French has no gender-neutral "it". Every noun is masculine or feminine, so the pronoun is <em>il</em> or <em>elle</em> based on the noun's gender.</p>
+<div class="ex">
+  <p><span class="fr">Où est la voiture ? — <strong>Elle</strong> est dans le garage.</span><span class="en">Where is the car? — It's in the garage. (la voiture is feminine)</span></p>
+  <p><span class="fr">Tu vois le livre ? — Oui, <strong>il</strong> est sur la table.</span><span class="en">Do you see the book? — Yes, it's on the table.</span></p>
+</div>
+</article>
+
+<!-- ============================================================
+     CHAPTER 3 — ÊTRE
+     ============================================================ -->
+<article class="chapter" id="a1-etre">
+<h2><span class="level">A1</span> 3. The verb <em>être</em> (to be)</h2>
+
+<p>The most important verb in French. Used for identity, profession, location, and state. Also serves as an auxiliary for some past-tense constructions (chapter 21).</p>
+
+<h3>3.1 Conjugation in the present tense</h3>
+<table>
+  <thead><tr><th>Person</th><th>Form</th><th>Sounds like</th><th>Example</th></tr></thead>
+  <tbody>
+    <tr><td>je</td><td><strong>suis</strong></td><td class="ipa">/sɥi/</td><td class="fr">Je suis étudiant.</td></tr>
+    <tr><td>tu</td><td><strong>es</strong></td><td class="ipa">/ɛ/</td><td class="fr">Tu es français.</td></tr>
+    <tr><td>il / elle / on</td><td><strong>est</strong></td><td class="ipa">/ɛ/</td><td class="fr">Elle est médecin.</td></tr>
+    <tr><td>nous</td><td><strong>sommes</strong></td><td class="ipa">/sɔm/</td><td class="fr">Nous sommes à Paris.</td></tr>
+    <tr><td>vous</td><td><strong>êtes</strong></td><td class="ipa">/ɛt/</td><td class="fr">Vous êtes prêt ?</td></tr>
+    <tr><td>ils / elles</td><td><strong>sont</strong></td><td class="ipa">/sɔ̃/</td><td class="fr">Ils sont fatigués.</td></tr>
+  </tbody>
+</table>
+
+<div class="note"><strong>tu es</strong> and <strong>il est</strong> sound identical (both /ɛ/). Only the pronoun distinguishes them in speech.</div>
+
+<h3>3.2 Five core uses</h3>
+<table>
+  <thead><tr><th>Use</th><th>Example</th><th>Translation</th></tr></thead>
+  <tbody>
+    <tr><td>Identity / name</td><td class="fr">Je suis Marie.</td><td class="en">I am Marie.</td></tr>
+    <tr><td>Profession (no article!)</td><td class="fr">Il est professeur.</td><td class="en">He is a teacher.</td></tr>
+    <tr><td>Nationality (no article!)</td><td class="fr">Elle est belge.</td><td class="en">She is Belgian.</td></tr>
+    <tr><td>Location</td><td class="fr">Nous sommes à la maison.</td><td class="en">We are at home.</td></tr>
+    <tr><td>State / feeling</td><td class="fr">Je suis fatigué(e).</td><td class="en">I am tired.</td></tr>
+  </tbody>
+</table>
+
+<div class="note">For <strong>professions</strong> and <strong>nationalities</strong>, French drops the article after <em>être</em>. <span class="fr">Je suis <strong>médecin</strong>.</span> — <span class="en">I am <strong>a</strong> doctor.</span> — no <em>un</em>. But with <em>c'est</em> you do need the article: <span class="fr">C'est <strong>un</strong> médecin.</span></div>
+
+<h3>3.3 With adjectives — agreement is mandatory</h3>
+<p>Adjectives following <em>être</em> must match the subject's gender and number:</p>
+<table>
+  <thead><tr><th>Subject</th><th>Form</th></tr></thead>
+  <tbody>
+    <tr><td>Il (m.sg)</td><td class="fr">Il est <strong>grand</strong>.</td></tr>
+    <tr><td>Elle (f.sg)</td><td class="fr">Elle est <strong>grande</strong>.</td></tr>
+    <tr><td>Ils (m.pl / mixed)</td><td class="fr">Ils sont <strong>grands</strong>.</td></tr>
+    <tr><td>Elles (f.pl)</td><td class="fr">Elles sont <strong>grandes</strong>.</td></tr>
+  </tbody>
+</table>
+</article>
+
+<!-- ============================================================
+     CHAPTER 4 — AVOIR
+     ============================================================ -->
+<article class="chapter" id="a1-avoir">
+<h2><span class="level">A1</span> 4. The verb <em>avoir</em> (to have)</h2>
+
+<p>The second pillar of French. Used for possession, age, and several physical/emotional states where English uses "to be". Also the most common auxiliary in past-tense constructions.</p>
+
+<h3>4.1 Conjugation in the present tense</h3>
+<table>
+  <thead><tr><th>Person</th><th>Form</th><th>Sounds like</th><th>Example</th></tr></thead>
+  <tbody>
+    <tr><td>je</td><td><strong>ai</strong> (j'ai)</td><td class="ipa">/e/</td><td class="fr">J'ai un frère.</td></tr>
+    <tr><td>tu</td><td><strong>as</strong></td><td class="ipa">/a/</td><td class="fr">Tu as raison.</td></tr>
+    <tr><td>il / elle / on</td><td><strong>a</strong></td><td class="ipa">/a/</td><td class="fr">Elle a vingt ans.</td></tr>
+    <tr><td>nous</td><td><strong>avons</strong></td><td class="ipa">/a.vɔ̃/</td><td class="fr">Nous avons faim.</td></tr>
+    <tr><td>vous</td><td><strong>avez</strong></td><td class="ipa">/a.ve/</td><td class="fr">Vous avez l'heure ?</td></tr>
+    <tr><td>ils / elles</td><td><strong>ont</strong></td><td class="ipa">/ɔ̃/</td><td class="fr">Ils ont deux chats.</td></tr>
+  </tbody>
+</table>
+
+<div class="note">Don't confuse <strong>ont</strong> (they have, /ɔ̃/) with <strong>sont</strong> (they are, /sɔ̃/) — single consonant difference, both nasal.</div>
+
+<h3>4.2 The "<em>avoir</em>" expressions — where English uses "to be"</h3>
+<p>French treats these states as things you <em>have</em>, not things you <em>are</em>:</p>
+<table>
+  <thead><tr><th>French</th><th>Literal</th><th>Actual meaning</th></tr></thead>
+  <tbody>
+    <tr><td class="fr">J'ai 25 ans.</td><td>I have 25 years.</td><td class="en">I am 25 years old.</td></tr>
+    <tr><td class="fr">J'ai faim.</td><td>I have hunger.</td><td class="en">I am hungry.</td></tr>
+    <tr><td class="fr">J'ai soif.</td><td>I have thirst.</td><td class="en">I am thirsty.</td></tr>
+    <tr><td class="fr">J'ai chaud.</td><td>I have hot.</td><td class="en">I am hot.</td></tr>
+    <tr><td class="fr">J'ai froid.</td><td>I have cold.</td><td class="en">I am cold.</td></tr>
+    <tr><td class="fr">J'ai peur.</td><td>I have fear.</td><td class="en">I am afraid.</td></tr>
+    <tr><td class="fr">J'ai sommeil.</td><td>I have sleep.</td><td class="en">I am sleepy.</td></tr>
+    <tr><td class="fr">J'ai raison / tort.</td><td>I have right / wrong.</td><td class="en">I am right / wrong.</td></tr>
+    <tr><td class="fr">J'ai besoin de …</td><td>I have need of …</td><td class="en">I need …</td></tr>
+    <tr><td class="fr">J'ai envie de …</td><td>I have desire of …</td><td class="en">I feel like …</td></tr>
+    <tr><td class="fr">J'ai mal à la tête.</td><td>I have hurt to the head.</td><td class="en">I have a headache.</td></tr>
+  </tbody>
+</table>
+
+<div class="tip">When you want to say "I'm hungry", your instinct as an English speaker is to reach for <em>être</em>. Resist. <strong>J'ai faim</strong>, never <em>je suis faim</em>.</div>
+
+<h3>4.3 <em>il y a</em> — "there is / there are"</h3>
+<p>This invariable expression uses <em>avoir</em> in the 3rd singular. It does not change in the plural.</p>
+<div class="ex">
+  <p><span class="fr">Il y a un chat dans le jardin.</span><span class="en">There is a cat in the garden.</span></p>
+  <p><span class="fr">Il y a trois enfants ici.</span><span class="en">There are three children here.</span></p>
+  <p><span class="fr">Il n'y a pas de problème.</span><span class="en">There is no problem.</span></p>
+</div>
+</article>
+
+<!-- ============================================================
+     CHAPTER 5 — REGULAR -ER VERBS
+     ============================================================ -->
+<article class="chapter" id="a1-er-verbs">
+<h2><span class="level">A1</span> 5. Regular <em>-er</em> verbs · présent</h2>
+
+<p>Roughly <strong>80% of all French verbs</strong> end in <em>-er</em> and follow the same predictable pattern. Master this one rule and you can conjugate thousands of verbs.</p>
+
+<h3>5.1 The pattern</h3>
+<p>Take the infinitive (e.g. <em>parler</em> — to speak), drop the <strong>-er</strong> to get the stem (<em>parl-</em>), then add these endings:</p>
+<table>
+  <thead><tr><th>Person</th><th>Ending</th><th>parler (to speak)</th><th>aimer (to love)</th><th>habiter (to live)</th></tr></thead>
+  <tbody>
+    <tr><td>je</td><td><strong>-e</strong></td><td class="fr">je parle</td><td class="fr">j'aime</td><td class="fr">j'habite</td></tr>
+    <tr><td>tu</td><td><strong>-es</strong></td><td class="fr">tu parles</td><td class="fr">tu aimes</td><td class="fr">tu habites</td></tr>
+    <tr><td>il / elle / on</td><td><strong>-e</strong></td><td class="fr">il parle</td><td class="fr">elle aime</td><td class="fr">on habite</td></tr>
+    <tr><td>nous</td><td><strong>-ons</strong></td><td class="fr">nous parlons</td><td class="fr">nous aimons</td><td class="fr">nous habitons</td></tr>
+    <tr><td>vous</td><td><strong>-ez</strong></td><td class="fr">vous parlez</td><td class="fr">vous aimez</td><td class="fr">vous habitez</td></tr>
+    <tr><td>ils / elles</td><td><strong>-ent</strong></td><td class="fr">ils parlent</td><td class="fr">elles aiment</td><td class="fr">ils habitent</td></tr>
+  </tbody>
+</table>
+
+<div class="note">The endings <strong>-e, -es, -e, -ent</strong> are all <em>silent</em>. <em>Je parle, tu parles, il parle, ils parlent</em> all sound the same — only the subject pronoun tells them apart.</div>
+
+<h3>5.2 Spelling variants — small but important</h3>
+
+<h4>Verbs ending in <em>-ger</em> (manger, voyager, nager)</h4>
+<p>Insert an extra <strong>e</strong> before <em>-ons</em> to keep the soft /ʒ/ sound:</p>
+<table>
+  <tbody>
+    <tr><td class="fr">manger → nous <strong>mangeons</strong></td><td class="en">we eat</td></tr>
+    <tr><td class="fr">voyager → nous <strong>voyageons</strong></td><td class="en">we travel</td></tr>
+  </tbody>
+</table>
+
+<h4>Verbs ending in <em>-cer</em> (commencer, lancer)</h4>
+<p>The <em>c</em> becomes <strong>ç</strong> before <em>-ons</em>:</p>
+<table>
+  <tbody>
+    <tr><td class="fr">commencer → nous <strong>commençons</strong></td><td class="en">we begin</td></tr>
+    <tr><td class="fr">lancer → nous <strong>lançons</strong></td><td class="en">we throw</td></tr>
+  </tbody>
+</table>
+
+<h4>Verbs ending in <em>-yer</em> (payer, envoyer, essayer)</h4>
+<p>The <em>y</em> becomes <strong>i</strong> in the four "shoe" forms (je/tu/il/ils):</p>
+<table>
+  <tbody>
+    <tr><td class="fr">payer → je <strong>paie</strong>, tu paies, il paie, ils paient</td></tr>
+    <tr><td class="fr">payer → nous payons, vous payez</td></tr>
+  </tbody>
+</table>
+
+<h4>Verbs with stem <em>e</em> + consonant + <em>-er</em> (acheter, lever, mener)</h4>
+<p>Add a grave accent (è) on the stem in the shoe forms:</p>
+<table>
+  <tbody>
+    <tr><td class="fr">acheter → j'<strong>achète</strong>, tu achètes, il achète, ils achètent</td></tr>
+    <tr><td class="fr">acheter → nous achetons, vous achetez</td></tr>
+    <tr><td class="fr">lever → je lève, nous levons</td></tr>
+  </tbody>
+</table>
+
+<h4>Verbs ending in <em>-eler / -eter</em> (appeler, jeter)</h4>
+<p>Most double the consonant in the shoe forms:</p>
+<table>
+  <tbody>
+    <tr><td class="fr">appeler → j'<strong>appelle</strong>, tu appelles, il appelle, ils appellent</td></tr>
+    <tr><td class="fr">appeler → nous appelons, vous appelez</td></tr>
+    <tr><td class="fr">jeter → je jette, nous jetons</td></tr>
+  </tbody>
+</table>
+
+<h3>5.3 The one truly irregular <em>-er</em> verb: <em>aller</em> (to go)</h3>
+<p>It looks <em>-er</em> but it's not regular — chapter 24 covers it in full. Quick form:</p>
+<table>
+  <tbody>
+    <tr><td class="fr">je vais · tu vas · il va · nous allons · vous allez · ils vont</td></tr>
+  </tbody>
+</table>
+
+<h3>5.4 Frequent <em>-er</em> verbs to know cold</h3>
+<table>
+  <tbody>
+    <tr><td class="fr">parler</td><td>to speak</td><td class="fr">aimer</td><td>to love/like</td></tr>
+    <tr><td class="fr">habiter</td><td>to live (somewhere)</td><td class="fr">travailler</td><td>to work</td></tr>
+    <tr><td class="fr">manger</td><td>to eat</td><td class="fr">écouter</td><td>to listen</td></tr>
+    <tr><td class="fr">regarder</td><td>to watch/look at</td><td class="fr">jouer</td><td>to play</td></tr>
+    <tr><td class="fr">étudier</td><td>to study</td><td class="fr">acheter</td><td>to buy</td></tr>
+    <tr><td class="fr">donner</td><td>to give</td><td class="fr">demander</td><td>to ask</td></tr>
+    <tr><td class="fr">trouver</td><td>to find</td><td class="fr">chercher</td><td>to look for</td></tr>
+    <tr><td class="fr">penser</td><td>to think</td><td class="fr">arriver</td><td>to arrive</td></tr>
+  </tbody>
+</table>
+</article>
+
+<!-- ============================================================
+     CHAPTER 6 — NEGATION
+     ============================================================ -->
+<article class="chapter" id="a1-negation">
+<h2><span class="level">A1</span> 6. Negation — <em>ne … pas</em></h2>
+
+<p>French negation is a <strong>two-word sandwich</strong> around the verb. The English "I don't speak French" is in French <em>"I <em>not</em> speak <em>not</em> French"</em>.</p>
+
+<h3>6.1 The basic rule</h3>
+<table>
+  <thead><tr><th>Affirmative</th><th>Negative</th></tr></thead>
+  <tbody>
+    <tr><td class="fr">Je parle français.</td><td class="fr">Je <strong>ne</strong> parle <strong>pas</strong> français.</td></tr>
+    <tr><td class="fr">Il vient ce soir.</td><td class="fr">Il <strong>ne</strong> vient <strong>pas</strong> ce soir.</td></tr>
+    <tr><td class="fr">Nous travaillons le dimanche.</td><td class="fr">Nous <strong>ne</strong> travaillons <strong>pas</strong> le dimanche.</td></tr>
+  </tbody>
+</table>
+
+<h3>6.2 <em>ne → n'</em> before a vowel or mute <em>h</em></h3>
+<table>
+  <tbody>
+    <tr><td class="fr">J'aime ça.</td><td class="fr">Je <strong>n'</strong>aime <strong>pas</strong> ça.</td></tr>
+    <tr><td class="fr">Il habite ici.</td><td class="fr">Il <strong>n'</strong>habite <strong>pas</strong> ici.</td></tr>
+  </tbody>
+</table>
+
+<h3>6.3 Negation drops the indefinite/partitive article</h3>
+<p>After a negative verb, <em>un, une, des, du, de la, de l'</em> all become <strong>de</strong> (or <strong>d'</strong> before a vowel). Reviewed already in §1.4 — it's worth seeing twice:</p>
+<table>
+  <thead><tr><th>Affirmative</th><th>Negative</th></tr></thead>
+  <tbody>
+    <tr><td class="fr">J'ai un chien.</td><td class="fr">Je n'ai pas <strong>de</strong> chien.</td></tr>
+    <tr><td class="fr">Il mange du pain.</td><td class="fr">Il ne mange pas <strong>de</strong> pain.</td></tr>
+    <tr><td class="fr">Elle a des amis.</td><td class="fr">Elle n'a pas <strong>d'</strong>amis.</td></tr>
+  </tbody>
+</table>
+
+<h3>6.4 Other negative pairs (preview of A2)</h3>
+<table>
+  <thead><tr><th>Negation</th><th>Meaning</th><th>Example</th></tr></thead>
+  <tbody>
+    <tr><td><strong>ne … jamais</strong></td><td>never</td><td class="fr">Je ne mange jamais de viande. — <span class="en">I never eat meat.</span></td></tr>
+    <tr><td><strong>ne … rien</strong></td><td>nothing</td><td class="fr">Il ne fait rien. — <span class="en">He's doing nothing.</span></td></tr>
+    <tr><td><strong>ne … personne</strong></td><td>nobody</td><td class="fr">Je ne vois personne. — <span class="en">I don't see anyone.</span></td></tr>
+    <tr><td><strong>ne … plus</strong></td><td>no longer / not anymore</td><td class="fr">Elle n'habite plus ici. — <span class="en">She doesn't live here anymore.</span></td></tr>
+    <tr><td><strong>ne … pas encore</strong></td><td>not yet</td><td class="fr">Je n'ai pas encore mangé. — <span class="en">I haven't eaten yet.</span></td></tr>
+    <tr><td><strong>ne … que</strong></td><td>only</td><td class="fr">Je n'ai qu'un euro. — <span class="en">I only have one euro.</span></td></tr>
+  </tbody>
+</table>
+
+<div class="note">In everyday spoken French, the <em>ne</em> is often dropped: <span class="fr">Je sais pas. C'est pas vrai.</span> Don't do this in writing or formal speech — only listen for it. In written French the <em>ne</em> is mandatory.</div>
+</article>
+
+<!-- ============================================================
+     CHAPTER 7 — FORMING QUESTIONS
+     ============================================================ -->
+<article class="chapter" id="a1-questions">
+<h2><span class="level">A1</span> 7. Forming questions</h2>
+
+<p>French has <strong>three</strong> ways to turn a statement into a question. They mean the same thing but differ in register (how formal).</p>
+
+<h3>7.1 The three registers</h3>
+<table>
+  <thead><tr><th>Method</th><th>Register</th><th>Example</th></tr></thead>
+  <tbody>
+    <tr><td>1. Intonation (rising tone)</td><td>casual / spoken</td><td class="fr">Tu viens ?</td></tr>
+    <tr><td>2. <strong>Est-ce que</strong> + statement</td><td>standard / neutral</td><td class="fr">Est-ce que tu viens ?</td></tr>
+    <tr><td>3. Verb-subject inversion</td><td>formal / written</td><td class="fr">Viens-tu ?</td></tr>
+  </tbody>
+</table>
+
+<div class="tip">As a learner, default to <strong>est-ce que</strong>. It works in every situation, doesn't require inversion gymnastics, and is universally understood. Reserve inversion for written French and very polite speech.</div>
+
+<h3>7.2 <em>est-ce que</em> — the safe choice</h3>
+<p>Drop "est-ce que" at the front of any statement and you have a yes/no question. It elides to <strong>est-ce qu'</strong> before a vowel.</p>
+<div class="ex">
+  <p><span class="fr">Est-ce que tu parles français ?</span><span class="en">Do you speak French?</span></p>
+  <p><span class="fr">Est-ce qu'il vient ce soir ?</span><span class="en">Is he coming tonight?</span></p>
+  <p><span class="fr">Est-ce que vous avez l'heure ?</span><span class="en">Do you have the time?</span></p>
+</div>
+
+<h3>7.3 Inversion — formal style</h3>
+<p>Flip the subject and verb, joined with a hyphen:</p>
+<table>
+  <thead><tr><th>Statement</th><th>Inversion</th></tr></thead>
+  <tbody>
+    <tr><td class="fr">Tu parles français.</td><td class="fr">Parles-tu français ?</td></tr>
+    <tr><td class="fr">Vous avez faim.</td><td class="fr">Avez-vous faim ?</td></tr>
+    <tr><td class="fr">Il est médecin.</td><td class="fr">Est-il médecin ?</td></tr>
+  </tbody>
+</table>
+
+<div class="note">When the verb ends in a vowel and the subject is <em>il/elle/on</em>, insert <strong>-t-</strong> for euphony: <span class="fr">Parle-<strong>t</strong>-il français ? · A-<strong>t</strong>-elle vingt ans ? · Va-<strong>t</strong>-on partir ?</span></div>
+
+<h3>7.4 Inversion with a noun subject</h3>
+<p>When the subject is a noun (not a pronoun), keep the noun first and add an inverted pronoun:</p>
+<div class="ex">
+  <p><span class="fr"><strong>Marie</strong> parle-<strong>t-elle</strong> espagnol ?</span><span class="en">Does Marie speak Spanish?</span></p>
+  <p><span class="fr"><strong>Vos amis</strong> habitent-<strong>ils</strong> à Lyon ?</span><span class="en">Do your friends live in Lyon?</span></p>
+</div>
+
+<h3>7.5 Question + word order with question words</h3>
+<p>All three methods extend to wh-questions (see chapter 8). With <em>est-ce que</em> the question word goes first:</p>
+<div class="ex">
+  <p><span class="fr">Où est-ce que tu habites ?</span><span class="en">Where do you live? (standard)</span></p>
+  <p><span class="fr">Où habites-tu ?</span><span class="en">Where do you live? (formal, with inversion)</span></p>
+  <p><span class="fr">Tu habites où ?</span><span class="en">Where do you live? (casual, question word at the end)</span></p>
+</div>
+</article>
+
+<!-- ============================================================
+     CHAPTER 8 — QUESTION WORDS
+     ============================================================ -->
+<article class="chapter" id="a1-question-words">
+<h2><span class="level">A1</span> 8. Question words</h2>
+
+<table>
+  <thead><tr><th>Word</th><th>Meaning</th><th>Example</th></tr></thead>
+  <tbody>
+    <tr><td><strong>qui</strong></td><td>who</td><td class="fr">Qui est cette femme ? — <span class="en">Who is that woman?</span></td></tr>
+    <tr><td><strong>que / qu'</strong></td><td>what (object)</td><td class="fr">Que veux-tu ? · Qu'est-ce que c'est ? — <span class="en">What do you want? · What is it?</span></td></tr>
+    <tr><td><strong>quoi</strong></td><td>what (after a preposition / at end)</td><td class="fr">De quoi parles-tu ? · Tu fais quoi ? — <span class="en">What are you talking about? · What are you doing?</span></td></tr>
+    <tr><td><strong>où</strong></td><td>where</td><td class="fr">Où habites-tu ? — <span class="en">Where do you live?</span></td></tr>
+    <tr><td><strong>quand</strong></td><td>when</td><td class="fr">Quand arrive-t-il ? — <span class="en">When does he arrive?</span></td></tr>
+    <tr><td><strong>pourquoi</strong></td><td>why</td><td class="fr">Pourquoi pleures-tu ? — <span class="en">Why are you crying?</span></td></tr>
+    <tr><td><strong>comment</strong></td><td>how</td><td class="fr">Comment ça va ? — <span class="en">How are you?</span></td></tr>
+    <tr><td><strong>combien (de)</strong></td><td>how much / how many</td><td class="fr">Combien ça coûte ? · Combien de frères as-tu ? — <span class="en">How much is it? · How many brothers do you have?</span></td></tr>
+    <tr><td><strong>quel/quelle/quels/quelles</strong></td><td>which / what (kind of)</td><td class="fr">Quel livre lis-tu ? · Quelle heure est-il ? — <span class="en">Which book are you reading? · What time is it?</span></td></tr>
+  </tbody>
+</table>
+
+<h3>8.1 <em>quel</em> agrees like an adjective</h3>
+<table>
+  <thead><tr><th></th><th>Masculine</th><th>Feminine</th></tr></thead>
+  <tbody>
+    <tr><td>Singular</td><td><strong>quel</strong> <span class="fr">(quel livre)</span></td><td><strong>quelle</strong> <span class="fr">(quelle voiture)</span></td></tr>
+    <tr><td>Plural</td><td><strong>quels</strong> <span class="fr">(quels livres)</span></td><td><strong>quelles</strong> <span class="fr">(quelles voitures)</span></td></tr>
+  </tbody>
+</table>
+<p>All four forms sound identical: /kɛl/.</p>
+
+<h3>8.2 <em>qu'est-ce que</em> vs <em>qui est-ce qui</em></h3>
+<p>For "what" or "who" as subject vs object, French distinguishes carefully:</p>
+<table>
+  <thead><tr><th>Role</th><th>Person (who)</th><th>Thing (what)</th></tr></thead>
+  <tbody>
+    <tr><td>Subject</td><td class="fr">Qui est-ce qui … ? · Qui … ?</td><td class="fr">Qu'est-ce qui … ?</td></tr>
+    <tr><td>Object</td><td class="fr">Qui est-ce que … ? · Qui … ?</td><td class="fr">Qu'est-ce que … ? · Que … ?</td></tr>
+  </tbody>
+</table>
+<div class="ex">
+  <p><span class="fr">Qui est-ce qui parle ?</span><span class="en">Who is talking? (who = subject)</span></p>
+  <p><span class="fr">Qui est-ce que tu vois ?</span><span class="en">Whom do you see? (who = object)</span></p>
+  <p><span class="fr">Qu'est-ce qui se passe ?</span><span class="en">What's happening? (what = subject)</span></p>
+  <p><span class="fr">Qu'est-ce que tu fais ?</span><span class="en">What are you doing? (what = object)</span></p>
+</div>
+
+<h3>8.3 Question word + preposition</h3>
+<p>Where English ends with a stranded preposition ("Who are you talking to?"), French puts the preposition first:</p>
+<div class="ex">
+  <p><span class="fr"><strong>À qui</strong> parles-tu ?</span><span class="en">Who are you talking to?</span></p>
+  <p><span class="fr"><strong>De quoi</strong> parlez-vous ?</span><span class="en">What are you talking about?</span></p>
+  <p><span class="fr"><strong>Avec qui</strong> sors-tu ce soir ?</span><span class="en">Who are you going out with tonight?</span></p>
+</div>
+</article>
+
+<!-- ============================================================
+     CHAPTER 9 — NOUN GENDER + PLURALS
+     ============================================================ -->
+<article class="chapter" id="a1-nouns">
+<h2><span class="level">A1</span> 9. Noun gender and plurals</h2>
+
+<p>Every French noun has a gender (masculine or feminine), and every plural form may change spelling. There is no perfectly reliable shortcut — you learn each noun with its article — but there are useful patterns.</p>
+
+<h3>9.1 Endings that <em>usually</em> signal masculine</h3>
+<table>
+  <thead><tr><th>Ending</th><th>Example</th></tr></thead>
+  <tbody>
+    <tr><td>-age</td><td class="fr">le voyage, le fromage, le garage</td></tr>
+    <tr><td>-eau</td><td class="fr">le bureau, le château, le bateau</td></tr>
+    <tr><td>-ment</td><td class="fr">le moment, le bâtiment, le mouvement</td></tr>
+    <tr><td>-eur (things, professions)</td><td class="fr">le moteur, le bonheur, le directeur</td></tr>
+    <tr><td>-isme</td><td class="fr">le tourisme, le réalisme</td></tr>
+    <tr><td>-ier</td><td class="fr">le quartier, le panier</td></tr>
+  </tbody>
+</table>
+
+<h3>9.2 Endings that <em>usually</em> signal feminine</h3>
+<table>
+  <thead><tr><th>Ending</th><th>Example</th></tr></thead>
+  <tbody>
+    <tr><td>-tion / -sion</td><td class="fr">la nation, la décision, la passion</td></tr>
+    <tr><td>-té / -tié</td><td class="fr">la beauté, la vérité, l'amitié</td></tr>
+    <tr><td>-ette / -elle / -esse</td><td class="fr">la fillette, la nouvelle, la jeunesse</td></tr>
+    <tr><td>-ence / -ance</td><td class="fr">la patience, la chance</td></tr>
+    <tr><td>-ière</td><td class="fr">la rivière, la lumière</td></tr>
+    <tr><td>-ure</td><td class="fr">la voiture, la nature, la confiture</td></tr>
+  </tbody>
+</table>
+
+<div class="note">Exceptions abound. <span class="fr">le musée, le lycée</span> end in <em>-ée</em> but are masculine. <span class="fr">la peau, l'eau</span> end in <em>-eau</em> but are feminine. Always learn nouns <strong>with their article</strong>: <em>"le frère"</em>, not <em>"frère"</em>.</p></div>
+
+<h3>9.3 Plural formation</h3>
+<table>
+  <thead><tr><th>Rule</th><th>Singular → Plural</th></tr></thead>
+  <tbody>
+    <tr><td>Default: add <strong>-s</strong></td><td class="fr">livre → livres · table → tables</td></tr>
+    <tr><td>Already ends in <em>-s, -x, -z</em>: no change</td><td class="fr">le bois → les bois · la voix → les voix · le nez → les nez</td></tr>
+    <tr><td>Ends in <em>-au, -eau, -eu</em>: add <strong>-x</strong></td><td class="fr">le bateau → les bateaux · le jeu → les jeux</td></tr>
+    <tr><td>Ends in <em>-al</em>: change to <strong>-aux</strong></td><td class="fr">le cheval → les chevaux · le journal → les journaux</td></tr>
+    <tr><td>Ends in <em>-ail</em>: usually add <strong>-s</strong></td><td class="fr">le détail → les détails</td></tr>
+    <tr><td>Ends in <em>-ail</em> (7 special): <strong>-aux</strong></td><td class="fr">le travail → les travaux · le vitrail → les vitraux</td></tr>
+  </tbody>
+</table>
+
+<h3>9.4 Irregular plurals to memorize</h3>
+<table>
+  <tbody>
+    <tr><td class="fr">l'œil → les yeux</td><td>the eye → the eyes</td></tr>
+    <tr><td class="fr">monsieur → messieurs</td><td>sir → gentlemen</td></tr>
+    <tr><td class="fr">madame → mesdames</td><td>madam → ladies</td></tr>
+    <tr><td class="fr">mademoiselle → mesdemoiselles</td><td>miss → misses</td></tr>
+    <tr><td class="fr">le ciel → les cieux</td><td>sky → heavens (poetic; everyday plural is "les ciels")</td></tr>
+  </tbody>
+</table>
+
+<div class="note">The final <em>-s</em> or <em>-x</em> on a plural noun is <strong>silent</strong>. <span class="fr">le livre</span> and <span class="fr">les livres</span> sound identical — only the article (<em>le</em> vs <em>les</em>) tells you it's plural. This is why the article matters so much.</div>
+</article>
+
+<!-- ============================================================
+     CHAPTER 10 — ADJECTIVES
+     ============================================================ -->
+<article class="chapter" id="a1-adjectives">
+<h2><span class="level">A1</span> 10. Adjective agreement</h2>
+
+<p>French adjectives agree in <strong>gender</strong> and <strong>number</strong> with the noun they describe. They have up to four forms: masc-sg, fem-sg, masc-pl, fem-pl.</p>
+
+<h3>10.1 The basic rules</h3>
+<table>
+  <thead><tr><th>Form</th><th>Rule</th><th>Example: grand (big)</th></tr></thead>
+  <tbody>
+    <tr><td>Masc-sg</td><td>base form</td><td class="fr">un grand homme</td></tr>
+    <tr><td>Fem-sg</td><td>add <strong>-e</strong></td><td class="fr">une grand<strong>e</strong> femme</td></tr>
+    <tr><td>Masc-pl</td><td>add <strong>-s</strong></td><td class="fr">de grand<strong>s</strong> hommes</td></tr>
+    <tr><td>Fem-pl</td><td>add <strong>-es</strong></td><td class="fr">de grand<strong>es</strong> femmes</td></tr>
+  </tbody>
+</table>
+
+<h3>10.2 Common irregularities</h3>
+<table>
+  <thead><tr><th>Masculine</th><th>Feminine</th><th>Meaning</th></tr></thead>
+  <tbody>
+    <tr><td class="fr">beau</td><td class="fr">belle</td><td>beautiful</td></tr>
+    <tr><td class="fr">nouveau</td><td class="fr">nouvelle</td><td>new</td></tr>
+    <tr><td class="fr">vieux</td><td class="fr">vieille</td><td>old</td></tr>
+    <tr><td class="fr">blanc</td><td class="fr">blanche</td><td>white</td></tr>
+    <tr><td class="fr">long</td><td class="fr">longue</td><td>long</td></tr>
+    <tr><td class="fr">gentil</td><td class="fr">gentille</td><td>kind</td></tr>
+    <tr><td class="fr">heureux</td><td class="fr">heureuse</td><td>happy (and all <em>-eux → -euse</em>)</td></tr>
+    <tr><td class="fr">premier</td><td class="fr">première</td><td>first (and all <em>-er → -ère</em>)</td></tr>
+    <tr><td class="fr">italien</td><td class="fr">italienne</td><td>Italian (double the <em>n</em>)</td></tr>
+    <tr><td class="fr">sec</td><td class="fr">sèche</td><td>dry</td></tr>
+    <tr><td class="fr">frais</td><td class="fr">fraîche</td><td>fresh</td></tr>
+  </tbody>
+</table>
+
+<h3>10.3 Beau / nouveau / vieux — three sounds before a vowel</h3>
+<p>These three have a special masculine form used before a vowel or mute <em>h</em>:</p>
+<table>
+  <thead><tr><th>Masc-sg (consonant)</th><th>Masc-sg (vowel)</th><th>Fem-sg</th></tr></thead>
+  <tbody>
+    <tr><td class="fr">un beau livre</td><td class="fr">un <strong>bel</strong> homme</td><td class="fr">une belle femme</td></tr>
+    <tr><td class="fr">un nouveau livre</td><td class="fr">un <strong>nouvel</strong> ami</td><td class="fr">une nouvelle voiture</td></tr>
+    <tr><td class="fr">un vieux livre</td><td class="fr">un <strong>vieil</strong> homme</td><td class="fr">une vieille maison</td></tr>
+  </tbody>
+</table>
+
+<h3>10.4 Position — most after, some before</h3>
+<p>Default: <strong>after</strong> the noun. <span class="fr">un livre intéressant, une voiture rouge.</span></p>
+
+<p>A small set of common adjectives goes <strong>before</strong>. Mnemonic: <strong>BAGS</strong> — Beauty, Age, Goodness, Size.</p>
+<table>
+  <thead><tr><th>Category</th><th>Adjectives</th></tr></thead>
+  <tbody>
+    <tr><td>Beauty</td><td class="fr">beau, joli, laid</td></tr>
+    <tr><td>Age</td><td class="fr">jeune, vieux, nouveau, ancien</td></tr>
+    <tr><td>Goodness</td><td class="fr">bon, mauvais, meilleur</td></tr>
+    <tr><td>Size</td><td class="fr">grand, petit, gros, long, court</td></tr>
+    <tr><td>Plus a few others</td><td class="fr">autre, même, premier, dernier, propre</td></tr>
+  </tbody>
+</table>
+<div class="ex">
+  <p><span class="fr">une <strong>belle</strong> maison · un <strong>petit</strong> garçon · une <strong>bonne</strong> idée</span><span class="en">a beautiful house · a small boy · a good idea</span></p>
+  <p><span class="fr">un livre <strong>rouge</strong> · une voiture <strong>française</strong> · un examen <strong>difficile</strong></span><span class="en">a red book · a French car · a difficult exam</span></p>
+</div>
+
+<h3>10.5 <em>des</em> becomes <em>de</em> before a pre-positioned adjective</h3>
+<table>
+  <tbody>
+    <tr><td class="fr">des livres → <strong>de</strong> beaux livres</td><td class="en">books → beautiful books</td></tr>
+    <tr><td class="fr">des amis → <strong>de</strong> bons amis</td><td class="en">friends → good friends</td></tr>
+  </tbody>
+</table>
+<p>In casual spoken French this rule is often ignored (<span class="fr">des beaux livres</span>), but it remains correct in writing.</p>
+
+<h3>10.6 Adjectives that change meaning by position</h3>
+<table>
+  <thead><tr><th>Adjective</th><th>Before noun</th><th>After noun</th></tr></thead>
+  <tbody>
+    <tr><td class="fr">ancien</td><td>former (<em>mon ancien prof</em> = my former teacher)</td><td>ancient, old (<em>un livre ancien</em> = an old book)</td></tr>
+    <tr><td class="fr">cher</td><td>dear (<em>mon cher ami</em>)</td><td>expensive (<em>une voiture chère</em>)</td></tr>
+    <tr><td class="fr">propre</td><td>own (<em>ma propre voiture</em> = my own car)</td><td>clean (<em>une voiture propre</em>)</td></tr>
+    <tr><td class="fr">grand</td><td>great (<em>un grand homme</em> = a great man)</td><td>tall (<em>un homme grand</em>)</td></tr>
+    <tr><td class="fr">pauvre</td><td>unfortunate (<em>le pauvre garçon</em> = poor [pitiable] boy)</td><td>poor (no money) (<em>un garçon pauvre</em>)</td></tr>
+  </tbody>
+</table>
+</article>
+
+<!-- ============================================================
+     CHAPTER 11 — POSSESSIVE ADJECTIVES
+     ============================================================ -->
+<article class="chapter" id="a1-possessives">
+<h2><span class="level">A1</span> 11. Possessive adjectives</h2>
+
+<p>"My, your, his/her, our, their" — these agree with the <strong>thing possessed</strong>, not the owner. This is the opposite of English.</p>
+
+<h3>11.1 The full table</h3>
+<table>
+  <thead><tr><th>Owner</th><th>Masc-sg<br><small>(or before vowel)</small></th><th>Fem-sg</th><th>Plural</th><th>Example</th></tr></thead>
+  <tbody>
+    <tr><td>je (my)</td><td><strong>mon</strong></td><td><strong>ma</strong></td><td><strong>mes</strong></td><td class="fr">mon livre · ma sœur · mes parents</td></tr>
+    <tr><td>tu (your, inf.)</td><td><strong>ton</strong></td><td><strong>ta</strong></td><td><strong>tes</strong></td><td class="fr">ton ami · ta voiture · tes amis</td></tr>
+    <tr><td>il/elle (his/her)</td><td><strong>son</strong></td><td><strong>sa</strong></td><td><strong>ses</strong></td><td class="fr">son père · sa mère · ses enfants</td></tr>
+    <tr><td>nous (our)</td><td colspan="2"><strong>notre</strong> (same for both)</td><td><strong>nos</strong></td><td class="fr">notre maison · nos voisins</td></tr>
+    <tr><td>vous (your, fml/pl)</td><td colspan="2"><strong>votre</strong></td><td><strong>vos</strong></td><td class="fr">votre adresse · vos papiers</td></tr>
+    <tr><td>ils/elles (their)</td><td colspan="2"><strong>leur</strong></td><td><strong>leurs</strong></td><td class="fr">leur fils · leurs amis</td></tr>
+  </tbody>
+</table>
+
+<h3>11.2 The English-speaker trap: <em>son / sa / ses</em></h3>
+<p>In English you say "his book" or "her book" depending on the owner's gender. In French you say <em>son livre</em> or <em>sa voiture</em> depending on the <strong>noun's</strong> gender — <em>son/sa/ses</em> means both "his" and "her".</p>
+<table>
+  <thead><tr><th>French</th><th>Possible meanings</th></tr></thead>
+  <tbody>
+    <tr><td class="fr">son père</td><td>his father OR her father (père is masculine)</td></tr>
+    <tr><td class="fr">sa mère</td><td>his mother OR her mother (mère is feminine)</td></tr>
+    <tr><td class="fr">ses enfants</td><td>his children OR her children (plural)</td></tr>
+  </tbody>
+</table>
+<p>If context is unclear, French disambiguates with <strong>à lui / à elle</strong>: <span class="fr">C'est son livre <strong>à elle</strong>.</span> — <span class="en">It's <em>her</em> book.</span></p>
+
+<h3>11.3 <em>ma → mon</em> before a vowel</h3>
+<p>Feminine nouns starting with a vowel or mute <em>h</em> take the masculine-shaped form (<em>mon, ton, son</em>) for pronunciation. The noun is still feminine — only the article-sound changes:</p>
+<table>
+  <thead><tr><th>Wrong</th><th>Correct</th><th>Meaning</th></tr></thead>
+  <tbody>
+    <tr><td class="fr"><s>ma amie</s></td><td class="fr"><strong>mon</strong> amie</td><td>my (female) friend</td></tr>
+    <tr><td class="fr"><s>ta idée</s></td><td class="fr"><strong>ton</strong> idée</td><td>your idea</td></tr>
+    <tr><td class="fr"><s>sa école</s></td><td class="fr"><strong>son</strong> école</td><td>his/her school</td></tr>
+  </tbody>
+</table>
+
+<h3>11.4 Family etiquette: <em>tu</em> vs <em>vous</em> possessives</h3>
+<div class="ex">
+  <p><span class="fr">— Voici <strong>ta</strong> chambre, Marie.</span><span class="en">— Here's your room, Marie. (informal)</span></p>
+  <p><span class="fr">— Voici <strong>votre</strong> chambre, monsieur.</span><span class="en">— Here's your room, sir. (formal)</span></p>
+</div>
+</article>
+
+<!-- ============================================================
+     CHAPTER 12 — DEMONSTRATIVES
+     ============================================================ -->
+<article class="chapter" id="a1-demonstratives">
+<h2><span class="level">A1</span> 12. Demonstrative adjectives — <em>ce, cet, cette, ces</em></h2>
+
+<p>French has <strong>one</strong> demonstrative adjective covering both "this" and "that" — the same word, four forms by gender + number + vowel-start.</p>
+
+<table>
+  <thead><tr><th>Form</th><th>Used for</th><th>Example</th></tr></thead>
+  <tbody>
+    <tr><td><strong>ce</strong></td><td>masc-sg + consonant</td><td class="fr">ce livre, ce garçon, ce chat</td></tr>
+    <tr><td><strong>cet</strong></td><td>masc-sg + vowel or mute h</td><td class="fr">cet ami, cet homme, cet été</td></tr>
+    <tr><td><strong>cette</strong></td><td>fem-sg (always)</td><td class="fr">cette femme, cette idée, cette école</td></tr>
+    <tr><td><strong>ces</strong></td><td>plural (any gender)</td><td class="fr">ces livres, ces idées, ces amis</td></tr>
+  </tbody>
+</table>
+
+<div class="note"><strong>cet</strong> and <strong>cette</strong> sound identical (/sɛt/). The difference is purely visual — <em>cet</em> for masculine, <em>cette</em> for feminine.</div>
+
+<h3>12.1 "This" vs "that" — add <em>-ci</em> or <em>-là</em></h3>
+<p>If you need to distinguish "this one here" from "that one there", attach <strong>-ci</strong> (closer) or <strong>-là</strong> (farther) to the noun with a hyphen:</p>
+<div class="ex">
+  <p><span class="fr">Je préfère ce livre-<strong>ci</strong>, pas ce livre-<strong>là</strong>.</span><span class="en">I prefer this book, not that book.</span></p>
+  <p><span class="fr">Cette robe-<strong>ci</strong> est plus jolie que cette robe-<strong>là</strong>.</span><span class="en">This dress is prettier than that dress.</span></p>
+</div>
+<p>In daily speech, French speakers rarely bother with <em>-ci/-là</em> unless explicitly contrasting — bare <em>ce/cet/cette/ces</em> covers both "this" and "that".</p>
+
+<h3>12.2 The pronoun <em>ça / cela / ceci</em></h3>
+<p>To say "this" or "that" as a pronoun (without a noun), use <strong>ça</strong> (everyday) or <strong>cela</strong> (formal). <strong>Ceci</strong> exists but is rare.</p>
+<div class="ex">
+  <p><span class="fr">Qu'est-ce que c'est ? — C'est <strong>ça</strong>.</span><span class="en">What is that? — That's it.</span></p>
+  <p><span class="fr"><strong>Ça</strong> ne marche pas.</span><span class="en">That doesn't work.</span></p>
+  <p><span class="fr">Je préfère <strong>cela</strong>.</span><span class="en">I prefer that. (formal)</span></p>
+</div>
+</article>
+
+<!-- ============================================================
+     CHAPTER 13 — NUMBERS, TIME, DATE
+     ============================================================ -->
+<article class="chapter" id="a1-numbers">
+<h2><span class="level">A1</span> 13. Numbers, time, date, days, months</h2>
+
+<h3>13.1 Numbers 0–20</h3>
+<table>
+  <tbody>
+    <tr><td>0 <span class="fr">zéro</span></td><td>1 <span class="fr">un / une</span></td><td>2 <span class="fr">deux</span></td><td>3 <span class="fr">trois</span></td><td>4 <span class="fr">quatre</span></td></tr>
+    <tr><td>5 <span class="fr">cinq</span></td><td>6 <span class="fr">six</span></td><td>7 <span class="fr">sept</span></td><td>8 <span class="fr">huit</span></td><td>9 <span class="fr">neuf</span></td></tr>
+    <tr><td>10 <span class="fr">dix</span></td><td>11 <span class="fr">onze</span></td><td>12 <span class="fr">douze</span></td><td>13 <span class="fr">treize</span></td><td>14 <span class="fr">quatorze</span></td></tr>
+    <tr><td>15 <span class="fr">quinze</span></td><td>16 <span class="fr">seize</span></td><td>17 <span class="fr">dix-sept</span></td><td>18 <span class="fr">dix-huit</span></td><td>19 <span class="fr">dix-neuf</span></td></tr>
+    <tr><td>20 <span class="fr">vingt</span></td><td></td><td></td><td></td><td></td></tr>
+  </tbody>
+</table>
+
+<h3>13.2 The tens — and the famous traps</h3>
+<table>
+  <thead><tr><th>Tens</th><th>Word</th><th>How to build 21–29, 31–39, etc.</th></tr></thead>
+  <tbody>
+    <tr><td>20</td><td class="fr">vingt</td><td class="fr">vingt <strong>et un</strong>, vingt-deux, vingt-trois …</td></tr>
+    <tr><td>30</td><td class="fr">trente</td><td class="fr">trente <strong>et un</strong>, trente-deux …</td></tr>
+    <tr><td>40</td><td class="fr">quarante</td><td class="fr">quarante <strong>et un</strong>, quarante-deux …</td></tr>
+    <tr><td>50</td><td class="fr">cinquante</td><td class="fr">cinquante <strong>et un</strong>, cinquante-deux …</td></tr>
+    <tr><td>60</td><td class="fr">soixante</td><td class="fr">soixante <strong>et un</strong>, soixante-deux …</td></tr>
+    <tr><td>70</td><td class="fr">soixante-dix (= 60+10)</td><td class="fr">soixante <strong>et onze</strong>, soixante-douze, …, soixante-dix-neuf</td></tr>
+    <tr><td>80</td><td class="fr">quatre-vingts (= 4×20, +s when bare)</td><td class="fr">quatre-vingt-<strong>un</strong> (no "et", no -s), quatre-vingt-deux …</td></tr>
+    <tr><td>90</td><td class="fr">quatre-vingt-dix (= 4×20+10)</td><td class="fr">quatre-vingt-onze, …, quatre-vingt-dix-neuf</td></tr>
+    <tr><td>100</td><td class="fr">cent</td><td class="fr">cent un, cent deux …, deux cent<strong>s</strong> (bare), deux cent un (no -s)</td></tr>
+    <tr><td>1000</td><td class="fr">mille</td><td class="fr">mille un, deux mille (mille never takes -s)</td></tr>
+  </tbody>
+</table>
+
+<div class="tip">In Belgium and Switzerland, 70 = <strong>septante</strong> and 90 = <strong>nonante</strong> (much simpler!). In standard French however, you must use <em>soixante-dix</em> and <em>quatre-vingt-dix</em>.</div>
+
+<h3>13.3 Telling time</h3>
+<table>
+  <thead><tr><th>Time</th><th>French</th></tr></thead>
+  <tbody>
+    <tr><td>3:00</td><td class="fr">Il est trois heures.</td></tr>
+    <tr><td>3:15</td><td class="fr">Il est trois heures <strong>et quart</strong>.</td></tr>
+    <tr><td>3:30</td><td class="fr">Il est trois heures <strong>et demie</strong>.</td></tr>
+    <tr><td>3:45</td><td class="fr">Il est quatre heures <strong>moins le quart</strong>.</td></tr>
+    <tr><td>3:50</td><td class="fr">Il est quatre heures moins dix.</td></tr>
+    <tr><td>12:00 noon</td><td class="fr">Il est <strong>midi</strong>.</td></tr>
+    <tr><td>12:00 midnight</td><td class="fr">Il est <strong>minuit</strong>.</td></tr>
+    <tr><td>14:30 (24h)</td><td class="fr">Il est quatorze heures trente.</td></tr>
+  </tbody>
+</table>
+
+<h3>13.4 Days of the week (all masculine, lowercase!)</h3>
+<table>
+  <tbody>
+    <tr><td class="fr">lundi</td><td>Monday</td><td class="fr">vendredi</td><td>Friday</td></tr>
+    <tr><td class="fr">mardi</td><td>Tuesday</td><td class="fr">samedi</td><td>Saturday</td></tr>
+    <tr><td class="fr">mercredi</td><td>Wednesday</td><td class="fr">dimanche</td><td>Sunday</td></tr>
+    <tr><td class="fr">jeudi</td><td>Thursday</td><td></td><td></td></tr>
+  </tbody>
+</table>
+<p>French day and month names are <strong>lowercase</strong>, unlike English. <em>Le lundi</em> with a definite article means "on Mondays" (habit). <em>Lundi</em> alone means "this Monday".</p>
+
+<h3>13.5 Months</h3>
+<table>
+  <tbody>
+    <tr><td class="fr">janvier, février, mars, avril, mai, juin,</td></tr>
+    <tr><td class="fr">juillet, août, septembre, octobre, novembre, décembre</td></tr>
+  </tbody>
+</table>
+
+<h3>13.6 Dates</h3>
+<p>Format: <strong>le + day + month + year</strong>. The first of the month is <em>premier</em>, all others use cardinal numbers.</p>
+<div class="ex">
+  <p><span class="fr">Aujourd'hui, c'est <strong>le 15 mars 2026</strong>.</span><span class="en">Today is March 15, 2026.</span></p>
+  <p><span class="fr">Je suis né(e) <strong>le premier janvier</strong>.</span><span class="en">I was born on January 1st.</span></p>
+  <p><span class="fr">Nous arrivons <strong>le 3 juillet</strong>.</span><span class="en">We arrive on July 3rd.</span></p>
+</div>
+</article>
+
+<!-- ============================================================
+     CHAPTER 14 — PREPOSITIONS
+     ============================================================ -->
+<article class="chapter" id="a1-prepositions">
+<h2><span class="level">A1</span> 14. Common prepositions</h2>
+
+<h3>14.1 Place</h3>
+<table>
+  <thead><tr><th>Preposition</th><th>Meaning</th><th>Example</th></tr></thead>
+  <tbody>
+    <tr><td class="fr">à</td><td>to, at, in</td><td class="fr">Je vais à Paris. — <span class="en">I'm going to Paris.</span></td></tr>
+    <tr><td class="fr">de</td><td>from, of</td><td class="fr">Il vient de Lyon. — <span class="en">He comes from Lyon.</span></td></tr>
+    <tr><td class="fr">dans</td><td>in, inside</td><td class="fr">Le chat est dans la boîte. — <span class="en">The cat is in the box.</span></td></tr>
+    <tr><td class="fr">sur</td><td>on</td><td class="fr">Le livre est sur la table. — <span class="en">The book is on the table.</span></td></tr>
+    <tr><td class="fr">sous</td><td>under</td><td class="fr">Le chien dort sous le lit. — <span class="en">The dog sleeps under the bed.</span></td></tr>
+    <tr><td class="fr">devant</td><td>in front of</td><td class="fr">Il attend devant l'école. — <span class="en">He's waiting in front of the school.</span></td></tr>
+    <tr><td class="fr">derrière</td><td>behind</td><td class="fr">Le parking est derrière l'immeuble.</td></tr>
+    <tr><td class="fr">à côté de</td><td>next to</td><td class="fr">Il habite à côté de moi.</td></tr>
+    <tr><td class="fr">en face de</td><td>opposite</td><td class="fr">La poste est en face de la banque.</td></tr>
+    <tr><td class="fr">entre</td><td>between</td><td class="fr">Entre Paris et Lyon.</td></tr>
+    <tr><td class="fr">chez</td><td>at someone's place</td><td class="fr">Je dîne chez ma sœur. — <span class="en">at my sister's</span></td></tr>
+    <tr><td class="fr">près de</td><td>near</td><td class="fr">L'hôtel est près de la gare.</td></tr>
+    <tr><td class="fr">loin de</td><td>far from</td><td class="fr">Loin de la ville.</td></tr>
+  </tbody>
+</table>
+
+<h3>14.2 Cities, countries, regions: <em>à</em> vs <em>en</em> vs <em>au</em> vs <em>aux</em></h3>
+<table>
+  <thead><tr><th>Destination type</th><th>Preposition</th><th>Example</th></tr></thead>
+  <tbody>
+    <tr><td>City</td><td><strong>à</strong></td><td class="fr">à Paris, à Lyon, à New York</td></tr>
+    <tr><td>Feminine country (ends in -e)</td><td><strong>en</strong></td><td class="fr">en France, en Espagne, en Italie</td></tr>
+    <tr><td>Masculine country</td><td><strong>au</strong></td><td class="fr">au Canada, au Portugal, au Japon</td></tr>
+    <tr><td>Plural country</td><td><strong>aux</strong></td><td class="fr">aux États-Unis, aux Pays-Bas</td></tr>
+    <tr><td>Country starting with vowel</td><td><strong>en</strong></td><td class="fr">en Iran, en Afghanistan, en Israël</td></tr>
+  </tbody>
+</table>
+<div class="note">Le Mexique is masculine despite ending in -e: <span class="fr">au Mexique</span>. Most countries ending in -e are feminine; consonant-ending countries are masculine.</div>
+
+<h3>14.3 Time</h3>
+<table>
+  <thead><tr><th>Preposition</th><th>Use</th><th>Example</th></tr></thead>
+  <tbody>
+    <tr><td class="fr">à</td><td>specific time</td><td class="fr">à 8 heures, à midi</td></tr>
+    <tr><td class="fr">en</td><td>month, year, season (except spring)</td><td class="fr">en mai, en 2026, en hiver, en été</td></tr>
+    <tr><td class="fr">au</td><td>spring</td><td class="fr">au printemps</td></tr>
+    <tr><td class="fr">dans</td><td>"in X time" (future)</td><td class="fr">dans deux jours — <span class="en">in two days</span></td></tr>
+    <tr><td class="fr">il y a</td><td>"X ago"</td><td class="fr">il y a deux ans — <span class="en">two years ago</span></td></tr>
+    <tr><td class="fr">depuis</td><td>since, for (ongoing)</td><td class="fr">J'habite ici depuis 2020. — <span class="en">since 2020</span></td></tr>
+    <tr><td class="fr">pendant</td><td>during, for</td><td class="fr">pendant l'été — <span class="en">during the summer</span></td></tr>
+    <tr><td class="fr">avant / après</td><td>before / after</td><td class="fr">avant midi, après le repas</td></tr>
+  </tbody>
+</table>
+
+<h3>14.4 Other essentials</h3>
+<table>
+  <tbody>
+    <tr><td class="fr">avec</td><td>with</td><td class="fr">avec mes amis</td></tr>
+    <tr><td class="fr">sans</td><td>without</td><td class="fr">sans sucre</td></tr>
+    <tr><td class="fr">pour</td><td>for, in order to</td><td class="fr">pour toi · pour apprendre</td></tr>
+    <tr><td class="fr">par</td><td>by, through</td><td class="fr">par avion · par hasard</td></tr>
+    <tr><td class="fr">contre</td><td>against</td><td class="fr">contre cette idée</td></tr>
+    <tr><td class="fr">vers</td><td>toward, around (time)</td><td class="fr">vers le nord · vers midi</td></tr>
+  </tbody>
+</table>
+</article>
+
+<!-- ============================================================
+     CHAPTER 15 — IL Y A / C'EST / IL EST
+     ============================================================ -->
+<article class="chapter" id="a1-il-y-a">
+<h2><span class="level">A1</span> 15. Three building blocks: <em>il y a · c'est · il est</em></h2>
+
+<p>These short impersonal expressions get used dozens of times a day. The trick is knowing which one to pick — they're not interchangeable.</p>
+
+<h3>15.1 <em>il y a</em> = "there is / there are"</h3>
+<p>Existential. Invariable in the present (it does not change for plural).</p>
+<div class="ex">
+  <p><span class="fr">Il y a un chat dans le jardin.</span><span class="en">There is a cat in the garden.</span></p>
+  <p><span class="fr">Il y a beaucoup de gens.</span><span class="en">There are a lot of people.</span></p>
+  <p><span class="fr">Il n'y a pas de problème.</span><span class="en">There's no problem.</span></p>
+</div>
+
+<h3>15.2 <em>c'est</em> = "it is / this is / that is / he is / she is"</h3>
+<p>Used to identify or describe with <strong>an article + noun</strong>, or with a name, pronoun, or general adjective.</p>
+<table>
+  <thead><tr><th>Use</th><th>Example</th></tr></thead>
+  <tbody>
+    <tr><td>+ Name</td><td class="fr">C'est Marie. — <span class="en">It's Marie.</span></td></tr>
+    <tr><td>+ Article + noun</td><td class="fr">C'est un médecin. — <span class="en">He's a doctor.</span></td></tr>
+    <tr><td>+ Stressed pronoun</td><td class="fr">C'est moi. — <span class="en">It's me.</span></td></tr>
+    <tr><td>+ Generic adjective</td><td class="fr">C'est intéressant. — <span class="en">It's interesting.</span></td></tr>
+    <tr><td>Plural: <strong>ce sont</strong></td><td class="fr">Ce sont mes amis. — <span class="en">They are my friends.</span></td></tr>
+  </tbody>
+</table>
+
+<h3>15.3 <em>il est / elle est</em> = "he is / she is / it is"</h3>
+<p>Used for a <strong>specific person/thing already referenced</strong>, especially with a profession, nationality, or descriptive adjective. <strong>No article</strong> after.</p>
+<table>
+  <thead><tr><th>Use</th><th>Example</th></tr></thead>
+  <tbody>
+    <tr><td>+ Profession (no article)</td><td class="fr">Il est médecin. — <span class="en">He is a doctor.</span></td></tr>
+    <tr><td>+ Nationality (no article)</td><td class="fr">Elle est française. — <span class="en">She is French.</span></td></tr>
+    <tr><td>+ Adjective (about a specific thing)</td><td class="fr">Ce livre ? Il est intéressant.</td></tr>
+    <tr><td>Telling time</td><td class="fr">Il est trois heures. — <span class="en">It is 3 o'clock.</span></td></tr>
+  </tbody>
+</table>
+
+<h3>15.4 The classic decision — <em>c'est</em> or <em>il est</em>?</h3>
+<table>
+  <thead><tr><th>Test</th><th>Use</th></tr></thead>
+  <tbody>
+    <tr><td>Is there an article (un, le, une, la)?</td><td><strong>c'est</strong></td></tr>
+    <tr><td>Is there only an adjective / profession / nationality, no article?</td><td><strong>il est / elle est</strong></td></tr>
+    <tr><td>Are you making a general remark ("it's interesting")?</td><td><strong>c'est</strong></td></tr>
+    <tr><td>Are you describing a specific known person/thing?</td><td><strong>il est / elle est</strong></td></tr>
+  </tbody>
+</table>
+<div class="ex">
+  <p><span class="fr"><strong>Il est</strong> médecin. <strong>C'est</strong> un bon médecin.</span><span class="en">He is a doctor. He is a good doctor. (article? → c'est)</span></p>
+  <p><span class="fr"><strong>Elle est</strong> belle. <strong>C'est</strong> une belle femme.</span><span class="en">She is beautiful. She is a beautiful woman.</span></p>
+  <p><span class="fr">Le français ? <strong>C'est</strong> difficile mais <strong>c'est</strong> beau.</span><span class="en">French? It's difficult but it's beautiful. (general remark)</span></p>
+</div>
+
+<h3>15.5 <em>voici / voilà</em> — pointing at things</h3>
+<p>Bonus pair. Both mean "here is / here are / there is", used when handing something or pointing.</p>
+<div class="ex">
+  <p><span class="fr">Voici votre café.</span><span class="en">Here is your coffee. (handing it over)</span></p>
+  <p><span class="fr">Voilà ! C'est fini.</span><span class="en">There! It's done.</span></p>
+  <p><span class="fr">Voilà mon ami Paul.</span><span class="en">Here's my friend Paul. (introducing)</span></p>
+</div>
+</article>
+
+<!-- ============================================================
+     CHAPTER 16 — REGULAR -IR VERBS (GROUP 2)
+     ============================================================ -->
+<article class="chapter" id="a2-ir-verbs">
+<h2><span class="level a2">A2</span> 16. Regular <em>-ir</em> verbs (group 2)</h2>
+
+<p>The "second group" of French verbs ends in <strong>-ir</strong> and inserts <em>-iss-</em> in the plural. About 300 verbs follow this pattern, including <em>finir, choisir, réussir, grandir, obéir, rougir</em>.</p>
+
+<h3>16.1 Conjugation pattern: <em>finir</em> (to finish)</h3>
+<table>
+  <thead><tr><th>Person</th><th>Ending</th><th>Example</th></tr></thead>
+  <tbody>
+    <tr><td>je</td><td><strong>-is</strong></td><td class="fr">je finis</td></tr>
+    <tr><td>tu</td><td><strong>-is</strong></td><td class="fr">tu finis</td></tr>
+    <tr><td>il / elle / on</td><td><strong>-it</strong></td><td class="fr">il finit</td></tr>
+    <tr><td>nous</td><td><strong>-issons</strong></td><td class="fr">nous finissons</td></tr>
+    <tr><td>vous</td><td><strong>-issez</strong></td><td class="fr">vous finissez</td></tr>
+    <tr><td>ils / elles</td><td><strong>-issent</strong></td><td class="fr">ils finissent</td></tr>
+  </tbody>
+</table>
+
+<div class="note">Singular forms (je / tu / il) sound identical: /fini/. The <em>-iss-</em> in the plural is what makes this group obvious to the ear.</div>
+
+<h3>16.2 Other common group-2 verbs</h3>
+<table>
+  <tbody>
+    <tr><td class="fr">choisir</td><td>to choose</td><td class="fr">je choisis · nous choisissons</td></tr>
+    <tr><td class="fr">réussir</td><td>to succeed</td><td class="fr">je réussis · nous réussissons</td></tr>
+    <tr><td class="fr">grandir</td><td>to grow</td><td class="fr">l'enfant grandit vite</td></tr>
+    <tr><td class="fr">obéir (à)</td><td>to obey</td><td class="fr">il obéit à sa mère</td></tr>
+    <tr><td class="fr">rougir</td><td>to blush</td><td class="fr">elle rougit</td></tr>
+    <tr><td class="fr">remplir</td><td>to fill</td><td class="fr">remplissez le formulaire</td></tr>
+    <tr><td class="fr">applaudir</td><td>to applaud</td><td class="fr">le public applaudit</td></tr>
+  </tbody>
+</table>
+
+<h3>16.3 Beware — not every <em>-ir</em> verb is group 2</h3>
+<p>Some <em>-ir</em> verbs (about 150 of them) are <strong>irregular</strong> and belong to "group 3". Compare:</p>
+<table>
+  <thead><tr><th>Group 2 (regular)</th><th>Group 3 (irregular)</th></tr></thead>
+  <tbody>
+    <tr><td class="fr">finir → nous fin<strong>issons</strong></td><td class="fr">partir → nous part<strong>ons</strong> (no -iss-)</td></tr>
+    <tr><td class="fr">choisir → ils chois<strong>issent</strong></td><td class="fr">sortir → ils sort<strong>ent</strong></td></tr>
+    <tr><td class="fr">grandir → vous grand<strong>issez</strong></td><td class="fr">dormir → vous dorm<strong>ez</strong></td></tr>
+  </tbody>
+</table>
+<p>Irregular <em>-ir</em> verbs include: <span class="fr">partir, sortir, dormir, mentir, sentir, servir, courir, venir, tenir, mourir, ouvrir, offrir</span>. See appendix 33 for tables.</p>
+</article>
+
+<!-- ============================================================
+     CHAPTER 17 — REGULAR -RE VERBS
+     ============================================================ -->
+<article class="chapter" id="a2-re-verbs">
+<h2><span class="level a2">A2</span> 17. Regular <em>-re</em> verbs</h2>
+
+<p>About 50 truly regular <em>-re</em> verbs exist (a much smaller family than -er or -ir). They drop the final <em>-e</em> from the infinitive in conjugation, then add these endings:</p>
+
+<h3>17.1 Pattern: <em>vendre</em> (to sell)</h3>
+<table>
+  <thead><tr><th>Person</th><th>Ending</th><th>Example</th></tr></thead>
+  <tbody>
+    <tr><td>je</td><td><strong>-s</strong></td><td class="fr">je vends</td></tr>
+    <tr><td>tu</td><td><strong>-s</strong></td><td class="fr">tu vends</td></tr>
+    <tr><td>il / elle / on</td><td><strong>—</strong> (bare stem!)</td><td class="fr">il vend</td></tr>
+    <tr><td>nous</td><td><strong>-ons</strong></td><td class="fr">nous vendons</td></tr>
+    <tr><td>vous</td><td><strong>-ez</strong></td><td class="fr">vous vendez</td></tr>
+    <tr><td>ils / elles</td><td><strong>-ent</strong></td><td class="fr">ils vendent</td></tr>
+  </tbody>
+</table>
+
+<div class="note">The 3rd-person singular has <strong>no ending at all</strong> — the bare stem. <span class="fr">il vend, il rend, il attend, il répond</span>.</div>
+
+<h3>17.2 Common group-3-regular <em>-re</em> verbs</h3>
+<table>
+  <tbody>
+    <tr><td class="fr">attendre</td><td>to wait (for)</td><td class="fr">j'attends</td></tr>
+    <tr><td class="fr">descendre</td><td>to go down</td><td class="fr">elle descend</td></tr>
+    <tr><td class="fr">entendre</td><td>to hear</td><td class="fr">j'entends</td></tr>
+    <tr><td class="fr">perdre</td><td>to lose</td><td class="fr">nous perdons</td></tr>
+    <tr><td class="fr">rendre</td><td>to give back</td><td class="fr">je rends</td></tr>
+    <tr><td class="fr">répondre</td><td>to answer</td><td class="fr">tu réponds</td></tr>
+    <tr><td class="fr">vendre</td><td>to sell</td><td class="fr">ils vendent</td></tr>
+  </tbody>
+</table>
+
+<h3>17.3 Irregular <em>-re</em> verbs (chapter preview)</h3>
+<p>Many high-frequency <em>-re</em> verbs are irregular: <span class="fr">être, prendre, mettre, faire, dire, écrire, lire, boire, vivre, suivre, comprendre, apprendre, connaître</span>. See appendix 33 for their full present-tense tables.</p>
+</article>
+
+<!-- ============================================================
+     CHAPTER 18 — MODAL VERBS
+     ============================================================ -->
+<article class="chapter" id="a2-modals">
+<h2><span class="level a2">A2</span> 18. Modal verbs — <em>pouvoir, vouloir, devoir, savoir</em></h2>
+
+<p>Modal verbs express ability, desire, obligation, and knowledge. All four are irregular and followed by an <strong>infinitive</strong>.</p>
+
+<h3>18.1 The conjugations</h3>
+<table>
+  <thead><tr><th></th><th>pouvoir<br><small>(can / be able to)</small></th><th>vouloir<br><small>(want)</small></th><th>devoir<br><small>(must / have to)</small></th><th>savoir<br><small>(know how to)</small></th></tr></thead>
+  <tbody>
+    <tr><td>je</td><td class="fr">peux</td><td class="fr">veux</td><td class="fr">dois</td><td class="fr">sais</td></tr>
+    <tr><td>tu</td><td class="fr">peux</td><td class="fr">veux</td><td class="fr">dois</td><td class="fr">sais</td></tr>
+    <tr><td>il / elle</td><td class="fr">peut</td><td class="fr">veut</td><td class="fr">doit</td><td class="fr">sait</td></tr>
+    <tr><td>nous</td><td class="fr">pouvons</td><td class="fr">voulons</td><td class="fr">devons</td><td class="fr">savons</td></tr>
+    <tr><td>vous</td><td class="fr">pouvez</td><td class="fr">voulez</td><td class="fr">devez</td><td class="fr">savez</td></tr>
+    <tr><td>ils / elles</td><td class="fr">peuvent</td><td class="fr">veulent</td><td class="fr">doivent</td><td class="fr">savent</td></tr>
+  </tbody>
+</table>
+
+<h3>18.2 Usage — modal + infinitive</h3>
+<table>
+  <thead><tr><th>Modal</th><th>Meaning</th><th>Example</th></tr></thead>
+  <tbody>
+    <tr><td><strong>pouvoir</strong></td><td>ability or permission</td><td class="fr">Je peux t'aider. — <span class="en">I can help you.</span></td></tr>
+    <tr><td><strong>pouvoir</strong> (cond.)</td><td>polite request</td><td class="fr">Pourriez-vous m'aider ? — <span class="en">Could you help me?</span></td></tr>
+    <tr><td><strong>vouloir</strong></td><td>desire</td><td class="fr">Je veux un café. — <span class="en">I want a coffee.</span></td></tr>
+    <tr><td><strong>vouloir</strong> (cond.)</td><td>polite wish</td><td class="fr">Je voudrais un café. — <span class="en">I'd like a coffee.</span></td></tr>
+    <tr><td><strong>devoir</strong></td><td>obligation</td><td class="fr">Je dois partir. — <span class="en">I have to leave.</span></td></tr>
+    <tr><td><strong>devoir</strong></td><td>probability</td><td class="fr">Il doit être en retard. — <span class="en">He must be late.</span></td></tr>
+    <tr><td><strong>savoir</strong></td><td>knowing a fact / a skill</td><td class="fr">Je sais nager. — <span class="en">I know how to swim.</span></td></tr>
+  </tbody>
+</table>
+
+<h3>18.3 <em>savoir</em> vs <em>connaître</em> — both mean "to know"</h3>
+<table>
+  <thead><tr><th>savoir (fact / how)</th><th>connaître (person / place / thing by acquaintance)</th></tr></thead>
+  <tbody>
+    <tr><td class="fr">Je sais la réponse. — <span class="en">I know the answer.</span></td><td class="fr">Je connais Paris. — <span class="en">I know Paris.</span></td></tr>
+    <tr><td class="fr">Tu sais où il habite ? — <span class="en">Do you know where he lives?</span></td><td class="fr">Tu connais Pierre ? — <span class="en">Do you know Pierre?</span></td></tr>
+    <tr><td class="fr">Elle sait jouer du piano. — <span class="en">She can play the piano.</span></td><td class="fr">Elle connaît bien ce livre.</td></tr>
+  </tbody>
+</table>
+<div class="tip">Rule of thumb: if it's followed by a <strong>that-clause, an infinitive, or a question word</strong>, use <em>savoir</em>. If it's followed by a <strong>direct noun</strong> (person, place, book, etc.), use <em>connaître</em>.</div>
+
+<h3>18.4 <em>pouvoir</em> vs <em>savoir</em> — two kinds of "can"</h3>
+<table>
+  <tbody>
+    <tr><td class="fr">Je <strong>sais</strong> nager. — <span class="en">I can swim. (I have the skill)</span></td></tr>
+    <tr><td class="fr">Je <strong>peux</strong> nager aujourd'hui. — <span class="en">I can swim today. (circumstances allow it)</span></td></tr>
+  </tbody>
+</table>
+</article>
+
+<!-- ============================================================
+     CHAPTER 19 — REFLEXIVE / PRONOMINAL VERBS
+     ============================================================ -->
+<article class="chapter" id="a2-reflexives">
+<h2><span class="level a2">A2</span> 19. Reflexive (pronominal) verbs</h2>
+
+<p>Reflexive verbs have an extra pronoun (<em>me, te, se, nous, vous, se</em>) before the verb. The subject performs the action on <strong>itself</strong>.</p>
+
+<h3>19.1 Pattern: <em>se laver</em> (to wash oneself)</h3>
+<table>
+  <thead><tr><th>Person</th><th>Reflexive pron.</th><th>Verb</th><th>Translation</th></tr></thead>
+  <tbody>
+    <tr><td>je</td><td><strong>me</strong></td><td class="fr">me lave</td><td>I wash myself</td></tr>
+    <tr><td>tu</td><td><strong>te</strong></td><td class="fr">te laves</td><td>you wash yourself</td></tr>
+    <tr><td>il / elle / on</td><td><strong>se</strong></td><td class="fr">se lave</td><td>he / she washes himself / herself</td></tr>
+    <tr><td>nous</td><td><strong>nous</strong></td><td class="fr">nous lavons</td><td>we wash ourselves</td></tr>
+    <tr><td>vous</td><td><strong>vous</strong></td><td class="fr">vous lavez</td><td>you wash yourself / yourselves</td></tr>
+    <tr><td>ils / elles</td><td><strong>se</strong></td><td class="fr">se lavent</td><td>they wash themselves</td></tr>
+  </tbody>
+</table>
+
+<div class="note">Before a vowel: <em>me/te/se</em> elide to <em>m'/t'/s'</em>: <span class="fr">je m'appelle, tu t'habilles, il s'amuse</span>.</div>
+
+<h3>19.2 Common reflexive verbs</h3>
+<table>
+  <tbody>
+    <tr><td class="fr">s'appeler</td><td>to be called</td><td class="fr">Je m'appelle Marie.</td></tr>
+    <tr><td class="fr">se lever</td><td>to get up</td><td class="fr">Je me lève à 7 heures.</td></tr>
+    <tr><td class="fr">se laver</td><td>to wash up</td><td class="fr">Il se lave le matin.</td></tr>
+    <tr><td class="fr">se brosser (les dents)</td><td>to brush (one's teeth)</td><td class="fr">Je me brosse les dents.</td></tr>
+    <tr><td class="fr">s'habiller</td><td>to get dressed</td><td class="fr">Elle s'habille vite.</td></tr>
+    <tr><td class="fr">se coucher</td><td>to go to bed</td><td class="fr">Je me couche tard.</td></tr>
+    <tr><td class="fr">se réveiller</td><td>to wake up</td><td class="fr">Tu te réveilles tôt.</td></tr>
+    <tr><td class="fr">se reposer</td><td>to rest</td><td class="fr">Nous nous reposons.</td></tr>
+    <tr><td class="fr">se promener</td><td>to take a walk</td><td class="fr">On se promène au parc.</td></tr>
+    <tr><td class="fr">s'amuser</td><td>to have fun</td><td class="fr">Les enfants s'amusent.</td></tr>
+    <tr><td class="fr">se souvenir de</td><td>to remember</td><td class="fr">Je me souviens de toi.</td></tr>
+    <tr><td class="fr">se dépêcher</td><td>to hurry</td><td class="fr">Dépêche-toi !</td></tr>
+    <tr><td class="fr">se sentir</td><td>to feel</td><td class="fr">Je me sens bien.</td></tr>
+  </tbody>
+</table>
+
+<h3>19.3 Negation with reflexive verbs</h3>
+<p>The <em>ne</em> goes before the reflexive pronoun; <em>pas</em> goes after the verb:</p>
+<div class="ex">
+  <p><span class="fr">Je <strong>ne</strong> me lève <strong>pas</strong> tôt le dimanche.</span><span class="en">I don't get up early on Sundays.</span></p>
+  <p><span class="fr">Il <strong>ne</strong> s'appelle <strong>pas</strong> Paul, il s'appelle Pierre.</span></p>
+</div>
+
+<h3>19.4 Reciprocal use (each other)</h3>
+<p>In the plural, the same reflexive forms can mean "each other":</p>
+<div class="ex">
+  <p><span class="fr">Nous <strong>nous</strong> aimons.</span><span class="en">We love each other. (or: we love ourselves)</span></p>
+  <p><span class="fr">Ils <strong>se</strong> téléphonent tous les jours.</span><span class="en">They call each other every day.</span></p>
+</div>
+</article>
+
+<!-- ============================================================
+     CHAPTER 20 — PASSÉ COMPOSÉ WITH AVOIR
+     ============================================================ -->
+<article class="chapter" id="a2-pc-avoir">
+<h2><span class="level a2">A2</span> 20. Passé composé with <em>avoir</em></h2>
+
+<p>The <strong>passé composé</strong> is the most common French past tense. It corresponds to English "I ate / I have eaten / I did eat". About <strong>85% of verbs</strong> form it with the auxiliary <em>avoir</em>.</p>
+
+<h3>20.1 Formula</h3>
+<p class="fr" style="font-size:13pt;text-align:center;color:var(--accent);margin:1em 0"><strong>subject + avoir (present) + past participle</strong></p>
+
+<div class="ex">
+  <p><span class="fr">J'ai mangé une pomme.</span><span class="en">I ate / have eaten an apple.</span></p>
+  <p><span class="fr">Tu as fini ton travail ?</span><span class="en">Did you finish your work?</span></p>
+  <p><span class="fr">Il a perdu ses clés.</span><span class="en">He lost his keys.</span></p>
+  <p><span class="fr">Nous avons vu un film hier.</span><span class="en">We saw a film yesterday.</span></p>
+</div>
+
+<h3>20.2 Forming the past participle</h3>
+<table>
+  <thead><tr><th>Verb group</th><th>Rule</th><th>Examples</th></tr></thead>
+  <tbody>
+    <tr><td>-er verbs</td><td>stem + <strong>-é</strong></td><td class="fr">parler → parlé · manger → mangé · aimer → aimé</td></tr>
+    <tr><td>Regular -ir (group 2)</td><td>stem + <strong>-i</strong></td><td class="fr">finir → fini · choisir → choisi</td></tr>
+    <tr><td>Regular -re (group 3)</td><td>stem + <strong>-u</strong></td><td class="fr">vendre → vendu · attendre → attendu · perdre → perdu</td></tr>
+    <tr><td>Irregular</td><td>memorize</td><td>see table below</td></tr>
+  </tbody>
+</table>
+
+<h3>20.3 Common irregular past participles</h3>
+<table>
+  <thead><tr><th>Infinitive</th><th>PP</th><th>Infinitive</th><th>PP</th><th>Infinitive</th><th>PP</th></tr></thead>
+  <tbody>
+    <tr><td class="fr">avoir</td><td class="fr">eu</td><td class="fr">être</td><td class="fr">été</td><td class="fr">faire</td><td class="fr">fait</td></tr>
+    <tr><td class="fr">voir</td><td class="fr">vu</td><td class="fr">savoir</td><td class="fr">su</td><td class="fr">pouvoir</td><td class="fr">pu</td></tr>
+    <tr><td class="fr">vouloir</td><td class="fr">voulu</td><td class="fr">devoir</td><td class="fr">dû</td><td class="fr">prendre</td><td class="fr">pris</td></tr>
+    <tr><td class="fr">mettre</td><td class="fr">mis</td><td class="fr">comprendre</td><td class="fr">compris</td><td class="fr">apprendre</td><td class="fr">appris</td></tr>
+    <tr><td class="fr">dire</td><td class="fr">dit</td><td class="fr">écrire</td><td class="fr">écrit</td><td class="fr">lire</td><td class="fr">lu</td></tr>
+    <tr><td class="fr">boire</td><td class="fr">bu</td><td class="fr">connaître</td><td class="fr">connu</td><td class="fr">vivre</td><td class="fr">vécu</td></tr>
+    <tr><td class="fr">offrir</td><td class="fr">offert</td><td class="fr">ouvrir</td><td class="fr">ouvert</td><td class="fr">recevoir</td><td class="fr">reçu</td></tr>
+  </tbody>
+</table>
+
+<h3>20.4 Negation</h3>
+<p><em>ne</em> goes before the auxiliary, <em>pas</em> after it. The past participle sits at the end:</p>
+<div class="ex">
+  <p><span class="fr">Je <strong>n'</strong>ai <strong>pas</strong> mangé.</span><span class="en">I didn't eat.</span></p>
+  <p><span class="fr">Il <strong>n'</strong>a <strong>rien</strong> vu.</span><span class="en">He saw nothing.</span></p>
+  <p><span class="fr">Nous <strong>n'</strong>avons <strong>jamais</strong> visité Paris.</span><span class="en">We've never visited Paris.</span></p>
+</div>
+
+<h3>20.5 Questions</h3>
+<div class="ex">
+  <p><span class="fr">Est-ce que tu as mangé ?</span><span class="en">Did you eat? (standard)</span></p>
+  <p><span class="fr">As-tu mangé ?</span><span class="en">Did you eat? (formal inversion)</span></p>
+  <p><span class="fr">Tu as mangé ?</span><span class="en">Did you eat? (casual)</span></p>
+</div>
+
+<h3>20.6 No agreement with <em>avoir</em> — almost</h3>
+<p>With the auxiliary <em>avoir</em>, the past participle does <strong>not</strong> agree with the subject. <span class="fr">Marie a mangé.</span> — no extra <em>-e</em>.</p>
+<div class="note">There is one B2-level exception: if the direct object comes <em>before</em> the verb, the past participle agrees with it. <span class="fr">Les pommes que j'ai mang<strong>ées</strong>.</span> Don't worry about this at A2; just know it exists.</div>
+</article>
+
+<!-- ============================================================
+     CHAPTER 21 — PASSÉ COMPOSÉ WITH ÊTRE
+     ============================================================ -->
+<article class="chapter" id="a2-pc-etre">
+<h2><span class="level a2">A2</span> 21. Passé composé with <em>être</em> + agreement</h2>
+
+<p>A small set of verbs — mostly verbs of <strong>motion and change of state</strong> — uses the auxiliary <em>être</em> instead of <em>avoir</em>. With <em>être</em>, the past participle <strong>agrees</strong> with the subject (like an adjective).</p>
+
+<h3>21.1 The Mrs Vandertramp verbs</h3>
+<p>Memorize this list of 14 (plus their compounds). All form their passé composé with <em>être</em>:</p>
+<table>
+  <thead><tr><th>Verb</th><th>Meaning</th><th>Past participle</th></tr></thead>
+  <tbody>
+    <tr><td class="fr">aller</td><td>to go</td><td class="fr">allé</td></tr>
+    <tr><td class="fr">venir</td><td>to come</td><td class="fr">venu</td></tr>
+    <tr><td class="fr">arriver</td><td>to arrive</td><td class="fr">arrivé</td></tr>
+    <tr><td class="fr">partir</td><td>to leave</td><td class="fr">parti</td></tr>
+    <tr><td class="fr">entrer</td><td>to enter</td><td class="fr">entré</td></tr>
+    <tr><td class="fr">sortir</td><td>to go out</td><td class="fr">sorti</td></tr>
+    <tr><td class="fr">monter</td><td>to go up</td><td class="fr">monté</td></tr>
+    <tr><td class="fr">descendre</td><td>to go down</td><td class="fr">descendu</td></tr>
+    <tr><td class="fr">naître</td><td>to be born</td><td class="fr">né</td></tr>
+    <tr><td class="fr">mourir</td><td>to die</td><td class="fr">mort</td></tr>
+    <tr><td class="fr">rester</td><td>to stay</td><td class="fr">resté</td></tr>
+    <tr><td class="fr">tomber</td><td>to fall</td><td class="fr">tombé</td></tr>
+    <tr><td class="fr">retourner</td><td>to return</td><td class="fr">retourné</td></tr>
+    <tr><td class="fr">devenir</td><td>to become</td><td class="fr">devenu</td></tr>
+    <tr><td colspan="3">+ compounds: revenir (revenu), rentrer (rentré), repartir (reparti), remonter (remonté) …</td></tr>
+  </tbody>
+</table>
+
+<p><strong>Plus all reflexive verbs</strong>: <span class="fr">se laver, se lever, s'habiller, …</span> always take <em>être</em>.</p>
+
+<h3>21.2 Agreement with the subject</h3>
+<table>
+  <thead><tr><th>Subject</th><th>Past participle</th><th>Example</th></tr></thead>
+  <tbody>
+    <tr><td>masc-sg</td><td>base form</td><td class="fr">Il est allé au cinéma.</td></tr>
+    <tr><td>fem-sg</td><td>+ <strong>-e</strong></td><td class="fr">Elle est all<strong>ée</strong> au cinéma.</td></tr>
+    <tr><td>masc-pl / mixed</td><td>+ <strong>-s</strong></td><td class="fr">Ils sont all<strong>és</strong> au cinéma.</td></tr>
+    <tr><td>fem-pl</td><td>+ <strong>-es</strong></td><td class="fr">Elles sont all<strong>ées</strong> au cinéma.</td></tr>
+  </tbody>
+</table>
+
+<div class="ex">
+  <p><span class="fr">Marie est <strong>née</strong> en 1990.</span><span class="en">Marie was born in 1990.</span></p>
+  <p><span class="fr">Mes parents sont <strong>partis</strong> hier.</span><span class="en">My parents left yesterday.</span></p>
+  <p><span class="fr">Les filles sont <strong>arrivées</strong> à dix heures.</span><span class="en">The girls arrived at 10.</span></p>
+  <p><span class="fr">Nous nous sommes <strong>réveillés</strong> tôt.</span><span class="en">We woke up early. (reflexive → être + agreement)</span></p>
+</div>
+
+<h3>21.3 Negation with reflexive in passé composé</h3>
+<p>The <em>ne</em> goes before the reflexive pronoun; <em>pas</em> after the auxiliary:</p>
+<div class="ex">
+  <p><span class="fr">Je <strong>ne</strong> me suis <strong>pas</strong> levé(e) tôt.</span><span class="en">I didn't get up early.</span></p>
+  <p><span class="fr">Ils <strong>ne</strong> se sont <strong>pas</strong> couchés tard.</span></p>
+</div>
+
+<h3>21.4 The "house of être" trick</h3>
+<p>Picture a house. You enter (entrer), go up the stairs (monter), come down (descendre), exit (sortir), arrive (arriver), leave (partir), stay (rester), fall (tomber), are born (naître), die (mourir) — and you become (devenir) in this house. Everything is motion or change of state.</p>
+
+<div class="note">A few of these verbs (<em>monter, descendre, sortir, rentrer, passer, retourner</em>) can take <em>avoir</em> when followed by a direct object — meaning shifts:<br>
+<span class="fr">Je suis sorti.</span> = <em>I went out.</em> (intransitive, être)<br>
+<span class="fr">J'ai sorti le chien.</span> = <em>I took the dog out.</em> (transitive, avoir, no agreement)</div>
+</article>
+
+<!-- ============================================================
+     CHAPTER 22 — IMPARFAIT
+     ============================================================ -->
+<article class="chapter" id="a2-imparfait">
+<h2><span class="level a2">A2</span> 22. Imparfait — the "ongoing past"</h2>
+
+<p>The <strong>imparfait</strong> is the second great past tense of French. It describes the <strong>scenery</strong>: what was happening, what used to happen, how things were. The passé composé reports finished events; the imparfait paints the backdrop.</p>
+
+<h3>22.1 Formula — easy</h3>
+<p>Take the <strong>nous</strong> form of the present, drop <em>-ons</em> to get the stem, then add the imparfait endings:</p>
+<table>
+  <thead><tr><th>Person</th><th>Ending</th><th>parler<br><small>(nous parl<u>ons</u>)</small></th><th>finir<br><small>(nous finiss<u>ons</u>)</small></th><th>vendre<br><small>(nous vend<u>ons</u>)</small></th></tr></thead>
+  <tbody>
+    <tr><td>je</td><td><strong>-ais</strong></td><td class="fr">je parlais</td><td class="fr">je finissais</td><td class="fr">je vendais</td></tr>
+    <tr><td>tu</td><td><strong>-ais</strong></td><td class="fr">tu parlais</td><td class="fr">tu finissais</td><td class="fr">tu vendais</td></tr>
+    <tr><td>il / elle / on</td><td><strong>-ait</strong></td><td class="fr">il parlait</td><td class="fr">elle finissait</td><td class="fr">on vendait</td></tr>
+    <tr><td>nous</td><td><strong>-ions</strong></td><td class="fr">nous parlions</td><td class="fr">nous finissions</td><td class="fr">nous vendions</td></tr>
+    <tr><td>vous</td><td><strong>-iez</strong></td><td class="fr">vous parliez</td><td class="fr">vous finissiez</td><td class="fr">vous vendiez</td></tr>
+    <tr><td>ils / elles</td><td><strong>-aient</strong></td><td class="fr">ils parlaient</td><td class="fr">elles finissaient</td><td class="fr">ils vendaient</td></tr>
+  </tbody>
+</table>
+
+<div class="note">The endings <em>-ais, -ais, -ait, -aient</em> all sound identical: /ɛ/. <span class="fr">je parlais, tu parlais, il parlait, ils parlaient</span> all sound the same. Only context and the pronoun distinguish them.</div>
+
+<h3>22.2 The one exception: <em>être</em></h3>
+<p><em>Être</em> has the stem <strong>ét-</strong> (the only verb that doesn't follow the nous-rule):</p>
+<table>
+  <tbody>
+    <tr><td class="fr">j'étais · tu étais · il était · nous étions · vous étiez · ils étaient</td></tr>
+  </tbody>
+</table>
+
+<h3>22.3 When to use the imparfait</h3>
+<table>
+  <thead><tr><th>Use</th><th>Example</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Description</strong> (weather, setting, age, feelings)</td><td class="fr">Il faisait beau. La maison était petite. J'avais cinq ans.</td></tr>
+    <tr><td><strong>Habitual action in the past</strong> ("used to / would")</td><td class="fr">Quand j'étais petit, je jouais tous les jours.</td></tr>
+    <tr><td><strong>Ongoing action interrupted by another</strong></td><td class="fr">Je dormais quand il est arrivé.</td></tr>
+    <tr><td><strong>State of mind / continuous feeling</strong></td><td class="fr">Elle aimait beaucoup ce livre.</td></tr>
+    <tr><td><strong>Polite or hypothetical suggestion</strong></td><td class="fr">Si on allait au cinéma ? — <span class="en">How about going to the cinema?</span></td></tr>
+  </tbody>
+</table>
+
+<h3>22.4 English equivalents</h3>
+<table>
+  <thead><tr><th>French (imparfait)</th><th>English</th></tr></thead>
+  <tbody>
+    <tr><td class="fr">Je travaillais.</td><td>I was working. / I used to work. / I worked. (depending on context)</td></tr>
+    <tr><td class="fr">Il jouait au foot tous les jeudis.</td><td>He used to play / would play soccer every Thursday.</td></tr>
+    <tr><td class="fr">Elle avait dix ans.</td><td>She was ten years old.</td></tr>
+    <tr><td class="fr">Il pleuvait.</td><td>It was raining.</td></tr>
+  </tbody>
+</table>
+</article>
+
+<!-- ============================================================
+     CHAPTER 23 — PC VS IMPARFAIT
+     ============================================================ -->
+<article class="chapter" id="a2-pc-vs-imp">
+<h2><span class="level a2">A2</span> 23. Passé composé vs imparfait — choosing one</h2>
+
+<p>The single biggest source of A2 confusion. Both tenses describe the past, but they answer different questions.</p>
+
+<h3>23.1 The mental model</h3>
+<table>
+  <thead><tr><th>Passé composé</th><th>Imparfait</th></tr></thead>
+  <tbody>
+    <tr><td>"What happened?"</td><td>"What was the situation?"</td></tr>
+    <tr><td>completed, bounded event</td><td>ongoing or repeated state</td></tr>
+    <tr><td>action that moves the story forward</td><td>backdrop / decoration</td></tr>
+    <tr><td>finite duration mentioned</td><td>no clear endpoint</td></tr>
+    <tr><td>foreground</td><td>background</td></tr>
+  </tbody>
+</table>
+
+<h3>23.2 The classic contrast — interruption</h3>
+<p>In a single sentence the two tenses often cooperate: the imparfait sets the scene, the passé composé delivers the punch.</p>
+<div class="ex">
+  <p><span class="fr">Je <strong>dormais</strong> quand le téléphone <strong>a sonné</strong>.</span><span class="en">I was sleeping when the phone rang.</span></p>
+  <p><span class="fr">Il <strong>pleuvait</strong>, mais nous <strong>sommes sortis</strong>.</span><span class="en">It was raining, but we went out.</span></p>
+  <p><span class="fr">Elle <strong>lisait</strong> quand il <strong>est entré</strong>.</span><span class="en">She was reading when he came in.</span></p>
+</div>
+
+<h3>23.3 Habits vs single events</h3>
+<table>
+  <thead><tr><th>Imparfait (habit)</th><th>Passé composé (one occurrence)</th></tr></thead>
+  <tbody>
+    <tr><td class="fr">Tous les étés, j'<strong>allais</strong> en Italie.</td><td class="fr">L'été dernier, je <strong>suis allé</strong> en Italie.</td></tr>
+    <tr><td>(every summer I would go)</td><td>(last summer I went)</td></tr>
+    <tr><td class="fr">Quand j'étais petit, je <strong>mangeais</strong> beaucoup de chocolat.</td><td class="fr">Hier, j'<strong>ai mangé</strong> du chocolat.</td></tr>
+  </tbody>
+</table>
+
+<h3>23.4 Time markers that tilt the choice</h3>
+<table>
+  <thead><tr><th>Often imparfait</th><th>Often passé composé</th></tr></thead>
+  <tbody>
+    <tr><td class="fr">tous les jours, toujours, souvent, généralement, d'habitude, le lundi, à l'époque, quand j'étais …, pendant que …</td><td class="fr">hier, soudain, tout à coup, une fois, ce jour-là, en 2020, le 5 mai, pendant deux heures, trois fois</td></tr>
+  </tbody>
+</table>
+
+<h3>23.5 Same verb, different tense, different meaning</h3>
+<table>
+  <thead><tr><th>Verb</th><th>Imparfait</th><th>Passé composé</th></tr></thead>
+  <tbody>
+    <tr><td>savoir</td><td class="fr">je savais — <span class="en">I knew (state)</span></td><td class="fr">j'ai su — <span class="en">I found out (event)</span></td></tr>
+    <tr><td>connaître</td><td class="fr">je connaissais — <span class="en">I knew (state)</span></td><td class="fr">j'ai connu — <span class="en">I met / got to know</span></td></tr>
+    <tr><td>pouvoir</td><td class="fr">je pouvais — <span class="en">I could (was able to)</span></td><td class="fr">j'ai pu — <span class="en">I managed to / I was able to (and did)</span></td></tr>
+    <tr><td>vouloir</td><td class="fr">je voulais — <span class="en">I wanted</span></td><td class="fr">j'ai voulu — <span class="en">I tried to / decided to</span></td></tr>
+    <tr><td>devoir</td><td class="fr">je devais — <span class="en">I was supposed to</span></td><td class="fr">j'ai dû — <span class="en">I had to / must have</span></td></tr>
+  </tbody>
+</table>
+
+<h3>23.6 A short story showing both</h3>
+<div class="ex">
+  <p class="fr">Il <strong>faisait</strong> beau ce matin-là. Marie <strong>marchait</strong> dans le parc et <strong>écoutait</strong> de la musique. Soudain, elle <strong>a vu</strong> un vieil ami. Ils <strong>se sont arrêtés</strong> pour parler. Ils <strong>ont discuté</strong> pendant une heure puis Marie <strong>a continué</strong> sa promenade.</p>
+  <p class="en">It was nice that morning. Marie was walking in the park and listening to music. Suddenly, she saw an old friend. They stopped to talk. They chatted for an hour, then Marie continued her walk.</p>
+  <p class="uitleg"><em>Imparfait</em> for setting + ongoing actions; <em>passé composé</em> for the sequence of events.</p>
+</div>
+</article>
+
+<!-- ============================================================
+     CHAPTER 24 — FUTUR PROCHE + FUTUR SIMPLE
+     ============================================================ -->
+<article class="chapter" id="a2-futur">
+<h2><span class="level a2">A2</span> 24. Futur proche and futur simple (intro)</h2>
+
+<p>French has two main ways to talk about the future. The <strong>futur proche</strong> (near future) is the everyday choice; the <strong>futur simple</strong> is more formal or planned.</p>
+
+<h3>24.1 Futur proche: <em>aller</em> + infinitive</h3>
+<p class="fr" style="font-size:13pt;text-align:center;color:var(--accent);margin:1em 0"><strong>subject + aller (present) + infinitive</strong></p>
+
+<table>
+  <thead><tr><th>Person</th><th>aller</th><th>+ infinitive</th></tr></thead>
+  <tbody>
+    <tr><td>je</td><td class="fr">vais</td><td class="fr">je vais manger</td></tr>
+    <tr><td>tu</td><td class="fr">vas</td><td class="fr">tu vas partir</td></tr>
+    <tr><td>il / elle / on</td><td class="fr">va</td><td class="fr">il va arriver</td></tr>
+    <tr><td>nous</td><td class="fr">allons</td><td class="fr">nous allons voir</td></tr>
+    <tr><td>vous</td><td class="fr">allez</td><td class="fr">vous allez comprendre</td></tr>
+    <tr><td>ils / elles</td><td class="fr">vont</td><td class="fr">ils vont rentrer</td></tr>
+  </tbody>
+</table>
+
+<div class="ex">
+  <p><span class="fr">Je vais manger une pomme.</span><span class="en">I'm going to eat an apple. / I'll eat an apple.</span></p>
+  <p><span class="fr">Demain, on va voir un film.</span><span class="en">Tomorrow we're going to see a film.</span></p>
+  <p><span class="fr">Ils vont arriver bientôt.</span><span class="en">They will arrive soon.</span></p>
+</div>
+
+<h3>24.2 Futur proche — negation</h3>
+<p><em>ne ... pas</em> wraps around <em>aller</em>, not the infinitive:</p>
+<div class="ex">
+  <p><span class="fr">Je <strong>ne</strong> vais <strong>pas</strong> sortir ce soir.</span><span class="en">I'm not going to go out tonight.</span></p>
+</div>
+
+<h3>24.3 Futur simple — formula</h3>
+<p>For regular verbs: <strong>infinitive + futur endings</strong>. For -re verbs, drop the final <em>-e</em>.</p>
+<table>
+  <thead><tr><th>Person</th><th>Ending</th><th>parler</th><th>finir</th><th>vendre</th></tr></thead>
+  <tbody>
+    <tr><td>je</td><td><strong>-ai</strong></td><td class="fr">je parlerai</td><td class="fr">je finirai</td><td class="fr">je vendrai</td></tr>
+    <tr><td>tu</td><td><strong>-as</strong></td><td class="fr">tu parleras</td><td class="fr">tu finiras</td><td class="fr">tu vendras</td></tr>
+    <tr><td>il / elle</td><td><strong>-a</strong></td><td class="fr">il parlera</td><td class="fr">elle finira</td><td class="fr">on vendra</td></tr>
+    <tr><td>nous</td><td><strong>-ons</strong></td><td class="fr">nous parlerons</td><td class="fr">nous finirons</td><td class="fr">nous vendrons</td></tr>
+    <tr><td>vous</td><td><strong>-ez</strong></td><td class="fr">vous parlerez</td><td class="fr">vous finirez</td><td class="fr">vous vendrez</td></tr>
+    <tr><td>ils / elles</td><td><strong>-ont</strong></td><td class="fr">ils parleront</td><td class="fr">elles finiront</td><td class="fr">ils vendront</td></tr>
+  </tbody>
+</table>
+
+<div class="tip">The future endings <em>-ai, -as, -a, -ons, -ez, -ont</em> are the present forms of <em>avoir</em>. Mnemonic: "the future is what I <em>have</em> to do."</div>
+
+<h3>24.4 Irregular futur stems</h3>
+<table>
+  <thead><tr><th>Infinitive</th><th>Future stem</th><th>Example (je)</th></tr></thead>
+  <tbody>
+    <tr><td class="fr">être</td><td><strong>ser-</strong></td><td class="fr">je serai</td></tr>
+    <tr><td class="fr">avoir</td><td><strong>aur-</strong></td><td class="fr">j'aurai</td></tr>
+    <tr><td class="fr">aller</td><td><strong>ir-</strong></td><td class="fr">j'irai</td></tr>
+    <tr><td class="fr">faire</td><td><strong>fer-</strong></td><td class="fr">je ferai</td></tr>
+    <tr><td class="fr">voir</td><td><strong>verr-</strong></td><td class="fr">je verrai</td></tr>
+    <tr><td class="fr">venir</td><td><strong>viendr-</strong></td><td class="fr">je viendrai</td></tr>
+    <tr><td class="fr">pouvoir</td><td><strong>pourr-</strong></td><td class="fr">je pourrai</td></tr>
+    <tr><td class="fr">vouloir</td><td><strong>voudr-</strong></td><td class="fr">je voudrai</td></tr>
+    <tr><td class="fr">devoir</td><td><strong>devr-</strong></td><td class="fr">je devrai</td></tr>
+    <tr><td class="fr">savoir</td><td><strong>saur-</strong></td><td class="fr">je saurai</td></tr>
+    <tr><td class="fr">tenir</td><td><strong>tiendr-</strong></td><td class="fr">je tiendrai</td></tr>
+  </tbody>
+</table>
+
+<h3>24.5 Futur proche vs futur simple — when to pick which</h3>
+<table>
+  <thead><tr><th>Futur proche (aller + inf)</th><th>Futur simple</th></tr></thead>
+  <tbody>
+    <tr><td>everyday speech, near future</td><td>formal, written, distant future</td></tr>
+    <tr><td>plans, intentions</td><td>predictions, promises</td></tr>
+    <tr><td>certainty, imminent</td><td>more abstract</td></tr>
+    <tr><td class="fr">Je vais te téléphoner ce soir.</td><td class="fr">Je te téléphonerai bientôt.</td></tr>
+    <tr><td>after <em>si</em> in conditionals → use <strong>present</strong>, never future</td><td>in the main clause of <em>si</em> conditions ✓</td></tr>
+  </tbody>
+</table>
+
+<div class="ex">
+  <p><span class="fr">Si tu viens, je serai content.</span><span class="en">If you come, I'll be happy. (si + present → futur simple in main clause)</span></p>
+</div>
+</article>
+
+<!-- ============================================================
+     CHAPTER 25 — DIRECT OBJECT PRONOUNS (COD)
+     ============================================================ -->
+<article class="chapter" id="a2-cod">
+<h2><span class="level a2">A2</span> 25. Direct object pronouns (COD)</h2>
+
+<p>A <strong>direct object</strong> is what the verb acts on without a preposition. "I see <em>the dog</em>" — "the dog" is the direct object. In French, this can be replaced by a pronoun placed <strong>before the verb</strong>.</p>
+
+<h3>25.1 The COD pronouns</h3>
+<table>
+  <thead><tr><th>Refers to</th><th>Pronoun</th></tr></thead>
+  <tbody>
+    <tr><td>me (the speaker)</td><td><strong>me / m'</strong></td></tr>
+    <tr><td>you (one person, informal)</td><td><strong>te / t'</strong></td></tr>
+    <tr><td>him / it (masculine)</td><td><strong>le / l'</strong></td></tr>
+    <tr><td>her / it (feminine)</td><td><strong>la / l'</strong></td></tr>
+    <tr><td>us</td><td><strong>nous</strong></td></tr>
+    <tr><td>you (a group, OR one person formally)</td><td><strong>vous</strong></td></tr>
+    <tr><td>them</td><td><strong>les</strong></td></tr>
+  </tbody>
+</table>
+
+<h3>25.2 Position — always before the verb</h3>
+<table>
+  <thead><tr><th>With noun</th><th>With pronoun</th></tr></thead>
+  <tbody>
+    <tr><td class="fr">Je vois <strong>le film</strong>.</td><td class="fr">Je <strong>le</strong> vois.</td></tr>
+    <tr><td class="fr">Tu connais <strong>Marie</strong> ?</td><td class="fr">Tu <strong>la</strong> connais ?</td></tr>
+    <tr><td class="fr">Elle aime <strong>les chats</strong>.</td><td class="fr">Elle <strong>les</strong> aime.</td></tr>
+    <tr><td class="fr">Tu m'entends ? (= tu entends moi)</td><td class="fr">Oui, je t'entends.</td></tr>
+  </tbody>
+</table>
+
+<h3>25.3 With an infinitive</h3>
+<p>The pronoun goes before the <strong>infinitive</strong>, not before the conjugated verb:</p>
+<div class="ex">
+  <p><span class="fr">Je vais <strong>le</strong> voir ce soir.</span><span class="en">I'm going to see him/it tonight.</span></p>
+  <p><span class="fr">Tu peux <strong>m'</strong>aider ?</span><span class="en">Can you help me?</span></p>
+  <p><span class="fr">Je veux <strong>les</strong> rencontrer.</span><span class="en">I want to meet them.</span></p>
+</div>
+
+<h3>25.4 In the passé composé</h3>
+<p>Pronoun goes before the auxiliary. When the object is COD and comes before, the past participle <strong>agrees</strong> with it (the only place this matters at A2):</p>
+<div class="ex">
+  <p><span class="fr">J'ai vu <strong>les filles</strong>. → Je <strong>les</strong> ai vu<strong>es</strong>.</span><span class="en">I saw them. (les filles → fem-pl, so -es)</span></p>
+  <p><span class="fr">J'ai écrit <strong>la lettre</strong>. → Je <strong>l'</strong>ai écrit<strong>e</strong>.</span></p>
+</div>
+
+<h3>25.5 In negation</h3>
+<p><em>ne</em> goes before the pronoun, <em>pas</em> after the verb:</p>
+<div class="ex">
+  <p><span class="fr">Je <strong>ne le</strong> vois <strong>pas</strong>.</span><span class="en">I don't see him/it.</span></p>
+  <p><span class="fr">Tu <strong>ne</strong> m'as <strong>pas</strong> téléphoné.</span><span class="en">You didn't call me.</span></p>
+</div>
+</article>
+
+<!-- ============================================================
+     CHAPTER 26 — INDIRECT OBJECT PRONOUNS (COI)
+     ============================================================ -->
+<article class="chapter" id="a2-coi">
+<h2><span class="level a2">A2</span> 26. Indirect object pronouns (COI)</h2>
+
+<p>An <strong>indirect object</strong> is what comes after the preposition <em>à</em>. "I'm talking to <em>Marie</em>" — <em>à Marie</em>. The pronoun replaces the whole <em>à</em>+person phrase.</p>
+
+<h3>26.1 The COI pronouns</h3>
+<table>
+  <thead><tr><th>Refers to</th><th>Pronoun</th></tr></thead>
+  <tbody>
+    <tr><td>to me</td><td><strong>me / m'</strong></td></tr>
+    <tr><td>to you (one person, informal)</td><td><strong>te / t'</strong></td></tr>
+    <tr><td>to him / to her (singular)</td><td><strong>lui</strong></td></tr>
+    <tr><td>to us</td><td><strong>nous</strong></td></tr>
+    <tr><td>to you (a group, OR one person formally)</td><td><strong>vous</strong></td></tr>
+    <tr><td>to them</td><td><strong>leur</strong></td></tr>
+  </tbody>
+</table>
+
+<div class="note">In the 1st and 2nd persons, the COD and COI pronouns are identical (<em>me, te, nous, vous</em>). In the 3rd person they're different — COD is <em>le/la/les</em>, COI is <em>lui/leur</em>.</div>
+
+<h3>26.2 Verbs that take <em>à</em> + person (most common)</h3>
+<table>
+  <tbody>
+    <tr><td class="fr">parler <strong>à</strong></td><td>to speak to</td><td class="fr">téléphoner <strong>à</strong></td><td>to phone</td></tr>
+    <tr><td class="fr">écrire <strong>à</strong></td><td>to write to</td><td class="fr">dire <strong>à</strong></td><td>to say to / tell</td></tr>
+    <tr><td class="fr">donner <strong>à</strong></td><td>to give to</td><td class="fr">demander <strong>à</strong></td><td>to ask</td></tr>
+    <tr><td class="fr">répondre <strong>à</strong></td><td>to answer</td><td class="fr">offrir <strong>à</strong></td><td>to give (as gift)</td></tr>
+    <tr><td class="fr">envoyer <strong>à</strong></td><td>to send to</td><td class="fr">expliquer <strong>à</strong></td><td>to explain to</td></tr>
+    <tr><td class="fr">acheter <strong>à</strong></td><td>to buy for</td><td class="fr">prêter <strong>à</strong></td><td>to lend to</td></tr>
+    <tr><td class="fr">apprendre <strong>à</strong></td><td>to teach</td><td class="fr">montrer <strong>à</strong></td><td>to show</td></tr>
+  </tbody>
+</table>
+
+<h3>26.3 Examples</h3>
+<table>
+  <thead><tr><th>With noun</th><th>With pronoun</th></tr></thead>
+  <tbody>
+    <tr><td class="fr">Je téléphone <strong>à Marie</strong>.</td><td class="fr">Je <strong>lui</strong> téléphone.</td></tr>
+    <tr><td class="fr">Il parle <strong>à ses parents</strong>.</td><td class="fr">Il <strong>leur</strong> parle.</td></tr>
+    <tr><td class="fr">Je donne le livre <strong>à Paul</strong>.</td><td class="fr">Je <strong>lui</strong> donne le livre.</td></tr>
+    <tr><td class="fr">Elle répond <strong>aux étudiants</strong>.</td><td class="fr">Elle <strong>leur</strong> répond.</td></tr>
+  </tbody>
+</table>
+
+<h3>26.4 No past-participle agreement with COI</h3>
+<p>Unlike COD pronouns (which trigger agreement in the passé composé), COI pronouns do <strong>not</strong>:</p>
+<div class="ex">
+  <p><span class="fr">Je leur ai parlé.</span><span class="en">I spoke to them. (no agreement — parlé stays unchanged)</span></p>
+</div>
+
+<h3>26.5 Watch out: <em>à</em> + thing → use <em>y</em>, not COI</h3>
+<p>The COI pronouns (<em>lui, leur</em>) replace only <em>à</em> + <strong>person</strong>. For <em>à</em> + thing, use <em>y</em> (next chapter):</p>
+<div class="ex">
+  <p><span class="fr">Je réponds <strong>à Marie</strong>. → Je <strong>lui</strong> réponds.</span><span class="en">(à Marie = person → lui)</span></p>
+  <p><span class="fr">Je réponds <strong>à la question</strong>. → J'<strong>y</strong> réponds.</span><span class="en">(à la question = thing → y)</span></p>
+</div>
+
+<h3>26.6 Exception: certain verbs of <em>thinking about</em> a person keep <em>à</em></h3>
+<p>For <em>penser à, faire attention à, s'intéresser à, songer à</em> with a person, French uses the stressed pronouns (<em>à moi, à toi, à lui, à elle, à eux, à elles</em>), not lui/leur:</p>
+<div class="ex">
+  <p><span class="fr">Je pense à Marie. → Je pense <strong>à elle</strong>.</span><span class="en">I'm thinking about her. (not lui)</span></p>
+</div>
+</article>
+
+<!-- ============================================================
+     CHAPTER 27 — Y AND EN
+     ============================================================ -->
+<article class="chapter" id="a2-y-en">
+<h2><span class="level a2">A2</span> 27. Pronouns <em>y</em> and <em>en</em></h2>
+
+<p>Two tiny pronouns that English speakers consistently forget — but they're <strong>everywhere</strong> in French. Master them and your speech instantly sounds more natural.</p>
+
+<h3>27.1 <em>y</em> — replaces <em>à</em>/<em>dans</em>/<em>en</em>/<em>chez</em> + place or thing</h3>
+<table>
+  <thead><tr><th>Use</th><th>Example</th></tr></thead>
+  <tbody>
+    <tr><td>Place: "there"</td><td class="fr">Je vais à Paris. → J'<strong>y</strong> vais. — <span class="en">I'm going there.</span></td></tr>
+    <tr><td>Place: "here / in"</td><td class="fr">Il habite à Lyon. → Il <strong>y</strong> habite. — <span class="en">He lives there.</span></td></tr>
+    <tr><td>Place: at someone's house</td><td class="fr">On dîne chez Marie. → On <strong>y</strong> dîne. — <span class="en">We're eating there.</span></td></tr>
+    <tr><td><em>à</em> + thing/idea</td><td class="fr">Je pense à mes vacances. → J'<strong>y</strong> pense. — <span class="en">I'm thinking about it.</span></td></tr>
+    <tr><td><em>à</em> + thing (response)</td><td class="fr">Elle répond à la question. → Elle <strong>y</strong> répond. — <span class="en">She answers it.</span></td></tr>
+  </tbody>
+</table>
+
+<div class="ex">
+  <p><span class="fr">— Tu vas au cinéma ce soir ? <br>— Oui, j'<strong>y</strong> vais.</span><span class="en">— Are you going to the cinema tonight? — Yes, I'm going (there).</span></p>
+</div>
+
+<h3>27.2 <em>en</em> — replaces <em>de</em> + something (quantity, origin, "about it")</h3>
+<table>
+  <thead><tr><th>Use</th><th>Example</th></tr></thead>
+  <tbody>
+    <tr><td>Quantity: "some / any of it"</td><td class="fr">Tu veux du café ? → Oui, j'<strong>en</strong> veux. — <span class="en">Yes, I want some.</span></td></tr>
+    <tr><td>Specific number kept</td><td class="fr">J'ai trois enfants. → J'<strong>en</strong> ai trois. — <span class="en">I have three (of them).</span></td></tr>
+    <tr><td>Negation: "any"</td><td class="fr">Il n'a pas d'argent. → Il n'<strong>en</strong> a pas.</td></tr>
+    <tr><td>Origin: "from there"</td><td class="fr">Je viens de Lyon. → J'<strong>en</strong> viens. — <span class="en">I come from there.</span></td></tr>
+    <tr><td><em>de</em> + thing</td><td class="fr">Il parle de ses vacances. → Il <strong>en</strong> parle. — <span class="en">He's talking about them.</span></td></tr>
+    <tr><td><em>avoir besoin de, envie de</em></td><td class="fr">J'ai besoin d'aide. → J'<strong>en</strong> ai besoin. — <span class="en">I need some.</span></td></tr>
+  </tbody>
+</table>
+
+<div class="note">When you use <em>en</em>, you typically <strong>keep the number/quantity word</strong> at the end: <span class="fr">J'en ai <strong>trois</strong>. J'en veux <strong>un peu</strong>. Il en a <strong>beaucoup</strong>.</span></div>
+
+<h3>27.3 Same trap as COI: <em>de</em> + person → not <em>en</em></h3>
+<p>For <em>parler de, avoir besoin de, se souvenir de</em> with a <strong>person</strong>, use stressed pronouns (<em>de moi, de toi, de lui, d'elle, d'eux, d'elles</em>):</p>
+<div class="ex">
+  <p><span class="fr">Je parle de Marie. → Je parle <strong>d'elle</strong>.</span><span class="en">(not "j'en parle")</span></p>
+  <p><span class="fr">Je parle de mes vacances. → J'<strong>en</strong> parle.</span><span class="en">(thing → en)</span></p>
+</div>
+
+<h3>27.4 Position — same rules as other pronouns</h3>
+<table>
+  <thead><tr><th>Construction</th><th>Example</th></tr></thead>
+  <tbody>
+    <tr><td>Present</td><td class="fr">J'y vais. · J'en veux.</td></tr>
+    <tr><td>With infinitive</td><td class="fr">Je vais y aller. · Je vais en prendre.</td></tr>
+    <tr><td>Passé composé</td><td class="fr">J'y suis allé. · J'en ai pris.</td></tr>
+    <tr><td>Negation</td><td class="fr">Je n'y vais pas. · Je n'en veux pas.</td></tr>
+    <tr><td>Imperative (affirm.)</td><td class="fr">Vas-<strong>y</strong> ! Prends-<strong>en</strong> ! <small>(hyphen, en becomes the only word that can follow imperative)</small></td></tr>
+  </tbody>
+</table>
+
+<h3>27.5 The famous fixed expressions</h3>
+<table>
+  <tbody>
+    <tr><td class="fr">Il y a</td><td>there is / there are</td></tr>
+    <tr><td class="fr">Vas-y !</td><td>Go on! Go for it!</td></tr>
+    <tr><td class="fr">On y va.</td><td>Let's go.</td></tr>
+    <tr><td class="fr">Ça y est !</td><td>That's it! It's done!</td></tr>
+    <tr><td class="fr">J'en ai marre.</td><td>I'm fed up.</td></tr>
+    <tr><td class="fr">Je m'en vais.</td><td>I'm leaving.</td></tr>
+    <tr><td class="fr">Ne t'en fais pas.</td><td>Don't worry about it.</td></tr>
+  </tbody>
+</table>
+</article>
+
+<!-- ============================================================
+     CHAPTER 28 — PRONOUN ORDER
+     ============================================================ -->
+<article class="chapter" id="a2-pronoun-order">
+<h2><span class="level a2">A2</span> 28. Pronoun order</h2>
+
+<p>When two or more pronouns share the same verb, they line up in a strict order. Memorize the table — it never changes.</p>
+
+<h3>28.1 The canonical order (before the verb)</h3>
+<table>
+  <thead><tr><th>Position 1</th><th>Position 2</th><th>Position 3</th><th>Position 4</th><th>Position 5</th></tr></thead>
+  <tbody>
+    <tr><td><strong>me<br>te<br>se<br>nous<br>vous</strong></td><td><strong>le<br>la<br>les</strong></td><td><strong>lui<br>leur</strong></td><td><strong>y</strong></td><td><strong>en</strong></td></tr>
+  </tbody>
+</table>
+
+<div class="ex">
+  <p><span class="fr">Il <strong>me le</strong> donne.</span><span class="en">He gives it to me.  (1 + 2)</span></p>
+  <p><span class="fr">Je <strong>le lui</strong> donne.</span><span class="en">I give it to him/her.  (2 + 3)</span></p>
+  <p><span class="fr">Il y <strong>en</strong> a trois.</span><span class="en">There are three of them.  (4 + 5)</span></p>
+  <p><span class="fr">Je <strong>te le</strong> dis !</span><span class="en">I'm telling you (it)!  (1 + 2)</span></p>
+</div>
+
+<h3>28.2 Awkward combinations to avoid</h3>
+<p>Column 1 (<em>me/te/se/nous/vous</em>) and column 3 (<em>lui/leur</em>) cannot coexist. When both are needed, demote the indirect object to a stressed pronoun:</p>
+<table>
+  <thead><tr><th>Wrong</th><th>Correct</th></tr></thead>
+  <tbody>
+    <tr><td class="fr"><s>Il me lui présente.</s></td><td class="fr">Il me présente <strong>à lui</strong>. — <span class="en">He's introducing me to him.</span></td></tr>
+    <tr><td class="fr"><s>Je te leur recommande.</s></td><td class="fr">Je te recommande <strong>à eux</strong>.</td></tr>
+  </tbody>
+</table>
+
+<h3>28.3 Affirmative imperative — order flips, hyphens appear</h3>
+<p>In a positive command, pronouns go <em>after</em> the verb, joined with hyphens. <em>me</em> and <em>te</em> become <em>moi</em> and <em>toi</em>.</p>
+<table>
+  <thead><tr><th>Negative imperative</th><th>Affirmative imperative</th></tr></thead>
+  <tbody>
+    <tr><td class="fr">Ne <strong>me le</strong> donne pas.</td><td class="fr">Donne-<strong>le-moi</strong> ! — <span class="en">Give it to me!</span></td></tr>
+    <tr><td class="fr">Ne <strong>les lui</strong> donne pas.</td><td class="fr">Donne-<strong>les-lui</strong> !</td></tr>
+    <tr><td class="fr">Ne <strong>te</strong> dépêche pas.</td><td class="fr">Dépêche-<strong>toi</strong> !</td></tr>
+  </tbody>
+</table>
+
+<h3>28.4 Order with infinitive / futur proche / modal</h3>
+<p>All pronouns sit before the infinitive:</p>
+<div class="ex">
+  <p><span class="fr">Je vais <strong>te le</strong> dire.</span><span class="en">I'll tell it to you.</span></p>
+  <p><span class="fr">Tu peux <strong>me les</strong> envoyer ?</span><span class="en">Can you send them to me?</span></p>
+  <p><span class="fr">Elle doit <strong>lui en</strong> parler.</span><span class="en">She has to talk to him about it.</span></p>
+</div>
+
+<h3>28.5 Practice — common everyday combinations</h3>
+<table>
+  <tbody>
+    <tr><td class="fr">Je te le promets.</td><td>I promise you.</td></tr>
+    <tr><td class="fr">Donne-le-moi.</td><td>Give it to me.</td></tr>
+    <tr><td class="fr">Je vous les envoie.</td><td>I'll send them to you.</td></tr>
+    <tr><td class="fr">On lui en a parlé.</td><td>We spoke to him about it.</td></tr>
+    <tr><td class="fr">Il s'en occupe.</td><td>He's taking care of it.</td></tr>
+    <tr><td class="fr">Je m'y habitue.</td><td>I'm getting used to it.</td></tr>
+  </tbody>
+</table>
+</article>
+
+<!-- ============================================================
+     CHAPTER 29 — COMPARATIVE AND SUPERLATIVE
+     ============================================================ -->
+<article class="chapter" id="a2-comparative">
+<h2><span class="level a2">A2</span> 29. Comparative and superlative</h2>
+
+<h3>29.1 Comparative — three forms</h3>
+<table>
+  <thead><tr><th>Comparison</th><th>Pattern</th><th>Example</th></tr></thead>
+  <tbody>
+    <tr><td>more than</td><td class="fr"><strong>plus</strong> + adj/adv + <strong>que</strong></td><td class="fr">Il est plus grand que moi. — <span class="en">He's taller than me.</span></td></tr>
+    <tr><td>less than</td><td class="fr"><strong>moins</strong> + adj/adv + <strong>que</strong></td><td class="fr">Elle est moins rapide que toi. — <span class="en">She's less fast than you.</span></td></tr>
+    <tr><td>as ... as</td><td class="fr"><strong>aussi</strong> + adj/adv + <strong>que</strong></td><td class="fr">Pierre est aussi sympa que Paul. — <span class="en">Pierre is as nice as Paul.</span></td></tr>
+  </tbody>
+</table>
+
+<h3>29.2 Comparing nouns (quantity)</h3>
+<table>
+  <thead><tr><th>Pattern</th><th>Meaning</th><th>Example</th></tr></thead>
+  <tbody>
+    <tr><td class="fr">plus de + noun + que</td><td>more ... than</td><td class="fr">J'ai plus d'argent que toi.</td></tr>
+    <tr><td class="fr">moins de + noun + que</td><td>less ... than</td><td class="fr">Il a moins de temps que moi.</td></tr>
+    <tr><td class="fr">autant de + noun + que</td><td>as much/many ... as</td><td class="fr">Elle a autant d'amis que sa sœur.</td></tr>
+  </tbody>
+</table>
+
+<h3>29.3 Comparing verbs (action)</h3>
+<table>
+  <tbody>
+    <tr><td class="fr">Je travaille <strong>plus</strong> que lui.</td><td>I work more than him.</td></tr>
+    <tr><td class="fr">Tu manges <strong>moins</strong> que ton frère.</td><td>You eat less than your brother.</td></tr>
+    <tr><td class="fr">Nous parlons <strong>autant</strong> qu'eux.</td><td>We talk as much as they do.</td></tr>
+  </tbody>
+</table>
+
+<h3>29.4 Irregular comparatives</h3>
+<table>
+  <thead><tr><th>Adjective/adverb</th><th>Comparative</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td class="fr">bon (good, adjective)</td><td class="fr"><strong>meilleur</strong> (que)</td><td>not "plus bon"</td></tr>
+    <tr><td class="fr">bien (well, adverb)</td><td class="fr"><strong>mieux</strong> (que)</td><td>not "plus bien"</td></tr>
+    <tr><td class="fr">mauvais (bad, adj)</td><td class="fr"><strong>pire</strong> or plus mauvais</td><td>both correct; <em>pire</em> is more emphatic</td></tr>
+    <tr><td class="fr">mal (badly, adv)</td><td class="fr"><strong>plus mal</strong> or pire</td><td></td></tr>
+  </tbody>
+</table>
+
+<div class="ex">
+  <p><span class="fr">Ce vin est <strong>meilleur</strong> que l'autre.</span><span class="en">This wine is better than the other.</span></p>
+  <p><span class="fr">Je vais <strong>mieux</strong> aujourd'hui.</span><span class="en">I'm doing better today.</span></p>
+  <p><span class="fr">Sa situation est <strong>pire</strong> qu'avant.</span><span class="en">His situation is worse than before.</span></p>
+</div>
+
+<h3>29.5 Superlative — "the most / least"</h3>
+<p>Pattern: <strong>le / la / les + plus (or moins) + adjective + (de + group)</strong>. The article matches the noun's gender + number.</p>
+<table>
+  <thead><tr><th>Pattern</th><th>Example</th></tr></thead>
+  <tbody>
+    <tr><td>Adj. comes after noun</td><td class="fr">C'est la maison <strong>la plus</strong> chère <strong>de</strong> la ville.</td></tr>
+    <tr><td>Adj. comes before noun (BAGS)</td><td class="fr">C'est <strong>la plus</strong> belle maison <strong>de</strong> la ville.</td></tr>
+    <tr><td>Adverb</td><td class="fr">Il court <strong>le plus</strong> vite.</td></tr>
+    <tr><td>Verb</td><td class="fr">C'est lui qui travaille <strong>le plus</strong>.</td></tr>
+    <tr><td>Noun (quantity)</td><td class="fr">Elle a <strong>le plus de</strong> livres.</td></tr>
+  </tbody>
+</table>
+
+<h3>29.6 Irregular superlatives</h3>
+<table>
+  <tbody>
+    <tr><td class="fr">le meilleur, la meilleure, les meilleurs, les meilleures</td><td>the best (adj.)</td></tr>
+    <tr><td class="fr">le mieux</td><td>the best (adv.)</td></tr>
+    <tr><td class="fr">le pire / le plus mauvais</td><td>the worst</td></tr>
+  </tbody>
+</table>
+<div class="ex">
+  <p><span class="fr">C'est <strong>le meilleur</strong> restaurant de Paris.</span><span class="en">It's the best restaurant in Paris.</span></p>
+  <p><span class="fr">Voilà ce que je fais <strong>le mieux</strong>.</span><span class="en">Here's what I do best.</span></p>
+</div>
+
+<div class="note">Note the preposition <strong>de</strong> after a superlative (where English uses "in"): <span class="fr">le plus grand <strong>de</strong> la classe</span> — <span class="en">the tallest <strong>in</strong> the class.</span></div>
+</article>
+
+<!-- ============================================================
+     CHAPTER 30 — ADVERBS
+     ============================================================ -->
+<article class="chapter" id="a2-adverbs">
+<h2><span class="level a2">A2</span> 30. Adverbs — formation in <em>-ment</em></h2>
+
+<p>French adverbs of manner ("how?") almost all end in <strong>-ment</strong>, the equivalent of English <em>-ly</em>.</p>
+
+<h3>30.1 The basic rule — feminine adjective + <em>-ment</em></h3>
+<table>
+  <thead><tr><th>Adjective (masc)</th><th>Adjective (fem)</th><th>Adverb</th></tr></thead>
+  <tbody>
+    <tr><td class="fr">lent</td><td class="fr">lente</td><td class="fr"><strong>lentement</strong></td></tr>
+    <tr><td class="fr">heureux</td><td class="fr">heureuse</td><td class="fr"><strong>heureusement</strong></td></tr>
+    <tr><td class="fr">doux</td><td class="fr">douce</td><td class="fr"><strong>doucement</strong></td></tr>
+    <tr><td class="fr">attentif</td><td class="fr">attentive</td><td class="fr"><strong>attentivement</strong></td></tr>
+    <tr><td class="fr">naturel</td><td class="fr">naturelle</td><td class="fr"><strong>naturellement</strong></td></tr>
+    <tr><td class="fr">général</td><td class="fr">générale</td><td class="fr"><strong>généralement</strong></td></tr>
+  </tbody>
+</table>
+
+<h3>30.2 Adjective ends in vowel → use the masculine form directly</h3>
+<table>
+  <tbody>
+    <tr><td class="fr">vrai → <strong>vraiment</strong></td><td>truly</td></tr>
+    <tr><td class="fr">poli → <strong>poliment</strong></td><td>politely</td></tr>
+    <tr><td class="fr">absolu → <strong>absolument</strong></td><td>absolutely</td></tr>
+    <tr><td class="fr">joli → <strong>joliment</strong></td><td>nicely</td></tr>
+  </tbody>
+</table>
+
+<h3>30.3 Adjective ends in <em>-ant / -ent</em> → <em>-amment / -emment</em></h3>
+<table>
+  <tbody>
+    <tr><td class="fr">constant → <strong>constamment</strong></td><td>constantly</td></tr>
+    <tr><td class="fr">élégant → <strong>élégamment</strong></td><td>elegantly</td></tr>
+    <tr><td class="fr">évident → <strong>évidemment</strong></td><td>obviously</td></tr>
+    <tr><td class="fr">récent → <strong>récemment</strong></td><td>recently</td></tr>
+    <tr><td class="fr">patient → <strong>patiemment</strong></td><td>patiently</td></tr>
+  </tbody>
+</table>
+<p>Both endings are pronounced /amɑ̃/.</p>
+
+<h3>30.4 Irregular adverbs (frequent)</h3>
+<table>
+  <tbody>
+    <tr><td class="fr">bon → <strong>bien</strong></td><td>well</td></tr>
+    <tr><td class="fr">mauvais → <strong>mal</strong></td><td>badly</td></tr>
+    <tr><td class="fr">meilleur → <strong>mieux</strong></td><td>better</td></tr>
+    <tr><td class="fr">petit → <strong>peu</strong></td><td>little</td></tr>
+    <tr><td class="fr">rapide → vite (or rapidement)</td><td>quickly</td></tr>
+    <tr><td class="fr">gentil → <strong>gentiment</strong></td><td>kindly</td></tr>
+    <tr><td class="fr">bref → <strong>brièvement</strong></td><td>briefly</td></tr>
+  </tbody>
+</table>
+
+<h3>30.5 Adverbs of frequency (no -ment)</h3>
+<table>
+  <tbody>
+    <tr><td class="fr">toujours</td><td>always</td><td class="fr">souvent</td><td>often</td></tr>
+    <tr><td class="fr">parfois</td><td>sometimes</td><td class="fr">rarement</td><td>rarely</td></tr>
+    <tr><td class="fr">jamais</td><td>never (with ne)</td><td class="fr">déjà</td><td>already</td></tr>
+    <tr><td class="fr">encore</td><td>still / again</td><td class="fr">tout de suite</td><td>right away</td></tr>
+  </tbody>
+</table>
+
+<h3>30.6 Position of adverbs</h3>
+<table>
+  <thead><tr><th>Rule</th><th>Example</th></tr></thead>
+  <tbody>
+    <tr><td>With simple verb: after the verb</td><td class="fr">Il parle <strong>doucement</strong>.</td></tr>
+    <tr><td>With passé composé: short adv between aux + PP</td><td class="fr">J'ai <strong>bien</strong> mangé. · Elle est <strong>déjà</strong> partie.</td></tr>
+    <tr><td>Long adverbs: after the past participle</td><td class="fr">Il a répondu <strong>poliment</strong>.</td></tr>
+    <tr><td>Adverbs of time/place: end of sentence or beginning</td><td class="fr">Hier, je suis allé à Paris. · Il habite <strong>ici</strong>.</td></tr>
+  </tbody>
+</table>
+</article>
+
+<!-- ============================================================
+     CHAPTER 31 — IMPERATIVE
+     ============================================================ -->
+<article class="chapter" id="a2-imperative">
+<h2><span class="level a2">A2</span> 31. Imperative (impératif)</h2>
+
+<p>The imperative gives orders, instructions, advice, or invitations. It exists in only three persons — <strong>tu</strong>, <strong>nous</strong>, and <strong>vous</strong> — and uses no subject pronoun.</p>
+
+<h3>31.1 Formation — take the present tense and drop the pronoun</h3>
+<table>
+  <thead><tr><th>Verb</th><th>tu form</th><th>nous form</th><th>vous form</th></tr></thead>
+  <tbody>
+    <tr><td>parler</td><td class="fr">parle ! <small>(no -s for -er verbs)</small></td><td class="fr">parlons !</td><td class="fr">parlez !</td></tr>
+    <tr><td>finir</td><td class="fr">finis !</td><td class="fr">finissons !</td><td class="fr">finissez !</td></tr>
+    <tr><td>vendre</td><td class="fr">vends !</td><td class="fr">vendons !</td><td class="fr">vendez !</td></tr>
+    <tr><td>aller</td><td class="fr">va ! <small>(no -s)</small></td><td class="fr">allons !</td><td class="fr">allez !</td></tr>
+  </tbody>
+</table>
+
+<div class="note">For <em>-er</em> verbs (and <em>aller</em>), the <em>tu</em> imperative drops the final <em>-s</em>. <strong>BUT</strong>, when followed by the pronoun <em>en</em> or <em>y</em>, the <em>-s</em> comes back for euphony: <span class="fr">Vas-y ! Manges-en !</span></div>
+
+<h3>31.2 Irregular imperatives — four verbs to memorize</h3>
+<table>
+  <thead><tr><th>Verb</th><th>tu</th><th>nous</th><th>vous</th></tr></thead>
+  <tbody>
+    <tr><td>être</td><td class="fr">sois</td><td class="fr">soyons</td><td class="fr">soyez</td></tr>
+    <tr><td>avoir</td><td class="fr">aie</td><td class="fr">ayons</td><td class="fr">ayez</td></tr>
+    <tr><td>savoir</td><td class="fr">sache</td><td class="fr">sachons</td><td class="fr">sachez</td></tr>
+    <tr><td>vouloir</td><td class="fr">veuille (rare)</td><td class="fr">—</td><td class="fr">veuillez (formal: "please")</td></tr>
+  </tbody>
+</table>
+
+<div class="ex">
+  <p><span class="fr">Sois sage !</span><span class="en">Be good!</span></p>
+  <p><span class="fr">N'aie pas peur.</span><span class="en">Don't be afraid.</span></p>
+  <p><span class="fr">Veuillez patienter, s'il vous plaît.</span><span class="en">Please wait. (very polite)</span></p>
+</div>
+
+<h3>31.3 Negative imperative</h3>
+<p>Wrap <em>ne … pas</em> around the verb. Pronouns return to their pre-verb position.</p>
+<table>
+  <thead><tr><th>Affirmative</th><th>Negative</th></tr></thead>
+  <tbody>
+    <tr><td class="fr">Mange ta soupe !</td><td class="fr">Ne mange pas ta soupe !</td></tr>
+    <tr><td class="fr">Donne-le-moi !</td><td class="fr">Ne me le donne pas !</td></tr>
+    <tr><td class="fr">Lève-toi !</td><td class="fr">Ne te lève pas !</td></tr>
+  </tbody>
+</table>
+
+<h3>31.4 Reflexive verbs in the imperative</h3>
+<p>Affirmative: pronoun after verb, <em>te → toi</em>. Negative: pronoun back in front.</p>
+<div class="ex">
+  <p><span class="fr">Lève-<strong>toi</strong> !</span><span class="en">Get up!</span></p>
+  <p><span class="fr">Asseyez-<strong>vous</strong>.</span><span class="en">Sit down.</span></p>
+  <p><span class="fr">Dépêchons-<strong>nous</strong>.</span><span class="en">Let's hurry.</span></p>
+  <p><span class="fr">Ne <strong>te</strong> dépêche pas.</span><span class="en">Don't hurry.</span></p>
+</div>
+
+<h3>31.5 Softening with politeness</h3>
+<p>French imperatives can feel abrupt. Soften with <em>s'il vous plaît</em>, <em>s'il te plaît</em>, or use the conditional instead:</p>
+<table>
+  <tbody>
+    <tr><td class="fr">Passe-moi le sel, s'il te plaît.</td><td>Pass me the salt, please.</td></tr>
+    <tr><td class="fr">Pourrais-tu me passer le sel ?</td><td>Could you pass me the salt? (very polite)</td></tr>
+  </tbody>
+</table>
+</article>
+
+<!-- ============================================================
+     CHAPTER 32 — CONNECTORS
+     ============================================================ -->
+<article class="chapter" id="a2-connectors">
+<h2><span class="level a2">A2</span> 32. Connectors and linking words</h2>
+
+<p>Connectors stitch ideas together — adding, contrasting, sequencing, explaining cause and consequence. A good supply of connectors elevates your French from word-soup to flowing prose.</p>
+
+<h3>32.1 Coordinating (link two equal clauses)</h3>
+<table>
+  <thead><tr><th>Connector</th><th>Meaning</th><th>Example</th></tr></thead>
+  <tbody>
+    <tr><td class="fr">et</td><td>and</td><td class="fr">Pierre et Marie viennent.</td></tr>
+    <tr><td class="fr">ou</td><td>or</td><td class="fr">Café ou thé ?</td></tr>
+    <tr><td class="fr">mais</td><td>but</td><td class="fr">Il fait beau, mais il fait froid.</td></tr>
+    <tr><td class="fr">donc</td><td>so / therefore</td><td class="fr">Il pleut, donc je reste.</td></tr>
+    <tr><td class="fr">car</td><td>because (literary)</td><td class="fr">Il est parti, car il était fatigué.</td></tr>
+    <tr><td class="fr">ni … ni</td><td>neither … nor</td><td class="fr">Je ne veux ni café ni thé.</td></tr>
+  </tbody>
+</table>
+
+<h3>32.2 Cause</h3>
+<table>
+  <thead><tr><th>Connector</th><th>Meaning</th><th>Example</th></tr></thead>
+  <tbody>
+    <tr><td class="fr">parce que</td><td>because (most common)</td><td class="fr">Je reste parce qu'il pleut.</td></tr>
+    <tr><td class="fr">puisque</td><td>since (cause known to all)</td><td class="fr">Puisque tu insistes, j'accepte.</td></tr>
+    <tr><td class="fr">comme</td><td>since / as (at start)</td><td class="fr">Comme il pleut, je reste.</td></tr>
+    <tr><td class="fr">à cause de + noun</td><td>because of (negative)</td><td class="fr">À cause de la grève, je suis en retard.</td></tr>
+    <tr><td class="fr">grâce à + noun</td><td>thanks to (positive)</td><td class="fr">Grâce à toi, j'ai réussi.</td></tr>
+  </tbody>
+</table>
+
+<h3>32.3 Consequence</h3>
+<table>
+  <tbody>
+    <tr><td class="fr">donc, alors</td><td>so / therefore</td><td class="fr">Il pleut, alors je reste.</td></tr>
+    <tr><td class="fr">c'est pourquoi</td><td>that's why</td><td class="fr">Il pleut ; c'est pourquoi je reste.</td></tr>
+    <tr><td class="fr">par conséquent</td><td>consequently (formal)</td><td></td></tr>
+  </tbody>
+</table>
+
+<h3>32.4 Opposition / contrast</h3>
+<table>
+  <tbody>
+    <tr><td class="fr">mais</td><td>but</td><td class="fr">J'aime ça, mais c'est cher.</td></tr>
+    <tr><td class="fr">pourtant</td><td>yet / however</td><td class="fr">Il pleut ; pourtant, je sors.</td></tr>
+    <tr><td class="fr">cependant</td><td>however (formal)</td><td></td></tr>
+    <tr><td class="fr">par contre</td><td>on the other hand</td><td class="fr">Le service est lent ; par contre, la nourriture est bonne.</td></tr>
+    <tr><td class="fr">au contraire</td><td>on the contrary</td><td></td></tr>
+    <tr><td class="fr">malgré + noun</td><td>despite</td><td class="fr">Malgré la pluie, nous sortons.</td></tr>
+  </tbody>
+</table>
+
+<h3>32.5 Sequence / time</h3>
+<table>
+  <tbody>
+    <tr><td class="fr">d'abord</td><td>first (of all)</td><td class="fr">D'abord, je me lève.</td></tr>
+    <tr><td class="fr">ensuite, puis</td><td>then / next</td><td class="fr">Ensuite, je prends mon café.</td></tr>
+    <tr><td class="fr">après</td><td>after</td><td class="fr">Après, je vais au bureau.</td></tr>
+    <tr><td class="fr">enfin</td><td>finally</td><td class="fr">Enfin, je rentre à la maison.</td></tr>
+    <tr><td class="fr">avant de + inf.</td><td>before (doing)</td><td class="fr">Avant de partir, je prends une douche.</td></tr>
+    <tr><td class="fr">après avoir / être + PP</td><td>after (having done)</td><td class="fr">Après avoir mangé, je sors.</td></tr>
+    <tr><td class="fr">quand, lorsque</td><td>when</td><td class="fr">Quand j'arrive, je te téléphone.</td></tr>
+    <tr><td class="fr">pendant que</td><td>while</td><td class="fr">Il dort pendant que je travaille.</td></tr>
+  </tbody>
+</table>
+
+<h3>32.6 Adding / illustrating</h3>
+<table>
+  <tbody>
+    <tr><td class="fr">aussi</td><td>also / too (after verb)</td><td class="fr">J'aime aussi le thé.</td></tr>
+    <tr><td class="fr">en plus, de plus</td><td>furthermore</td><td class="fr">C'est cher. De plus, c'est loin.</td></tr>
+    <tr><td class="fr">par exemple</td><td>for example</td><td class="fr">Par exemple, tu pourrais venir samedi.</td></tr>
+    <tr><td class="fr">c'est-à-dire</td><td>that is to say</td><td></td></tr>
+  </tbody>
+</table>
+
+<h3>32.7 Goal / purpose</h3>
+<table>
+  <tbody>
+    <tr><td class="fr">pour + inf.</td><td>to / in order to (same subject)</td><td class="fr">Je travaille pour gagner ma vie.</td></tr>
+    <tr><td class="fr">pour que + subj.</td><td>so that (different subject — uses subjonctif, B2)</td><td class="fr">Je travaille pour que ma fille étudie.</td></tr>
+  </tbody>
+</table>
+
+<div class="tip">A2 sweet spot: start every paragraph in writing with one of <em>d'abord, ensuite, mais, donc, par exemple, enfin</em>. Your prose will instantly sound organized rather than choppy.</div>
+</article>
+
+<!-- ============================================================
+     APPENDIX 33 — IRREGULAR VERB TABLES
+     ============================================================ -->
+<article class="chapter" id="app-irregular">
+<h2>Appendix 33. Common irregular verbs — present tense tables</h2>
+
+<p>The 20 verbs every A1+A2 learner needs cold. The patterns recur across other tenses, so memorizing these unlocks dozens more.</p>
+
+<h3>33.1 The two pillars</h3>
+<table>
+  <thead><tr><th></th><th>être (to be)</th><th>avoir (to have)</th></tr></thead>
+  <tbody>
+    <tr><td>je</td><td class="fr">suis</td><td class="fr">ai</td></tr>
+    <tr><td>tu</td><td class="fr">es</td><td class="fr">as</td></tr>
+    <tr><td>il/elle/on</td><td class="fr">est</td><td class="fr">a</td></tr>
+    <tr><td>nous</td><td class="fr">sommes</td><td class="fr">avons</td></tr>
+    <tr><td>vous</td><td class="fr">êtes</td><td class="fr">avez</td></tr>
+    <tr><td>ils/elles</td><td class="fr">sont</td><td class="fr">ont</td></tr>
+    <tr><td>Past part.</td><td class="fr">été</td><td class="fr">eu</td></tr>
+  </tbody>
+</table>
+
+<h3>33.2 The "movement and modal" group</h3>
+<table>
+  <thead><tr><th></th><th>aller (go)</th><th>venir (come)</th><th>faire (do/make)</th></tr></thead>
+  <tbody>
+    <tr><td>je</td><td class="fr">vais</td><td class="fr">viens</td><td class="fr">fais</td></tr>
+    <tr><td>tu</td><td class="fr">vas</td><td class="fr">viens</td><td class="fr">fais</td></tr>
+    <tr><td>il</td><td class="fr">va</td><td class="fr">vient</td><td class="fr">fait</td></tr>
+    <tr><td>nous</td><td class="fr">allons</td><td class="fr">venons</td><td class="fr">faisons</td></tr>
+    <tr><td>vous</td><td class="fr">allez</td><td class="fr">venez</td><td class="fr">faites</td></tr>
+    <tr><td>ils</td><td class="fr">vont</td><td class="fr">viennent</td><td class="fr">font</td></tr>
+    <tr><td>PP</td><td class="fr">allé (être)</td><td class="fr">venu (être)</td><td class="fr">fait</td></tr>
+  </tbody>
+</table>
+
+<h3>33.3 Modal four</h3>
+<table>
+  <thead><tr><th></th><th>pouvoir (can)</th><th>vouloir (want)</th><th>devoir (must)</th><th>savoir (know)</th></tr></thead>
+  <tbody>
+    <tr><td>je</td><td class="fr">peux</td><td class="fr">veux</td><td class="fr">dois</td><td class="fr">sais</td></tr>
+    <tr><td>tu</td><td class="fr">peux</td><td class="fr">veux</td><td class="fr">dois</td><td class="fr">sais</td></tr>
+    <tr><td>il</td><td class="fr">peut</td><td class="fr">veut</td><td class="fr">doit</td><td class="fr">sait</td></tr>
+    <tr><td>nous</td><td class="fr">pouvons</td><td class="fr">voulons</td><td class="fr">devons</td><td class="fr">savons</td></tr>
+    <tr><td>vous</td><td class="fr">pouvez</td><td class="fr">voulez</td><td class="fr">devez</td><td class="fr">savez</td></tr>
+    <tr><td>ils</td><td class="fr">peuvent</td><td class="fr">veulent</td><td class="fr">doivent</td><td class="fr">savent</td></tr>
+    <tr><td>PP</td><td class="fr">pu</td><td class="fr">voulu</td><td class="fr">dû</td><td class="fr">su</td></tr>
+  </tbody>
+</table>
+
+<h3>33.4 The "perception" set</h3>
+<table>
+  <thead><tr><th></th><th>voir (see)</th><th>entendre (hear)</th><th>croire (believe)</th></tr></thead>
+  <tbody>
+    <tr><td>je</td><td class="fr">vois</td><td class="fr">entends</td><td class="fr">crois</td></tr>
+    <tr><td>tu</td><td class="fr">vois</td><td class="fr">entends</td><td class="fr">crois</td></tr>
+    <tr><td>il</td><td class="fr">voit</td><td class="fr">entend</td><td class="fr">croit</td></tr>
+    <tr><td>nous</td><td class="fr">voyons</td><td class="fr">entendons</td><td class="fr">croyons</td></tr>
+    <tr><td>vous</td><td class="fr">voyez</td><td class="fr">entendez</td><td class="fr">croyez</td></tr>
+    <tr><td>ils</td><td class="fr">voient</td><td class="fr">entendent</td><td class="fr">croient</td></tr>
+    <tr><td>PP</td><td class="fr">vu</td><td class="fr">entendu</td><td class="fr">cru</td></tr>
+  </tbody>
+</table>
+
+<h3>33.5 The "communication" set</h3>
+<table>
+  <thead><tr><th></th><th>dire (say)</th><th>lire (read)</th><th>écrire (write)</th></tr></thead>
+  <tbody>
+    <tr><td>je</td><td class="fr">dis</td><td class="fr">lis</td><td class="fr">écris</td></tr>
+    <tr><td>tu</td><td class="fr">dis</td><td class="fr">lis</td><td class="fr">écris</td></tr>
+    <tr><td>il</td><td class="fr">dit</td><td class="fr">lit</td><td class="fr">écrit</td></tr>
+    <tr><td>nous</td><td class="fr">disons</td><td class="fr">lisons</td><td class="fr">écrivons</td></tr>
+    <tr><td>vous</td><td class="fr">dites</td><td class="fr">lisez</td><td class="fr">écrivez</td></tr>
+    <tr><td>ils</td><td class="fr">disent</td><td class="fr">lisent</td><td class="fr">écrivent</td></tr>
+    <tr><td>PP</td><td class="fr">dit</td><td class="fr">lu</td><td class="fr">écrit</td></tr>
+  </tbody>
+</table>
+
+<div class="note"><em>Vous dites</em> (not <em>disez</em>) is one of three special <em>-tes</em> forms: <em>vous êtes, vous faites, vous dites</em>. Memorize these together.</div>
+
+<h3>33.6 The "everyday actions"</h3>
+<table>
+  <thead><tr><th></th><th>prendre (take)</th><th>mettre (put)</th><th>boire (drink)</th></tr></thead>
+  <tbody>
+    <tr><td>je</td><td class="fr">prends</td><td class="fr">mets</td><td class="fr">bois</td></tr>
+    <tr><td>tu</td><td class="fr">prends</td><td class="fr">mets</td><td class="fr">bois</td></tr>
+    <tr><td>il</td><td class="fr">prend</td><td class="fr">met</td><td class="fr">boit</td></tr>
+    <tr><td>nous</td><td class="fr">prenons</td><td class="fr">mettons</td><td class="fr">buvons</td></tr>
+    <tr><td>vous</td><td class="fr">prenez</td><td class="fr">mettez</td><td class="fr">buvez</td></tr>
+    <tr><td>ils</td><td class="fr">prennent</td><td class="fr">mettent</td><td class="fr">boivent</td></tr>
+    <tr><td>PP</td><td class="fr">pris</td><td class="fr">mis</td><td class="fr">bu</td></tr>
+  </tbody>
+</table>
+
+<h3>33.7 Movement -ir verbs (no -iss-)</h3>
+<table>
+  <thead><tr><th></th><th>partir (leave)</th><th>sortir (go out)</th><th>dormir (sleep)</th><th>ouvrir (open)</th></tr></thead>
+  <tbody>
+    <tr><td>je</td><td class="fr">pars</td><td class="fr">sors</td><td class="fr">dors</td><td class="fr">ouvre</td></tr>
+    <tr><td>tu</td><td class="fr">pars</td><td class="fr">sors</td><td class="fr">dors</td><td class="fr">ouvres</td></tr>
+    <tr><td>il</td><td class="fr">part</td><td class="fr">sort</td><td class="fr">dort</td><td class="fr">ouvre</td></tr>
+    <tr><td>nous</td><td class="fr">partons</td><td class="fr">sortons</td><td class="fr">dormons</td><td class="fr">ouvrons</td></tr>
+    <tr><td>vous</td><td class="fr">partez</td><td class="fr">sortez</td><td class="fr">dormez</td><td class="fr">ouvrez</td></tr>
+    <tr><td>ils</td><td class="fr">partent</td><td class="fr">sortent</td><td class="fr">dorment</td><td class="fr">ouvrent</td></tr>
+    <tr><td>PP</td><td class="fr">parti (être)</td><td class="fr">sorti (être)</td><td class="fr">dormi</td><td class="fr">ouvert</td></tr>
+  </tbody>
+</table>
+<p><em>Ouvrir</em> is special: although it ends in <em>-ir</em>, it conjugates like an <em>-er</em> verb in the present (-e, -es, -e, -ons, -ez, -ent). Same for <em>offrir, couvrir, découvrir, souffrir</em>.</p>
+
+<h3>33.8 The "knowledge / recognition" pair</h3>
+<table>
+  <thead><tr><th></th><th>connaître (know)</th><th>vivre (live)</th></tr></thead>
+  <tbody>
+    <tr><td>je</td><td class="fr">connais</td><td class="fr">vis</td></tr>
+    <tr><td>tu</td><td class="fr">connais</td><td class="fr">vis</td></tr>
+    <tr><td>il</td><td class="fr">connaît</td><td class="fr">vit</td></tr>
+    <tr><td>nous</td><td class="fr">connaissons</td><td class="fr">vivons</td></tr>
+    <tr><td>vous</td><td class="fr">connaissez</td><td class="fr">vivez</td></tr>
+    <tr><td>ils</td><td class="fr">connaissent</td><td class="fr">vivent</td></tr>
+    <tr><td>PP</td><td class="fr">connu</td><td class="fr">vécu</td></tr>
+  </tbody>
+</table>
+</article>
+
+<!-- ============================================================
+     APPENDIX 34 — ÊTRE VERBS LIST
+     ============================================================ -->
+<article class="chapter" id="app-etre-verbs">
+<h2>Appendix 34. Verbs that take <em>être</em> in the passé composé</h2>
+
+<p>This list is short — memorize it once and you'll always know which auxiliary to pick. Everything else uses <em>avoir</em>.</p>
+
+<h3>34.1 The 14 "Mrs Vandertramp" verbs</h3>
+<table>
+  <thead><tr><th>Infinitive</th><th>Past participle</th><th>Meaning</th></tr></thead>
+  <tbody>
+    <tr><td class="fr">aller</td><td class="fr">allé(e)(s)</td><td>to go</td></tr>
+    <tr><td class="fr">venir</td><td class="fr">venu(e)(s)</td><td>to come</td></tr>
+    <tr><td class="fr">arriver</td><td class="fr">arrivé(e)(s)</td><td>to arrive</td></tr>
+    <tr><td class="fr">partir</td><td class="fr">parti(e)(s)</td><td>to leave</td></tr>
+    <tr><td class="fr">entrer</td><td class="fr">entré(e)(s)</td><td>to enter</td></tr>
+    <tr><td class="fr">sortir</td><td class="fr">sorti(e)(s)</td><td>to go out</td></tr>
+    <tr><td class="fr">monter</td><td class="fr">monté(e)(s)</td><td>to go up / get in</td></tr>
+    <tr><td class="fr">descendre</td><td class="fr">descendu(e)(s)</td><td>to go down / get off</td></tr>
+    <tr><td class="fr">naître</td><td class="fr">né(e)(s)</td><td>to be born</td></tr>
+    <tr><td class="fr">mourir</td><td class="fr">mort(e)(s)</td><td>to die</td></tr>
+    <tr><td class="fr">rester</td><td class="fr">resté(e)(s)</td><td>to stay</td></tr>
+    <tr><td class="fr">tomber</td><td class="fr">tombé(e)(s)</td><td>to fall</td></tr>
+    <tr><td class="fr">retourner</td><td class="fr">retourné(e)(s)</td><td>to return / go back</td></tr>
+    <tr><td class="fr">devenir</td><td class="fr">devenu(e)(s)</td><td>to become</td></tr>
+  </tbody>
+</table>
+
+<h3>34.2 Compounds (re- + Vandertramp)</h3>
+<table>
+  <tbody>
+    <tr><td class="fr">revenir → revenu(e)(s)</td><td>to come back</td></tr>
+    <tr><td class="fr">rentrer → rentré(e)(s)</td><td>to return home / re-enter</td></tr>
+    <tr><td class="fr">repartir → reparti(e)(s)</td><td>to leave again</td></tr>
+    <tr><td class="fr">remonter → remonté(e)(s)</td><td>to go up again</td></tr>
+    <tr><td class="fr">redescendre → redescendu(e)(s)</td><td>to go down again</td></tr>
+    <tr><td class="fr">passer (par) → passé(e)(s)</td><td>to pass by</td></tr>
+  </tbody>
+</table>
+
+<h3>34.3 All reflexive verbs (no exceptions)</h3>
+<p>Every pronominal verb takes <em>être</em>: <span class="fr">se laver, se lever, s'habiller, se coucher, se réveiller, se promener, s'amuser, se souvenir, se dépêcher, se sentir …</span></p>
+<div class="ex">
+  <p><span class="fr">Je me suis levé(e) à 7 heures.</span><span class="en">I got up at 7.</span></p>
+  <p><span class="fr">Elle s'est réveillée tôt.</span></p>
+  <p><span class="fr">Nous nous sommes amusés.</span></p>
+</div>
+
+<h3>34.4 The transitive-shift gotcha</h3>
+<p>Six verbs from the Vandertramp list can also take <em>avoir</em> when they have a direct object. The meaning shifts to "transitive":</p>
+<table>
+  <thead><tr><th>Verb</th><th>With <em>être</em> (no object)</th><th>With <em>avoir</em> (+ object)</th></tr></thead>
+  <tbody>
+    <tr><td>sortir</td><td class="fr">Je suis sorti. (I went out)</td><td class="fr">J'ai sorti le chien. (I took the dog out)</td></tr>
+    <tr><td>monter</td><td class="fr">Elle est montée. (she went up)</td><td class="fr">Elle a monté les escaliers. (she climbed the stairs)</td></tr>
+    <tr><td>descendre</td><td class="fr">Il est descendu. (he went down)</td><td class="fr">Il a descendu la valise. (he brought the suitcase down)</td></tr>
+    <tr><td>rentrer</td><td class="fr">Je suis rentré. (I went home)</td><td class="fr">J'ai rentré la voiture. (I put the car away)</td></tr>
+    <tr><td>retourner</td><td class="fr">Il est retourné. (he returned)</td><td class="fr">Il a retourné la crêpe. (he flipped the pancake)</td></tr>
+    <tr><td>passer</td><td class="fr">Je suis passé par Paris. (I went via Paris)</td><td class="fr">J'ai passé une semaine ici. (I spent a week here)</td></tr>
+  </tbody>
+</table>
+</article>
+
+<!-- ============================================================
+     APPENDIX 35 — GENDER HEURISTICS
+     ============================================================ -->
+<article class="chapter" id="app-gender">
+<h2>Appendix 35. Heuristics for guessing noun gender</h2>
+
+<p>No rule is 100%, but knowing the patterns gets you to ~85% accuracy on new vocabulary. Always learn nouns with their article.</p>
+
+<h3>35.1 Strong masculine patterns (~90% reliable)</h3>
+<table>
+  <thead><tr><th>Ending</th><th>Examples</th><th>Notable exception</th></tr></thead>
+  <tbody>
+    <tr><td>-age (2+ syll.)</td><td class="fr">le voyage, le fromage, le visage</td><td class="fr">la page, la plage, la cage, l'image</td></tr>
+    <tr><td>-eau</td><td class="fr">le bateau, le château, le bureau</td><td class="fr">la peau, l'eau</td></tr>
+    <tr><td>-ment</td><td class="fr">le moment, le bâtiment, le sentiment</td><td class="fr">la jument (mare)</td></tr>
+    <tr><td>-isme</td><td class="fr">le tourisme, le socialisme, le réalisme</td><td>—</td></tr>
+    <tr><td>-eur (things)</td><td class="fr">le moteur, le bonheur, le malheur</td><td class="fr">la fleur, la couleur, la peur, la valeur</td></tr>
+    <tr><td>-oir</td><td class="fr">le miroir, le couloir, le devoir</td><td>—</td></tr>
+    <tr><td>-ier</td><td class="fr">le quartier, le pommier, le panier</td><td>—</td></tr>
+    <tr><td>-in / -ain</td><td class="fr">le matin, le pain, le train</td><td class="fr">la fin, la main</td></tr>
+    <tr><td>-on</td><td class="fr">le bouton, le poisson, le savon</td><td class="fr">la maison, la chanson, la leçon, la saison</td></tr>
+  </tbody>
+</table>
+
+<h3>35.2 Strong feminine patterns (~90% reliable)</h3>
+<table>
+  <thead><tr><th>Ending</th><th>Examples</th><th>Notable exception</th></tr></thead>
+  <tbody>
+    <tr><td>-tion / -sion</td><td class="fr">la nation, la décision, la passion</td><td>—</td></tr>
+    <tr><td>-té / -tié</td><td class="fr">la beauté, la liberté, l'amitié</td><td class="fr">le côté, l'été, le comté</td></tr>
+    <tr><td>-ette</td><td class="fr">la fillette, la baguette, la maquette</td><td>—</td></tr>
+    <tr><td>-elle</td><td class="fr">la nouvelle, la vaisselle, la pelle</td><td>—</td></tr>
+    <tr><td>-esse</td><td class="fr">la jeunesse, la richesse, la promesse</td><td>—</td></tr>
+    <tr><td>-ence / -ance</td><td class="fr">la patience, la chance, la naissance</td><td class="fr">le silence (!)</td></tr>
+    <tr><td>-ière</td><td class="fr">la rivière, la lumière, la matière</td><td>—</td></tr>
+    <tr><td>-ure</td><td class="fr">la voiture, la nature, la confiture</td><td>—</td></tr>
+    <tr><td>-ie</td><td class="fr">la vie, la pluie, la philosophie</td><td class="fr">le génie, le parapluie</td></tr>
+    <tr><td>-aille / -eille</td><td class="fr">la bataille, la merveille</td><td>—</td></tr>
+  </tbody>
+</table>
+
+<h3>35.3 Semantic categories</h3>
+<table>
+  <thead><tr><th>Always feminine</th><th>Always masculine</th></tr></thead>
+  <tbody>
+    <tr><td>Most countries ending in -e: <span class="fr">la France, l'Espagne, l'Italie</span></td><td>Most countries NOT in -e: <span class="fr">le Canada, le Japon, le Brésil</span></td></tr>
+    <tr><td>Most rivers ending in -e: <span class="fr">la Seine, la Loire</span></td><td>Languages: <span class="fr">le français, le japonais, l'anglais</span></td></tr>
+    <tr><td>Sciences: <span class="fr">la physique, la chimie, la biologie</span></td><td>Days, months, seasons: <span class="fr">le lundi, le mai, le printemps, l'hiver</span></td></tr>
+    <tr><td></td><td>Metals: <span class="fr">le fer, l'or, l'argent</span></td></tr>
+    <tr><td></td><td>Wines & cheeses: <span class="fr">le bordeaux, le camembert</span></td></tr>
+  </tbody>
+</table>
+
+<h3>35.4 Famous gender exceptions to memorize</h3>
+<table>
+  <thead><tr><th>Word</th><th>Gender</th><th>Note</th></tr></thead>
+  <tbody>
+    <tr><td class="fr">le Mexique</td><td>m</td><td>only -e country that's masculine</td></tr>
+    <tr><td class="fr">l'eau, la peau</td><td>f</td><td>despite -eau ending</td></tr>
+    <tr><td class="fr">le silence</td><td>m</td><td>despite -ence ending</td></tr>
+    <tr><td class="fr">le musée, le lycée, le pygmée</td><td>m</td><td>despite -ée ending</td></tr>
+    <tr><td class="fr">le problème, le système, le poème, le thème</td><td>m</td><td>Greek-derived</td></tr>
+    <tr><td class="fr">la photo, la moto, la radio, la stéréo</td><td>f</td><td>short for feminine words (photographie, motocyclette)</td></tr>
+    <tr><td class="fr">une personne</td><td>f always</td><td>even for a man: <span class="fr">cette personne est grande</span></td></tr>
+    <tr><td class="fr">un professeur, un médecin, un écrivain</td><td>m by default</td><td>modernly with -e: une professeure, une écrivaine</td></tr>
+  </tbody>
+</table>
+
+<h3>35.5 Words that change meaning by gender</h3>
+<table>
+  <thead><tr><th>Word</th><th>Masculine</th><th>Feminine</th></tr></thead>
+  <tbody>
+    <tr><td class="fr">livre</td><td>book</td><td>pound (currency, weight)</td></tr>
+    <tr><td class="fr">tour</td><td>turn, trip</td><td>tower</td></tr>
+    <tr><td class="fr">mode</td><td>way, method</td><td>fashion</td></tr>
+    <tr><td class="fr">manche</td><td>sleeve handle</td><td>sleeve (of garment) / English Channel</td></tr>
+    <tr><td class="fr">page</td><td>pageboy (rare)</td><td>page (of book)</td></tr>
+    <tr><td class="fr">poste</td><td>position, job</td><td>post office, mail</td></tr>
+  </tbody>
+</table>
+</article>
+
+<!-- ============================================================
+     APPENDIX 36 — PRONUNCIATION TRAPS
+     ============================================================ -->
+<article class="chapter" id="app-pronunciation">
+<h2>Appendix 36. Pronunciation traps for English speakers</h2>
+
+<h3>36.1 Silent endings</h3>
+<p>French routinely drops the final consonant. Don't pronounce what you see:</p>
+<table>
+  <thead><tr><th>Word</th><th>Looks like</th><th>Actually sounds like</th></tr></thead>
+  <tbody>
+    <tr><td class="fr">petit</td><td>pet-eet</td><td class="ipa">/pə.ti/  (the t is silent)</td></tr>
+    <tr><td class="fr">grand</td><td>grand</td><td class="ipa">/ɡʁɑ̃/  (the d is silent)</td></tr>
+    <tr><td class="fr">temps</td><td>temps</td><td class="ipa">/tɑ̃/  (mps all silent except nasal vowel)</td></tr>
+    <tr><td class="fr">vous</td><td>voo-ss</td><td class="ipa">/vu/</td></tr>
+    <tr><td class="fr">les enfants</td><td>les en-fants</td><td class="ipa">/lez‿ɑ̃.fɑ̃/  (liaison! see 36.4)</td></tr>
+  </tbody>
+</table>
+
+<h3>36.2 The "CaReFuL" exception — finals that <strong>are</strong> pronounced</h3>
+<p>Mnemonic: a final <strong>c, r, f, l</strong> is usually pronounced. (Watch out — <em>r</em> in <em>-er</em> verb infinitives is silent.)</p>
+<table>
+  <tbody>
+    <tr><td class="fr">parc</td><td class="ipa">/paʁk/</td><td>park</td></tr>
+    <tr><td class="fr">mer</td><td class="ipa">/mɛʁ/</td><td>sea</td></tr>
+    <tr><td class="fr">chef</td><td class="ipa">/ʃɛf/</td><td>chief, chef</td></tr>
+    <tr><td class="fr">poil</td><td class="ipa">/pwal/</td><td>hair (animal)</td></tr>
+    <tr><td class="fr">parler (infinitive)</td><td class="ipa">/paʁ.le/</td><td>r silent in -er infinitives</td></tr>
+  </tbody>
+</table>
+
+<h3>36.3 The nasal vowels — the A1 cliff</h3>
+<p>French has four nasal vowels: air flows through both mouth and nose. The N or M is <strong>not</strong> pronounced separately — it just signals nasality.</p>
+<table>
+  <thead><tr><th>Spelling</th><th>IPA</th><th>Approximate English</th><th>Examples</th></tr></thead>
+  <tbody>
+    <tr><td class="fr">an / en / am / em</td><td class="ipa">/ɑ̃/</td><td>roughly "ahnh"</td><td class="fr">enfant, blanc, dans, lent, temps</td></tr>
+    <tr><td class="fr">on / om</td><td class="ipa">/ɔ̃/</td><td>roughly "ohnh"</td><td class="fr">bon, son, nom, blond, comble</td></tr>
+    <tr><td class="fr">in / ain / ein / im / ym</td><td class="ipa">/ɛ̃/</td><td>roughly "enh"</td><td class="fr">vin, pain, plein, demain, symbolique</td></tr>
+    <tr><td class="fr">un / um</td><td class="ipa">/œ̃/ → often /ɛ̃/</td><td>roughly "uhnh"</td><td class="fr">un, brun, parfum  (modern: same as /ɛ̃/)</td></tr>
+  </tbody>
+</table>
+
+<div class="note">Add a vowel after a nasal letter and the nasality usually vanishes: <span class="fr">bon</span> /bɔ̃/ (nasal) vs <span class="fr">bonne</span> /bɔn/ (not nasal — the final -e makes the n sound separately).</div>
+
+<h3>36.4 Liaison — the silent letter wakes up</h3>
+<p>When a normally silent final consonant is followed by a vowel-initial word, it "wakes up" and links to that vowel.</p>
+<table>
+  <thead><tr><th>Spelling</th><th>Pronounced</th></tr></thead>
+  <tbody>
+    <tr><td class="fr">les amis</td><td>lez‿ami</td></tr>
+    <tr><td class="fr">un enfant</td><td>un‿enfant (with the -n now audible)</td></tr>
+    <tr><td class="fr">grand homme</td><td>gran<strong>t</strong>‿homme  (d → t for euphony)</td></tr>
+    <tr><td class="fr">vous avez</td><td>vou<strong>z</strong>‿avez</td></tr>
+    <tr><td class="fr">ils ont</td><td>il<strong>z</strong>‿ont (vs ils sont = ils sont, no liaison)</td></tr>
+  </tbody>
+</table>
+<p>Liaison is <strong>mandatory</strong> after determiners (les, des, un, mes), pronouns (nous, vous, ils, elles, on), and short adjectives before a noun (grand, petit, bon).</p>
+<p>Liaison is <strong>forbidden</strong> after singular nouns (don't link <em>un étudiant‿espagnol</em>), after <em>et</em>, before an aspirated <em>h</em> (<em>les / héros</em> stays separate), and after a comma.</p>
+
+<h3>36.5 Elision — vowel collisions</h3>
+<p>Single-vowel words drop the vowel before another vowel: <em>je → j', le → l', la → l', de → d', ne → n', que → qu', si → s' (only before il/ils), ce → c'</em>.</p>
+
+<h3>36.6 The four most-confused vowel sounds</h3>
+<table>
+  <thead><tr><th>Sound</th><th>Spelling</th><th>Examples</th></tr></thead>
+  <tbody>
+    <tr><td class="ipa">/y/</td><td>u</td><td class="fr">rue, tu, vu, lune  (front "i" with rounded lips — not English "oo")</td></tr>
+    <tr><td class="ipa">/u/</td><td>ou</td><td class="fr">vous, jour, tour  (English "oo")</td></tr>
+    <tr><td class="ipa">/ø/</td><td>eu (closed)</td><td class="fr">deux, peu, bleu</td></tr>
+    <tr><td class="ipa">/œ/</td><td>eu / œu (open)</td><td class="fr">cœur, sœur, neuf</td></tr>
+  </tbody>
+</table>
+
+<h3>36.7 Uvular R — the most distinctive sound</h3>
+<p>The French <em>r</em> is made at the back of the throat (uvular), not on the tongue tip. Approximate: a soft gargle. Practice with words like <span class="fr">Paris, rue, frère, rouge</span>. English speakers often substitute their tongue-tip R — comprehensible but obviously foreign.</p>
+
+<h3>36.8 The H — always silent</h3>
+<p>French H is never pronounced. It comes in two flavors:</p>
+<ul>
+  <li><strong>Mute H</strong> (h muet): acts like a vowel — triggers elision and liaison: <span class="fr">l'homme, les‿hommes</span>.</li>
+  <li><strong>Aspirated H</strong> (h aspiré): historically borrowed words. Blocks elision and liaison: <span class="fr">le héros</span> (not <em>l'héros</em>), <span class="fr">les / héros</span> (no liaison).</li>
+</ul>
+<p>Common aspirated-H words: <span class="fr">le héros, le hibou, le haricot, la honte, la hauteur, le hasard, le hockey, dehors</span>. Dictionaries mark them with a † or apostrophe.</p>
+
+<h3>36.9 Stress — barely any</h3>
+<p>French is largely stress-free. Each syllable gets roughly equal weight, with a slight emphasis on the <strong>last syllable</strong> of a word or phrase. Avoid English stress-timed rhythm: <em>"PA-ris"</em> (English) becomes <em>"pa-RIS"</em> (French).</p>
+</article>
+
+<!-- =============== END OF GRAMMAR BIBLE =============== -->
+<section style="text-align:center;margin-top:30mm;font-family:var(--sans);color:var(--ink-soft)">
+  <hr>
+  <p><em>Fin. Bonne route vers le français.</em></p>
+  <p style="font-size:9pt">A1 + A2 covered in 32 chapters and 4 appendices. The next level (B1) introduces the imperfect-subjunctive contrast, the conditional, more advanced pronouns (y, en in combination), and complex relative clauses with <em>dont / lequel</em>.</p>
+</section>
+
+</body>
+</html>
