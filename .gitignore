@@ -3,3 +3,10 @@ nederlands/.DS_Store
 # Playwright MCP artifacts (browser snapshots, screenshots, console logs)
 .playwright-mcp/
 *.png
+
+# Local secrets (API keys)
+.secrets/
+
+# Generated learning videos (large media, venvs, node_modules) — kept local / iCloud only
+nederlands/*-video/
+francais/*-video/
