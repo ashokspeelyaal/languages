@@ -8,7 +8,7 @@ Personal language-learning tools and material: `nederlands/` (Dutch, level B1+/B
   - Format: a two-person Q&A dialogue (Ashok from the place, Christine from Belgium).
   - Sources: real Wikimedia Commons photos matched to what is said, Azure nl-BE voices, cartoon speakers with lip sync, and karaoke subtitles.
   - Learning layer: dense vocabulary and phrase pop-up cards at B2-stretch level.
-  - Output: 720p encode copied to iCloud Drive → `Leervideos/`.
+  - Output: 720p encode copied to iCloud Drive → `LeerVideos/`.
   - Reference implementation: `nederlands/kulithalai-video/`. The agent file holds the full spec plus its Learnings.
 - **`unreal-metahuman-video`**: MetaHuman/Unreal Engine route (verified setup, but the look was rejected as not cinematic enough). Keep for reference.
 
