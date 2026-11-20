@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Le Cahier d&#x27;écriture — Volume 3</title>
+<!-- Volume 3 of 3. Print again and again. -->
+<style>
+:root{
+  --ink:#17202b; --muted:#5d6b7a; --brand:#12386e; --accent:#b32131;
+  --gold:#8a5a00; --line:#d5dce4; --soft:#f2f6fa; --chip:#eaf0f7;
+  --rule-bg:#f5f9fd; --rule-edge:#12386e;
+  --key-bg:#f4f7f2; --key-edge:#2c6b3f;
+  --do-bg:#fffaf0; --do-edge:#b8860b;
+  --warn-bg:#fdf2f2; --warn-edge:#b32131;
+  --write:#c6d2de;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#fff}
+body{font-family:"Helvetica Neue",Arial,"Noto Sans","Noto Sans Tamil","Tamil MN","InaiMathi","Latha",sans-serif;
+  color:var(--ink);font-size:9.1pt;line-height:1.36}
+.page{max-width:194mm;margin:0 auto;padding:6mm 4mm}
+@media print{
+  @page{size:A4;margin:9mm 8mm}
+  .page{max-width:none;padding:0}
+  .card,.rule,.key,.fig,.masthead,.tip,.warn,.dialog,.plan,.conj,.txt{break-inside:avoid}
+  tr,.numline,.qline,.figrow,.toc .r,.plan .d,h2.section,h3,h4,.sepbox,.sepline,
+  .trace .row,.dialog .ln,.wl .l{break-inside:avoid}
+  .trace .t,.drill .h{break-after:avoid}
+  thead{display:table-header-group}
+  .pb{break-before:page}
+  h2.section{break-after:avoid}
+  h3{break-after:avoid}
+}
+/* ---------- masthead ---------- */
+.masthead{border-bottom:3px solid var(--brand);padding-bottom:5mm;margin-bottom:5mm}
+.kicker{color:var(--accent);font-weight:700;letter-spacing:.09em;font-size:8.2pt;text-transform:uppercase}
+.masthead h1{font-size:20pt;line-height:1.18;margin-top:2mm;color:var(--brand)}
+.masthead h1 .ta{display:block;font-size:12.5pt;color:var(--muted);font-weight:600;margin-top:1.5mm}
+.masthead .meta{color:var(--muted);font-size:9pt;margin-top:3mm;line-height:1.45}
+.flagbar{height:4px;display:flex;margin-bottom:3mm}
+.flagbar i{flex:1}
+.flagbar i:nth-child(1){background:#12386e}
+.flagbar i:nth-child(2){background:#e9edf2}
+.flagbar i:nth-child(3){background:#b32131}
+/* ---------- structure ---------- */
+h2.section{font-size:12pt;color:var(--brand);background:#e8eff7;border-radius:4px;
+  border-left:1.4mm solid var(--brand);border-bottom:.5mm solid #c3d5e8;
+  padding:1.4mm 2.6mm;margin:5mm 0 2.6mm;line-height:1.25}
+h2.section .ta{display:block;color:#4c6a8c;font-weight:600;font-size:10pt;margin-top:.4mm}
+h2.section .num{background:var(--brand);color:#fff;border-radius:3px;padding:0 5px;margin-right:5px;font-size:10.5pt}
+h3{font-size:10.2pt;color:var(--brand);margin:3.2mm 0 1.7mm;border-bottom:1px solid var(--line);padding-bottom:.8mm}
+h3 .ta{color:var(--muted);font-weight:600;font-size:9.8pt}
+h4{font-size:9.8pt;color:var(--accent);margin:2.8mm 0 1.4mm}
+h4 .ta{color:var(--muted);font-weight:600;font-size:9.2pt}
+p{margin-bottom:1.4mm}
+.lang-tag{display:inline-block;background:var(--chip);color:var(--brand);border-radius:3px;font-size:7.2pt;
+  font-weight:700;padding:1px 6px;margin-bottom:1.2mm;letter-spacing:.05em}
+.duo{display:flex;gap:5mm;margin-bottom:2.5mm}
+.duo>div{flex:1;min-width:0}
+.ta-col{color:#33414d}
+.grid{display:flex;gap:4mm;margin-bottom:3mm}
+.grid>div{flex:1;min-width:0}
+/* ---------- boxes ---------- */
+.card{border:1px solid var(--line);border-radius:8px;padding:4mm;margin-bottom:4mm;background:#fff}
+.rule{background:var(--rule-bg);border:1px solid #cddcee;border-left:5px solid var(--rule-edge);
+  border-radius:6px;padding:2.4mm 3mm;margin:2.4mm 0}
+.rule .h{font-size:9.2pt;font-weight:800;color:var(--brand);margin-bottom:1.5mm;text-transform:uppercase;letter-spacing:.04em}
+.rule .h .ta{color:#4b6a8e;font-weight:700;text-transform:none;letter-spacing:0}
+.tip{background:var(--do-bg);border:1px solid #eeddb0;border-left:5px solid var(--do-edge);
+  border-radius:6px;padding:2.4mm 3mm;margin:2.4mm 0}
+.tip .h{font-size:9.2pt;font-weight:800;color:var(--gold);margin-bottom:1.2mm}
+.warn{background:var(--warn-bg);border:1px solid #f0cdcd;border-left:5px solid var(--warn-edge);
+  border-radius:6px;padding:2.4mm 3mm;margin:2.4mm 0}
+.warn .h{font-size:9.2pt;font-weight:800;color:var(--accent);margin-bottom:1.2mm}
+.key{background:var(--key-bg);border:1px solid #cfe0d4;border-left:5px solid var(--key-edge);
+  border-radius:6px;padding:2.4mm 3mm;margin:2.4mm 0;font-size:8.8pt}
+.key .h{font-size:9pt;font-weight:800;color:var(--key-edge);margin-bottom:1.2mm}
+.drill{background:#fff;border:1.5px dashed #b9c6d4;border-radius:7px;padding:2.8mm;margin:2.4mm 0}
+.drill .h{font-size:9.4pt;font-weight:800;color:var(--brand);margin-bottom:2mm;line-height:1.35}
+.drill .h:before{content:"✎ ";font-size:11pt;color:var(--accent)}
+.drill .h .ta{color:var(--muted);font-weight:700;font-size:8.8pt}
+/* ---------- french text ---------- */
+.fr{color:var(--brand);font-weight:700}
+.fr-i{color:var(--brand);font-weight:700;font-style:italic}
+.en{color:var(--ink)}
+.ta{color:var(--muted)}
+.gloss{color:var(--muted);font-size:9pt}
+.txt{background:var(--soft);border-radius:6px;padding:2.2mm 2.6mm;margin:1.8mm 0;
+  font-size:9.4pt;line-height:1.45;border:1px solid #e2e9f1}
+.txt b{color:var(--brand)}
+.src{font-size:8pt;color:var(--muted);margin-top:1.5mm;word-break:break-all}
+.src a{color:var(--muted)}
+/* ---------- tables ---------- */
+.tblwrap{margin:2.5mm 0}
+table{width:100%;border-collapse:collapse;font-size:8.3pt}
+th{background:#e8eff7;color:var(--brand);text-align:left;padding:.8mm 1.3mm .9mm;font-size:7.8pt;
+  font-weight:800;letter-spacing:.03em;border-bottom:.6mm solid var(--brand)}
+th .ta{color:#4c6a8c;font-weight:600;display:block;font-size:7.4pt}
+td{border:1px solid var(--line);padding:.85mm 1.3mm;vertical-align:top}
+tr:nth-child(even) td{background:#fbfcfd}
+td.fr{color:var(--brand);font-weight:700;white-space:nowrap}
+td.w,tr:nth-child(even) td.w{min-width:30mm;padding:1mm 1.3mm .6mm;background:#fff}
+td.w .ln{border-bottom:0.3mm solid var(--write);height:5.8mm}
+.mini td,.mini th{font-size:7.8pt;padding:.6mm 1.1mm}
+table.gl td{font-size:7.7pt;padding:.5mm 1mm}
+table.gl td.fr{white-space:normal}
+/* conjugation block */
+.conj{display:inline-block;border:1px solid var(--line);border-radius:6px;padding:1.6mm 2.4mm;margin:0 2.4mm 2mm 0;
+  background:#fbfdff;vertical-align:top;min-width:44mm}
+.conj .t{font-weight:800;color:var(--accent);font-size:9.6pt;margin-bottom:1mm;border-bottom:1px solid var(--line);padding-bottom:.8mm}
+.conj .t .ta{color:var(--muted);font-weight:600;font-size:8.4pt}
+.conj div.l{font-size:9.1pt;line-height:1.5}
+.conj div.l b{color:var(--brand)}
+/* ---------- writing lines ---------- */
+.wl{margin:2mm 0}
+.wl .l{border-bottom:1px solid var(--write);height:6.3mm}
+.wl.tight .l{height:6mm}
+.wl.wide .l{height:8.5mm}
+.numline{margin-bottom:1.2mm}
+.numline .n{font-weight:800;color:var(--accent);font-size:9.2pt;margin-right:1.5mm}
+.numline .q{font-size:9.4pt;display:inline}
+.numline .q .ta{color:var(--muted);font-size:8.4pt}
+.numline .b{border-bottom:1px solid var(--write);height:6.2mm;margin-top:.4mm}
+.qline{margin-bottom:1.5mm}
+.qline .q{font-size:9.4pt}
+.qline .q b{color:var(--brand)}
+.qline .q .ta{display:block;color:var(--muted);font-size:8.5pt}
+.qline .b{border-bottom:1px solid var(--write);height:6.2mm;margin-top:.6mm}
+/* trace boxes */
+.trace{border:1px solid var(--line);border-radius:6px;padding:2.5mm 3mm;margin:2.5mm 0;background:#fcfdff}
+.trace .t{font-size:8.2pt;font-weight:800;color:var(--brand);text-transform:uppercase;letter-spacing:.04em;margin-bottom:1.5mm}
+.trace .row{display:flex;align-items:baseline;gap:3mm;padding:.9mm 0;border-bottom:1px dotted #dfe6ee}
+.trace .row:last-child{border-bottom:0}
+.trace .row .m{color:var(--brand);font-weight:700;font-size:10pt;min-width:38mm}
+.trace .row .g{color:#b9c6d4;font-size:10pt;font-weight:700;letter-spacing:.02em}
+.trace .row .s{flex:1;border-bottom:1px solid var(--write);height:5mm}
+/* ---------- figures ---------- */
+.fig{border:1px solid var(--line);border-radius:8px;padding:1.8mm;margin:2mm 0;background:#fff;text-align:center}
+.fig img{max-width:100%;border-radius:5px;border:1px solid #e6ecf3}
+.fig .cap{margin-top:2mm;font-size:8.6pt;color:var(--muted);text-align:left;line-height:1.45}
+.fig .cap b{color:var(--brand)}
+.fig .cap .ta{display:block;color:var(--muted)}
+.fig .tagline{font-size:7.4pt;font-weight:800;color:var(--accent);text-transform:uppercase;
+  letter-spacing:.06em;text-align:left;margin-bottom:1.5mm}
+.figrow{display:flex;gap:3mm;margin:3mm 0}
+.figrow .fig{flex:1;margin:0;min-width:0}
+.figbig img{max-width:94mm}
+.figsm img{max-width:50mm}
+.figwide img{max-width:100%}
+/* ---------- chips / misc ---------- */
+.chip{display:inline-block;border:1px solid #c3d2e2;background:#fff;border-radius:20px;
+  font-size:8.4pt;padding:1px 8px;margin:1.5px 3px 1.5px 0;color:var(--brand);font-weight:600}
+.chip.r{border-color:#eec3c3;color:var(--accent)}
+.chip.g{border-color:#c6ddc9;color:#2c6b3f}
+ul,ol{margin:1.5mm 0 2mm 5mm}
+li{margin-bottom:1.2mm}
+li .ta{display:block;color:var(--muted);font-size:8.8pt}
+.dialog{background:#fbfdff;border:1px solid var(--line);border-radius:7px;padding:3mm;margin:2.5mm 0}
+.dialog .ln{padding:.8mm 0;border-bottom:1px dotted #e3e9f0;font-size:9.1pt}
+.dialog .ln:last-child{border-bottom:0}
+.dialog .sp{font-weight:800;color:var(--accent);min-width:14mm;display:inline-block}
+.dialog .ta{display:block;color:var(--muted);font-size:8.5pt;margin-left:14mm}
+.toc{border:1px solid var(--line);border-radius:8px;padding:4mm;background:#fbfdff}
+.toc .r{display:flex;gap:3mm;padding:1.4mm 0;border-bottom:1px dotted #e3e9f0;font-size:9.4pt}
+.toc .r:last-child{border-bottom:0}
+.toc .r .n{font-weight:800;color:var(--accent);min-width:8mm}
+.toc .r .t{flex:1}
+.toc .r .t .ta{display:block;color:var(--muted);font-size:8.5pt}
+.foot{margin-top:7mm;border-top:2px solid var(--brand);padding-top:2.5mm;color:var(--muted);font-size:8pt}
+.plan{border:1px solid var(--line);border-radius:8px;overflow:hidden;margin:3mm 0}
+.plan .d{display:flex;border-bottom:1px solid var(--line)}
+.plan .d:last-child{border-bottom:0}
+.plan .d>.day{background:#e8eff7;color:var(--brand);font-weight:800;font-size:8.8pt;padding:2mm;border-right:.7mm solid var(--brand);
+  min-width:26mm;display:flex;flex-direction:column;justify-content:center}
+.plan .d>.day .sub{font-weight:600;font-size:7.6pt;color:var(--muted)}
+.plan .d>.body{padding:2mm 3mm;font-size:9pt;flex:1}
+.plan .d>.body .ta{display:block;color:var(--muted);font-size:8.3pt;margin-top:.4mm}
+.plan .d:nth-child(even)>.body{background:#fafcfe}
+.badge{display:inline-block;background:#fbeaec;color:var(--accent);border:.6pt solid #e6b9bf;border-radius:4px;
+  font-size:7.6pt;font-weight:800;padding:0 5px;letter-spacing:.04em;text-transform:uppercase}
+.badge.b{background:#e8eff7;color:var(--brand);border-color:#bcd0e6}
+.badge.g{background:#eaf4ed;color:#2c6b3f;border-color:#bfdcc7}
+.sepbox{border:3px solid var(--accent);border-radius:10px;padding:5mm 5.5mm;margin:0 0 6mm;background:#fdf4f4}
+.sepbox .t{font-size:13pt;font-weight:800;color:var(--accent);letter-spacing:.02em;margin-bottom:1mm}
+.sepbox .t .ta{display:block;font-size:10.5pt;color:#8d4a52;font-weight:700;margin-top:.8mm}
+.sepbox .b{font-size:9.6pt;margin-top:2.5mm}
+.sepbox .b .ta-col{color:#4a3a3c}
+.sepline{border-top:3px double var(--accent);margin:6mm 0 4mm;padding-top:2.5mm;
+  font-size:9.4pt;color:var(--accent);font-weight:700;text-align:center}
+.sepline .ta{display:block;color:var(--muted);font-weight:600;font-size:8.8pt;margin-top:.6mm}
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="flagbar"><i></i><i></i><i></i></div>
+<div class="masthead">
+  <div class="kicker">Volume 3 of 3 · print it again as often as you like</div>
+  <h1>Le Cahier d'écriture
+    <span class="ta">எழுத்துப் பயிற்சிப் புத்தகம்</span></h1>
+  <div class="meta">
+    No new grammar. Nothing here that is not already in Volume 1. This is the same material turned into pure
+    pen-work — copying, dictation, transformation, translation and free writing — so that you can print it and
+    do it again as many times as you want.<br>
+    <span class="ta">புதிய இலக்கணம் இல்லை. தொகுதி 1-இல் இல்லாத எதுவும் இங்கே இல்லை. அதே பாடப்பொருளே முழுக்க
+    முழுக்க பேனா வேலையாக மாற்றப்பட்டுள்ளது — நகலெடுத்தல், சொல்லக் கேட்டு எழுதுதல், மாற்றியமைத்தல்,
+    மொழிபெயர்த்தல், சுதந்திரமாக எழுதுதல். விரும்பும் அளவு முறை அச்சிட்டுச் செய்யுங்கள்.</span>
+  </div>
+</div><div class="tip"><div class="h">The method — five passes over the same sentence <span class="ta">· முறை — ஒரே வாக்கியத்தின் மேல் ஐந்து சுற்றுகள்</span></div><div class="duo"><div><b>1 · Copy</b> it while saying it aloud. <b>2 · Cover</b> the model and write it from
+  memory. <b>3 · Check</b> letter by letter — especially the endings, <i>la désinence</i>. <b>4 · Change</b> one
+  thing (make it feminine, plural, negative, past). <b>5 · Use</b> it about your own life.<br>
+  Cindy made four spelling corrections in eight lessons; every one was an <b>ending</b>.</div>
+  <div class="ta-col"><b>1 · நகலெடுங்கள்</b> — சத்தமாகச் சொல்லிக்கொண்டே. <b>2 · மூடி</b> நினைவிலிருந்து
+  எழுதுங்கள். <b>3 · சரிபாருங்கள்</b> — எழுத்துக்கு எழுத்து, குறிப்பாக விகுதிகள். <b>4 · ஒன்றை மாற்றுங்கள்</b>
+  (பெண்பால், பன்மை, மறுப்பு, இறந்தகாலம்). <b>5 · பயன்படுத்துங்கள்</b> — உங்கள் சொந்த வாழ்க்கையைப் பற்றி.<br>
+  எட்டு பாடங்களில் சிண்டி நான்கு எழுத்துத் திருத்தங்கள் செய்தார்; ஒவ்வொன்றும் ஒரு <b>விகுதியே</b>.</div></div></div><h2 class="section"><span class="num">1</span>Copy and say — the sixty words you must never hesitate on<span class="ta">நகலெடுத்துச் சொல்லுங்கள் — தயங்கக் கூடாத அறுபது சொற்கள்</span></h2><div class="trace"><div class="t">PEOPLE & FAMILY · மக்களும் குடும்பமும்</div><div class="row"><div class="m">un frère</div><div class="g">un frère</div><div class="s"></div></div><div class="row"><div class="m">une sœur</div><div class="g">une sœur</div><div class="s"></div></div><div class="row"><div class="m">le père</div><div class="g">le père</div><div class="s"></div></div><div class="row"><div class="m">la mère</div><div class="g">la mère</div><div class="s"></div></div><div class="row"><div class="m">le grand-père</div><div class="g">le grand-père</div><div class="s"></div></div><div class="row"><div class="m">la grand-mère</div><div class="g">la grand-mère</div><div class="s"></div></div><div class="row"><div class="m">la petite-fille</div><div class="g">la petite-fille</div><div class="s"></div></div><div class="row"><div class="m">le petit-fils</div><div class="g">le petit-fils</div><div class="s"></div></div><div class="row"><div class="m">un oncle</div><div class="g">un oncle</div><div class="s"></div></div><div class="row"><div class="m">une tante</div><div class="g">une tante</div><div class="s"></div></div><div class="row"><div class="m">un neveu</div><div class="g">un neveu</div><div class="s"></div></div><div class="row"><div class="m">une nièce</div><div class="g">une nièce</div><div class="s"></div></div><div class="row"><div class="m">la belle-mère</div><div class="g">la belle-mère</div><div class="s"></div></div><div class="row"><div class="m">la demi-sœur</div><div class="g">la demi-sœur</div><div class="s"></div></div><div class="row"><div class="m">l'aîné</div><div class="g">l'aîné</div><div class="s"></div></div><div class="row"><div class="m">le cadet</div><div class="g">le cadet</div><div class="s"></div></div></div><div class="trace"><div class="t">DESCRIBING · விவரித்தல்</div><div class="row"><div class="m">il est grand</div><div class="g">il est grand</div><div class="s"></div></div><div class="row"><div class="m">elle est grande</div><div class="g">elle est grande</div><div class="s"></div></div><div class="row"><div class="m">il est gros</div><div class="g">il est gros</div><div class="s"></div></div><div class="row"><div class="m">elle est grosse</div><div class="g">elle est grosse</div><div class="s"></div></div><div class="row"><div class="m">il est roux</div><div class="g">il est roux</div><div class="s"></div></div><div class="row"><div class="m">elle est rousse</div><div class="g">elle est rousse</div><div class="s"></div></div><div class="row"><div class="m">il est mince</div><div class="g">il est mince</div><div class="s"></div></div><div class="row"><div class="m">elle est mince</div><div class="g">elle est mince</div><div class="s"></div></div><div class="row"><div class="m">il est vieux</div><div class="g">il est vieux</div><div class="s"></div></div><div class="row"><div class="m">elle est vieille</div><div class="g">elle est vieille</div><div class="s"></div></div><div class="row"><div class="m">les cheveux courts</div><div class="g">les cheveux courts</div><div class="s"></div></div><div class="row"><div class="m">les cheveux frisés</div><div class="g">les cheveux frisés</div><div class="s"></div></div><div class="row"><div class="m">il porte des lunettes</div><div class="g">il porte des lunettes</div><div class="s"></div></div><div class="row"><div class="m">elle porte une natte</div><div class="g">elle porte une natte</div><div class="s"></div></div><div class="row"><div class="m">je suis jeune</div><div class="g">je suis jeune</div><div class="s"></div></div><div class="row"><div class="m">vous êtes de taille moyenne</div><div class="g">vous êtes de taille moyenne</div><div class="s"></div></div></div><div class="trace"><div class="t">EVERYDAY VERBS · அன்றாட வினைச்சொற்கள்</div><div class="row"><div class="m">j'habite</div><div class="g">j'habite</div><div class="s"></div></div><div class="row"><div class="m">tu habites</div><div class="g">tu habites</div><div class="s"></div></div><div class="row"><div class="m">il travaille</div><div class="g">il travaille</div><div class="s"></div></div><div class="row"><div class="m">nous parlons</div><div class="g">nous parlons</div><div class="s"></div></div><div class="row"><div class="m">vous êtes</div><div class="g">vous êtes</div><div class="s"></div></div><div class="row"><div class="m">ils ont</div><div class="g">ils ont</div><div class="s"></div></div><div class="row"><div class="m">je vais</div><div class="g">je vais</div><div class="s"></div></div><div class="row"><div class="m">elle fait</div><div class="g">elle fait</div><div class="s"></div></div><div class="row"><div class="m">il met</div><div class="g">il met</div><div class="s"></div></div><div class="row"><div class="m">je viens</div><div class="g">je viens</div><div class="s"></div></div><div class="row"><div class="m">j'aime</div><div class="g">j'aime</div><div class="s"></div></div><div class="row"><div class="m">je préfère</div><div class="g">je préfère</div><div class="s"></div></div><div class="row"><div class="m">je reste</div><div class="g">je reste</div><div class="s"></div></div><div class="row"><div class="m">je regarde</div><div class="g">je regarde</div><div class="s"></div></div><div class="row"><div class="m">j'écris</div><div class="g">j'écris</div><div class="s"></div></div><div class="row"><div class="m">je me promène</div><div class="g">je me promène</div><div class="s"></div></div></div><div class="trace"><div class="t">FOOD & ARTICLES · உணவும் இடைச்சொற்களும்</div><div class="row"><div class="m">un potiron</div><div class="g">un potiron</div><div class="s"></div></div><div class="row"><div class="m">une cerise</div><div class="g">une cerise</div><div class="s"></div></div><div class="row"><div class="m">des abricots</div><div class="g">des abricots</div><div class="s"></div></div><div class="row"><div class="m">des carottes</div><div class="g">des carottes</div><div class="s"></div></div><div class="row"><div class="m">du melon</div><div class="g">du melon</div><div class="s"></div></div><div class="row"><div class="m">du céleri</div><div class="g">du céleri</div><div class="s"></div></div><div class="row"><div class="m">de la salade</div><div class="g">de la salade</div><div class="s"></div></div><div class="row"><div class="m">de la pêche</div><div class="g">de la pêche</div><div class="s"></div></div><div class="row"><div class="m">de l'ananas</div><div class="g">de l'ananas</div><div class="s"></div></div><div class="row"><div class="m">de l'orange</div><div class="g">de l'orange</div><div class="s"></div></div><div class="row"><div class="m">des choux-fleurs</div><div class="g">des choux-fleurs</div><div class="s"></div></div><div class="row"><div class="m">des petits pois</div><div class="g">des petits pois</div><div class="s"></div></div><div class="row"><div class="m">des pommes de terre</div><div class="g">des pommes de terre</div><div class="s"></div></div><div class="row"><div class="m">des haricots</div><div class="g">des haricots</div><div class="s"></div></div><div class="row"><div class="m">un chou de Bruxelles</div><div class="g">un chou de Bruxelles</div><div class="s"></div></div><div class="row"><div class="m">une pomme</div><div class="g">une pomme</div><div class="s"></div></div></div><div class="pb"></div><h2 class="section"><span class="num">2</span>Dictation — her own sentences, read to yourself<span class="ta">சொல்லக் கேட்டு எழுதுதல் — அவரது சொந்த வாக்கியங்கள்</span></h2><div class="duo"><div><span class="lang-tag">ENGLISH</span><div><p>Read each sentence aloud once, slowly. Then cover it with your hand and write it on the line. Then
+  uncover and check. Every one of these was typed by Cindy or built directly from her texts.</p></div></div><div><span class="lang-tag">தமிழ்</span><div class="ta-col"><p>ஒவ்வொரு வாக்கியத்தையும் ஒரு முறை மெதுவாகச் சத்தமாகப் படியுங்கள். கையால் மூடி, கோட்டில் எழுதுங்கள்.
+  பிறகு திறந்து சரிபாருங்கள். இவை அனைத்தும் சிண்டி தட்டச்சு செய்தவை அல்லது அவரது உரைகளிலிருந்து நேரடியாக
+  உருவானவை.</p></div></div></div><div class="qline"><div class="q"><b class='fr'>Paul a trente-trois ans et il est professeur.</b> <span class='ta'>Paul-க்கு 33 வயது; அவர் ஆசிரியர்.</span></div><div class="b"></div></div><div class="qline"><div class="q"><b class='fr'>Il habite à Rambouillet, c'est à côté de Paris.</b> <span class='ta'>Rambouillet-இல் வசிக்கிறார்; அது பாரிஸ் அருகில்.</span></div><div class="b"></div></div><div class="qline"><div class="q"><b class='fr'>Mélanie ne travaille pas, elle est étudiante.</b> <span class='ta'>Mélanie வேலை செய்யவில்லை; மாணவி.</span></div><div class="b"></div></div><div class="qline"><div class="q"><b class='fr'>Obélix est grand, gros et fort.</b> <span class='ta'>Obélix உயரமானவர், பருமனானவர், பலசாலி.</span></div><div class="b"></div></div><div class="qline"><div class="q"><b class='fr'>Il a les cheveux roux et il porte des nattes.</b> <span class='ta'>செம்பட்டை முடி; பின்னல் போடுகிறார்.</span></div><div class="b"></div></div><div class="qline"><div class="q"><b class='fr'>Astérix est petit et mince.</b> <span class='ta'>Astérix குட்டையானவர், மெலிந்தவர்.</span></div><div class="b"></div></div><div class="qline"><div class="q"><b class='fr'>Une pomme et une poire vertes.</b> <span class='ta'>பச்சை ஆப்பிளும் பேரிக்காயும்.</span></div><div class="b"></div></div><div class="qline"><div class="q"><b class='fr'>Un couteau et une fourchette gris.</b> <span class='ta'>சாம்பல் நிற கத்தியும் முள்கரண்டியும்.</span></div><div class="b"></div></div><div class="qline"><div class="q"><b class='fr'>Madame Dubois a envie d'aller au cinéma.</b> <span class='ta'>திருமதி Dubois திரையரங்கிற்குச் செல்ல விரும்புகிறார்.</span></div><div class="b"></div></div><div class="qline"><div class="q"><b class='fr'>Son mari n'a pas envie de sortir.</b> <span class='ta'>அவரது கணவருக்கு வெளியே செல்ல விருப்பமில்லை.</span></div><div class="b"></div></div><div class="qline"><div class="q"><b class='fr'>Les enfants font du piano tous les jours.</b> <span class='ta'>குழந்தைகள் தினமும் பியானோ கற்கிறார்கள்.</span></div><div class="b"></div></div><div class="qline"><div class="q"><b class='fr'>Elle a horreur des insectes.</b> <span class='ta'>அவளுக்குப் பூச்சிகளைக் கண்டால் பயம்.</span></div><div class="b"></div></div><div class="qline"><div class="q"><b class='fr'>Il met une araignée dans la chambre de sa sœur.</b> <span class='ta'>சகோதரியின் அறையில் ஒரு சிலந்தியை வைக்கிறான்.</span></div><div class="b"></div></div><div class="qline"><div class="q"><b class='fr'>Sa femme est mexicaine et son père est italien.</b> <span class='ta'>மனைவி மெக்சிகன், தந்தை இத்தாலியர்.</span></div><div class="b"></div></div><div class="qline"><div class="q"><b class='fr'>Son frère est né aux États-Unis.</b> <span class='ta'>சகோதரர் அமெரிக்காவில் பிறந்தார்.</span></div><div class="b"></div></div><div class="qline"><div class="q"><b class='fr'>Son oncle et sa tante ont vécu un an en Grèce.</b> <span class='ta'>மாமாவும் அத்தையும் ஓராண்டு கிரேக்கத்தில் வாழ்ந்தார்கள்.</span></div><div class="b"></div></div><div class="qline"><div class="q"><b class='fr'>Je viens du sud de l'Inde et je parle tamoul.</b> <span class='ta'>தென்னிந்தியாவிலிருந்து வருகிறேன்; தமிழ் பேசுகிறேன்.</span></div><div class="b"></div></div><div class="qline"><div class="q"><b class='fr'>Je ne parle pas hindi.</b> <span class='ta'>நான் இந்தி பேசுவதில்லை.</span></div><div class="b"></div></div><div class="qline"><div class="q"><b class='fr'>Nous avons toujours une batte à la maison.</b> <span class='ta'>வீட்டில் எப்போதும் ஒரு மட்டை உண்டு.</span></div><div class="b"></div></div><div class="qline"><div class="q"><b class='fr'>J'achète des carottes, du céleri et un chou-fleur.</b> <span class='ta'>கேரட், செலரி, ஒரு காலிஃபிளவர் வாங்குகிறேன்.</span></div><div class="b"></div></div><div class="pb"></div><h2 class="section"><span class="num">3</span>Transformation — change one thing, rewrite the whole sentence<span class="ta">மாற்றியமைத்தல் — ஒன்றை மாற்றி, முழு வாக்கியத்தையும் மீண்டும் எழுதுங்கள்</span></h2><h3>A · Make it feminine <span class="ta">· A · பெண்பாலாக்குங்கள்</span></h3><div class="numline"><span class="n">1.</span><span class="q"><span class='fr'>Il est grand, blond et frisé.</span></span><div class="b"></div></div><div class="numline"><span class="n">2.</span><span class="q"><span class='fr'>Mon frère est vieux et roux.</span></span><div class="b"></div></div><div class="numline"><span class="n">3.</span><span class="q"><span class='fr'>Ce garçon est paresseux et agressif.</span></span><div class="b"></div></div><div class="numline"><span class="n">4.</span><span class="q"><span class='fr'>Il est souriant et bavard.</span></span><div class="b"></div></div><div class="numline"><span class="n">5.</span><span class="q"><span class='fr'>Marc est créatif et original.</span></span><div class="b"></div></div><div class="numline"><span class="n">6.</span><span class="q"><span class='fr'>Le lycéen est timide.</span></span><div class="b"></div></div><div class="key"><div class="h">Answer key · விடைகள்</div>1. <span class="fr">Elle est grande, blonde et frisée.</span> · 2. <span class="fr">Ma sœur est vieille et rousse.</span> ·
+3. <span class="fr">Cette fille est paresseuse et agressive.</span> · 4. <span class="fr">Elle est souriante et bavarde.</span> ·
+5. <span class="fr">Marie est créative et originale.</span> · 6. <span class="fr">La lycéenne est timide.</span></div><h3>B · Make it plural <span class="ta">· B · பன்மையாக்குங்கள்</span></h3><div class="numline"><span class="n">1.</span><span class="q"><span class='fr'>Le chou est vert.</span></span><div class="b"></div></div><div class="numline"><span class="n">2.</span><span class="q"><span class='fr'>Un genou lavé.</span></span><div class="b"></div></div><div class="numline"><span class="n">3.</span><span class="q"><span class='fr'>Le chou-fleur est délicieux.</span></span><div class="b"></div></div><div class="numline"><span class="n">4.</span><span class="q"><span class='fr'>La prune est juteuse.</span></span><div class="b"></div></div><div class="numline"><span class="n">5.</span><span class="q"><span class='fr'>Ce livre est nouveau.</span></span><div class="b"></div></div><div class="numline"><span class="n">6.</span><span class="q"><span class='fr'>L'enfant est gentil.</span></span><div class="b"></div></div><div class="key"><div class="h">Answer key · விடைகள்</div>1. <span class="fr">Les choux sont verts.</span> · 2. <span class="fr">Des genoux lavés.</span> ·
+3. <span class="fr">Les choux-fleurs sont délicieux.</span> · 4. <span class="fr">Les prunes sont juteuses.</span> ·
+5. <span class="fr">Ces livres sont nouveaux.</span> · 6. <span class="fr">Les enfants sont gentils.</span></div><h3>C · Make it negative <span class="ta">· C · மறுப்பாக்குங்கள்</span></h3><div class="numline"><span class="n">1.</span><span class="q"><span class='fr'>Je mange des champignons.</span></span><div class="b"></div></div><div class="numline"><span class="n">2.</span><span class="q"><span class='fr'>Elle travaille à Nantes.</span></span><div class="b"></div></div><div class="numline"><span class="n">3.</span><span class="q"><span class='fr'>Il porte des nattes.</span></span><div class="b"></div></div><div class="numline"><span class="n">4.</span><span class="q"><span class='fr'>Nous avons un frère.</span></span><div class="b"></div></div><div class="numline"><span class="n">5.</span><span class="q"><span class='fr'>Tu bois du café.</span></span><div class="b"></div></div><div class="numline"><span class="n">6.</span><span class="q"><span class='fr'>C'est une casquette.</span></span><div class="b"></div></div><div class="key"><div class="h">Answer key · விடைகள்</div>1. <span class="fr">Je ne mange pas de champignons.</span> · 2. <span class="fr">Elle ne travaille pas à Nantes.</span> ·
+3. <span class="fr">Il ne porte pas de nattes.</span> · 4. <span class="fr">Nous n'avons pas de frère.</span> ·
+5. <span class="fr">Tu ne bois pas de café.</span> · 6. <span class="fr">Ce n'est pas une casquette.</span> — <b>être keeps the article.</b></div><h3>D · Ask the question three ways <span class="ta">· D · மூன்று வழிகளில் கேள்வி கேளுங்கள்</span></h3><div class="qline"><div class="q"><span class='fr'>Il s'appelle Paul.</span> <span class='ta'>(பெயர் என்ன?)</span></div><div class="b"></div><div class="b"></div><div class="b"></div></div><div class="qline"><div class="q"><span class='fr'>Elle habite à Nantes.</span> <span class='ta'>(எங்கே வசிக்கிறாள்?)</span></div><div class="b"></div><div class="b"></div><div class="b"></div></div><div class="qline"><div class="q"><span class='fr'>Il a vingt-cinq ans.</span> <span class='ta'>(என்ன வயது?)</span></div><div class="b"></div><div class="b"></div><div class="b"></div></div><div class="qline"><div class="q"><span class='fr'>Elle est française.</span> <span class='ta'>(என்ன தேசியம்?)</span></div><div class="b"></div><div class="b"></div><div class="b"></div></div><div class="qline"><div class="q"><span class='fr'>Il aime le cinéma.</span> <span class='ta'>(எது பிடிக்கும்?)</span></div><div class="b"></div><div class="b"></div><div class="b"></div></div><div class="pb"></div><h2 class="section"><span class="num">4</span>Translation — from English and from Tamil<span class="ta">மொழிபெயர்ப்பு — ஆங்கிலத்திலிருந்தும் தமிழிலிருந்தும்</span></h2><div class="duo"><div><span class="lang-tag">ENGLISH</span><div><p>Every sentence below can be built entirely from words Cindy gave you. Nothing new is needed. Translating
+  <b>from Tamil</b> is harder and more valuable than from English, because Tamil word order is not French word
+  order — remember <b>SVO</b>.</p></div></div><div><span class="lang-tag">தமிழ்</span><div class="ta-col"><p>கீழே உள்ள ஒவ்வொரு வாக்கியத்தையும் சிண்டி கொடுத்த சொற்களைக் கொண்டே முழுமையாக உருவாக்கலாம். புதிதாக
+  எதுவும் தேவையில்லை. <b>தமிழிலிருந்து</b> மொழிபெயர்ப்பது ஆங்கிலத்திலிருந்து மொழிபெயர்ப்பதை விடக்
+  கடினமானது, பயனுள்ளது — தமிழ்ச் சொல் வரிசை பிரெஞ்சு வரிசை அல்ல. <b>SVO</b> நினைவிருக்கட்டும்.</p></div></div></div><h3>A · From English <span class="ta">· A · ஆங்கிலத்திலிருந்து</span></h3><div class="qline"><div class="q">My sister is small and slim. She has long black hair. <span class='ta'></span></div><div class="b"></div><div class="b"></div></div><div class="qline"><div class="q">I do not speak Hindi, but I speak Tamil and Dutch. <span class='ta'></span></div><div class="b"></div><div class="b"></div></div><div class="qline"><div class="q">How old are you? — I am forty-five years old. <span class='ta'></span></div><div class="b"></div><div class="b"></div></div><div class="qline"><div class="q">Where were you born? — I was born in India. <span class='ta'></span></div><div class="b"></div><div class="b"></div></div><div class="qline"><div class="q">My father's brother is my uncle; his daughter is my cousin. <span class='ta'></span></div><div class="b"></div><div class="b"></div></div><div class="qline"><div class="q">She feels like going to the cinema, but her husband prefers to stay at home. <span class='ta'></span></div><div class="b"></div><div class="b"></div></div><div class="qline"><div class="q">We play football on Saturday and we do sport every day. <span class='ta'></span></div><div class="b"></div><div class="b"></div></div><div class="qline"><div class="q">I buy some carrots, a cauliflower and some celery. <span class='ta'></span></div><div class="b"></div><div class="b"></div></div><div class="qline"><div class="q">They lived one year in Greece. — Ils ont … <span class='ta'></span></div><div class="b"></div><div class="b"></div></div><div class="qline"><div class="q">I am going to write every day. <span class='ta'></span></div><div class="b"></div><div class="b"></div></div><div class="key"><div class="h">Answer key · விடைகள்</div>1. <span class="fr">Ma sœur est petite et mince. Elle a les cheveux noirs et longs.</span> ·
+2. <span class="fr">Je ne parle pas hindi, mais je parle tamoul et néerlandais.</span> ·
+3. <span class="fr">Quel âge as-tu ? — J'ai quarante-cinq ans.</span> ·
+4. <span class="fr">Où es-tu né ? — Je suis né en Inde.</span> ·
+5. <span class="fr">Le frère de mon père est mon oncle ; sa fille est ma cousine.</span> ·
+6. <span class="fr">Elle a envie d'aller au cinéma, mais son mari préfère rester chez lui.</span> ·
+7. <span class="fr">Nous jouons au football le samedi et nous faisons du sport tous les jours.</span> ·
+8. <span class="fr">J'achète des carottes, un chou-fleur et du céleri.</span> ·
+9. <span class="fr">Ils ont vécu un an en Grèce.</span> ·
+10. <span class="fr">Je vais écrire tous les jours.</span></div><h3>B · From Tamil <span class="ta">· B · தமிழிலிருந்து</span></h3><div class="qline"><div class="q"><span class='ta' style='font-size:9.8pt'>என் தாத்தாவின் பெயர் என்ன?</span></div><div class="b"></div><div class="b"></div></div><div class="qline"><div class="q"><span class='ta' style='font-size:9.8pt'>அவள் இளையவள்; அவளுக்கு பத்தொன்பது வயது.</span></div><div class="b"></div><div class="b"></div></div><div class="qline"><div class="q"><span class='ta' style='font-size:9.8pt'>நான் தென்னிந்தியாவிலிருந்து வருகிறேன், பெல்ஜியத்தில் வசிக்கிறேன்.</span></div><div class="b"></div><div class="b"></div></div><div class="qline"><div class="q"><span class='ta' style='font-size:9.8pt'>அவர் ஆசிரியர் அல்ல; அவர் மாணவர்.</span></div><div class="b"></div><div class="b"></div></div><div class="qline"><div class="q"><span class='ta' style='font-size:9.8pt'>எனக்கு ஒரு சகோதரனும் இரண்டு சகோதரிகளும் உண்டு.</span></div><div class="b"></div><div class="b"></div></div><div class="qline"><div class="q"><span class='ta' style='font-size:9.8pt'>இந்த ஆரஞ்சுகளும் அல்லிப்பழங்களும் சுவையானவை.</span></div><div class="b"></div><div class="b"></div></div><div class="qline"><div class="q"><span class='ta' style='font-size:9.8pt'>நாளை நான் நீச்சல் குளத்திற்குச் செல்லப் போகிறேன்.</span></div><div class="b"></div><div class="b"></div></div><div class="qline"><div class="q"><span class='ta' style='font-size:9.8pt'>அவர்கள் ஜப்பானில் வேலை செய்தார்கள்.</span></div><div class="b"></div><div class="b"></div></div><div class="qline"><div class="q"><span class='ta' style='font-size:9.8pt'>எனக்கு இறைச்சி வேண்டாம்; நான் சைவம்.</span></div><div class="b"></div><div class="b"></div></div><div class="qline"><div class="q"><span class='ta' style='font-size:9.8pt'>பேத்தி பாட்டியுடன் இருக்கிறாள்.</span></div><div class="b"></div><div class="b"></div></div><div class="key"><div class="h">Answer key · விடைகள்</div>1. <span class="fr">Comment s'appelle mon grand-père ?</span> (or <span class="fr">Quel est le prénom de mon grand-père ?</span>) ·
+2. <span class="fr">Elle est jeune ; elle a dix-neuf ans.</span> ·
+3. <span class="fr">Je viens du sud de l'Inde et j'habite en Belgique.</span> ·
+4. <span class="fr">Il n'est pas professeur ; il est étudiant.</span> ·
+5. <span class="fr">J'ai un frère et deux sœurs.</span> ·
+6. <span class="fr">Ces oranges et ces prunes sont délicieuses.</span> ·
+7. <span class="fr">Demain, je vais aller à la piscine.</span> ·
+8. <span class="fr">Ils ont travaillé au Japon.</span> ·
+9. <span class="fr">Je ne veux pas de viande ; je suis végétarien.</span> ·
+10. <span class="fr">La petite-fille est avec sa grand-mère.</span></div><div class="pb"></div><h2 class="section"><span class="num">5</span>Free writing — ten prompts, one page each<span class="ta">சுதந்திரமாக எழுதுதல் — பத்துத் தூண்டுதல்கள்</span></h2><div class="duo"><div><span class="lang-tag">ENGLISH</span><div><p>Sixty to a hundred words each, by hand. Print this section again whenever you finish it. Under every
+  prompt is the short list of things Cindy will look for.</p></div></div><div><span class="lang-tag">தமிழ்</span><div class="ta-col"><p>ஒவ்வொன்றும் அறுபது முதல் நூறு சொற்கள், கையால். முடித்ததும் இந்தப் பகுதியை மீண்டும் அச்சிடுங்கள்.
+  ஒவ்வொரு தூண்டுதலுக்கும் கீழே சிண்டி எதைத் தேடுவார் என்ற சிறு பட்டியல் உள்ளது.</p></div></div></div><div class="drill"><div class="h">1 · <span class="fr" style="font-size:11pt">Je me présente</span> <span class="ta">· என்னை அறிமுகம் செய்கிறேன்</span></div><p class="gloss" style="margin-bottom:2mm"><b>Cindy will look for:</b> name · age · city · job · languages · nationality · one negative<span class="ta" style="display:block">பெயர் · வயது · ஊர் · வேலை · மொழிகள் · தேசியம் · ஒரு மறுப்பு</span></p><div class="wl "><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div></div></div><div class="drill"><div class="h">2 · <span class="fr" style="font-size:11pt">Ma famille</span> <span class="ta">· என் குடும்பம்</span></div><p class="gloss" style="margin-bottom:2mm"><b>Cindy will look for:</b> six hyphenated words · aîné / cadet · maternel / paternel · possessives<span class="ta" style="display:block">ஆறு இணைப்புக்கோடு சொற்கள் · aîné / cadet · maternel / paternel · உடைமைச் சொற்கள்</span></p><div class="wl "><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div></div></div><div class="pb"></div><div class="drill"><div class="h">3 · <span class="fr" style="font-size:11pt">Mon meilleur ami</span> <span class="ta">· என் நெருங்கிய நண்பர்</span></div><p class="gloss" style="margin-bottom:2mm"><b>Cindy will look for:</b> être + avoir + porter · four adjectives with correct agreement · hair and eyes<span class="ta" style="display:block">être + avoir + porter · சரியான ஒப்புமையுடன் நான்கு பெயரடைகள்</span></p><div class="wl "><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div></div></div><div class="drill"><div class="h">4 · <span class="fr" style="font-size:11pt">Mon week-end</span> <span class="ta">· என் வார இறுதி</span></div><p class="gloss" style="margin-bottom:2mm"><b>Cindy will look for:</b> avoir envie de ×2 · faire du · jouer à · demain · aujourd'hui<span class="ta" style="display:block">avoir envie de ×2 · faire du · jouer à · demain · aujourd'hui</span></p><div class="wl "><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div></div></div><div class="pb"></div><div class="drill"><div class="h">5 · <span class="fr" style="font-size:11pt">Mes loisirs</span> <span class="ta">· என் பொழுதுபோக்குகள்</span></div><p class="gloss" style="margin-bottom:2mm"><b>Cindy will look for:</b> faire du / de la · jouer à / de · four -er verbs · one hobby you dislike (negative)<span class="ta" style="display:block">faire du / de la · jouer à / de · நான்கு -er வினைச்சொற்கள் · ஒரு மறுப்பு</span></p><div class="wl "><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div></div></div><div class="drill"><div class="h">6 · <span class="fr" style="font-size:11pt">Une famille internationale</span> <span class="ta">· ஒரு சர்வதேசக் குடும்பம்</span></div><p class="gloss" style="margin-bottom:2mm"><b>Cindy will look for:</b> six countries with the right article · six nationalities · capital letters correct<span class="ta" style="display:block">சரியான இடைச்சொல்லுடன் ஆறு நாடுகள் · ஆறு தேசியங்கள் · பெரிய எழுத்து சரியாக</span></p><div class="wl "><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div></div></div><div class="pb"></div><div class="drill"><div class="h">7 · <span class="fr" style="font-size:11pt">Au marché</span> <span class="ta">· சந்தையில்</span></div><p class="gloss" style="margin-bottom:2mm"><b>Cindy will look for:</b> fifteen items · un / une / des / du / de la / de l' · one negative with de<span class="ta" style="display:block">பதினைந்து பொருட்கள் · எல்லா இடைச்சொற்களும் · de-உடன் ஒரு மறுப்பு</span></p><div class="wl "><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div></div></div><div class="drill"><div class="h">8 · <span class="fr" style="font-size:11pt">Un repas chez moi</span> <span class="ta">· என் வீட்டில் ஒரு உணவு</span></div><p class="gloss" style="margin-bottom:2mm"><b>Cindy will look for:</b> les repas vocabulary · partitives · avoir faim / avoir soif · délicieux<span class="ta" style="display:block">உணவுச் சொற்கள் · பகுதி இடைச்சொற்கள் · avoir faim / soif</span></p><div class="wl "><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div></div></div><div class="pb"></div><div class="drill"><div class="h">9 · <span class="fr" style="font-size:11pt">Mes quarante jours sans français</span> <span class="ta">· பிரெஞ்சு இல்லாத என் நாற்பது நாட்கள்</span></div><p class="gloss" style="margin-bottom:2mm"><b>Cindy will look for:</b> passé composé ×6 · two with être · one ne … pas · one ne … plus<span class="ta" style="display:block">passé composé ×6 · இரண்டு être-உடன் · ஒரு ne … pas · ஒரு ne … plus</span></p><div class="wl "><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div></div></div><div class="drill"><div class="h">10 · <span class="fr" style="font-size:11pt">Mes projets pour le français</span> <span class="ta">· பிரெஞ்சுக்கான என் திட்டங்கள்</span></div><p class="gloss" style="margin-bottom:2mm"><b>Cindy will look for:</b> futur proche ×6 · numbers written in words · two questions to ask Cindy<span class="ta" style="display:block">futur proche ×6 · எண்கள் சொற்களில் · சிண்டியிடம் கேட்க இரு கேள்விகள்</span></p><div class="wl "><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div></div></div><div class="pb"></div><h2 class="section"><span class="num">6</span>The self-check — mark your own work the way she would<span class="ta">சுய சரிபார்ப்பு — அவர் திருத்துவது போல உங்கள் வேலையைத் திருத்துங்கள்</span></h2><div class="duo"><div><span class="lang-tag">ENGLISH</span><div><p>After every text you write, run this list. Cindy's four corrections in eight lessons were
+  <i>êtes</i>, <i>je suis jeune</i>, <i>agressive</i> and <i>reconstitute</i> — three endings and one spelling.
+  Check the endings first.</p></div></div><div><span class="lang-tag">தமிழ்</span><div class="ta-col"><p>எழுதும் ஒவ்வொரு உரைக்குப் பிறகும் இந்தப் பட்டியலைச் செய்யுங்கள். எட்டு பாடங்களில் சிண்டியின் நான்கு
+  திருத்தங்கள்: <i>êtes</i>, <i>je suis jeune</i>, <i>agressive</i>, <i>reconstitute</i> — மூன்று விகுதிகள்,
+  ஒரு எழுத்துப்பிழை. முதலில் விகுதிகளைச் சரிபாருங்கள்.</p></div></div></div><div class="tblwrap"><table class=""><thead><tr><th>#</th><th>Check <span class='ta'>சரிபார்ப்பு</span></th><th>Why it costs marks <span class='ta'>ஏன் மதிப்பெண் இழக்கிறது</span></th></tr></thead><tbody><tr><td>1</td><td><b>Every adjective</b> — does it match the noun in gender <b>and</b> number?</td><td>Cindy's Lesson 3. Silent in speech, visible on paper. <span class='ta'>பேச்சில் ஒலிக்காது, காகிதத்தில் தெரியும்.</span></td></tr><tr><td>2</td><td><b>Every verb ending</b> — <i>la désinence</i>. <i>-e, -es, -e, -ons, -ez, -ent</i>.</td><td>Her correction of <i>je sui jeun</i>. <span class='ta'>அவரது திருத்தம்.</span></td></tr><tr><td>3</td><td><b>Every accent</b> — é è ê on the right vowel; ç where you need [s].</td><td><i>sur</i> vs <i>sûr</i> changes the word. <span class='ta'>வார்த்தையையே மாற்றும்.</span></td></tr><tr><td>4</td><td><b>Every article</b> — un/une/le/la/du/de la/de l'/des, and <b>de</b> after a negative.</td><td>Her Lesson 8. <span class='ta'>அவரது பாடம் 8.</span></td></tr><tr><td>5</td><td><b>Every country</b> — le/la/les, and en/au/aux when you are <i>in</i> it.</td><td>Her Lesson 7. <span class='ta'>அவரது பாடம் 7.</span></td></tr><tr><td>6</td><td><b>Every nationality</b> — capital for the person, small for the adjective and the language.</td><td>Her Lesson 6. <span class='ta'>அவரது பாடம் 6.</span></td></tr><tr><td>7</td><td><b>Every hyphen</b> — <i>grand-père</i>, <i>petite-fille</i>, <i>chou-fleur</i>, <i>petit-déjeuner</i>.</td><td><i>la petite-fille</i> vs <i>la fille petite</i>. <span class='ta'>அர்த்தமே மாறும்.</span></td></tr><tr><td>8</td><td><b>Word order</b> — S V O, and the adjective before or after by the BAGS rule.</td><td><i>un homme grand</i> vs <i>un grand homme</i>. <span class='ta'>தமிழ் வரிசை அல்ல.</span></td></tr><tr><td>9</td><td><b>Read it aloud.</b> If you cannot say it, you cannot write it.</td><td>Her very first lesson was pronunciation. <span class='ta'>அவரது முதல் பாடமே உச்சரிப்பு.</span></td></tr></tbody></table></div><div class="drill"><div class="h">Your error log — write down every mistake she corrects, and the correct form beside it <span class="ta">· உங்கள் தவறுப் பதிவேடு — அவர் திருத்தும் ஒவ்வொரு தவறையும், அருகில் சரியான வடிவத்தையும் எழுதுங்கள்</span></div><p class="gloss">The four she has already given you are filled in. Keep adding. Re-read this page before
+  every lesson.</p><div class="tblwrap"><table class=""><thead><tr><th>Date</th><th>What I wrote <span class='ta'>நான் எழுதியது</span></th><th>Correct <span class='ta'>சரியானது</span></th><th>Why <span class='ta'>ஏன்</span></th></tr></thead><tbody><tr><td>15 Jun</td><td><i>vous etes moyens</i></td><td><b class='fr'>vous êtes</b></td><td>circumflex is part of the spelling</td></tr><tr><td>15 Jun</td><td><i>Je sui jeun</i></td><td><b class='fr'>je suis jeune</b></td><td>la désinence — the endings</td></tr><tr><td>18 Jun</td><td><i>aggressive</i></td><td><b class='fr'>agressive</b></td><td>French has one g</td></tr><tr><td>22 Jun</td><td><i>recounstitute</i></td><td><b class='fr'>reconstitute</b></td><td>spelling</td></tr><tr><td>8 Jul</td><td><i>La fille petite</i></td><td><b class='fr'>la petite-fille</b></td><td>hyphen changes the meaning</td></tr><tr><td>13 Jul</td><td><i>Wallis et Foutouna</i></td><td><b class='fr'>Wallis-et-Futuna</b></td><td>spelling + hyphens</td></tr><tr><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td></tr></tbody></table></div></div><div class="foot">
+<b>Le Cahier d'écriture — Volume 3.</b> Practice only: every sentence, word and rule drilled here comes from
+Volume 1 (Cindy's material) or Volume 2 (the small extra). Print it again whenever you want it.<br>
+<span class="ta">பயிற்சி மட்டுமே: இங்கே பயிற்சி செய்யப்படும் ஒவ்வொரு வாக்கியமும், சொல்லும், விதியும் தொகுதி 1
+(சிண்டியின் பாடம்) அல்லது தொகுதி 2 (சிறிய கூடுதல்) இலிருந்து வந்தவை. விரும்பும்போது மீண்டும் அச்சிடுங்கள்.</span>
+</div></div></body></html>

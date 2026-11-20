@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Au-delà de Cindy — Volume 2 · Le pas suivant</title>
+<!-- Volume 2 of 3. Only what Cindy's own material was already pointing at. -->
+<style>
+:root{
+  --ink:#17202b; --muted:#5d6b7a; --brand:#12386e; --accent:#b32131;
+  --gold:#8a5a00; --line:#d5dce4; --soft:#f2f6fa; --chip:#eaf0f7;
+  --rule-bg:#f5f9fd; --rule-edge:#12386e;
+  --key-bg:#f4f7f2; --key-edge:#2c6b3f;
+  --do-bg:#fffaf0; --do-edge:#b8860b;
+  --warn-bg:#fdf2f2; --warn-edge:#b32131;
+  --write:#c6d2de;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#fff}
+body{font-family:"Helvetica Neue",Arial,"Noto Sans","Noto Sans Tamil","Tamil MN","InaiMathi","Latha",sans-serif;
+  color:var(--ink);font-size:9.1pt;line-height:1.36}
+.page{max-width:194mm;margin:0 auto;padding:6mm 4mm}
+@media print{
+  @page{size:A4;margin:9mm 8mm}
+  .page{max-width:none;padding:0}
+  .card,.rule,.key,.fig,.masthead,.tip,.warn,.dialog,.plan,.conj,.txt{break-inside:avoid}
+  tr,.numline,.qline,.figrow,.toc .r,.plan .d,h2.section,h3,h4,.sepbox,.sepline,
+  .trace .row,.dialog .ln,.wl .l{break-inside:avoid}
+  .trace .t,.drill .h{break-after:avoid}
+  thead{display:table-header-group}
+  .pb{break-before:page}
+  h2.section{break-after:avoid}
+  h3{break-after:avoid}
+}
+/* ---------- masthead ---------- */
+.masthead{border-bottom:3px solid var(--brand);padding-bottom:5mm;margin-bottom:5mm}
+.kicker{color:var(--accent);font-weight:700;letter-spacing:.09em;font-size:8.2pt;text-transform:uppercase}
+.masthead h1{font-size:20pt;line-height:1.18;margin-top:2mm;color:var(--brand)}
+.masthead h1 .ta{display:block;font-size:12.5pt;color:var(--muted);font-weight:600;margin-top:1.5mm}
+.masthead .meta{color:var(--muted);font-size:9pt;margin-top:3mm;line-height:1.45}
+.flagbar{height:4px;display:flex;margin-bottom:3mm}
+.flagbar i{flex:1}
+.flagbar i:nth-child(1){background:#12386e}
+.flagbar i:nth-child(2){background:#e9edf2}
+.flagbar i:nth-child(3){background:#b32131}
+/* ---------- structure ---------- */
+h2.section{font-size:12pt;color:var(--brand);background:#e8eff7;border-radius:4px;
+  border-left:1.4mm solid var(--brand);border-bottom:.5mm solid #c3d5e8;
+  padding:1.4mm 2.6mm;margin:5mm 0 2.6mm;line-height:1.25}
+h2.section .ta{display:block;color:#4c6a8c;font-weight:600;font-size:10pt;margin-top:.4mm}
+h2.section .num{background:var(--brand);color:#fff;border-radius:3px;padding:0 5px;margin-right:5px;font-size:10.5pt}
+h3{font-size:10.2pt;color:var(--brand);margin:3.2mm 0 1.7mm;border-bottom:1px solid var(--line);padding-bottom:.8mm}
+h3 .ta{color:var(--muted);font-weight:600;font-size:9.8pt}
+h4{font-size:9.8pt;color:var(--accent);margin:2.8mm 0 1.4mm}
+h4 .ta{color:var(--muted);font-weight:600;font-size:9.2pt}
+p{margin-bottom:1.4mm}
+.lang-tag{display:inline-block;background:var(--chip);color:var(--brand);border-radius:3px;font-size:7.2pt;
+  font-weight:700;padding:1px 6px;margin-bottom:1.2mm;letter-spacing:.05em}
+.duo{display:flex;gap:5mm;margin-bottom:2.5mm}
+.duo>div{flex:1;min-width:0}
+.ta-col{color:#33414d}
+.grid{display:flex;gap:4mm;margin-bottom:3mm}
+.grid>div{flex:1;min-width:0}
+/* ---------- boxes ---------- */
+.card{border:1px solid var(--line);border-radius:8px;padding:4mm;margin-bottom:4mm;background:#fff}
+.rule{background:var(--rule-bg);border:1px solid #cddcee;border-left:5px solid var(--rule-edge);
+  border-radius:6px;padding:2.4mm 3mm;margin:2.4mm 0}
+.rule .h{font-size:9.2pt;font-weight:800;color:var(--brand);margin-bottom:1.5mm;text-transform:uppercase;letter-spacing:.04em}
+.rule .h .ta{color:#4b6a8e;font-weight:700;text-transform:none;letter-spacing:0}
+.tip{background:var(--do-bg);border:1px solid #eeddb0;border-left:5px solid var(--do-edge);
+  border-radius:6px;padding:2.4mm 3mm;margin:2.4mm 0}
+.tip .h{font-size:9.2pt;font-weight:800;color:var(--gold);margin-bottom:1.2mm}
+.warn{background:var(--warn-bg);border:1px solid #f0cdcd;border-left:5px solid var(--warn-edge);
+  border-radius:6px;padding:2.4mm 3mm;margin:2.4mm 0}
+.warn .h{font-size:9.2pt;font-weight:800;color:var(--accent);margin-bottom:1.2mm}
+.key{background:var(--key-bg);border:1px solid #cfe0d4;border-left:5px solid var(--key-edge);
+  border-radius:6px;padding:2.4mm 3mm;margin:2.4mm 0;font-size:8.8pt}
+.key .h{font-size:9pt;font-weight:800;color:var(--key-edge);margin-bottom:1.2mm}
+.drill{background:#fff;border:1.5px dashed #b9c6d4;border-radius:7px;padding:2.8mm;margin:2.4mm 0}
+.drill .h{font-size:9.4pt;font-weight:800;color:var(--brand);margin-bottom:2mm;line-height:1.35}
+.drill .h:before{content:"✎ ";font-size:11pt;color:var(--accent)}
+.drill .h .ta{color:var(--muted);font-weight:700;font-size:8.8pt}
+/* ---------- french text ---------- */
+.fr{color:var(--brand);font-weight:700}
+.fr-i{color:var(--brand);font-weight:700;font-style:italic}
+.en{color:var(--ink)}
+.ta{color:var(--muted)}
+.gloss{color:var(--muted);font-size:9pt}
+.txt{background:var(--soft);border-radius:6px;padding:2.2mm 2.6mm;margin:1.8mm 0;
+  font-size:9.4pt;line-height:1.45;border:1px solid #e2e9f1}
+.txt b{color:var(--brand)}
+.src{font-size:8pt;color:var(--muted);margin-top:1.5mm;word-break:break-all}
+.src a{color:var(--muted)}
+/* ---------- tables ---------- */
+.tblwrap{margin:2.5mm 0}
+table{width:100%;border-collapse:collapse;font-size:8.3pt}
+th{background:#e8eff7;color:var(--brand);text-align:left;padding:.8mm 1.3mm .9mm;font-size:7.8pt;
+  font-weight:800;letter-spacing:.03em;border-bottom:.6mm solid var(--brand)}
+th .ta{color:#4c6a8c;font-weight:600;display:block;font-size:7.4pt}
+td{border:1px solid var(--line);padding:.85mm 1.3mm;vertical-align:top}
+tr:nth-child(even) td{background:#fbfcfd}
+td.fr{color:var(--brand);font-weight:700;white-space:nowrap}
+td.w,tr:nth-child(even) td.w{min-width:30mm;padding:1mm 1.3mm .6mm;background:#fff}
+td.w .ln{border-bottom:0.3mm solid var(--write);height:5.8mm}
+.mini td,.mini th{font-size:7.8pt;padding:.6mm 1.1mm}
+table.gl td{font-size:7.7pt;padding:.5mm 1mm}
+table.gl td.fr{white-space:normal}
+/* conjugation block */
+.conj{display:inline-block;border:1px solid var(--line);border-radius:6px;padding:1.6mm 2.4mm;margin:0 2.4mm 2mm 0;
+  background:#fbfdff;vertical-align:top;min-width:44mm}
+.conj .t{font-weight:800;color:var(--accent);font-size:9.6pt;margin-bottom:1mm;border-bottom:1px solid var(--line);padding-bottom:.8mm}
+.conj .t .ta{color:var(--muted);font-weight:600;font-size:8.4pt}
+.conj div.l{font-size:9.1pt;line-height:1.5}
+.conj div.l b{color:var(--brand)}
+/* ---------- writing lines ---------- */
+.wl{margin:2mm 0}
+.wl .l{border-bottom:1px solid var(--write);height:6.3mm}
+.wl.tight .l{height:6mm}
+.wl.wide .l{height:8.5mm}
+.numline{margin-bottom:1.2mm}
+.numline .n{font-weight:800;color:var(--accent);font-size:9.2pt;margin-right:1.5mm}
+.numline .q{font-size:9.4pt;display:inline}
+.numline .q .ta{color:var(--muted);font-size:8.4pt}
+.numline .b{border-bottom:1px solid var(--write);height:6.2mm;margin-top:.4mm}
+.qline{margin-bottom:1.5mm}
+.qline .q{font-size:9.4pt}
+.qline .q b{color:var(--brand)}
+.qline .q .ta{display:block;color:var(--muted);font-size:8.5pt}
+.qline .b{border-bottom:1px solid var(--write);height:6.2mm;margin-top:.6mm}
+/* trace boxes */
+.trace{border:1px solid var(--line);border-radius:6px;padding:2.5mm 3mm;margin:2.5mm 0;background:#fcfdff}
+.trace .t{font-size:8.2pt;font-weight:800;color:var(--brand);text-transform:uppercase;letter-spacing:.04em;margin-bottom:1.5mm}
+.trace .row{display:flex;align-items:baseline;gap:3mm;padding:.9mm 0;border-bottom:1px dotted #dfe6ee}
+.trace .row:last-child{border-bottom:0}
+.trace .row .m{color:var(--brand);font-weight:700;font-size:10pt;min-width:38mm}
+.trace .row .g{color:#b9c6d4;font-size:10pt;font-weight:700;letter-spacing:.02em}
+.trace .row .s{flex:1;border-bottom:1px solid var(--write);height:5mm}
+/* ---------- figures ---------- */
+.fig{border:1px solid var(--line);border-radius:8px;padding:1.8mm;margin:2mm 0;background:#fff;text-align:center}
+.fig img{max-width:100%;border-radius:5px;border:1px solid #e6ecf3}
+.fig .cap{margin-top:2mm;font-size:8.6pt;color:var(--muted);text-align:left;line-height:1.45}
+.fig .cap b{color:var(--brand)}
+.fig .cap .ta{display:block;color:var(--muted)}
+.fig .tagline{font-size:7.4pt;font-weight:800;color:var(--accent);text-transform:uppercase;
+  letter-spacing:.06em;text-align:left;margin-bottom:1.5mm}
+.figrow{display:flex;gap:3mm;margin:3mm 0}
+.figrow .fig{flex:1;margin:0;min-width:0}
+.figbig img{max-width:94mm}
+.figsm img{max-width:50mm}
+.figwide img{max-width:100%}
+/* ---------- chips / misc ---------- */
+.chip{display:inline-block;border:1px solid #c3d2e2;background:#fff;border-radius:20px;
+  font-size:8.4pt;padding:1px 8px;margin:1.5px 3px 1.5px 0;color:var(--brand);font-weight:600}
+.chip.r{border-color:#eec3c3;color:var(--accent)}
+.chip.g{border-color:#c6ddc9;color:#2c6b3f}
+ul,ol{margin:1.5mm 0 2mm 5mm}
+li{margin-bottom:1.2mm}
+li .ta{display:block;color:var(--muted);font-size:8.8pt}
+.dialog{background:#fbfdff;border:1px solid var(--line);border-radius:7px;padding:3mm;margin:2.5mm 0}
+.dialog .ln{padding:.8mm 0;border-bottom:1px dotted #e3e9f0;font-size:9.1pt}
+.dialog .ln:last-child{border-bottom:0}
+.dialog .sp{font-weight:800;color:var(--accent);min-width:14mm;display:inline-block}
+.dialog .ta{display:block;color:var(--muted);font-size:8.5pt;margin-left:14mm}
+.toc{border:1px solid var(--line);border-radius:8px;padding:4mm;background:#fbfdff}
+.toc .r{display:flex;gap:3mm;padding:1.4mm 0;border-bottom:1px dotted #e3e9f0;font-size:9.4pt}
+.toc .r:last-child{border-bottom:0}
+.toc .r .n{font-weight:800;color:var(--accent);min-width:8mm}
+.toc .r .t{flex:1}
+.toc .r .t .ta{display:block;color:var(--muted);font-size:8.5pt}
+.foot{margin-top:7mm;border-top:2px solid var(--brand);padding-top:2.5mm;color:var(--muted);font-size:8pt}
+.plan{border:1px solid var(--line);border-radius:8px;overflow:hidden;margin:3mm 0}
+.plan .d{display:flex;border-bottom:1px solid var(--line)}
+.plan .d:last-child{border-bottom:0}
+.plan .d>.day{background:#e8eff7;color:var(--brand);font-weight:800;font-size:8.8pt;padding:2mm;border-right:.7mm solid var(--brand);
+  min-width:26mm;display:flex;flex-direction:column;justify-content:center}
+.plan .d>.day .sub{font-weight:600;font-size:7.6pt;color:var(--muted)}
+.plan .d>.body{padding:2mm 3mm;font-size:9pt;flex:1}
+.plan .d>.body .ta{display:block;color:var(--muted);font-size:8.3pt;margin-top:.4mm}
+.plan .d:nth-child(even)>.body{background:#fafcfe}
+.badge{display:inline-block;background:#fbeaec;color:var(--accent);border:.6pt solid #e6b9bf;border-radius:4px;
+  font-size:7.6pt;font-weight:800;padding:0 5px;letter-spacing:.04em;text-transform:uppercase}
+.badge.b{background:#e8eff7;color:var(--brand);border-color:#bcd0e6}
+.badge.g{background:#eaf4ed;color:#2c6b3f;border-color:#bfdcc7}
+.sepbox{border:3px solid var(--accent);border-radius:10px;padding:5mm 5.5mm;margin:0 0 6mm;background:#fdf4f4}
+.sepbox .t{font-size:13pt;font-weight:800;color:var(--accent);letter-spacing:.02em;margin-bottom:1mm}
+.sepbox .t .ta{display:block;font-size:10.5pt;color:#8d4a52;font-weight:700;margin-top:.8mm}
+.sepbox .b{font-size:9.6pt;margin-top:2.5mm}
+.sepbox .b .ta-col{color:#4a3a3c}
+.sepline{border-top:3px double var(--accent);margin:6mm 0 4mm;padding-top:2.5mm;
+  font-size:9.4pt;color:var(--accent);font-weight:700;text-align:center}
+.sepline .ta{display:block;color:var(--muted);font-weight:600;font-size:8.8pt;margin-top:.6mm}
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="sepbox">
+  <div class="t">▲ STOP — everything after this line was NOT taught by Cindy
+    <span class="ta">▲ நிறுத்துங்கள் — இந்தக் கோட்டுக்குப் பின் உள்ள எதையும் சிண்டி கற்பிக்கவில்லை</span></div>
+  <div class="b"><div class="duo">
+    <div><b>Volume 1 is hers. This volume is not.</b> Not one sentence in these nine chapters was taught in your
+    eight lessons. Each chapter does, however, grow out of something <b>already sitting in her own texts, links
+    or corrections</b> — a tense she used without naming, a link she sent on her last day, a rule she started
+    and did not finish.<br><br>
+    Keep the two apart when you talk to her. Say plainly: <span class="fr">« J'ai révisé nos
+    leçons, et j'ai aussi étudié un peu plus tout seul. »</span> — <i>I revised our lessons, and I also studied
+    a bit more on my own.</i></div>
+    <div class="ta-col"><b>தொகுதி 1 அவருடையது. இந்தத் தொகுதி அல்ல.</b> இந்த ஒன்பது அத்தியாயங்களில் உள்ள ஒரு
+    வாக்கியம்கூட உங்கள் எட்டு பாடங்களில் கற்பிக்கப்படவில்லை. ஆனால் ஒவ்வொரு அத்தியாயமும் <b>அவரது சொந்த உரைகள்,
+    இணைப்புகள், திருத்தங்களில் ஏற்கனவே இருந்த</b> ஒன்றிலிருந்தே வளர்ந்தது — பெயரிடாமல் பயன்படுத்திய ஒரு காலம்,
+    கடைசி நாளில் அனுப்பிய ஒரு இணைப்பு, தொடங்கி முடிக்காத ஒரு விதி.<br><br>
+    அவரிடம் பேசும்போது இரண்டையும் தனித்தனியாக வையுங்கள். தெளிவாகச் சொல்லுங்கள்:
+    <span class="fr">« J'ai révisé nos leçons, et j'ai aussi étudié un peu plus tout seul. »</span> —
+    <i>நம் பாடங்களை மீண்டும் படித்தேன், மேலும் தனியாகக் கொஞ்சம் அதிகமாகவும் படித்தேன்.</i></div>
+  </div></div>
+</div>
+<div class="flagbar"><i></i><i></i><i></i></div>
+<div class="masthead">
+  <div class="kicker">Volume 2 of 3 · the small step past her last lesson</div>
+  <h1>Au-delà de Cindy — le pas suivant
+    <span class="ta">சிண்டிக்கு அப்பால் — அடுத்த ஒரு அடி</span></h1>
+  <div class="meta">
+    Nine short chapters. Not a new course — every one of them is something <b>already present in her own
+    texts, links or corrections</b> that she simply had not stopped to explain.<br>
+    <span class="ta">ஒன்பது சிறு அத்தியாயங்கள். இது புதிய பாடத்திட்டம் அல்ல — ஒவ்வொன்றும் <b>அவரது சொந்த
+    உரைகள், இணைப்புகள், திருத்தங்களில் ஏற்கனவே இருந்தவை</b>; அவர் நிறுத்தி விளக்காதவை மட்டுமே.</span>
+  </div>
+</div><div class="duo"><div><span class="lang-tag">ENGLISH</span><div><p><b>Why exactly these nine.</b> Cindy's chat is full of grammar she used without naming. She wrote
+  <span class="fr">son père, sa mère, leur leçon</span> for five lessons without ever explaining possessives.
+  Her Lucas text is written in the past tense and she pointed at <span class="fr">vécu &gt; vivre</span> and
+  moved on. Her Dubois text is full of <span class="fr">il va à la piscine</span> — the near future — with no
+  comment. She sent you the <i>les repas</i> link on her last day and never opened it.</p>
+  <p>So this volume does not invent anything. It finishes the sentences she started.</p></div></div><div><span class="lang-tag">தமிழ்</span><div class="ta-col"><p><b>ஏன் இந்த ஒன்பது.</b> சிண்டியின் உரையாடல் முழுவதும் பெயரிடப்படாத இலக்கணம் நிறைந்துள்ளது. ஐந்து
+  பாடங்களுக்கு <span class="fr">son père, sa mère, leur leçon</span> என்று எழுதினார் — உடைமைச் சொற்களை
+  ஒருபோதும் விளக்கவில்லை. Lucas உரை முழுவதும் இறந்தகாலம்; <span class="fr">vécu &gt; vivre</span> என்று
+  சுட்டிக்காட்டி நகர்ந்தார். Dubois உரையில் <span class="fr">il va à la piscine</span> — அண்மை எதிர்காலம் —
+  குறிப்பே இல்லை. கடைசி நாளில் <i>les repas</i> இணைப்பை அனுப்பினார், திறக்கவே இல்லை.</p>
+  <p>எனவே இந்தத் தொகுதி எதையும் புதிதாகக் கண்டுபிடிக்கவில்லை. அவர் தொடங்கிய வாக்கியங்களை முடிக்கிறது.</p></div></div></div><div class="toc">
+<div class="r"><div class="n">1</div><div class="t">Mon, ma, mes — the possessives she used on every page
+  <span class="ta">உடைமைச் சொற்கள் — ஒவ்வொரு பக்கத்திலும் அவர் பயன்படுத்தியவை</span></div></div>
+<div class="r"><div class="n">2</div><div class="t">The present tense of the verbs she actually used
+  <span class="ta">அவர் உண்மையில் பயன்படுத்திய வினைச்சொற்களின் நிகழ்காலம்</span></div></div>
+<div class="r"><div class="n">3</div><div class="t">Le passé composé — the tense hiding in her Lucas text
+  <span class="ta">Lucas உரையில் மறைந்திருந்த இறந்தகாலம்</span></div></div>
+<div class="r"><div class="n">4</div><div class="t">Le futur proche — the tense hiding in her Dubois text
+  <span class="ta">Dubois உரையில் மறைந்திருந்த எதிர்காலம்</span></div></div>
+<div class="r"><div class="n">5</div><div class="t">Negation past <i>ne … pas</i>
+  <span class="ta">ne … pas-க்கு அப்பால் மறுப்பு</span></div></div>
+<div class="r"><div class="n">6</div><div class="t">Numbers to 100, and telling the time — she spelled out nine numbers and never gave you the system
+  <span class="ta">100 வரை எண்கள், நேரம் சொல்லுதல்</span></div></div>
+<div class="r"><div class="n">7</div><div class="t">en / au / aux — she taught the gender of countries but not what to do with it
+  <span class="ta">en / au / aux — நாட்டுப் பாலை என்ன செய்வது</span></div></div>
+<div class="r"><div class="n">8</div><div class="t">Les repas — the link she sent on her last day
+  <span class="ta">அவரது கடைசி நாள் இணைப்பு — உணவு</span></div></div>
+<div class="r"><div class="n">9</div><div class="t">Four texts to write, and what to say to her
+  <span class="ta">எழுத வேண்டிய நான்கு உரைகள், அவரிடம் சொல்ல வேண்டியது</span></div></div>
+</div><div class="pb"></div><h2 class="section"><span class="num">1</span>Mon, ma, mes — the possessives she used on every page<span class="ta">உடைமைச் சொற்கள்</span></h2><div class="duo"><div><span class="lang-tag">ENGLISH</span><div><p>You have already read <span class="fr">son père, sa mère, sa femme, sa sœur, son oncle, leur leçon,
+  leur rêve, ta profession, ma mère</span> — all in her texts. Here is the system behind them, and it holds one
+  surprise for an English speaker.</p></div></div><div><span class="lang-tag">தமிழ்</span><div class="ta-col"><p><span class="fr">son père, sa mère, sa femme, leur leçon, ta profession, ma mère</span> — இவை அனைத்தையும்
+  அவரது உரைகளில் ஏற்கனவே படித்திருக்கிறீர்கள். அவற்றின் பின்னால் உள்ள அமைப்பு இதோ; ஆங்கிலம் பேசுபவருக்கு
+  ஒரு ஆச்சரியமும் உண்டு.</p></div></div></div><div class="tblwrap"><table class=""><thead><tr><th>Owner <span class='ta'>உடையவர்</span></th><th>+ masc. noun</th><th>+ fem. noun</th><th>+ plural noun</th><th>Example from her texts <span class='ta'>அவரது உரையிலிருந்து</span></th></tr></thead><tbody><tr><td><b>je</b> — my <span class='ta'>என்</span></td><td><b class='fr'>mon</b> frère</td><td><b class='fr'>ma</b> sœur</td><td><b class='fr'>mes</b> parents</td><td><span class='fr'>ma mère</span> (Lesson 4)</td></tr><tr><td><b>tu</b> — your <span class='ta'>உன்</span></td><td><b class='fr'>ton</b> frère</td><td><b class='fr'>ta</b> sœur</td><td><b class='fr'>tes</b> parents</td><td><span class='fr'>ta profession, ta nationalité</span> (Lesson 2)</td></tr><tr><td><b>il / elle</b> — his / her <span class='ta'>அவரது</span></td><td><b class='fr'>son</b> père</td><td><b class='fr'>sa</b> mère</td><td><b class='fr'>ses</b> enfants</td><td><span class='fr'>son père est italien, sa femme est mexicaine</span> (Lesson 6)</td></tr><tr><td><b>nous</b> — our <span class='ta'>எங்கள்</span></td><td><b class='fr'>notre</b> frère</td><td><b class='fr'>notre</b> sœur</td><td><b class='fr'>nos</b> parents</td><td>—</td></tr><tr><td><b>vous</b> — your (pol./pl.) <span class='ta'>உங்கள்</span></td><td><b class='fr'>votre</b> frère</td><td><b class='fr'>votre</b> sœur</td><td><b class='fr'>vos</b> parents</td><td><span class='fr'>à votre avis</span> (Lesson 4)</td></tr><tr><td><b>ils / elles</b> — their <span class='ta'>அவர்களது</span></td><td><b class='fr'>leur</b> frère</td><td><b class='fr'>leur</b> sœur</td><td><b class='fr'>leurs</b> parents</td><td><span class='fr'>leur leçon de piano, leur rêve</span> (Lesson 5)</td></tr></tbody></table></div><div class="warn"><div class="h">The surprise: French agrees with the thing owned, not with the owner <span class="ta">· ஆச்சரியம்: பிரெஞ்சு உடையவருடன் அல்ல, உடைமையுடன் ஒப்புமை கொள்கிறது</span></div><div class="duo"><div>English chooses <i>his</i> or <i>her</i> by looking at the <b>owner</b>. French chooses
+  <b>son / sa / ses</b> by looking at the <b>noun that follows</b>. So:<br>
+  <span class="fr">son père</span> = <b>his</b> father <b>or</b> <b>her</b> father — <i>père</i> is masculine,
+  and that is all that matters.<br>
+  <span class="fr">sa mère</span> = <b>his</b> mother <b>or</b> <b>her</b> mother.<br>
+  In Lucas's text, <span class="fr">sa femme est mexicaine</span> means <i>his</i> wife — but the <b>sa</b> is
+  feminine because <i>femme</i> is feminine, not because the wife is a woman.<br><br>
+  <b>One extra rule:</b> before a feminine noun starting with a vowel, <b>ma / ta / sa</b> become
+  <b>mon / ton / son</b> for ease of sound: <span class="fr">mon amie, mon école, son araignée</span> — never
+  <i>ma amie</i>.</div>
+  <div class="ta-col">ஆங்கிலம் <b>உடையவரைப்</b> பார்த்து <i>his</i> / <i>her</i> தேர்ந்தெடுக்கிறது. பிரெஞ்சு
+  <b>பின் வரும் பெயர்ச்சொல்லைப்</b> பார்த்து <b>son / sa / ses</b> தேர்ந்தெடுக்கிறது.<br>
+  <span class="fr">son père</span> = <b>அவனது</b> தந்தை <b>அல்லது</b> <b>அவளது</b> தந்தை — <i>père</i>
+  ஆண்பால், அது மட்டுமே முக்கியம்.<br>
+  Lucas உரையில் <span class="fr">sa femme</span> — <i>femme</i> பெண்பால் என்பதால் <b>sa</b>; மனைவி பெண்
+  என்பதால் அல்ல.<br><br>
+  <b>கூடுதல் விதி:</b> உயிரெழுத்தில் தொடங்கும் பெண்பால் பெயர்ச்சொல்லுக்கு முன் <b>ma / ta / sa</b> →
+  <b>mon / ton / son</b>: <span class="fr">mon amie, mon école</span>.</div></div></div><div class="drill"><div class="h">Drill 1 — fill in the possessive <span class="ta">· பயிற்சி 1 — உடைமைச் சொல்லை நிரப்புங்கள்</span></div><div class="numline"><span class="n">1.</span><span class="q">Lucas et ____ (his) femme habitent à Paris.</span><div class="b"></div></div><div class="numline"><span class="n">2.</span><span class="q">Julie fait ____ (her) devoirs.</span><div class="b"></div></div><div class="numline"><span class="n">3.</span><span class="q">Nous aimons ____ (our) grands-parents.</span><div class="b"></div></div><div class="numline"><span class="n">4.</span><span class="q">Paul embête ____ (his) sœur.</span><div class="b"></div></div><div class="numline"><span class="n">5.</span><span class="q">Quelle est ____ (your, tu) nationalité ?</span><div class="b"></div></div><div class="numline"><span class="n">6.</span><span class="q">Les Dubois adorent ____ (their) enfants.</span><div class="b"></div></div><div class="numline"><span class="n">7.</span><span class="q">J'écris à ____ (my) oncle et à ____ (my) tante.</span><div class="b"></div></div><div class="numline"><span class="n">8.</span><span class="q">C'est ____ (my) amie Christine.</span><div class="b"></div></div><div class="numline"><span class="n">9.</span><span class="q">Vous parlez de ____ (your, vous) profession ?</span><div class="b"></div></div><div class="numline"><span class="n">10.</span><span class="q">Ils ont vendu ____ (their) voitures.</span><div class="b"></div></div></div><div class="key"><div class="h">Answer key · விடைகள்</div>1. <span class="fr">sa</span> · 2. <span class="fr">ses</span> · 3. <span class="fr">nos</span> ·
+4. <span class="fr">sa</span> · 5. <span class="fr">ta</span> · 6. <span class="fr">leurs</span> ·
+7. <span class="fr">mon … ma</span> · 8. <span class="fr">mon</span> (amie is feminine but starts with a vowel) ·
+9. <span class="fr">votre</span> · 10. <span class="fr">leurs</span>.</div><h2 class="section"><span class="num">2</span>The present tense of the verbs she actually used<span class="ta">அவர் பயன்படுத்திய வினைச்சொற்களின் நிகழ்காலம்</span></h2><div class="duo"><div><span class="lang-tag">ENGLISH</span><div><p>Cindy typed <b>-er-</b> once and moved on. That single note covers most of the verbs in her lessons.
+  Here is that group in full, and then the six irregular verbs she used without conjugating.</p></div></div><div><span class="lang-tag">தமிழ்</span><div class="ta-col"><p>சிண்டி ஒரே ஒரு முறை <b>-er-</b> என்று எழுதி நகர்ந்தார். அந்த ஒரு குறிப்பே அவரது பாடங்களில் உள்ள
+  பெரும்பாலான வினைச்சொற்களை உள்ளடக்குகிறது. அந்தக் குழு முழுமையாக, பிறகு அவர் மாற்றாமல் பயன்படுத்திய ஆறு
+  ஒழுங்கற்ற வினைச்சொற்கள்.</p></div></div></div><div class="rule"><div class="h">Group 1: -er verbs. Endings -e, -es, -e, -ons, -ez, -ent. <span class="ta">· குழு 1: -er வினைச்சொற்கள்</span></div><div class="duo"><div>Take off <b>-er</b>, add the ending. Her -er verbs, all of them:
+  <span class="fr">parler, habiter, travailler, aimer, porter, regarder, écouter, dessiner, tricoter, jouer,
+  rester, crier, embêter, laver, préférer, arriver, chanter, manger</span>.<br>
+  <b>Sound warning:</b> <i>je parle · tu parles · il parle · ils parlent</i> are pronounced <b>identically</b>.
+  Four different spellings, one sound. The spelling is what the exam marks.</div>
+  <div class="ta-col"><b>-er</b> நீக்கி விகுதி சேர்க்கவும். அவரது -er வினைச்சொற்கள் அனைத்தும் மேலே.<br>
+  <b>ஒலி எச்சரிக்கை:</b> <i>je parle · tu parles · il parle · ils parlent</i> — நான்கும் <b>ஒரே மாதிரி</b>
+  உச்சரிக்கப்படுகின்றன. நான்கு எழுத்துமுறைகள், ஒரே ஒலி. தேர்வு எழுத்துமுறையையே மதிப்பிடுகிறது.</div></div><div class="conj"><div class="t">parler <span class='gloss'>to speak</span> <span class="ta">பேசுதல்</span></div><div class="l">je parl<b>e</b></div><div class="l">tu parl<b>es</b></div><div class="l">il/elle parl<b>e</b></div><div class="l">nous parl<b>ons</b></div><div class="l">vous parl<b>ez</b></div><div class="l">ils/elles parl<b>ent</b></div></div><div class="conj"><div class="t">habiter <span class='gloss'>to live</span> <span class="ta">வசித்தல்</span></div><div class="l">j'habit<b>e</b></div><div class="l">tu habit<b>es</b></div><div class="l">il/elle habit<b>e</b></div><div class="l">nous habit<b>ons</b></div><div class="l">vous habit<b>ez</b></div><div class="l">ils/elles habit<b>ent</b></div></div><div class="conj"><div class="t">aimer <span class='gloss'>to like</span> <span class="ta">விரும்புதல்</span></div><div class="l">j'aim<b>e</b></div><div class="l">tu aim<b>es</b></div><div class="l">il/elle aim<b>e</b></div><div class="l">nous aim<b>ons</b></div><div class="l">vous aim<b>ez</b></div><div class="l">ils/elles aim<b>ent</b></div></div><div style="clear:both"></div></div><h3>The irregular verbs in her texts <span class="ta">· அவரது உரைகளில் உள்ள ஒழுங்கற்ற வினைச்சொற்கள்</span></h3><div class="conj"><div class="t">être <span class='gloss'>to be</span> <span class="ta">இருத்தல்</span></div><div class="l">je <b>suis</b></div><div class="l">tu <b>es</b></div><div class="l">il <b>est</b></div><div class="l">nous <b>sommes</b></div><div class="l">vous <b>êtes</b></div><div class="l">ils <b>sont</b></div></div><div class="conj"><div class="t">avoir <span class='gloss'>to have</span> <span class="ta">வைத்திருத்தல்</span></div><div class="l">j'<b>ai</b></div><div class="l">tu <b>as</b></div><div class="l">il <b>a</b></div><div class="l">nous <b>avons</b></div><div class="l">vous <b>avez</b></div><div class="l">ils <b>ont</b></div></div><div class="conj"><div class="t">aller <span class='gloss'>to go</span> <span class="ta">செல்லுதல்</span></div><div class="l">je <b>vais</b></div><div class="l">tu <b>vas</b></div><div class="l">il <b>va</b></div><div class="l">nous <b>allons</b></div><div class="l">vous <b>allez</b></div><div class="l">ils <b>vont</b></div></div><div class="conj"><div class="t">faire <span class='gloss'>to do, make</span> <span class="ta">செய்தல்</span></div><div class="l">je <b>fais</b></div><div class="l">tu <b>fais</b></div><div class="l">il <b>fait</b></div><div class="l">nous <b>faisons</b></div><div class="l">vous <b>faites</b></div><div class="l">ils <b>font</b></div></div><div class="conj"><div class="t">mettre <span class='gloss'>to put — “il met”</span> <span class="ta">வைத்தல்</span></div><div class="l">je <b>mets</b></div><div class="l">tu <b>mets</b></div><div class="l">il <b>met</b></div><div class="l">nous <b>mettons</b></div><div class="l">vous <b>mettez</b></div><div class="l">ils <b>mettent</b></div></div><div class="conj"><div class="t">sortir <span class='gloss'>to go out</span> <span class="ta">வெளியே செல்லுதல்</span></div><div class="l">je <b>sors</b></div><div class="l">tu <b>sors</b></div><div class="l">il <b>sort</b></div><div class="l">nous <b>sortons</b></div><div class="l">vous <b>sortez</b></div><div class="l">ils <b>sortent</b></div></div><div class="conj"><div class="t">écrire <span class='gloss'>to write</span> <span class="ta">எழுதுதல்</span></div><div class="l">j'<b>écris</b></div><div class="l">tu <b>écris</b></div><div class="l">il <b>écrit</b></div><div class="l">nous <b>écrivons</b></div><div class="l">vous <b>écrivez</b></div><div class="l">ils <b>écrivent</b></div></div><div class="conj"><div class="t">lire <span class='gloss'>to read</span> <span class="ta">படித்தல்</span></div><div class="l">je <b>lis</b></div><div class="l">tu <b>lis</b></div><div class="l">il <b>lit</b></div><div class="l">nous <b>lisons</b></div><div class="l">vous <b>lisez</b></div><div class="l">ils <b>lisent</b></div></div><div class="conj"><div class="t">venir <span class='gloss'>to come — “je viens du sud”</span> <span class="ta">வருதல்</span></div><div class="l">je <b>viens</b></div><div class="l">tu <b>viens</b></div><div class="l">il <b>vient</b></div><div class="l">nous <b>venons</b></div><div class="l">vous <b>venez</b></div><div class="l">ils <b>viennent</b></div></div><div class="conj"><div class="t">vivre <span class='gloss'>to live — “vécu”</span> <span class="ta">வாழ்தல்</span></div><div class="l">je <b>vis</b></div><div class="l">tu <b>vis</b></div><div class="l">il <b>vit</b></div><div class="l">nous <b>vivons</b></div><div class="l">vous <b>vivez</b></div><div class="l">ils <b>vivent</b></div></div><div style="clear:both"></div><div class="drill"><div class="h">Drill 2 — conjugate, then write the sentence out in full <span class="ta">· பயிற்சி 2 — வினைச்சொல்லை மாற்றி, முழு வாக்கியத்தை எழுதுங்கள்</span></div><div class="numline"><span class="n">1.</span><span class="q">Nous (habiter) ____ en Belgique.</span><div class="b"></div></div><div class="numline"><span class="n">2.</span><span class="q">Ils (être) ____ très gentils.</span><div class="b"></div></div><div class="numline"><span class="n">3.</span><span class="q">Vous (faire) ____ du sport ?</span><div class="b"></div></div><div class="numline"><span class="n">4.</span><span class="q">Elle (avoir) ____ les cheveux roux.</span><div class="b"></div></div><div class="numline"><span class="n">5.</span><span class="q">Je (venir) ____ du sud de l'Inde.</span><div class="b"></div></div><div class="numline"><span class="n">6.</span><span class="q">Tu (aller) ____ à la piscine demain ?</span><div class="b"></div></div><div class="numline"><span class="n">7.</span><span class="q">Paul (mettre) ____ une araignée dans la chambre.</span><div class="b"></div></div><div class="numline"><span class="n">8.</span><span class="q">Nous (écrire) ____ des lettres.</span><div class="b"></div></div><div class="numline"><span class="n">9.</span><span class="q">Les enfants (travailler) ____ beaucoup à l'école.</span><div class="b"></div></div><div class="numline"><span class="n">10.</span><span class="q">Je (préférer) ____ rester chez moi.</span><div class="b"></div></div></div><div class="key"><div class="h">Answer key · விடைகள்</div>1. <span class="fr">habitons</span> · 2. <span class="fr">sont</span> · 3. <span class="fr">faites</span> ·
+4. <span class="fr">a</span> · 5. <span class="fr">viens</span> · 6. <span class="fr">vas</span> ·
+7. <span class="fr">met</span> · 8. <span class="fr">écrivons</span> · 9. <span class="fr">travaillent</span> ·
+10. <span class="fr">préfère</span> (note the accent change: <i>é → è</i> when the ending is silent).</div><div class="pb"></div><h2 class="section"><span class="num">3</span>Le passé composé — the tense hiding in her Lucas text<span class="ta">Lucas உரையில் மறைந்திருந்த இறந்தகாலம்</span></h2><div class="duo"><div><span class="lang-tag">ENGLISH</span><div><p>Read her sentence again: <span class="fr">Son frère <b>est né</b> aux États-Unis. Le père de Lucas
+  <b>a</b> longtemps <b>travaillé</b> en Égypte. Son oncle et sa tante <b>ont vécu</b> un an en Grèce.</span>
+  Three past verbs, and she only glossed one word: <span class="fr">vécu &gt; vivre</span>.</p>
+  <p>The <b>passé composé</b> is built from two pieces: a <b>helper</b> (<i>avoir</i> or <i>être</i>) in the
+  present, plus the <b>past participle</b>. That is all.</p></div></div><div><span class="lang-tag">தமிழ்</span><div class="ta-col"><p>அவரது வாக்கியத்தை மீண்டும் படியுங்கள்: <span class="fr">est né · a travaillé · ont vécu</span>. மூன்று
+  இறந்தகால வினைச்சொற்கள்; அவர் ஒரே ஒரு வார்த்தையை மட்டும் விளக்கினார் — <span class="fr">vécu &gt; vivre</span>.</p>
+  <p><b>passé composé</b> இரு துண்டுகளால் ஆனது: நிகழ்காலத்தில் ஒரு <b>துணை வினை</b> (<i>avoir</i> அல்லது
+  <i>être</i>) + <b>இறந்தகாலப் பெயரெச்சம்</b>. அவ்வளவுதான்.</p></div></div></div><div class="rule"><div class="h">How to build a past participle <span class="ta">· இறந்தகாலப் பெயரெச்சத்தை எப்படி உருவாக்குவது</span></div><div class="tblwrap"><table class=""><thead><tr><th>Verb type <span class='ta'>வகை</span></th><th>Rule</th><th>Examples from her lessons <span class='ta'>அவரது பாடங்களிலிருந்து</span></th></tr></thead><tbody><tr><td><b>-er</b> verbs</td><td>-er → <b>-é</b></td><td><span class='fr'>travailler → travaill<b>é</b> · parler → parl<b>é</b> · habiter → habit<b>é</b> · manger → mang<b>é</b> · regarder → regard<b>é</b></span></td></tr><tr><td><b>-ir</b> verbs</td><td>-ir → <b>-i</b></td><td><span class='fr'>finir → fin<b>i</b> · sortir → sort<b>i</b> · dormir → dorm<b>i</b></span></td></tr><tr><td><b>irregular</b></td><td>learn one by one</td><td><span class='fr'>être → <b>été</b> · avoir → <b>eu</b> · faire → <b>fait</b> · vivre → <b>vécu</b> · lire → <b>lu</b> · écrire → <b>écrit</b> · mettre → <b>mis</b> · voir → <b>vu</b> · venir → <b>venu</b> · naître → <b>né</b> · prendre → <b>pris</b> · vouloir → <b>voulu</b></span></td></tr></tbody></table></div></div><div class="rule"><div class="h">avoir or être? — the small closed list <span class="ta">· avoir-ஆ être-ஆ? — சிறிய மூடிய பட்டியல்</span></div><div class="duo"><div><b>Almost every verb uses <i>avoir</i>.</b>
+  <span class="fr">J'ai travaillé. Elle a mangé. Nous avons vu.</span><br><br>
+  <b>A short list of verbs of movement and change uses <i>être</i></b> — and with <i>être</i> the participle
+  <b>agrees like an adjective</b>, exactly the rule Cindy drilled into you in Lesson 3:<br>
+  <span class="fr">aller, venir, arriver, partir, entrer, sortir, monter, descendre, rester, tomber, naître,
+  mourir, devenir, revenir, retourner, passer</span><br>
+  <span class="fr">Il est <b>né</b>. Elle est <b>née</b>. Ils sont <b>nés</b>. Elles sont <b>nées</b>.</span><br>
+  That is why her text reads <span class="fr">Son frère est né</span> — masculine singular, no extra -e.<br><br>
+  <b>All reflexive verbs use <i>être</i>:</b> <span class="fr">je me suis promené</span> (from her
+  <i>je me promène</i>).</div>
+  <div class="ta-col"><b>கிட்டத்தட்ட ஒவ்வொரு வினைச்சொல்லும் <i>avoir</i> பயன்படுத்துகிறது.</b><br><br>
+  <b>இயக்கம் / மாற்றம் குறிக்கும் சிறு பட்டியல் <i>être</i> பயன்படுத்துகிறது</b> — <i>être</i>-உடன்
+  பெயரெச்சம் <b>பெயரடை போல ஒப்புமை கொள்கிறது</b>; பாடம் 3-இல் சிண்டி பயிற்றுவித்த அதே விதி:<br>
+  <span class="fr">Il est né · Elle est née · Ils sont nés · Elles sont nées</span><br>
+  அதனால்தான் அவரது உரையில் <span class="fr">Son frère est né</span>.<br><br>
+  <b>அனைத்து தன்வினைச் சொற்களும் <i>être</i>:</b> <span class="fr">je me suis promené</span>.</div></div></div><div class="conj"><div class="t">travailler <span class='gloss'>— with avoir</span> <span class="ta">avoir-உடன்</span></div><div class="l">j'<b>ai</b> travaillé</div><div class="l">tu <b>as</b> travaillé</div><div class="l">il/elle <b>a</b> travaillé</div><div class="l">nous <b>avons</b> travaillé</div><div class="l">vous <b>avez</b> travaillé</div><div class="l">ils/elles <b>ont</b> travaillé</div></div><div class="conj"><div class="t">aller <span class='gloss'>— with être (agrees)</span> <span class="ta">être-உடன் (ஒப்புமை)</span></div><div class="l">je <b>suis</b> allé(e)</div><div class="l">tu <b>es</b> allé(e)</div><div class="l">il <b>est</b> allé / elle <b>est</b> allée</div><div class="l">nous <b>sommes</b> allé(e)s</div><div class="l">vous <b>êtes</b> allé(e)(s)</div><div class="l">ils <b>sont</b> allés / elles <b>sont</b> allées</div></div><div style="clear:both"></div><div class="tip"><div class="h">The negative wraps the helper, not the participle <span class="ta">· மறுப்பு துணை வினையைச் சுற்றுகிறது</span></div><span class="fr">Je <b>n'</b>ai <b>pas</b> travaillé.</span> · <span class="fr">Elle <b>n'</b>est <b>pas</b>
+  venue.</span> — <b>ne … pas</b> goes around <i>ai</i> / <i>est</i>, never around the participle.
+  <span class="ta"><b>ne … pas</b> <i>ai</i> / <i>est</i>-ஐச் சுற்றி வரும், பெயரெச்சத்தைச் சுற்றி அல்ல.</span></div><div class="drill"><div class="h">Drill 3 — put these into the passé composé <span class="ta">· பயிற்சி 3 — இவற்றை passé composé-இல் எழுதுங்கள்</span></div><div class="numline"><span class="n">1.</span><span class="q">Je (travailler) ____ à Bruxelles. <span class='ta'>பிரஸ்ஸல்ஸில் வேலை செய்தேன்.</span></span><div class="b"></div></div><div class="numline"><span class="n">2.</span><span class="q">Elle (naître) ____ en Inde. <span class='ta'>அவள் இந்தியாவில் பிறந்தாள்.</span></span><div class="b"></div></div><div class="numline"><span class="n">3.</span><span class="q">Nous (vivre) ____ un an en Grèce. <span class='ta'>ஓராண்டு கிரேக்கத்தில் வாழ்ந்தோம்.</span></span><div class="b"></div></div><div class="numline"><span class="n">4.</span><span class="q">Ils (aller) ____ au cinéma. <span class='ta'>அவர்கள் திரையரங்கிற்குச் சென்றார்கள்.</span></span><div class="b"></div></div><div class="numline"><span class="n">5.</span><span class="q">Tu (lire) ____ le texte ? <span class='ta'>உரையைப் படித்தாயா?</span></span><div class="b"></div></div><div class="numline"><span class="n">6.</span><span class="q">Je (ne pas étudier) ____ pendant quarante jours. <span class='ta'>நாற்பது நாட்கள் படிக்கவில்லை.</span></span><div class="b"></div></div><div class="numline"><span class="n">7.</span><span class="q">Vous (écrire) ____ des lettres. <span class='ta'>கடிதங்கள் எழுதினீர்கள்.</span></span><div class="b"></div></div><div class="numline"><span class="n">8.</span><span class="q">Mes parents (venir) ____ en Belgique. <span class='ta'>என் பெற்றோர் பெல்ஜியம் வந்தார்கள்.</span></span><div class="b"></div></div></div><div class="key"><div class="h">Answer key · விடைகள்</div>1. <span class="fr">ai travaillé</span> · 2. <span class="fr">est née</span> · 3. <span class="fr">avons vécu</span> ·
+4. <span class="fr">sont allés</span> · 5. <span class="fr">as lu</span> ·
+6. <span class="fr">n'ai pas étudié</span> · 7. <span class="fr">avez écrit</span> ·
+8. <span class="fr">sont venus</span>.</div><div class="warn"><div class="h">Sentence 6 is the one that matters most <span class="ta">· வாக்கியம் 6 தான் மிக முக்கியமானது</span></div><div class="duo"><div>You will need to explain the gap. In the past tense, in one line:<br>
+  <span class="fr" style="font-size:11pt">« J'ai eu beaucoup de travail, donc je n'ai pas étudié pendant
+  quarante jours. Mais j'ai beaucoup écrit toute seule cette semaine. »</span><br>
+  <span class="gloss">I had a lot of work, so I did not study for forty days. But I wrote a lot on my own this
+  week.</span> Three passé composé forms in one sentence, two of them irregular. She will notice.</div>
+  <div class="ta-col">இடைவெளியை விளக்க வேண்டியிருக்கும். இறந்தகாலத்தில், ஒரே வரியில் மேலே உள்ளது.
+  ஒரே வாக்கியத்தில் மூன்று passé composé வடிவங்கள், அதில் இரண்டு ஒழுங்கற்றவை. அவர் கவனிப்பார்.</div></div></div><div class="pb"></div><h2 class="section"><span class="num">4</span>Le futur proche — the tense hiding in her Dubois text<span class="ta">Dubois உரையில் மறைந்திருந்த எதிர்காலம்</span></h2><div class="duo"><div><span class="lang-tag">ENGLISH</span><div><p>Her sentences: <span class="fr">Demain il <b>va</b> à la piscine.</span> and <span class="fr">Madame
+  Dubois <b>va</b> donc <b>faire</b> une promenade seule.</span> The second one is the <b>near future</b>, and it
+  is the easiest tense in French: <b>aller</b> in the present + the <b>infinitive</b>. Nothing else changes.</p></div></div><div><span class="lang-tag">தமிழ்</span><div class="ta-col"><p>அவரது வாக்கியங்கள்: <span class="fr">Demain il <b>va</b> à la piscine.</span> மற்றும்
+  <span class="fr">Madame Dubois <b>va</b> donc <b>faire</b> une promenade seule.</span> இரண்டாவது
+  <b>அண்மை எதிர்காலம்</b> — பிரெஞ்சின் எளிதான காலம்: நிகழ்காலத்தில் <b>aller</b> + <b>வினையெச்சம்</b>.
+  வேறு எதுவும் மாறாது.</p></div></div></div><div class="tblwrap"><table class=""><thead><tr><th>Person</th><th>Near future <span class='ta'>அண்மை எதிர்காலம்</span></th><th>English</th><th>தமிழ்</th></tr></thead><tbody><tr><td>je</td><td><span class='fr'>je <b>vais</b> écrire</span></td><td>I am going to write</td><td>நான் எழுதப் போகிறேன்</td></tr><tr><td>tu</td><td><span class='fr'>tu <b>vas</b> parler</span></td><td>you are going to speak</td><td>நீ பேசப் போகிறாய்</td></tr><tr><td>il/elle</td><td><span class='fr'>elle <b>va</b> faire une promenade</span></td><td>she is going to go for a walk</td><td>அவள் நடைப்பயணம் செல்லப் போகிறாள்</td></tr><tr><td>nous</td><td><span class='fr'>nous <b>allons</b> étudier</span></td><td>we are going to study</td><td>நாங்கள் படிக்கப் போகிறோம்</td></tr><tr><td>vous</td><td><span class='fr'>vous <b>allez</b> travailler</span></td><td>you are going to work</td><td>நீங்கள் வேலை செய்யப் போகிறீர்கள்</td></tr><tr><td>ils/elles</td><td><span class='fr'>ils <b>vont</b> venir</span></td><td>they are going to come</td><td>அவர்கள் வரப் போகிறார்கள்</td></tr></tbody></table></div><div class="tip"><div class="h">Negative: ne … pas around aller only</div><span class="fr">Je <b>ne</b> vais <b>pas</b> abandonner le français.</span> — I am not going to give up French.
+  <span class="ta"><b>ne … pas</b> <i>aller</i>-ஐ மட்டும் சுற்றும்; வினையெச்சம் மாறாமல் இருக்கும்.</span></div><div class="drill"><div class="h">Drill 4 — write eight things you are going to do <span class="ta">· பயிற்சி 4 — நீங்கள் செய்யப் போகும் எட்டு விஷயங்கள்</span></div><p class="gloss">Model: <span class="fr">Je vais écrire tous les jours. Je vais apprendre le passé composé.</span></p><div class="wl "><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div></div></div><div class="pb"></div><h2 class="section"><span class="num">5</span>Negation past ne … pas<span class="ta">ne … pas-க்கு அப்பால் மறுப்பு</span></h2><div class="duo"><div><span class="lang-tag">ENGLISH</span><div><p>Cindy taught <b>ne … pas</b> through Mélanie (<span class="fr">Elle ne travaille pas</span>) and you used
+  it correctly yourself. The same two-piece frame gives you five more meanings just by changing the second
+  piece.</p></div></div><div><span class="lang-tag">தமிழ்</span><div class="ta-col"><p>Mélanie மூலம் சிண்டி <b>ne … pas</b> கற்பித்தார்; நீங்களே சரியாகப் பயன்படுத்தினீர்கள். இரண்டாவது
+  துண்டை மட்டும் மாற்றினால் அதே இரு-துண்டுச் சட்டகம் இன்னும் ஐந்து பொருள்களைத் தருகிறது.</p></div></div></div><div class="tblwrap"><table class=""><thead><tr><th>Frame <span class='ta'>சட்டகம்</span></th><th>Meaning</th><th>தமிழ்</th><th>Example <span class='ta'>எடுத்துக்காட்டு</span></th></tr></thead><tbody><tr><td><b class='fr'>ne … pas</b></td><td>not</td><td>இல்லை</td><td><span class='fr'>Je ne parle pas hindi.</span> — your own sentence</td></tr><tr><td><b class='fr'>ne … jamais</b></td><td>never</td><td>ஒருபோதும் இல்லை</td><td><span class='fr'>Je ne mange jamais de viande.</span></td></tr><tr><td><b class='fr'>ne … plus</b></td><td>no longer, not any more</td><td>இனி இல்லை</td><td><span class='fr'>Je ne suis plus débutant.</span> — say this to her</td></tr><tr><td><b class='fr'>ne … rien</b></td><td>nothing</td><td>எதுவும் இல்லை</td><td><span class='fr'>Je ne fais rien ce week-end.</span></td></tr><tr><td><b class='fr'>ne … personne</b></td><td>nobody</td><td>யாரும் இல்லை</td><td><span class='fr'>Je ne connais personne ici.</span></td></tr><tr><td><b class='fr'>ne … pas encore</b></td><td>not yet</td><td>இன்னும் இல்லை</td><td><span class='fr'>Je n'ai pas encore fini.</span></td></tr><tr><td><b class='fr'>ne … que</b></td><td>only (not a true negative)</td><td>மட்டும்</td><td><span class='fr'>Je n'ai que trois semaines.</span></td></tr></tbody></table></div><div class="tip"><div class="h">And remember Lesson 8's rule <span class="ta">· பாடம் 8-இன் விதியை நினைவில் வையுங்கள்</span></div>After any of these, <b>un / une / du / de la / des → de</b>: <span class="fr">Je ne mange jamais <b>de</b>
+  viande. Il n'y a plus <b>de</b> pain.</span> Except after <b>être</b> and after <b>ne … que</b>:
+  <span class="fr">Je ne bois que <b>du</b> thé.</span>
+  <span class="ta">இவற்றுக்குப் பின் இடைச்சொற்கள் <b>de</b> ஆகும் — <b>être</b> மற்றும் <b>ne … que</b>
+  தவிர.</span></div><div class="drill"><div class="h">Drill 5 — rewrite with the negative shown in brackets <span class="ta">· பயிற்சி 5 — அடைப்புக்குறியில் உள்ள மறுப்புடன் மீண்டும் எழுதுங்கள்</span></div><div class="numline"><span class="n">1.</span><span class="q">Je mange de la viande. (never)</span><div class="b"></div></div><div class="numline"><span class="n">2.</span><span class="q">Il est débutant. (no longer)</span><div class="b"></div></div><div class="numline"><span class="n">3.</span><span class="q">Je fais quelque chose ce soir. (nothing)</span><div class="b"></div></div><div class="numline"><span class="n">4.</span><span class="q">Elle connaît quelqu'un ici. (nobody)</span><div class="b"></div></div><div class="numline"><span class="n">5.</span><span class="q">J'ai fini mes devoirs. (not yet)</span><div class="b"></div></div><div class="numline"><span class="n">6.</span><span class="q">Nous avons des enfants. (not)</span><div class="b"></div></div><div class="numline"><span class="n">7.</span><span class="q">Tu bois du café. (only tea → <i>ne … que</i>)</span><div class="b"></div></div><div class="numline"><span class="n">8.</span><span class="q">Ils vont venir. (not)</span><div class="b"></div></div></div><div class="key"><div class="h">Answer key · விடைகள்</div>1. <span class="fr">Je ne mange jamais de viande.</span> · 2. <span class="fr">Il n'est plus débutant.</span> ·
+3. <span class="fr">Je ne fais rien ce soir.</span> · 4. <span class="fr">Elle ne connaît personne ici.</span> ·
+5. <span class="fr">Je n'ai pas encore fini mes devoirs.</span> · 6. <span class="fr">Nous n'avons pas d'enfants.</span> ·
+7. <span class="fr">Tu ne bois que du thé.</span> · 8. <span class="fr">Ils ne vont pas venir.</span></div><div class="pb"></div><h2 class="section"><span class="num">6</span>Numbers to 100, and telling the time<span class="ta">100 வரை எண்கள், நேரம் சொல்லுதல்</span></h2><div class="duo"><div><span class="lang-tag">ENGLISH</span><div><p>Across her lessons Cindy spelled out nine numbers one at a time — <span class="fr">cinq, six, dix-sept,
+  dix-neuf, vingt-cinq, trente-trois</span> and more — but never gave you the system. Here it is on one page.
+  She also wrote <span class="fr">de 5 heures à 6 heures</span> and <span class="fr">à la séance de 17 heures</span>
+  without explaining the clock.</p></div></div><div><span class="lang-tag">தமிழ்</span><div class="ta-col"><p>பாடங்கள் முழுவதும் சிண்டி ஒன்பது எண்களை ஒவ்வொன்றாக எழுதிக் காட்டினார் — ஆனால் அமைப்பைத் தரவில்லை.
+  ஒரே பக்கத்தில் இதோ. <span class="fr">de 5 heures à 6 heures</span>, <span class="fr">la séance de 17
+  heures</span> என்று எழுதினார் — கடிகாரத்தை விளக்கவில்லை.</p></div></div></div><div class="tblwrap"><table class=""><thead><tr><th>0–10</th><th>11–20</th><th>21–40</th><th>The tens <span class='ta'>பத்துகள்</span></th></tr></thead><tbody><tr><td><span class='fr'>0 zéro<br>1 un<br>2 deux<br>3 trois<br>4 quatre<br>5 <b>cinq</b><br>6 <b>six</b><br>7 sept<br>8 huit<br>9 neuf<br>10 dix</span></td><td><span class='fr'>11 onze<br>12 douze<br>13 treize<br>14 quatorze<br>15 quinze<br>16 seize<br>17 <b>dix-sept</b><br>18 dix-huit<br>19 <b>dix-neuf</b><br>20 vingt</span></td><td><span class='fr'>21 vingt et un<br>22 vingt-deux<br>25 <b>vingt-cinq</b><br>30 trente<br>31 trente et un<br>33 <b>trente-trois</b><br>40 quarante<br>41 quarante et un</span></td><td><span class='fr'>50 cinquante<br>60 soixante<br><b>70 soixante-dix</b> (60+10)<br>71 soixante et onze<br>75 soixante-quinze<br><b>80 quatre-vingts</b> (4×20)<br>81 quatre-vingt-un<br><b>90 quatre-vingt-dix</b><br>95 quatre-vingt-quinze<br>100 cent</span></td></tr></tbody></table></div><div class="tip"><div class="h">The three oddities, and a Belgian shortcut you already have <span class="ta">· மூன்று வினோதங்கள், மேலும் உங்களிடம் ஏற்கனவே உள்ள பெல்ஜியக் குறுக்குவழி</span></div><div class="duo"><div><b>70, 80, 90</b> are arithmetic, not words: <i>sixty-ten</i>, <i>four-twenties</i>,
+  <i>four-twenties-ten</i>. Every learner finds them absurd; you simply memorise them.<br>
+  <b>Living in Belgium, you have an advantage:</b> Belgian and Swiss French say <span class="fr">septante</span>
+  (70) and <span class="fr">nonante</span> (90) — far easier, and perfectly correct where you live. In France
+  and in the DELF, use <span class="fr">soixante-dix</span> and <span class="fr">quatre-vingt-dix</span>.
+  Mention this to Cindy — she is French, and she will enjoy the fact that you know the difference.<br>
+  <b>21, 31, 41…</b> insert <b>et</b>: <span class="fr">vingt <b>et</b> un</span>. But <b>81</b> and <b>91</b>
+  do not: <span class="fr">quatre-vingt-un</span>.</div>
+  <div class="ta-col"><b>70, 80, 90</b> சொற்கள் அல்ல, கணக்கு: <i>அறுபது-பத்து</i>, <i>நான்கு-இருபது</i>,
+  <i>நான்கு-இருபது-பத்து</i>. மனப்பாடம் செய்வதே வழி.<br>
+  <b>பெல்ஜியத்தில் வாழ்வதால் உங்களுக்கு ஒரு சாதகம்:</b> பெல்ஜிய/சுவிஸ் பிரெஞ்சில்
+  <span class="fr">septante</span> (70), <span class="fr">nonante</span> (90) — மிக எளிது, உங்கள் ஊரில்
+  முற்றிலும் சரி. பிரான்சிலும் DELF-லும் <span class="fr">soixante-dix</span>,
+  <span class="fr">quatre-vingt-dix</span>. இதைச் சிண்டியிடம் சொல்லுங்கள் — அவர் பிரெஞ்சுக்காரர்;
+  நீங்கள் வேறுபாட்டை அறிவது அவருக்குப் பிடிக்கும்.</div></div></div><h3>Telling the time — « Quelle heure est-il ? » <span class="ta">· நேரம் சொல்லுதல்</span></h3><div class="tblwrap"><table class=""><thead><tr><th>Clock <span class='ta'>கடிகாரம்</span></th><th>French <span class='ta'>பிரெஞ்சு</span></th><th>English</th><th>தமிழ்</th></tr></thead><tbody><tr><td>1:00</td><td><span class='fr'>Il est une heure.</span></td><td>It is one o'clock</td><td>ஒரு மணி</td></tr><tr><td>2:15</td><td><span class='fr'>Il est deux heures et quart.</span></td><td>quarter past two</td><td>இரண்டே கால்</td></tr><tr><td>2:30</td><td><span class='fr'>Il est deux heures et demie.</span></td><td>half past two</td><td>இரண்டரை</td></tr><tr><td>2:45</td><td><span class='fr'>Il est trois heures moins le quart.</span></td><td>quarter to three</td><td>மூன்றுக்கு கால் குறைவு</td></tr><tr><td>5:00–6:00</td><td><span class='fr'>de cinq heures à six heures</span></td><td>from 5 to 6 — <b>her sentence</b></td><td>ஐந்து முதல் ஆறு வரை</td></tr><tr><td>17:00</td><td><span class='fr'>la séance de dix-sept heures</span></td><td>the 5 p.m. showing — <b>her sentence</b></td><td>மாலை ஐந்து மணிக் காட்சி</td></tr><tr><td>12:00</td><td><span class='fr'>Il est midi.</span> / <span class='fr'>minuit</span></td><td>noon / midnight</td><td>நண்பகல் / நள்ளிரவு</td></tr></tbody></table></div><div class="tip"><div class="h">Note <i>et demie</i> — Cindy already gave you this in Lesson 5</div>She wrote <span class="fr">une baguette <b>et demie</b></span> beside <i>demi-sœur</i>. The same
+  <b>et demie</b> is what you need for half past the hour, and it agrees because <i>heure</i> is feminine:
+  <span class="fr">deux heures et demi<b>e</b></span> — but <span class="fr">midi et demi</span> (masculine, no -e).
+  <span class="ta">பாடம் 5-இல் <span class="fr">une baguette et demie</span> என்று அவர் ஏற்கனவே கொடுத்தார்.
+  அதே <b>et demie</b> தான் அரை மணிக்குத் தேவை; <i>heure</i> பெண்பால் என்பதால் ஒப்புமை கொள்கிறது.</span></div><div class="drill"><div class="h">Drill 6 — write these in words, then in full sentences <span class="ta">· பயிற்சி 6 — இவற்றைச் சொற்களில், பிறகு முழு வாக்கியங்களில் எழுதுங்கள்</span></div><div class="numline"><span class="n">1.</span><span class="q">33 ans</span><div class="b"></div></div><div class="numline"><span class="n">2.</span><span class="q">19 ans</span><div class="b"></div></div><div class="numline"><span class="n">3.</span><span class="q">25 ans</span><div class="b"></div></div><div class="numline"><span class="n">4.</span><span class="q">70 personnes</span><div class="b"></div></div><div class="numline"><span class="n">5.</span><span class="q">80 euros</span><div class="b"></div></div><div class="numline"><span class="n">6.</span><span class="q">91 pages</span><div class="b"></div></div><div class="numline"><span class="n">7.</span><span class="q">Il est 7:30.</span><div class="b"></div></div><div class="numline"><span class="n">8.</span><span class="q">Il est 10:45.</span><div class="b"></div></div><div class="numline"><span class="n">9.</span><span class="q">de 14 h à 16 h</span><div class="b"></div></div><div class="numline"><span class="n">10.</span><span class="q">Ma leçon est à 19:45.</span><div class="b"></div></div></div><div class="key"><div class="h">Answer key · விடைகள்</div>1. <span class="fr">trente-trois ans</span> · 2. <span class="fr">dix-neuf ans</span> ·
+3. <span class="fr">vingt-cinq ans</span> · 4. <span class="fr">soixante-dix personnes</span> (BE: <i>septante</i>) ·
+5. <span class="fr">quatre-vingts euros</span> · 6. <span class="fr">quatre-vingt-onze pages</span> (BE: <i>nonante et une</i>) ·
+7. <span class="fr">Il est sept heures et demie.</span> · 8. <span class="fr">Il est onze heures moins le quart.</span> ·
+9. <span class="fr">de quatorze heures à seize heures</span> · 10. <span class="fr">Ma leçon est à dix-neuf heures quarante-cinq.</span>
+— that last one is your real lesson time with Cindy.</div><div class="pb"></div><h2 class="section"><span class="num">7</span>en / au / aux — what to do with the gender of a country<span class="ta">நாட்டுப் பாலை என்ன செய்வது</span></h2><div class="duo"><div><span class="lang-tag">ENGLISH</span><div><p>On 8 July Cindy spent a whole lesson making you decide whether a country was <span class="fr">le</span>,
+  <span class="fr">la</span> or <span class="fr">les</span>. She never said what that decision was <b>for</b>.
+  This is what it was for.</p></div></div><div><span class="lang-tag">தமிழ்</span><div class="ta-col"><p>ஜூலை 8 அன்று ஒரு நாடு <span class="fr">le</span>, <span class="fr">la</span> அல்லது
+  <span class="fr">les</span> என்பதைத் தீர்மானிக்க சிண்டி ஒரு முழுப் பாடத்தைச் செலவிட்டார். அந்தத் தீர்மானம்
+  <b>எதற்காக</b> என்று சொல்லவே இல்லை. அதற்காகத்தான்:</p></div></div></div><div class="rule"><div class="h">To be in / to go to a country <span class="ta">· ஒரு நாட்டில் இருக்க / ஒரு நாட்டிற்குச் செல்ல</span></div><div class="tblwrap"><table class=""><thead><tr><th>The country is…</th><th>Use</th><th>Example <span class='ta'>எடுத்துக்காட்டு</span></th><th>தமிழ்</th></tr></thead><tbody><tr><td><b>feminine</b> (ends in -e) <span class='ta'>பெண்பால்</span></td><td><b class='fr'>en</b></td><td><span class='fr'>en France, en Belgique, en Inde, en Chine, en Turquie, en Suisse, en Italie</span></td><td>பிரான்சில், இந்தியாவில்</td></tr><tr><td><b>masculine</b> <span class='ta'>ஆண்பால்</span></td><td><b class='fr'>au</b></td><td><span class='fr'>au Japon, au Brésil, au Canada, au Portugal, au Maroc, au Mexique</span></td><td>ஜப்பானில்</td></tr><tr><td><b>plural</b> <span class='ta'>பன்மை</span></td><td><b class='fr'>aux</b></td><td><span class='fr'>aux États-Unis, aux Pays-Bas, aux Philippines</span></td><td>அமெரிக்காவில்</td></tr><tr><td><b>masculine starting with a vowel</b> <span class='ta'>உயிரெழுத்தில் தொடங்கும் ஆண்பால்</span></td><td><b class='fr'>en</b></td><td><span class='fr'>en Iran, en Irak, en Israël</span> — sound wins over gender</td><td>ஈரானில்</td></tr><tr><td><b>a city</b> <span class='ta'>நகரம்</span></td><td><b class='fr'>à</b></td><td><span class='fr'>à Paris, à Bruxelles, à Chennai, à Nantes, à Rambouillet</span> — her two texts</td><td>பாரிஸில்</td></tr></tbody></table></div></div><div class="tip"><div class="h">Coming <i>from</i> a place: de / du / des</div><span class="fr">Je viens <b>de</b> France · <b>du</b> Japon · <b>des</b> États-Unis · <b>de</b> Bruxelles.</span>
+  Your own chat sentence was <span class="fr">Je viens <b>du</b> sud de l'Inde</span> — correct, because
+  <i>le sud</i> is masculine.
+  <span class="ta">உரையாடலில் நீங்கள் எழுதிய <span class="fr">Je viens du sud de l'Inde</span> சரியானது —
+  <i>le sud</i> ஆண்பால்.</span></div><div class="drill"><div class="h">Drill 7 — en, au, aux or à? <span class="ta">· பயிற்சி 7 — en, au, aux அல்லது à?</span></div><div class="numline"><span class="n">1.</span><span class="q">J'habite ____ Belgique.</span><div class="b"></div></div><div class="numline"><span class="n">2.</span><span class="q">Je suis né ____ Inde.</span><div class="b"></div></div><div class="numline"><span class="n">3.</span><span class="q">Ma sœur travaille ____ Japon.</span><div class="b"></div></div><div class="numline"><span class="n">4.</span><span class="q">Nous allons ____ Pays-Bas.</span><div class="b"></div></div><div class="numline"><span class="n">5.</span><span class="q">Il vit ____ Bruxelles.</span><div class="b"></div></div><div class="numline"><span class="n">6.</span><span class="q">Elle est allée ____ Mexique.</span><div class="b"></div></div><div class="numline"><span class="n">7.</span><span class="q">Ils habitent ____ États-Unis.</span><div class="b"></div></div><div class="numline"><span class="n">8.</span><span class="q">Je vais ____ Chennai en décembre.</span><div class="b"></div></div><div class="numline"><span class="n">9.</span><span class="q">Mon oncle a vécu ____ Grèce.</span><div class="b"></div></div><div class="numline"><span class="n">10.</span><span class="q">Le père de Lucas a travaillé ____ Égypte et ____ Indonésie.</span><div class="b"></div></div></div><div class="key"><div class="h">Answer key · விடைகள்</div>1. <span class="fr">en</span> · 2. <span class="fr">en</span> · 3. <span class="fr">au</span> ·
+4. <span class="fr">aux</span> · 5. <span class="fr">à</span> · 6. <span class="fr">au</span> ·
+7. <span class="fr">aux</span> · 8. <span class="fr">à</span> · 9. <span class="fr">en</span> ·
+10. <span class="fr">en … en</span> — the last one is Cindy's own sentence, word for word.</div><div class="pb"></div><h2 class="section"><span class="num">8</span>Les repas — the link she sent on her last day<span class="ta">உணவு — அவரது கடைசி நாள் இணைப்பு</span></h2><div class="duo"><div><span class="lang-tag">ENGLISH</span><div><p>The final thing Cindy posted, on 13 July, was <b>podcastfrancaisfacile.com/texte/les_repas.html</b>. Then
+  the silence. It was obviously her plan for the next lesson, and it follows naturally from the fruit and
+  vegetables. So here it is, done — and it is the single most useful topic for real life in Belgium.</p></div></div><div><span class="lang-tag">தமிழ்</span><div class="ta-col"><p>ஜூலை 13 அன்று சிண்டி இறுதியாக இட்டது <b>les repas</b> இணைப்பு. பிறகு மௌனம். அது அடுத்த பாடத்திற்கான
+  அவரது திட்டம் என்பது தெளிவு; பழங்கள்-காய்கறிகளிலிருந்து இயல்பாகத் தொடர்கிறது. எனவே இதோ, முடிக்கப்பட்டது —
+  பெல்ஜியத்தில் அன்றாட வாழ்க்கைக்கு இதுவே மிகவும் பயனுள்ள தலைப்பு.</p></div></div></div><div class="tblwrap"><table class=""><thead><tr><th>French · பிரெஞ்சு</th><th>English</th><th>தமிழ்</th><th>Write it <span class="ta">எழுதுங்கள்</span></th></tr></thead><tbody><tr><td class="fr">un repas</td><td>a meal</td><td>உணவு</td><td class="w"><div class="ln"></div></td></tr><tr><td class="fr">le petit-déjeuner</td><td>breakfast (note the hyphen)</td><td>காலை உணவு</td><td class="w"><div class="ln"></div></td></tr><tr><td class="fr">le déjeuner</td><td>lunch</td><td>மதிய உணவு</td><td class="w"><div class="ln"></div></td></tr><tr><td class="fr">le dîner</td><td>dinner</td><td>இரவு உணவு</td><td class="w"><div class="ln"></div></td></tr><tr><td class="fr">le goûter</td><td>afternoon snack</td><td>மாலைச் சிற்றுண்டி</td><td class="w"><div class="ln"></div></td></tr><tr><td class="fr">prendre le petit-déjeuner</td><td>to have breakfast</td><td>காலை உணவு உண்ண</td><td class="w"><div class="ln"></div></td></tr><tr><td class="fr">manger</td><td>to eat</td><td>சாப்பிட</td><td class="w"><div class="ln"></div></td></tr><tr><td class="fr">boire</td><td>to drink — <i>je bois, il boit, nous buvons</i></td><td>குடிக்க</td><td class="w"><div class="ln"></div></td></tr><tr><td class="fr">avoir faim</td><td>to be hungry (lit. to have hunger)</td><td>பசிக்க</td><td class="w"><div class="ln"></div></td></tr><tr><td class="fr">avoir soif</td><td>to be thirsty</td><td>தாகமாக இருக்க</td><td class="w"><div class="ln"></div></td></tr><tr><td class="fr">le pain</td><td>bread</td><td>ரொட்டி</td><td class="w"><div class="ln"></div></td></tr><tr><td class="fr">une baguette</td><td>a baguette</td><td>பேகெட்</td><td class="w"><div class="ln"></div></td></tr><tr><td class="fr">le beurre</td><td>butter</td><td>வெண்ணெய்</td><td class="w"><div class="ln"></div></td></tr><tr><td class="fr">la confiture</td><td>jam</td><td>ஜாம்</td><td class="w"><div class="ln"></div></td></tr><tr><td class="fr">le fromage</td><td>cheese</td><td>பாலாடைக்கட்டி</td><td class="w"><div class="ln"></div></td></tr><tr><td class="fr">un œuf</td><td>an egg — her Lesson 1 word</td><td>முட்டை</td><td class="w"><div class="ln"></div></td></tr><tr><td class="fr">la viande</td><td>meat</td><td>இறைச்சி</td><td class="w"><div class="ln"></div></td></tr><tr><td class="fr">le poisson</td><td>fish</td><td>மீன்</td><td class="w"><div class="ln"></div></td></tr><tr><td class="fr">le poulet</td><td>chicken</td><td>கோழி</td><td class="w"><div class="ln"></div></td></tr><tr><td class="fr">le riz</td><td>rice</td><td>அரிசி, சாதம்</td><td class="w"><div class="ln"></div></td></tr><tr><td class="fr">les pâtes (f. pl.)</td><td>pasta</td><td>பாஸ்தா</td><td class="w"><div class="ln"></div></td></tr><tr><td class="fr">la soupe</td><td>soup</td><td>சூப்</td><td class="w"><div class="ln"></div></td></tr><tr><td class="fr">le sel / le poivre</td><td>salt / pepper</td><td>உப்பு / மிளகு</td><td class="w"><div class="ln"></div></td></tr><tr><td class="fr">l'eau (f.)</td><td>water</td><td>தண்ணீர்</td><td class="w"><div class="ln"></div></td></tr><tr><td class="fr">le café / le thé</td><td>coffee / tea</td><td>காபி / தேநீர்</td><td class="w"><div class="ln"></div></td></tr><tr><td class="fr">le lait</td><td>milk</td><td>பால்</td><td class="w"><div class="ln"></div></td></tr><tr><td class="fr">le vin</td><td>wine</td><td>மது</td><td class="w"><div class="ln"></div></td></tr><tr><td class="fr">l'addition (f.)</td><td>the bill</td><td>கணக்கு</td><td class="w"><div class="ln"></div></td></tr><tr><td class="fr">délicieux</td><td>delicious — her Lesson 3 word</td><td>சுவையான</td><td class="w"><div class="ln"></div></td></tr><tr><td class="fr">végétarien / végétarienne</td><td>vegetarian</td><td>சைவம்</td><td class="w"><div class="ln"></div></td></tr></tbody></table></div><div class="dialog"><div class="h" style="font-weight:800;color:#12386e;margin-bottom:2mm">Au café — the twelve lines worth memorising · உணவகத்தில் — மனப்பாடம் செய்ய வேண்டிய பன்னிரண்டு வரிகள்</div><div class="ln"><span class="sp">Serveur</span><span class='fr'>Bonjour ! Vous désirez ?</span> <span class='gloss'>Hello! What would you like?</span><span class="ta">வணக்கம்! என்ன வேண்டும்?</span></div><div class="ln"><span class="sp">Vous</span><span class='fr'>Bonjour. Je voudrais un café, s'il vous plaît.</span> <span class='gloss'>I would like a coffee, please.</span><span class="ta">ஒரு காபி வேண்டும், தயவுசெய்து.</span></div><div class="ln"><span class="sp">Serveur</span><span class='fr'>Et avec ça ?</span> <span class='gloss'>And with that?</span><span class="ta">அத்துடன் வேறு?</span></div><div class="ln"><span class="sp">Vous</span><span class='fr'>Une baguette avec du beurre et de la confiture.</span><span class="ta">வெண்ணெயும் ஜாமும் உள்ள பேகெட்.</span></div><div class="ln"><span class="sp">Serveur</span><span class='fr'>Vous mangez de la viande ?</span><span class="ta">இறைச்சி சாப்பிடுவீர்களா?</span></div><div class="ln"><span class="sp">Vous</span><span class='fr'>Non, je suis végétarien. Je ne mange pas de viande.</span><span class="ta">இல்லை, நான் சைவம்.</span></div><div class="ln"><span class="sp">Serveur</span><span class='fr'>Vous voulez de l'eau ?</span><span class="ta">தண்ணீர் வேண்டுமா?</span></div><div class="ln"><span class="sp">Vous</span><span class='fr'>Oui, une carafe d'eau, s'il vous plaît. J'ai soif.</span><span class="ta">ஆம், ஒரு ஜக் தண்ணீர்.</span></div><div class="ln"><span class="sp">Serveur</span><span class='fr'>C'était bon ?</span> <span class='gloss'>Was it good?</span><span class="ta">நன்றாக இருந்ததா?</span></div><div class="ln"><span class="sp">Vous</span><span class='fr'>C'était délicieux, merci.</span><span class="ta">மிகவும் சுவையாக இருந்தது, நன்றி.</span></div><div class="ln"><span class="sp">Vous</span><span class='fr'>L'addition, s'il vous plaît.</span><span class="ta">கணக்கு, தயவுசெய்து.</span></div><div class="ln"><span class="sp">Serveur</span><span class='fr'>Bien sûr. Bonne journée !</span><span class="ta">நிச்சயமாக. நல்ல நாள்!</span></div></div><div class="tip"><div class="h">Every partitive from her last lesson is in that dialogue <span class="ta">· அவரது கடைசிப் பாடத்தின் ஒவ்வொரு பகுதி இடைச்சொல்லும் அந்த உரையாடலில் உள்ளது</span></div><span class="fr">un café</span> (one whole) · <span class="fr">du beurre</span> (m., part) ·
+  <span class="fr">de la confiture</span> (f., part) · <span class="fr">de l'eau</span> (vowel) ·
+  <span class="fr">pas de viande</span> (after the negative). That is Lesson 8 working in a real sentence — show
+  Cindy that you can use it, not just recite it.
+  <span class="ta">இது பாடம் 8 உண்மையான வாக்கியத்தில் வேலை செய்வது. ஒப்பிப்பது மட்டுமல்ல, பயன்படுத்தவும்
+  முடியும் என்பதைச் சிண்டிக்குக் காட்டுங்கள்.</span></div><div class="drill"><div class="h">Drill 8 — write your own café dialogue, twelve lines <span class="ta">· பயிற்சி 8 — உங்கள் சொந்த உணவக உரையாடல், பன்னிரண்டு வரிகள்</span></div><p class="gloss">Use at least four partitives and one negative. Order something you would actually eat.</p><div class="wl "><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div></div></div><div class="pb"></div><h2 class="section"><span class="num">9</span>Four texts to write — and what to say to her<span class="ta">எழுத வேண்டிய நான்கு உரைகள் — அவரிடம் சொல்ல வேண்டியது</span></h2><div class="duo"><div><span class="lang-tag">ENGLISH</span><div><p>Four short texts, written by hand. Each one uses a defined set of structures from Volumes 1 and 2;
+  the specification is in the box above each. Photograph them and send them in the italki chat before your next
+  lesson, or bring them to the screen.</p></div></div><div><span class="lang-tag">தமிழ்</span><div class="ta-col"><p>நான்கு சிறு உரைகள், கையால் எழுதுவது. ஒவ்வொன்றும் தொகுதி 1, 2-இலிருந்து குறிப்பிட்ட அமைப்புகளைப்
+  பயன்படுத்துகிறது; விவரக்குறிப்பு ஒவ்வொன்றுக்கும் மேலே உள்ள பெட்டியில். புகைப்படம் எடுத்து, அடுத்த
+  பாடத்திற்கு முன் italki உரையாடலில் அனுப்புங்கள்.</p></div></div></div><h3>Text A · Ma famille — using everything from Lessons 4 and 5 <span class="ta">· உரை A · என் குடும்பம்</span></h3><div class="tip"><div class="h">What to put in it · என்ன சேர்க்க வேண்டும்</div><b>80–100 words.</b> At least six hyphenated family words · one <span class="fr">aîné / cadet</span> ·
+  <span class="fr">maternel</span> and <span class="fr">paternel</span> · three physical descriptions with
+  <b>être / avoir / porter</b> and correct agreement · one negative.
+  <span class="ta">80–100 சொற்கள். குறைந்தது ஆறு இணைப்புக்கோடு உறவுச் சொற்கள், ஒரு aîné/cadet,
+  maternel/paternel, être/avoir/porter கொண்ட மூன்று விவரிப்புகள், ஒரு மறுப்பு.</span></div><div class="wl "><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div></div><h3>Text B · Mon week-end — using le futur proche and avoir envie de <span class="ta">· உரை B · என் வார இறுதி</span></h3><div class="tip"><div class="h">What to put in it · என்ன சேர்க்க வேண்டும்</div><b>80 words.</b> Rewrite Madame Dubois's weekend as your own. Two <span class="fr">avoir envie de</span> ·
+  three <b>futur proche</b> (<span class="fr">je vais…</span>) · <span class="fr">faire du</span> and
+  <span class="fr">jouer à</span> once each · <span class="fr">demain</span> and <span class="fr">aujourd'hui</span>.
+  <span class="ta">80 சொற்கள். Madame Dubois-இன் வார இறுதியை உங்களுடையதாக மீண்டும் எழுதுங்கள்.</span></div><div class="wl "><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div></div><h3>Text C · Les quarante jours <span class="ta">· உரை C · நாற்பது நாட்கள்</span></h3><div class="tip"><div class="h">What to put in it · என்ன சேர்க்க வேண்டும்</div><b>60–80 words, in the passé composé.</b> Six past-tense verbs, at least two with <b>être</b>, one negative
+  (<span class="fr">je n'ai pas étudié</span>), and one <span class="fr">ne … plus</span>
+  (<span class="fr">je ne suis plus débutant</span>).
+  <span class="ta">60–80 சொற்கள், passé composé-இல்.</span></div><div class="txt"><b>Model — adapt, do not copy verbatim:</b><br>
+<span class="fr">Bonjour Cindy. J'ai eu beaucoup de travail en juillet et en août, donc je n'ai pas étudié
+pendant quarante jours. Je suis désolé. Mais je n'ai pas oublié le français. La semaine dernière, j'ai relu
+toutes nos leçons et j'ai beaucoup écrit. J'ai appris les fruits et les légumes, et j'ai fini l'exercice sur les
+pays et les nationalités. J'ai aussi étudié le passé composé toute seule. Je ne suis plus débutant !</span>
+<div class="src">"toute seule" → for a man, write <b>tout seul</b>. Cindy will spot it either way.</div></div><div class="wl "><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div></div><h3>Text D · Au marché — using Lesson 8 and les repas <span class="ta">· உரை D · சந்தையில்</span></h3><div class="tip"><div class="h">What to put in it · என்ன சேர்க்க வேண்டும்</div><b>60 words.</b> You go to the market and buy fifteen things. Every single one must carry the right article:
+  <span class="fr">un · une · des · du · de la · de l'</span>. End with one negative
+  (<span class="fr">Je n'achète pas de …</span>) and one adjective with correct agreement.
+  <span class="ta">60 சொற்கள். சந்தைக்குச் சென்று பதினைந்து பொருட்கள் வாங்குகிறீர்கள். ஒவ்வொன்றும் சரியான
+  இடைச்சொல்லுடன்.</span></div><div class="wl "><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l"></div></div><h3>The first ninety seconds of the lesson <span class="ta">· பாடத்தின் முதல் தொண்ணூறு வினாடிகள்</span></h3><div class="dialog"><div class="h" style="font-weight:800;color:#12386e;margin-bottom:2mm">Say it in this order · இந்த வரிசையில் சொல்லுங்கள்</div><div class="ln"><span class="sp">1</span><span class='fr'>Bonjour Cindy ! Quoi de neuf ?</span> <span class='gloss'>— she always opens this way; open it yourself first.</span><span class="ta">அவர் எப்போதும் இப்படித் தொடங்குவார்; இம்முறை நீங்களே முதலில் தொடங்குங்கள்.</span></div><div class="ln"><span class="sp">2</span><span class='fr'>Beaucoup de choses ! Désolé pour la longue absence.</span><span class="ta">நிறைய! நீண்ட இடைவெளிக்கு மன்னிக்கவும்.</span></div><div class="ln"><span class="sp">3</span><span class='fr'>J'ai eu beaucoup de travail, mais j'ai révisé toutes nos leçons.</span><span class="ta">நிறைய வேலை இருந்தது, ஆனால் நம் பாடங்கள் அனைத்தையும் மீண்டும் படித்தேன்.</span></div><div class="ln"><span class="sp">4</span><span class='fr'>J'ai fini les devoirs : les pays et les nationalités, et les fruits et légumes.</span><span class="ta">வீட்டுப்பாடங்களை முடித்தேன்: நாடுகள், தேசியங்கள், பழங்கள், காய்கறிகள்.</span></div><div class="ln"><span class="sp">5</span><span class='fr'>J'ai aussi étudié le passé composé et le futur proche tout seul.</span><span class="ta">passé composé, futur proche இரண்டையும் தனியாகப் படித்தேன்.</span></div><div class="ln"><span class="sp">6</span><span class='fr'>Je voudrais passer le DELF A2. On peut préparer ça ensemble ?</span><span class="ta">DELF A2 எழுத விரும்புகிறேன். சேர்ந்து தயார் செய்யலாமா?</span></div></div><div class="warn"><div class="h">Three details worth getting right · சரியாகச் செய்ய வேண்டிய மூன்று நுணுக்கங்கள்</div><div class="duo"><div><b>1 · Say <i>des haricots</i> correctly.</b> <i>“dé-arico”</i>, never
+  <i>“dé-zarico”</i> — the <b>h aspiré</b>. Almost no A1 student knows this.<br>
+  <b>2 · Mention <i>septante</i> and <i>nonante</i>.</b> Tell her that in Belgium you hear these, but you will
+  write <span class="fr">soixante-dix</span> and <span class="fr">quatre-vingt-dix</span> for the DELF. It shows
+  you are listening to French around you, not only in lessons.<br>
+  <b>3 · Use the word <i>la désinence</i>.</b> She taught it in one word on 15 June when you wrote
+  <i>je sui jeun</i>. <span class="fr">« Je fais attention aux désinences maintenant. »</span></div>
+  <div class="ta-col"><b>1 · <i>des haricots</i> சரியாகச் சொல்லுங்கள்</b> — “தே-அரிகோ”, “தே-ஸரிகோ” அல்ல.
+  A1 மாணவர்களில் யாருக்கும் இது தெரியாது.<br>
+  <b>2 · <i>septante</i>, <i>nonante</i> பற்றிச் சொல்லுங்கள்.</b> பெல்ஜியத்தில் இவற்றைக் கேட்கிறீர்கள்,
+  ஆனால் DELF-க்கு <span class="fr">soixante-dix</span> எழுதுவீர்கள் என்று சொல்லுங்கள்.<br>
+  <b>3 · <i>la désinence</i> என்ற சொல்லைப் பயன்படுத்துங்கள்.</b> ஜூன் 15 அன்று ஒரே வார்த்தையில் அவர்
+  கற்பித்தது. <span class="fr">« Je fais attention aux désinences maintenant. »</span></div></div></div><h3>And the two questions to ask her <span class="ta">· அவரிடம் கேட்க வேண்டிய இரு கேள்விகள்</span></h3><div class="qline"><div class="q"><b class='fr'>Est-ce qu'on peut préparer le DELF A2 ensemble ?</b> <span class='gloss'>Can we prepare the DELF A2 together?</span> <span class='ta'>சேர்ந்து DELF A2 தயார் செய்யலாமா?</span></div><div class="b"></div><div class="b"></div></div><div class="qline"><div class="q"><b class='fr'>Qu'est-ce que je dois travailler en priorité ?</b> <span class='gloss'>What should I work on first?</span> <span class='ta'>முதலில் எதில் உழைக்க வேண்டும்?</span></div><div class="b"></div><div class="b"></div></div><div class="foot">
+<b>Au-delà de Cindy — Volume 2 · Le pas suivant.</b> Nine chapters, none of them taught by Cindy CHENE — every
+one grows out of something already present in her own texts, links or corrections. Keep this volume separate from
+Volume 1 in your mind: Volume 1 is <b>hers</b>, this one is <b>yours</b>.
+Continue with <b>Volume 3 — Le Cahier d'écriture</b>.<br>
+<span class="ta">ஒன்பது அத்தியாயங்கள் — எதையும் சிண்டி கற்பிக்கவில்லை; ஒவ்வொன்றும் அவரது சொந்த உரைகள்,
+இணைப்புகள், திருத்தங்களில் ஏற்கனவே இருந்தவற்றிலிருந்து வளர்ந்தவை. மனதில் தொகுதி 1-லிருந்து இதைத்
+தனியாக வையுங்கள்: தொகுதி 1 <b>அவருடையது</b>, இது <b>உங்களுடையது</b>.</span>
+</div></div></body></html>

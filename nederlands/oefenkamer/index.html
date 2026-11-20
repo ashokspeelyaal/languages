@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Oefenkamer · Nederlands A1 → B2</title>
+<link rel="stylesheet" href="app/styles.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>📓</text></svg>">
+</head>
+<body>
+
+<header class="top">
+  <div class="topin">
+    <div class="brand">Oefenkamer<span>Nederlands A1 → B2</span></div>
+    <nav id="nav"></nav>
+  </div>
+</header>
+
+<main id="view"></main>
+
+<footer>
+  Alles draait lokaal in deze browser — geen server, geen account. Uitleg uit
+  <code>studiemateriaal/grammatica-overzicht.html</code>, woorden uit <code>studeerkamer/seeds</code>.
+</footer>
+
+<!-- Eerst de gegevens, dan de motor. Losse scripts (geen modules), zodat een
+     dubbelklik op dit bestand werkt: file:// mag geen modules of fetch gebruiken. -->
+<script src="vendor/d3.v7.min.js"></script>
+<script src="data/topics.js"></script>
+<script src="data/reference.js"></script>
+<script src="data/lexicon.js"></script>
+<script src="data/vocab.js"></script>
+<script src="data/items-a1.js"></script>
+<script src="data/items-a2.js"></script>
+<script src="data/items-b1.js"></script>
+<script src="data/items-b2.js"></script>
+<script src="app/store.js"></script>
+<script src="app/grade.js"></script>
+<script src="app/generators.js"></script>
+<script src="app/engine.js"></script>
+<script src="app/mindmap.js"></script>
+<script src="app/ui.js"></script>
+<script>OK_UI.boot();</script>
+</body>
+</html>

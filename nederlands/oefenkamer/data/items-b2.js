@@ -1,0 +1,163 @@
+/* B2 — oefeningen in context. Hier zit het verschil tussen "correct" en "klinkt Nederlands". */
+(function () {
+  var out = window.OK_ITEMS = window.OK_ITEMS || [];
+  function T(topic, arr) {
+    arr.forEach(function (it, i) { it.topic = topic; it.id = topic + ":" + (i + 1); out.push(it); });
+  }
+
+  T("b2-er", [
+    { t:"omzet", inst:"Vervang de zaak door er + voorzetsel.", q:"Ik denk vaak aan die reis.",
+      a:"Ik denk er vaak aan.", w:"Zaken staan nooit na een voorzetsel: aan die reis → eraan, gesplitst rond de bepaling." },
+    { t:"cloze", q:"Heb je aan het contract gedacht? — Ja, ik heb ___ aan gedacht.", a:"er",
+      w:"Voornaamwoordelijk bijwoord, gesplitst: er ... aan." },
+    { t:"mc", q:"Hoeveel broers heb je? — ___", o:["Ik heb drie.","Ik heb er drie.","Er heb ik drie."], a:"Ik heb er drie.",
+      w:"Getal-er is verplicht als je het zelfstandig naamwoord weglaat." },
+    { t:"cloze", q:"___ wordt in dit gebouw niet gerookt.", a:"Er", w:"Onpersoonlijk passief." },
+    { t:"fout", inst:"Verbeter de zin.", q:"Ik reken op het.",
+      a:"Ik reken erop.", w:"Na een voorzetsel kan 'het' niet staan; gebruik er + voorzetsel." },
+    { t:"cloze", q:"Ik ben ___ nog niet aan toegekomen.", a:"er", w:"toekomen aan + zaak → eraan, gesplitst." },
+    { t:"jn", q:"Ik denk eraan hem.", a:"fout",
+      w:"Bij personen blijft het voorzetsel + voornaamwoord: 'Ik denk aan hem'." },
+    { t:"omzet", inst:"Vervang 'in Gent' door er.", q:"Ik heb tien jaar in Gent gewoond.",
+      a:"Ik heb er tien jaar gewoond.", w:"Plaats-er staat vroeg in het middenveld." },
+    { t:"cloze", q:"___ zijn verschillende redenen om dat niet te doen.", a:"Er", w:"Voorlopig onderwerp." },
+    { t:"mc", q:"Welke functie heeft 'er' in: 'Ik heb er geen zin in'?",
+      o:["plaats","voorlopig onderwerp","voornaamwoordelijk bijwoord"], a:"voornaamwoordelijk bijwoord",
+      w:"zin hebben in + zaak → er ... in." },
+    { t:"cloze", q:"Wat vind je van dat plan? — Ik weet ___ nog niets van.", a:"er",
+      w:"weten van + zaak → ervan, hier gesplitst." },
+    { t:"omzet", inst:"Antwoord met er.", q:"Hoeveel talen spreek je? (vier)",
+      a:"Ik spreek er vier.", w:"Getal-er." },
+    { t:"jn", q:"Er staat een auto voor de deur.", a:"goed", w:"Onbepaald onderwerp → voorlopig onderwerp." },
+    { t:"cloze", q:"Ik heb ___ lang over nagedacht.", a:"er", w:"nadenken over → er ... over." },
+    { t:"order", inst:"Maak een correcte zin.", o:["er","ik","niet","ben","tevreden","over"],
+      a:"Ik ben er niet tevreden over.", w:"er vroeg, het voorzetsel achteraan." }
+  ]);
+
+  T("b2-partikels", [
+    { t:"mc", q:"Welk partikel maakt het verzoek het vriendelijkst? 'Doe de deur ___ dicht.'",
+      o:["maar","toch","zeker"], a:"maar", w:"'maar' verzacht een aansporing." },
+    { t:"cloze", q:"Kom ___ langs als je in de buurt bent.", a:"eens", acc:["maar","gerust"],
+      w:"'eens' maakt van een bevel een uitnodiging." },
+    { t:"cloze", q:"Kun je dat ___ even nakijken?", a:"misschien", acc:["even","nog"],
+      w:"'even' verkleint de gevraagde moeite." },
+    { t:"mc", q:"'Je komt toch wel?' — wat drukt 'toch' uit?",
+      o:["twijfel over een verwachting","een verbod","een tijdsbepaling"], a:"twijfel over een verwachting",
+      w:"toch checkt iets wat je eigenlijk al aanneemt." },
+    { t:"cloze", q:"Dat is niet erg, ___.", a:"hoor", w:"'hoor' staat achteraan en stelt gerust." },
+    { t:"jn", q:"Ga maar even zitten.", a:"goed", w:"Twee partikels stapelen is heel gewoon." },
+    { t:"mc", q:"Welke zin klinkt het minst bot?",
+      o:["Geef me het zout.","Geef me het zout even.","Geef me het zout eens even, wil je?"], a:"Geef me het zout eens even, wil je?",
+      w:"Partikels dragen de beleefdheid, niet de woordkeuze." },
+    { t:"cloze", q:"Het is ___ waar wat hij zegt.", a:"wel", w:"'wel' bevestigt tegen een verwachting in." },
+    { t:"cloze", q:"Wat doe je ___?", a:"nou", acc:["dan","toch"], w:"'nou' geeft lichte verbazing." },
+    { t:"mc", q:"Waar staan modale partikels meestal?",
+      o:["helemaal vooraan","in het middenveld","na het voltooid deelwoord"], a:"in het middenveld",
+      w:"Na onderwerp en persoonsvorm, vóór de rest." },
+    { t:"cloze", q:"Ik zal het ___ proberen.", a:"wel", acc:["toch","eens"], w:"'wel' = geruststellende belofte." },
+    { t:"jn", q:"Toch ik kom morgen.", a:"fout", w:"'Toch kom ik morgen' — vooraan volgt inversie." },
+    { t:"cloze", q:"Zeg ___ eens wat je ervan vindt.", a:"nou", acc:["maar","eens"], w:"Uitnodigend stapelen." },
+    { t:"mc", q:"'Dat zal wel' betekent meestal:", o:["volledige instemming","lichte twijfel of ironie","een vraag"], a:"lichte twijfel of ironie",
+      w:"Partikels dragen toon: dit is bijna sceptisch." }
+  ]);
+
+  T("b2-indirect", [
+    { t:"omzet", inst:"Maak indirect: 'Hij zei dat ...'", q:"Ik werk in Brussel.",
+      a:"Hij zei dat hij in Brussel werkte.", w:"tt → ovt, ik → hij, bijzinvolgorde." },
+    { t:"omzet", inst:"Maak indirect: 'Ze vroeg ...'", q:"Kom je morgen?",
+      a:"Ze vroeg of ik de volgende dag kwam.", w:"Ja/nee-vraag → of; morgen → de volgende dag." },
+    { t:"omzet", inst:"Maak indirect: 'Hij vroeg ...'", q:"Waar woon je?",
+      a:"Hij vroeg waar ik woonde.", w:"Open vraag houdt het vraagwoord." },
+    { t:"cloze", q:"Hij zei dat hij het al gedaan ___. (hebben, plusquam)", a:"had",
+      w:"Perfectum schuift door naar plusquamperfectum." },
+    { t:"omzet", inst:"Maak indirect: 'Ze beloofde ...'", q:"Ik zal je morgen bellen.",
+      a:"Ze beloofde dat ze me de volgende dag zou bellen.", w:"zal → zou, morgen → de volgende dag." },
+    { t:"cloze", q:"Hij vertelde dat hij ___ dag niet gewerkt had. (vandaag →)", a:"die",
+      w:"vandaag → die dag." },
+    { t:"fout", inst:"Verbeter de zin.", q:"Hij zei dat hij kwam morgen.",
+      a:"Hij zei dat hij de volgende dag kwam.", w:"Bijzinvolgorde + tijdsaanduiding aanpassen." },
+    { t:"mc", q:"'Ik ben moe' in de indirecte rede:",
+      o:["Hij zei dat hij moe is.","Hij zei dat hij moe was.","Hij zei dat hij moe zijn."], a:"Hij zei dat hij moe was.",
+      w:"Tijd schuift een stap terug." },
+    { t:"cloze", q:"Ze vroeg ___ ik zin had om mee te gaan.", a:"of", w:"Ja/nee-vraag → of." },
+    { t:"jn", q:"De docent legde uit dat water bij 100 graden kookt.", a:"goed",
+      w:"Bij algemeen geldige waarheden mag de tegenwoordige tijd blijven." },
+    { t:"omzet", inst:"Maak indirect: 'Hij zei ...'", q:"Ik heb hier gisteren gewacht.",
+      a:"Hij zei dat hij daar de dag ervoor gewacht had.", acc:["Hij zei dat hij daar de dag ervoor had gewacht."],
+      w:"hier → daar, gisteren → de dag ervoor, perfectum → plusquamperfectum." },
+    { t:"cloze", q:"Hij vroeg of ik hem ___ helpen. (kunnen, ovt)", a:"kon", w:"kan → kon." },
+    { t:"omzet", inst:"Maak indirect: 'Ze zei ...'", q:"We gaan volgende week verhuizen.",
+      a:"Ze zei dat ze de week daarna zouden verhuizen.", w:"gaan + toekomst → zouden; volgende week → de week daarna." }
+  ]);
+
+  T("b2-voegwoord", [
+    { t:"cloze", q:"Ik kom mee, ___ ik hoef niet te rijden.", a:"mits", acc:["op voorwaarde dat"],
+      w:"mits = op voorwaarde dat (positief)." },
+    { t:"cloze", q:"Ik kom mee, ___ het te laat wordt.", a:"tenzij", w:"tenzij = behalve als." },
+    { t:"cloze", q:"De trein reed niet ___ er sneeuw lag.", a:"doordat", acc:["omdat"],
+      w:"doordat = oorzaak zonder wil; omdat kan ook maar is minder precies." },
+    { t:"cloze", q:"___ hij ouder werd, werd hij milder.", a:"Naarmate", w:"naarmate = in dezelfde mate als." },
+    { t:"cloze", q:"___ ik thuis ben, stuur ik je het bestand.", a:"Zodra", w:"zodra = onmiddellijk nadat." },
+    { t:"mc", q:"Welk voegwoord is het formeelst?", o:["als","indien","wanneer"], a:"indien",
+      w:"indien hoort in wetteksten en formele brieven." },
+    { t:"cloze", q:"___ het contract getekend was, begon het werk.", a:"Nadat", w:"nadat + plusquamperfectum." },
+    { t:"cloze", q:"Hij bleef werken ___ hij ziek was.", a:"hoewel", acc:["ofschoon"], w:"Toegeving." },
+    { t:"fout", inst:"Verbeter de zin.", q:"Aangezien hij was ziek, bleef hij thuis.",
+      a:"Aangezien hij ziek was, bleef hij thuis.", w:"aangezien is onderschikkend: werkwoord achteraan." },
+    { t:"cloze", q:"Ik blijf ___ het nodig is.", a:"zolang", w:"zolang = gedurende de hele periode dat." },
+    { t:"mc", q:"'Hij oefent ___ hij het examen haalt' — kies het doel-voegwoord.",
+      o:["opdat","doordat","terwijl"], a:"opdat", w:"opdat = doel (formeel); alledaags: zodat." },
+    { t:"cloze", q:"Wacht even ___ ik terug ben.", a:"tot", acc:["totdat"], w:"Tijdsgrens." },
+    { t:"jn", q:"Voordat ik was vertrokken, belde ik hem.", a:"fout",
+      w:"Na voordat gebruik je meestal geen plusquamperfectum: 'Voordat ik vertrok, belde ik hem.'" },
+    { t:"cloze", q:"___ de cijfers kloppen, is het beleid mislukt.", a:"Indien", acc:["Als"],
+      w:"Formele voorwaarde." }
+  ]);
+
+  T("b2-volgorde", [
+    { t:"mc", q:"Welke volgorde is 'rood'?", o:["... dat hij het gedaan heeft","... dat hij het heeft gedaan","... dat hij heeft het gedaan"], a:"... dat hij het gedaan heeft",
+      w:"Rood = deelwoord vóór het hulpwerkwoord; in Vlaanderen gebruikelijker." },
+    { t:"mc", q:"Welke volgorde is 'groen'?", o:["... dat ik het gezien heb","... dat ik het heb gezien","... dat ik heb het gezien"], a:"... dat ik het heb gezien",
+      w:"Groen = hulpwerkwoord eerst." },
+    { t:"jn", q:"Ik denk dat hij het al afgewerkt heeft.", a:"goed", w:"Rode volgorde, correct." },
+    { t:"jn", q:"Ik denk dat hij het al heeft afgewerkt.", a:"goed", w:"Groene volgorde, ook correct." },
+    { t:"order", inst:"Maak een correcte bijzin (drie werkwoorden).", o:["dat","hij","het","niet","heeft","kunnen","doen"],
+      a:"dat hij het niet heeft kunnen doen", w:"Bij drie werkwoorden komt het hulpwerkwoord vooraan." },
+    { t:"fout", inst:"Verbeter de zin.", q:"Ik weet dat hij mij heeft gisteren gebeld.",
+      a:"Ik weet dat hij mij gisteren heeft gebeld.", acc:["Ik weet dat hij mij gisteren gebeld heeft."],
+      w:"De bepaling staat vóór de werkwoordsgroep, niet erin." },
+    { t:"order", inst:"Maak een correcte bijzin.", o:["omdat","ik","de trein","gemist","had"],
+      a:"omdat ik de trein gemist had", w:"Rode volgorde met plusquamperfectum." },
+    { t:"mc", q:"Waar staat het lijdend voorwerp?", o:["binnen de werkwoordsgroep","vóór de werkwoordsgroep","helemaal achteraan"], a:"vóór de werkwoordsgroep",
+      w:"'... dat hij het boek gelezen heeft'." },
+    { t:"jn", q:"Ik zei dat ik het doen moet.", a:"fout",
+      w:"Bij een infinitief zonder te staat het modale werkwoord vooraan: '... dat ik het moet doen'." },
+    { t:"cloze", q:"Maak af (groen): Ik hoop dat je het ___ ___. (hebben, begrijpen)", a:"hebt|begrepen",
+      multi:["hebt","begrepen"], w:"Groen: hulpwerkwoord dan deelwoord." },
+    { t:"cloze", q:"Maak af (rood): Ik hoop dat je het ___ ___. (begrijpen, hebben)", a:"begrepen|hebt",
+      multi:["begrepen","hebt"], w:"Rood: deelwoord dan hulpwerkwoord." },
+    { t:"order", inst:"Maak een correcte bijzin.", o:["hoewel","zij","ons","had","willen","helpen"],
+      a:"hoewel zij ons had willen helpen", w:"Drie werkwoorden: had + twee infinitieven." }
+  ]);
+
+  T("b2-vaste", [
+    { t:"cloze", q:"Ik heb lang ___ die brief gewacht.", a:"op", w:"wachten op." },
+    { t:"cloze", q:"Het hangt ___ het weer af.", a:"van", w:"afhangen van." },
+    { t:"cloze", q:"Hij lijdt ___ een chronische aandoening.", a:"aan", w:"lijden aan (ziekte)." },
+    { t:"cloze", q:"De ploeg leed ___ de druk van de media.", a:"onder", w:"lijden onder (omstandigheden)." },
+    { t:"cloze", q:"Ze is ___ haar examen geslaagd.", a:"voor", w:"slagen voor een examen." },
+    { t:"cloze", q:"Hij is ___ zijn opzet geslaagd.", a:"in", w:"slagen in een poging." },
+    { t:"cloze", q:"Ik erger me ___ dat constante geklaag.", a:"aan", w:"zich ergeren aan." },
+    { t:"cloze", q:"Zij is heel trots ___ haar dochter.", a:"op", w:"trots op." },
+    { t:"cloze", q:"Dit rapport bestaat ___ drie delen.", a:"uit", w:"bestaan uit." },
+    { t:"omzet", inst:"Vervang de zaak door er + voorzetsel.", q:"Ik reken op jouw steun.",
+      a:"Ik reken erop.", w:"Vast voorzetsel + zaak → er-vorm." },
+    { t:"fout", inst:"Verbeter de zin.", q:"Ik wacht voor de bus.",
+      a:"Ik wacht op de bus.", w:"Niet vertalen uit het Engels: wachten op." },
+    { t:"cloze", q:"Ben je ___ het resultaat tevreden?", a:"over", acc:["met"], w:"tevreden over (ook: tevreden met)." },
+    { t:"cloze", q:"De cijfers wijzen ___ een structureel probleem.", a:"op", w:"wijzen op." },
+    { t:"cloze", q:"Ik verheug me ___ het weerzien.", a:"op", w:"zich verheugen op." },
+    { t:"cloze", q:"Zij houdt zich strikt ___ de afspraken.", a:"aan", w:"zich houden aan." },
+    { t:"cloze", q:"Deze maatregel draagt bij ___ minder files.", a:"aan", acc:["tot"], w:"bijdragen aan/tot." }
+  ]);
+})();

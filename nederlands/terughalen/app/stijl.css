@@ -1,0 +1,141 @@
+/* Een bladzijde, geen dashboard. De tekst is de hoofdpersoon. */
+:root{
+  --papier:#fbf9f4; --blad:#fffefb; --inkt:#1f1e1c; --inkt2:#5f5950; --inkt3:#918a7e;
+  --lijn:#e6e0d3; --lijn2:#cfc7b6;
+  --accent:#1f5f5b; --accent2:#2a7a74; --accentzacht:#e2eeec;
+  --raak:#1f6b46; --raakzacht:#e3f0e6;
+  --naast:#a8392c; --naastzacht:#f7e7e3;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --mono:"SF Mono",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --papier:#141311; --blad:#1c1b18; --inkt:#ece7dc; --inkt2:#aaa294; --inkt3:#7d7568;
+    --lijn:#2c2a25; --lijn2:#413d36;
+    --accent:#6fbcb4; --accent2:#8ad3ca; --accentzacht:#1b2b29;
+    --raak:#7cc79a; --raakzacht:#17251c; --naast:#e08979; --naastzacht:#2a1c19;
+  }
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--papier);color:var(--inkt)}
+body{font-family:var(--sans);font-size:16px;line-height:1.6;-webkit-text-size-adjust:100%}
+
+/* ---------- bovenbalk ---------- */
+.balk{position:sticky;top:0;z-index:5;background:var(--papier);border-bottom:1px solid var(--lijn)}
+.voortgang{height:2px;background:var(--lijn)}
+.voortgang i{display:block;height:100%;background:var(--accent);transition:width .4s}
+.balkrij{max-width:720px;margin:0 auto;padding:.45rem 1.2rem;display:flex;align-items:center;gap:.9rem;
+  font-size:.78rem;color:var(--inkt3);letter-spacing:.03em}
+.balkrij .rek{flex:1}
+.balkrij .reeks{color:var(--accent)}
+.balkrij .waar{font-style:italic;max-width:16rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.menu{background:none;border:0;color:var(--inkt3);font-size:1.1rem;cursor:pointer;padding:0 .2rem;line-height:1}
+.menu:hover{color:var(--accent)}
+
+/* ---------- blad ---------- */
+.veld{max-width:720px;margin:0 auto;padding:2.2rem 1.2rem 6rem}
+.blad{background:var(--blad);border:1px solid var(--lijn);border-radius:3px;padding:2rem 2.2rem 1.6rem;
+  box-shadow:0 1px 1px rgba(31,30,28,.04),0 14px 40px -28px rgba(31,30,28,.5)}
+.etiket{display:flex;gap:.8rem;align-items:baseline;font-size:.72rem;text-transform:uppercase;
+  letter-spacing:.1em;color:var(--inkt3);margin-bottom:1.1rem}
+.etiket .rek{flex:1}
+.zacht{color:var(--inkt3);text-transform:none;letter-spacing:0;font-size:.8rem}
+h1{font-family:var(--serif);font-size:1.6rem;line-height:1.2;margin:0 0 1.1rem;letter-spacing:-.01em}
+h3{font-size:.74rem;text-transform:uppercase;letter-spacing:.1em;color:var(--inkt3);margin:1.6rem 0 .5rem}
+
+/* ---------- de tekst ---------- */
+.lees{font-family:var(--serif);font-size:1.16rem;line-height:1.95}
+.tekst .w{cursor:help;border-radius:2px}
+.tekst .w:hover{background:var(--accentzacht)}
+.tekst .w.gemarkeerd{box-shadow:inset 0 -2px 0 var(--accent2)}
+.ballon{position:relative;display:inline-block;margin-left:.35rem;padding:.05rem .45rem;
+  background:var(--accent);color:#fff;border-radius:3px;font-family:var(--sans);font-size:.72rem;
+  font-style:normal;white-space:nowrap;vertical-align:middle}
+
+/* het gat en zijn genezing */
+.gat{display:inline-block}
+.gatveld{font-family:var(--serif);font-size:1.16rem;line-height:1.4;color:var(--inkt);
+  background:transparent;border:0;border-bottom:2px solid var(--lijn2);border-radius:0;
+  padding:0 .1rem;text-align:center;outline:none;transition:border-color .15s,background .15s}
+.gatveld:focus{border-bottom-color:var(--accent);background:var(--accentzacht)}
+.gatveld.bezig{border-bottom-color:var(--accent2)}
+.gatveld.mis{border-bottom-color:var(--naast);background:var(--naastzacht);color:var(--naast)}
+.gatveld::placeholder{color:var(--inkt3);opacity:.55}
+.hersteld{background:var(--raakzacht);box-shadow:inset 0 -2px 0 var(--raak);border-radius:2px;
+  transition:background .7s ease,box-shadow .7s ease}
+.hersteld.hulp{background:var(--naastzacht);box-shadow:inset 0 -2px 0 var(--naast)}
+.hersteld.rustig{background:transparent;box-shadow:inset 0 -1px 0 var(--lijn2)}
+
+.gist{font-size:.94rem;color:var(--inkt2);border-left:2px solid var(--lijn2);padding-left:.9rem;margin:1.2rem 0}
+.gist.zicht{border-color:var(--accent)}
+.voet{font-size:.84rem;color:var(--inkt3);margin-top:1.4rem;padding-top:.9rem;border-top:1px solid var(--lijn)}
+
+/* ---------- vragen en schrijven ---------- */
+.vraag{font-family:var(--serif);font-size:1.28rem;line-height:1.45;margin:.2rem 0 1rem}
+.antwoordveld,.schrijfveld{font-family:var(--serif);font-size:1.08rem;width:100%;color:var(--inkt);
+  background:var(--papier);border:1px solid var(--lijn2);border-radius:3px;padding:.6rem .8rem}
+.antwoordveld:focus,.schrijfveld:focus{outline:2px solid var(--accent);outline-offset:1px}
+.antwoordveld.goed{border-color:var(--raak);background:var(--raakzacht)}
+.antwoordveld.mis{border-color:var(--naast);background:var(--naastzacht)}
+.schrijfveld{resize:vertical}
+.oordeel{font-size:.86rem;text-transform:uppercase;letter-spacing:.08em;margin:.8rem 0 .2rem}
+.oordeel.goed{color:var(--raak)} .oordeel.mis{color:var(--naast)}
+.modelzin{font-family:var(--serif);font-size:1.08rem;border-left:2px solid var(--accent);padding-left:.9rem;margin:.3rem 0 .8rem}
+.focus{font-size:.9rem;color:var(--inkt2);background:var(--accentzacht);padding:.5rem .8rem;border-radius:3px}
+
+/* ---------- snelvuur ---------- */
+.snel{text-align:center;min-height:19rem;display:flex;flex-direction:column}
+.snel .etiket{text-align:left}
+.klok{height:3px;background:var(--lijn);border-radius:2px;overflow:hidden;margin-bottom:2.2rem}
+.klok i{display:block;height:100%;width:100%;background:var(--accent);transition:width .12s linear}
+.snelvak{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:.9rem}
+.snelvraag{font-family:var(--serif);font-size:1.7rem;line-height:1.3;margin:0;max-width:26ch}
+.snelveld{font-family:var(--serif);font-size:1.5rem;text-align:center;width:min(22rem,80%);
+  background:transparent;color:var(--inkt);border:0;border-bottom:2px solid var(--lijn2);outline:none;padding:.2rem}
+.snelveld:focus{border-bottom-color:var(--accent)}
+.snelveld.raak{border-bottom-color:var(--raak);color:var(--raak)}
+.snelveld.naast{border-bottom-color:var(--naast);color:var(--naast)}
+.snelantwoord{font-family:var(--serif);font-size:1.25rem;color:var(--raak);margin:0}
+.snelantwoord small{color:var(--inkt3);font-family:var(--sans);font-size:.8rem}
+.snelteller{font-family:var(--serif);font-size:2.6rem;color:var(--inkt3);margin-top:1.6rem;line-height:1}
+.gemist{text-align:left;list-style:none;padding:0;margin:.6rem auto 0;max-width:26rem;font-size:.9rem;color:var(--inkt2)}
+.gemist li{padding:.15rem 0;border-bottom:1px solid var(--lijn)}
+.gemist b{font-family:var(--serif);color:var(--inkt)}
+
+/* ---------- uitslag, knoppen ---------- */
+.uitslag{margin-top:1.2rem}
+.score{font-family:var(--serif);font-size:1.2rem;margin:.2rem 0 .6rem}
+.score .record{color:var(--accent)}
+.rij{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:1.2rem;align-items:center}
+.knop{font:inherit;font-size:.92rem;padding:.45rem 1rem;border-radius:2px;border:1px solid var(--lijn2);
+  background:var(--papier);color:var(--inkt);cursor:pointer}
+.knop:hover{border-color:var(--accent)}
+.knop.hoofd{background:var(--accent);border-color:var(--accent);color:#fff}
+.knop.hoofd:hover{background:var(--accent2)}
+.knop.stil{background:transparent;color:var(--inkt2)}
+.knop.aan{background:var(--accentzacht);border-color:var(--accent);color:var(--accent)}
+.knop:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* ---------- pauze ---------- */
+.schaduw{position:fixed;inset:0;background:rgba(20,19,17,.45);z-index:20;display:flex;
+  align-items:flex-start;justify-content:center;padding:3rem 1.2rem;overflow:auto}
+.schaduw .blad{max-width:640px;width:100%}
+.cijfers{display:flex;gap:1.8rem;flex-wrap:wrap;border-bottom:1px solid var(--lijn);padding-bottom:1rem}
+.cijfer b{display:block;font-family:var(--serif);font-size:1.7rem;line-height:1.1}
+.cijfer span{font-size:.7rem;text-transform:uppercase;letter-spacing:.07em;color:var(--inkt3)}
+.tekstlijst{font-size:.9rem}
+.tr{display:flex;align-items:center;gap:.6rem;padding:.28rem 0;border-bottom:1px solid var(--lijn)}
+.tr span{flex:1}
+.tr small{color:var(--inkt3);flex:none}
+.trap{display:flex;gap:2px;flex:none}
+.trap i{width:6px;height:6px;border-radius:50%;background:var(--lijn2);display:block}
+.trap i.aan{background:var(--accent)}
+.let{background:var(--naastzacht);border-radius:3px;padding:.5rem .8rem;font-size:.88rem}
+
+@media(max-width:620px){
+  .blad{padding:1.4rem 1.2rem}
+  .lees{font-size:1.08rem;line-height:1.9}
+  .snelvraag{font-size:1.35rem}
+  h1{font-size:1.35rem}
+}
