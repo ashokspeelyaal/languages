@@ -1,0 +1,5 @@
+Engine v2 ready (2026-11-21). You may render now.
+Changed: (1) fr subtitles show the whole utterance (fixes lone "Hum." bug); (2) new character key `ashok` (voice fr-FR-AlainNeural, French only): put 'ashok' in the cast and write fr('ashok', ...) lines; (3) lesson iCloud name is NN-lesson-<slug>.mp4.
+Listen companion: name every scene chapter "Scène ..." (non-replay), then after episode_audio.py run: /opt/homebrew/bin/python3.13 francais/jurassic-serie/episode_render.py EP listen  -> EP/listen.mp4 (~1 min per 4 scenes).
+Cumulative: python3 francais/jurassic-serie/build_listen.py N -> iCloud FrenchVideos/A1/NN-listen-ep01-NN.mp4 (needs all earlier listen.mp4).
+Lesson encode adds -ar 48000 (see ENGINE.md step 5/6).

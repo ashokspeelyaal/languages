@@ -10,12 +10,57 @@ import numpy as np
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 from multiprocessing import Pool
 SERIE = pathlib.Path(__file__).resolve().parent; EP = pathlib.Path(sys.argv[1]).resolve()
+LISTEN = os.environ.get('FR_LISTEN') == '1'   # listen.mp4 mode: only the first (slow) pass of the "Scène" chapters
+def render_listen(ep=None):
+    """Build EP/listen.mp4 = title card (3 s) + every non-replay "Scène" chapter (photos, busts, FR+EN subtitles, vocab cards), 1 s gap
+    between scenes; no boards, À toi, replays or explanations. Same encode as the lesson (1280x720 30 fps crf 30, aac 80k mono 48 kHz).
+    Needs audio/timeline.json + narration.wav. Callable as: python3.13 episode_render.py EP listen"""
+    import wave, copy
+    ep = pathlib.Path(ep or EP).resolve(); TLo = json.load(open(ep / 'audio' / 'timeline.json'))
+    with wave.open(str(ep / 'audio' / 'narration.wav')) as w: SRo = w.getframerate(); pcm0 = w.readframes(w.getnframes())
+    items = TLo['items']; segs = []
+    for k, it in enumerate(items):
+        if it['kind'] == 'chapter' and it['title'].startswith('Scène') and not it['replay']:
+            end = it['start']; sc = [it]
+            for j in items[k + 1:]:
+                if j['kind'] == 'chapter': break
+                if j['kind'] == 'fr' and not j.get('replay'): end = max(end, j['end']); sc.append(j)
+            segs.append((it['start'], end + 0.8, sc))
+    assert segs, 'no Scène chapters found'
+    TITLE, LEADS, GAPS = 3.0, 0.4, 1.0; out = bytearray(b'\x00\x00' * int(TITLE * SRo)); cur = TITLE; new_items = []
+    def shift(o, dt):
+        o['start'] = round(o['start'] + dt, 3)
+        if 'end' in o: o['end'] = round(o['end'] + dt, 3)
+        if 'wt' in o: o['wt'] = [round(x + dt, 3) for x in o['wt']]
+        if 'vis' in o: o['vis'] = [[round(a + dt, 3), v] for a, v in o['vis']]
+        if 'cards' in o:
+            for c in o['cards']: c['t'] = round(c['t'] + dt, 3)
+        if 'imgs' in o:
+            for c in o['imgs']: c['t'] = round(c['t'] + dt, 3)
+        return o
+    for a, b, sc in segs:
+        dt = cur + LEADS - a; out += b'\x00\x00' * int(LEADS * SRo)
+        out += pcm0[int(a * SRo) * 2:int(b * SRo) * 2]
+        for o in sc: new_items.append(shift(copy.deepcopy(o), dt))
+        cur += LEADS + (b - a); out += b'\x00\x00' * int(GAPS * SRo); cur += GAPS
+    for o in new_items:
+        if o['kind'] == 'chapter': o['start'] = round(o['start'] - LEADS, 3); o['end'] = o['start']   # chip appears at the beginning of the lead-in
+    TLn = dict(TLo, duration=round(cur - GAPS, 3), items=new_items, boards={}, chapters=[i for i in new_items if i['kind'] == 'chapter'])
+    json.dump(TLn, open(ep / 'audio' / 'timeline_listen.json', 'w'), ensure_ascii=False)
+    with wave.open(str(ep / 'audio' / 'narration_listen.wav'), 'wb') as w: w.setnchannels(1); w.setsampwidth(2); w.setframerate(SRo); w.writeframes(bytes(out[:int((cur - GAPS) * SRo) * 2]))
+    env = dict(os.environ, FR_LISTEN='1'); r = subprocess.run([sys.executable, '-u', __file__, str(ep)], env=env)
+    if r.returncode: raise SystemExit('listen render failed')
+    subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-i', str(ep / 'master_listen.mp4'), '-vf', 'scale=1280:-2', '-c:v', 'libx264', '-profile:v', 'high', '-preset', 'slow', '-crf', '30',
+        '-pix_fmt', 'yuv420p', '-r', '30', '-c:a', 'aac', '-b:a', '80k', '-ac', '1', '-ar', '48000', '-movflags', '+faststart', str(ep / 'listen.mp4')], check=True)
+    (ep / 'master_listen.mp4').unlink(); print('listen.mp4', round((cur - GAPS) / 60, 2), 'min')
+if not LISTEN and len(sys.argv) > 2 and sys.argv[2] == 'listen': render_listen(); sys.exit()
 sys.path.insert(0, str(SERIE)); sys.path.insert(0, str(EP))
 import characters as CH
 from imgmap import IMG as IMGMAP
-IMGD = EP / 'images'; TL = json.load(open(EP / 'audio' / 'timeline.json')); ITEMS = TL['items']; BOARDS = TL['boards']; META = TL['meta']
-FPS = 30; W, H = 1920, 1080; OW, OH = 1280, 720; END_EXTRA = 12.0; ADUR = TL['duration']; DUR = ADUR + END_EXTRA
-OUT = EP / 'master_720.mp4'
+IMGD = EP / 'images'; TL = json.load(open(EP / 'audio' / ('timeline_listen.json' if LISTEN else 'timeline.json'))); ITEMS = TL['items']; BOARDS = TL['boards']; META = TL['meta']
+FPS = 30; W, H = 1920, 1080; OW, OH = 1280, 720; END_EXTRA = 0.5 if LISTEN else 12.0; ADUR = TL['duration']; DUR = ADUR + END_EXTRA
+OUT = EP / ('master_listen.mp4' if LISTEN else 'master_720.mp4')
+AUDIO_WAV = EP / 'audio' / ('narration_listen.wav' if LISTEN else 'narration.wav'); INTRO = 3.0 if LISTEN else 4.0
 HEL = '/System/Library/Fonts/Helvetica.ttc'; CHALK = '/System/Library/Fonts/Supplemental/ChalkboardSE.ttc'
 _f = {}
 def font(s, b=False):
@@ -177,7 +222,7 @@ def wrap(d, toks, fn, fbn, maxw):
     lines = [[]]; w = 0; sp = d.textlength(' ', font=fn)
     for k, tk in enumerate(toks):
         tw = d.textlength(tk, font=fbn)
-        if lines[-1] and w + tw > maxw: lines.append([]); w = 0
+        if lines[-1] and w + tw > maxw and tk not in ('!', '?', ':', ';', '»', '…'): lines.append([]); w = 0   # lone punctuation never starts a line
         lines[-1].append(k); w += tw + sp
     return lines
 def sentence_window(it, t):
@@ -186,8 +231,10 @@ def sentence_window(it, t):
         if re.search(r'[.!?:]$', tk) or k == len(toks) - 1: sents.append((a, k + 1)); a = k + 1
         elif tk in ('?', '!', ':') and k > a: sents.append((a, k + 1)); a = k + 1
     a, b = [r for r in sents if r[0] <= ci < r[1]][0]; return a, b, ci
-def draw_tokens(d, it, t, x_center, y_top, maxw, sizes, hi, base_col, fr_col=None, maxlines=2, hi_all=True):
-    a, b, ci = sentence_window(it, t); st = it['tokens'][a:b]; lg = it['langs'][a:b]
+def draw_tokens(d, it, t, x_center, y_top, maxw, sizes, hi, base_col, fr_col=None, maxlines=2, whole=False):
+    a, b, ci = sentence_window(it, t)
+    if whole: a, b = 0, len(it['tokens'])   # show the full utterance (matches the English line under it)
+    st = it['tokens'][a:b]; lg = it['langs'][a:b]
     for fs in sizes:
         fn, fb = font(fs), font(fs, True); lines = wrap(d, st, fn, fb, maxw)
         if len(lines) <= maxlines: break
@@ -210,6 +257,9 @@ def pill(d, x, y, text, f, fill, fg=(255, 255, 255), a=255):
     tw = d.textlength(text, font=f); h = f.size
     d.rounded_rectangle([x, y, x + tw + 52, y + h + 24], (h + 24) // 2, fill=fill + (a,)); d.text((x + 26, y + 12 + h / 2), text, font=f, fill=fg + (a,), anchor='lm')
 CARD_LEN = 3.6
+NEXT_TITLES = {1: "Les dinosaures", 2: "Grand ou petit ?", 3: "La visite", 4: "Au centre des visiteurs", 5: "La tempête",
+               6: "Le nouveau parc", 7: "Les raptors", 8: "Qu'est-ce qui s'est passé ?", 9: "L'évasion",
+               10: "Il y a 65 millions d'années", 11: "Le retour"}
 def card_sched():
     cards = sorted([(c['t'], c) for it in TIT if it['kind'] == 'fr' and not it.get('replay') for c in it['cards']], key=lambda x: x[0]); free = [0.0, 0.0]; out = []
     for t, c in cards:
@@ -229,14 +279,14 @@ def sub_bar(im, it, t, sp):
     d = ImageDraw.Draw(im, 'RGBA'); y0 = 840; d.rectangle([0, y0, W, H], fill=NAVY + (240,)); c = CH.COLOR[sp]
     d.text((60, y0 + 10), CH.FULL[sp].upper(), font=font(22, True), fill=c + (255,))
     if it['kind'] == 'fr':
-        y, fs = draw_tokens(d, it, t, W / 2, y0 + 36, W - 220, (64, 56, 50), YEL, WHITE)
+        y, fs = draw_tokens(d, it, t, W / 2, y0 + 36, W - 220, (60, 54, 48, 44, 40, 36), YEL, WHITE, whole=True)
         if not it.get('replay') and it.get('en'):
-            f = font(40, False)
+            f = font(38, False)
             while d.textlength(it['en'], font=f) > W - 200 and f.size > 30: f = font(f.size - 2)
             lines = [it['en']]
             if d.textlength(it['en'], font=f) > W - 200:
                 w_ = it['en'].split(); h = len(w_) // 2; lines = [' '.join(w_[:h]), ' '.join(w_[h:])]
-            yy = max(y + 4, y0 + 36 + 70 if y < y0 + 110 else y + 4)
+            yy = y + 4
             for ln in lines: d.text((W / 2, yy), ln, font=f, fill=CYAN + (255,), anchor='ma'); yy += f.size + 6
     else:
         draw_tokens(d, it, t, W / 2, y0 + 44, W - 220, (58, 52, 46), YEL, WHITE, fr_col=GOLD)
@@ -284,28 +334,28 @@ def frame(n):
         for c in CARDS:
             age = t - c['st']
             if 0 <= age < CARD_LEN: draw_card(im, c, age)
-    if t < 4.0:
-        a = 1.0 if t < 3.0 else max(0, 1 - (t - 3.0))
-        o = Image.new('RGBA', (W, H), NAVY + (int(215 * a),)); im = comp(im, o); d = ImageDraw.Draw(im, 'RGBA'); A = int(255 * a)
+    if t < INTRO:
+        a = 1.0 if t < INTRO - 1.0 else max(0, 1 - (t - (INTRO - 1.0)))
+        o = Image.new('RGBA', (W, H), NAVY + (int((255 if LISTEN else 215) * a),)); im = comp(im, o); d = ImageDraw.Draw(im, 'RGBA'); A = int(255 * a)
         d.text((W / 2, H / 2 - 150), 'Français Jurassique', font=font(110, True), fill=(255, 255, 255, A), anchor='mm')
         d.text((W / 2, H / 2 - 30), f"Épisode {META['num']} · {META['title']}", font=font(70, True), fill=GOLD + (A,), anchor='mm')
         d.text((W / 2, H / 2 + 60), f"Niveau {META['level']}  ·  français pour Ashok", font=font(44), fill=CYAN + (A,), anchor='mm')
-        for i, who in enumerate(['ellie', 'alan', 'malcolm', 'hammond', 'owen', 'claire']):
-            sp_ = CH.bust(who, 'closed', False, 200); lay = Image.new('RGBA', (W, H), (0, 0, 0, 0)); lay.paste(sp_, (W // 2 - 3 * 190 + i * 190, H // 2 + 130))
+        for i, who in enumerate(['ellie', 'alan', 'malcolm', 'hammond', 'owen', 'claire', 'ashok']):
+            sp_ = CH.bust(who, 'closed', False, 200); lay = Image.new('RGBA', (W, H), (0, 0, 0, 0)); lay.paste(sp_, (int(W // 2 - 3.5 * 190 + i * 190), H // 2 + 130))
             la = np.array(lay.getchannel('A')); lay.putalpha(Image.fromarray((la * a).astype(np.uint8))); im = comp(im, lay)
         d = ImageDraw.Draw(im, 'RGBA')
     te = ADUR - 0.5
-    if t > te:
+    if t > te and not LISTEN:
         a = min(1, (t - te) / 0.9); A = int(255 * a); o = Image.new('RGBA', (W, H), NAVY + (A,)); im = comp(im, o); d = ImageDraw.Draw(im, 'RGBA')
         d.text((W / 2, 110), 'À bientôt, Ashok !', font=font(84, True), fill=(255, 255, 255, A), anchor='mm')
-        d.text((W / 2, 200), f"Épisode {META['num']} · {META['title']}  ·  Prochain épisode : Les dinosaures", font=font(40), fill=GOLD + (A,), anchor='mm')
+        d.text((W / 2, 200), f"Épisode {META['num']} · {META['title']}" + (f"  ·  Prochain épisode : {NEXT_TITLES[int(META['num'])]}" if int(META['num']) in NEXT_TITLES else "  ·  Félicitations ! Tu as fini le niveau A2 !"), font=font(40), fill=GOLD + (A,), anchor='mm')
         d.text((W / 2, 280), "Photos : Wikimedia Commons – auteurs (licence)", font=font(32), fill=CYAN + (A,), anchor='mm')
         cr = credits(); nc = 3; per = (len(cr) + nc - 1) // nc
         for ci in range(nc):
             for r, (au, li) in enumerate(cr[ci * per:(ci + 1) * per]):
                 au = au if len(au) <= 30 else au[:29] + '…'; x = 60 + ci * 620; y = 330 + r * 44
                 d.text((x, y), au, font=font(26), fill=(255, 255, 255, A)); d.text((x + d.textlength(au, font=font(26)) + 10, y + 3), f'({li})', font=font(20), fill=(160, 190, 230, A))
-        d.text((W / 2, 1030), 'Voix : Azure fr-FR (Vivienne, Rémy, Lucien, Maurice)  ·  personnages dessinés pour ce projet', font=font(26), fill=(160, 190, 230, A), anchor='mm')
+        d.text((W / 2, 1030), 'Voix : Azure fr-FR (Vivienne, Rémy, Lucien, Maurice, Alain)  ·  personnages dessinés pour ce projet', font=font(26), fill=(160, 190, 230, A), anchor='mm')
     return im.convert('RGB')
 _CR = None
 def credits():
@@ -326,7 +376,7 @@ if __name__ == '__main__':
         sys.exit()
     N = int(DUR * FPS); t0 = time.time()
     ff = subprocess.Popen(['ffmpeg', '-y', '-loglevel', 'error', '-f', 'rawvideo', '-pix_fmt', 'rgb24', '-s', f'{OW}x{OH}', '-r', str(FPS), '-i', '-',
-        '-i', str(EP / 'audio' / 'narration.wav'), '-af', f'apad=pad_dur={END_EXTRA + 1}', '-c:v', 'libx264', '-preset', 'veryfast', '-crf', '18', '-pix_fmt', 'yuv420p',
+        '-i', str(AUDIO_WAV), '-af', f'apad=pad_dur={END_EXTRA + 1}', '-c:v', 'libx264', '-preset', 'veryfast', '-crf', '18', '-pix_fmt', 'yuv420p',
         '-c:a', 'aac', '-b:a', '128k', '-t', f'{DUR:.3f}', str(OUT)], stdin=subprocess.PIPE)
     with Pool(os.cpu_count()) as p:
         for i, b in enumerate(p.imap(render, range(N), chunksize=8)):

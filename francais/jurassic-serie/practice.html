@@ -1,0 +1,2352 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Français Jurassique · pratique</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>🦖</text></svg>">
+<style>
+:root{--bg:#0b1710;--bg2:#12251a;--panel:#162c1f;--line:#26452f;--text:#e9f0e4;--mute:#97ad9b;--amber:#e3a43a;--amber2:#f6c35c;--ok:#62d487;--bad:#ee6a5f;--half:#e8c15a;--m:#6db0ff;--f:#ff7f93;--r:14px}
+[hidden]{display:none!important}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;background:radial-gradient(1200px 600px at 50% -200px,#1d3d27 0,var(--bg) 70%) fixed,var(--bg);color:var(--text);font:18px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;min-height:100vh;padding-bottom:84px}
+#top{position:sticky;top:0;z-index:5;background:rgba(11,23,16,.92);backdrop-filter:blur(6px);border-bottom:1px solid var(--line);padding:calc(8px + env(safe-area-inset-top)) 16px 0}
+#top .row{display:flex;align-items:center;gap:12px;max-width:720px;margin:0 auto;padding-bottom:7px}
+#pauseBtn{background:var(--panel);color:var(--amber);border:1px solid var(--line);border-radius:10px;font-size:18px;width:42px;height:38px;cursor:pointer}
+#info{flex:1;font-size:15px;color:var(--mute)}#info b{color:var(--amber2)}#info .sp{color:var(--bad)}
+#meter{height:3px;background:var(--line);margin:0 -16px}#bar{height:3px;width:0;background:linear-gradient(90deg,#3f9b5b,var(--amber));transition:width .3s}
+.card{max-width:720px;margin:18px auto 0;padding:20px 16px 8px}
+.head{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+.tt{color:var(--mute);font-size:13px;text-transform:uppercase;letter-spacing:.08em}.retry{font-size:12px;color:var(--bg);background:var(--amber);border-radius:8px;padding:1px 8px}
+.chip{display:inline-block;font-size:13px;font-weight:600;padding:2px 10px;border-radius:999px;border:1px solid currentColor;white-space:nowrap}
+.ch-ellie{color:#6fd68c}.ch-alan{color:#e3a43a}.ch-malcolm{color:#f2796d}.ch-hammond{color:#8cc3ea}.ch-owen{color:#f0954a}.ch-claire{color:#c39cf0}.ch-ashok{color:#58d1c1}
+.sub{color:var(--mute);font-size:15px;margin:6px 0}.en{font-style:italic}
+.prompt{margin:10px 0 14px}.big{font-size:24px;line-height:1.5}.prompt.wrong{color:#f5b3ac}.say{color:var(--amber);font-weight:600}
+.pl{color:var(--amber2);font-weight:600;margin-right:6px}.blk{color:var(--amber)}
+input.ans,input.inl{font:inherit;color:var(--text);background:var(--bg2);border:2px solid var(--line);border-radius:12px;padding:10px 12px;outline:none;font-size:20px}
+input.ans{width:100%;margin:6px 0 4px}input.inl{display:inline-block;width:9.5em;max-width:100%;padding:3px 10px;margin:0 3px;font-size:inherit;vertical-align:baseline;text-align:center}
+input:focus{border-color:var(--amber);box-shadow:0 0 0 3px rgba(227,164,58,.18)}input:disabled{opacity:.8}
+.btn{font:inherit;font-size:17px;color:var(--text);background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 16px;cursor:pointer;min-height:46px}
+.btn.primary,.btn:not(.ghost):not(.g1):not(.g2):not(.g3):not(.g4){background:#1f4a2c;border-color:#2e7a45}
+.btn.ghost{background:transparent;color:var(--mute)}.btn:hover{border-color:var(--amber)}
+kbd{font:12px ui-monospace,Menlo,monospace;color:var(--mute);border:1px solid var(--line);border-radius:5px;padding:0 5px;margin-left:6px;background:rgba(0,0,0,.25)}
+.choice kbd,.tile kbd{margin:0 8px 0 0}
+.acts,.fbtn{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}.fbtn{margin-top:16px}
+.choices{display:grid;gap:10px;margin:8px 0}.choices.row{grid-template-columns:repeat(3,1fr)}
+.choice{text-align:left;font:inherit;font-size:19px;color:var(--text);background:var(--panel);border:2px solid var(--line);border-radius:12px;padding:12px 14px;cursor:pointer;min-height:50px}
+.choice:hover:not(:disabled){border-color:var(--amber)}.choice.right{border-color:var(--ok);background:rgba(98,212,135,.14)}.choice.wrong{border-color:var(--bad);background:rgba(238,106,95,.14)}.choice:disabled{cursor:default;color:var(--text)}
+.hint{background:rgba(227,164,58,.1);border-left:3px solid var(--amber);padding:8px 12px;border-radius:8px;margin:8px 0;font-size:16px}
+.fbhead{font-size:22px;font-weight:700;margin:14px 0 4px}.fbhead.ok{color:var(--ok)}.fbhead.half{color:var(--half)}.fbhead.bad{color:var(--bad)}.fbhead b{color:var(--amber2);text-decoration:underline}
+.fbans{font-size:21px;margin:4px 0}.fbans b{color:var(--amber2)}.fbgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:6px;margin:6px 0}.fbgrid>div{padding:6px 10px;border-radius:8px;background:var(--bg2);border-left:3px solid var(--bad)}.fbgrid .ok{border-color:var(--ok)}.fbgrid .half{border-color:var(--half)}
+.rule{margin:12px 0 4px;padding:10px 12px;background:var(--bg2);border-radius:10px;border:1px dashed var(--line)}.formula{color:var(--amber2);font-family:ui-monospace,Menlo,monospace;font-size:15px}.formula.big{font-size:17px;margin:6px 0}
+.whybox{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:10px 0;font-size:16px}
+.calnote{color:var(--amber2)}.calsum{margin:14px 0;padding:10px 14px;background:var(--bg2);border-radius:12px;border:1px solid var(--line)}.amber{color:var(--amber2)}
+.gm{color:var(--m);font-weight:700}.gf{color:var(--f);font-weight:700}
+.flash{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:28px 16px;text-align:center;margin:10px 0}.fw{font-size:34px;font-weight:600}.fen{font-size:24px;color:var(--mute);margin-top:6px}#fback{margin-top:14px;border-top:1px solid var(--line);padding-top:12px}
+.grades{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.grades .btn{padding:10px 4px;text-align:center}.g1{background:#4a2420;border-color:#8a3f37}.g2{background:#4a3d1c;border-color:#8a742f}.g3{background:#1f4a2c;border-color:#2e7a45}.g4{background:#1a4a45;border-color:#2e8a80}
+.mini{font-size:16px;background:transparent;border:1px solid var(--line);border-radius:8px;color:var(--text);cursor:pointer;padding:0 8px}.bigspk{font:inherit;font-size:22px;padding:16px 26px;border-radius:14px;background:var(--panel);color:var(--amber2);border:2px solid var(--amber);cursor:pointer}
+.passage{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--amber);border-radius:12px;padding:12px 16px;margin:8px 0 14px;line-height:1.9;font-size:18px}.ptitle{font-weight:700;color:var(--amber2);margin-bottom:2px}.passage p{margin:0}
+.qq{font-weight:600}
+.clock{width:120px;height:120px;color:var(--text);display:block;margin:4px auto}.prompt .big{text-align:center}
+.built{min-height:56px;border:2px dashed var(--line);border-radius:12px;padding:8px;margin:8px 0;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.tiles{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}.tile{font:inherit;font-size:19px;color:var(--text);background:var(--panel);border:2px solid var(--line);border-radius:10px;padding:8px 12px;cursor:pointer}.tile.on{border-color:var(--amber)}.tile.used{opacity:.3}.tile:hover:not(.used){border-color:var(--amber)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:8px;margin:8px 0}.cell{display:flex;align-items:center;gap:6px}.cell .pl{min-width:4.2em;text-align:right}.cell input.inl{width:100%;margin:0;text-align:left}
+.sflash{font-size:24px;font-weight:700;margin:16px 0}.sflash.ok{color:var(--ok)}.sflash.bad{color:var(--bad)}.card.spr{border-top:3px solid var(--bad)}
+.sumh{font-size:14px;text-transform:uppercase;letter-spacing:.1em;color:var(--amber)}.sum .big{font-size:32px;font-weight:700;margin:4px 0}.refl{margin-top:18px}.refl label{font-weight:600}.flav{margin-top:14px;font-style:italic}
+#acc{position:fixed;left:0;right:0;bottom:0;background:rgba(11,23,16,.96);border-top:1px solid var(--line);padding:6px 6px calc(6px + env(safe-area-inset-bottom));display:flex;justify-content:center;flex-wrap:wrap;gap:6px;z-index:6}#acc[hidden]{display:none}
+.acc{font:inherit;font-size:20px;min-width:38px;height:42px;background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:9px;cursor:pointer}
+#pause{position:fixed;inset:0;background:rgba(5,12,8,.88);z-index:20;overflow:auto;padding:20px 16px}#pause[hidden]{display:none}
+.pbox{max-width:560px;margin:0 auto;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:20px}.pbox h2{margin:0 0 4px;color:var(--amber2)}.pbox label{display:block;margin:14px 0 4px;color:var(--mute);font-size:15px}
+select,textarea{width:100%;font:inherit;font-size:17px;color:var(--text);background:var(--bg2);border:2px solid var(--line);border-radius:10px;padding:8px}textarea{min-height:90px;font-size:13px;font-family:ui-monospace,Menlo,monospace}
+.prow{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0}
+@media(max-width:520px){body{font-size:17px}.big{font-size:21px}.fw{font-size:28px}.choices.row{grid-template-columns:1fr}input.inl{width:8em}}
+</style>
+</head>
+<body>
+<div id="top"><div class="row"><button id="pauseBtn" aria-label="Pause and settings" title="Pause / settings (Esc)">⏸</button><div id="info"></div></div><div id="meter"><div id="bar"></div></div></div>
+<main id="card" class="card"></main>
+<div id="acc" hidden></div>
+<div id="pause" hidden><div class="pbox"><h2>⏸ Pause</h2><div class="sub">The timer is stopped. Esc to resume.</div>
+<label for="setWatched">I've watched up to…</label><select id="setWatched"></select>
+<label for="setItems">Items per expedition</label><select id="setItems"><option value="10">10 items</option><option value="15">15 items</option><option value="25">25 items</option></select>
+<label for="setMins">Time box per expedition</label><select id="setMins"><option value="3">3 minutes</option><option value="5">5 minutes</option><option value="8">8 minutes</option></select>
+<div class="prow"><button id="resumeBtn" class="btn primary">Resume ↵</button></div>
+<label for="xfer">Progress: export, import or reset</label><textarea id="xfer" spellcheck="false" placeholder="Export fills this box. To import, paste an export here."></textarea>
+<div class="prow"><button id="exportBtn" class="btn">Export</button><button id="importBtn" class="btn">Import</button><button id="resetBtn" class="btn ghost">Reset all progress</button></div><div id="xmsg" class="sub"></div></div></div>
+<script>
+(function(){'use strict';
+/* ===== DATA: one big object grouped by episode (1-12). Text blocks: fields split by |, alternatives by ; ===== */
+var DATA={};for(var i=1;i<=12;i++)DATA[i]={tr:[],fill:[],agree:[],fix:[],rs:[],gap:[],voc:[],pas:[]};
+function _L(s){return s.split('\n').map(function(x){return x.trim()}).filter(Boolean)}
+function _A(s){return(s||'').split(';').map(function(x){return x.trim()}).filter(Boolean)}
+function EP(n,o){var D=DATA[n];
+ if(o.tr)_L(o.tr).forEach(function(l){var p=l.split('|');D.tr.push({en:p[0],a:_A(p[1]),tag:p[2]})});
+ ['fill','agree'].forEach(function(k){if(o[k])_L(o[k]).forEach(function(l){var p=l.split('|');D[k].push({q:p[0],a:_A(p[1]),tag:p[2],note:p[3]||'',en:p[4]||''})})});
+ if(o.fix)_L(o.fix).forEach(function(l){var p=l.split('|');D.fix.push({q:p[0],a:_A(p[1]),tag:p[2]})});
+ if(o.rs)_L(o.rs).forEach(function(l){var p=l.split('|');D.rs.push({q:p[0],o:p[1].split('~'),tag:p[2]})});
+ if(o.gap)_L(o.gap).forEach(function(l){var p=l.split('|');D.gap.push({who:p[0],q:p[1],a:_A(p[2]),en:p[3]||'',tag:p[4]||'etre'})});
+ if(o.voc)_L(o.voc).forEach(function(l){var p=l.split('|');D.voc.push({g:p[0],fr:p[1],en:p[2],cat:p[3]})});
+}
+/* passages: @title|char then  fr|en lines (blanks as [[word]]), ?vf|statement|V/F  ?mc|question|right~wrong~wrong  ?ty|question|answer;alt */
+function PAS(n,s){var cur=null;_L(s).forEach(function(l){
+ if(l[0]==='@'){var p=l.slice(1).split('|');cur={title:p[0],ch:p[1],s:[],q:[]};DATA[n].pas.push(cur)}
+ else if(l[0]==='?'){var p=l.slice(1).split('|');cur.q.push({t:p[0],q:p[1],a:p[2]})}
+ else{var p=l.split('|');cur.s.push({fr:p[0],en:p[1]||''})}})}
+/* grammar notes per tag: char | short label | formula | explanation */
+var WHY={};
+(function(t){_L(t).forEach(function(l){var p=l.split('|');WHY[p[0]]={c:p[1],k:p[2],f:p[3],t:p[4]}})})(`
+etre|ellie|être|je suis · tu es · il/elle est · nous sommes · vous êtes · ils/elles sont|être (to be) is irregular, so learn the six forms as a song. Tip: "tu es" and "il est" sound the same (è).
+pron|ellie|pronouns|je · tu · il/elle/on · nous · vous · ils/elles|Subject pronouns tell you who does the verb. on = we (informal). ils covers a mixed group, elles only women.
+tuvous|ellie|tu or vous|tu = one friend or child · vous = polite OR several people|When in doubt, use vous. In the park they all say tu to you, Ashok, because you are colleagues.
+job|ellie|jobs|Je suis + MÉTIER (no un/une)|After être, a job takes no article: Je suis ingénieur. English says "an engineer", French does not.
+nat|ellie|nationality|masculine + e = feminine · belge stays belge|Nationalities agree with the person (indien → indienne) and have no capital letter.
+jappelle|ellie|je m'appelle|je m'appelle + NOM|Learn it as one block. It literally means "I call myself".
+jhabite|ellie|j'habite|j'habite + en + pays (feminine)|je becomes j' before a vowel or a silent h. Feminine countries take en.
+cava|ellie|ça va ?|Comment ça va ? → Ça va (bien), merci. Et toi / Et vous ?|Give the question back: Et toi ? (friend) or Et vous ? (polite).
+elis|ellie|elision|je → j' · le/la → l' · de → d' · ne → n' (before a vowel or silent h)|French avoids two vowels meeting, so the first word loses its vowel and takes an apostrophe.
+irreg|malcolm|chaos!|irregular = no pattern, just memorise|Malcolm: chaos has patterns, but this verb does not follow them. Sing it ten times a day.
+avoir|ellie|avoir|j'ai · tu as · il/elle a · nous avons · vous avez · ils/elles ont|avoir (to have). Careful: il a (has) vs il y a (there is).
+gender|ellie|gender|le dinosaure (m, blue) · la queue (f, red)|Every noun is masculine or feminine. Learn the article together with the noun, always.
+art|ellie|articles|un / une → des · le / la → les · le/la + voyelle → l'|un/une = a, le/la = the. In the plural both become des / les.
+elisl|ellie|l'|le / la + voyelle → l' (l'œuf, l'île)|Before a vowel or silent h, le and la become l'. You cannot hear the gender any more, so learn it with the noun.
+ilya|hammond|il y a|il y a + nom (singular or plural)|il y a = there is / there are. One form for singular and plural. Never ils y ont!
+age|malcolm|age|j'ai + nombre + ans|In English you ARE 35. In French you HAVE 35 years: j'ai 35 ans.
+peur|malcolm|avoir peur|j'ai peur = I have fear|Feelings use avoir, not être: j'ai peur, j'ai froid, j'ai faim.
+num20|hammond|numbers 0-20|zéro un deux trois quatre cinq six sept huit neuf dix onze douze treize quatorze quinze seize dix-sept dix-huit dix-neuf vingt|Learn 0 to 16 as separate words. After that it is dix + number.
+agree|ellie|agreement|adjectif + e (fem.) · + s (plur.) · + es (fem. plur.)|The adjective matches the noun: grand → grande → grands → grandes. Final -s, -t, -d are silent in the masculine.
+agr2|malcolm|chaos endings|-eux → -euse · -if → -ive · -ien → -ienne · blanc → blanche · vieux → vieille|Some adjective endings change in the feminine. Malcolm: chaos with a pattern.
+pos|ellie|position|noun + adjective, EXCEPT BAGS: beauté, âge, bonté, grandeur|Most adjectives come after the noun (une plante verte). BAGS adjectives come before: beau, jeune, vieux, bon, mauvais, petit, grand, joli, nouveau.
+cest|ellie|c'est / il est|c'est + un/une + nom · il/elle est + adjectif · il est + métier|c'est introduces a noun with an article; il est goes with an adjective or a job without article.
+num100|hammond|numbers 20-100|vingt trente quarante cinquante soixante · soixante-dix (septante) · quatre-vingts · quatre-vingt-dix (nonante) · cent|In Belgium it is simpler: septante (70) and nonante (90). Useful for you in Genk!
+colors|ellie|colours|vert · rouge · bleu · jaune · noir · blanc · gris · marron (invariable)|Colours are adjectives and agree (verte, blanche), but marron never changes.
+er|ellie|-er verbs|radical + e · es · e · ons · ez · ent|Four forms sound the same: je mange, tu manges, il mange, ils mangent (endings -e, -es, -ent are silent).
+er2|malcolm|little chaos|manger → nous mangeons (keep the e) · aimer → j'aime|With nous, manger keeps its e so that the g stays soft. Je becomes j' before a vowel.
+neg|ellie|negation|ne + VERBE + pas (n' before a vowel)|Negation works like brackets around the verb: je ne mange pas, je n'aime pas.
+negde|malcolm|pas de|après pas : un / une / des → de|Je mange des plantes → Je ne mange pas de plantes. (le/la/les stay: je n'aime pas la viande.)
+aimer|ellie|aimer + le/la/les|j'aime + le / la / les|After aimer, adorer, détester you use the definite article: j'aime les dinosaures.
+quest|ellie|questions|Tu aimes ? · Est-ce que tu aimes ? · mot interrogatif + est-ce que|Three ways to ask: intonation, est-ce que, or a question word (où, quand, comment, pourquoi, combien, qui, qu'est-ce que).
+aller|malcolm|aller|vais · vas · va · allons · allez · vont|Irregular: the chaos club. Learn aller, faire, venir and prendre by heart.
+faire|malcolm|faire|fais · fais · fait · faisons · faites · font|Irregular. Note vous faites and ils font.
+venir|malcolm|venir|viens · viens · vient · venons · venez · viennent|Irregular. Je viens de + origine.
+prendre|malcolm|prendre|prends · prends · prend · prenons · prenez · prennent|Irregular. prendre = to take / to have (a coffee).
+contr|ellie|à / de + le|à + le = au · à + les = aux · de + le = du · de + les = des|Only le and les contract. à la and à l' stay as they are.
+country|ellie|countries|en + fem. · au + masc. · aux + plur. | venir : de / d' / du / des|Je vais en Belgique, au Canada, aux États-Unis. Je viens de France, d'Inde, du Canada.
+prep|ellie|position|devant · derrière · dans · sur · sous · à côté de · entre · en face de|Position words. With à côté de / en face de, the contraction applies: à côté du restaurant.
+time|hammond|time|Il est … heure(s) · et quart · et demie · moins le quart · midi · minuit|Il est une heure, deux heures. Quarter past = et quart, half past = et demie, quarter to = moins le quart.
+fproche|ellie|futur proche|aller (présent) + INFINITIF|Je vais manger, nous allons partir. Negative: je ne vais pas manger.
+imper|ellie|imperative|tu / nous / vous form without the pronoun|Regarde ! Regardons ! Regardez ! The -er verbs lose the s in the tu form.
+imper2|malcolm|chaos commands|Viens ! · Cours ! · Reste ici ! · Allons-y ! · Ne bouge pas !|Negative commands wrap the verb: ne + VERBE + pas.
+faut|ellie|il faut|il faut + INFINITIF|il faut = you have to / one must. It never changes: Il faut courir.
+weather|ellie|weather|il fait beau/mauvais/chaud/froid · il pleut · il y a du vent|Weather uses il fait + adjective, or special verbs like il pleut.
+feel|malcolm|feelings|avoir peur / froid / chaud / faim / soif|Feelings use avoir, not être. In English you ARE cold; in French you HAVE cold.
+refl|ellie|reflexive|SUJET + me/te/se/nous/vous/se + VERBE|The pronoun matches the subject: je me lève, tu te lèves, il se lève. You already knew one: je m'appelle!
+reflneg|ellie|reflexive neg.|je ne me lève pas|The negation brackets go around the pronoun and the verb: ne + me lève + pas.
+routine|claire|routine|d'abord · ensuite · après · enfin · tôt · tard · jamais|Claire's routine words put your day in order: d'abord, ensuite, après, enfin.
+partit|ellie|partitive|du (m) · de la (f) · de l' (voyelle) · des (plur.) · pas de|Use it for an unknown amount of something. After a negation everything becomes de: pas de café.
+quant|ellie|quantity|beaucoup de · un peu de · assez de · trop de · une tasse de|After a quantity word you use de only, never du/de la/des.
+boire|malcolm|boire|bois · bois · boit · buvons · buvez · boivent|Malcolm: chaos in a glass. The stem changes: boi- / buv- / boiv-.
+vous2|claire|vous|vous = politeness, strangers, bosses, groups|With vous the verb has the -ez form (vous êtes, vous avez, vous parlez) and adjectives stay singular for one person.
+bignum|hammond|big numbers|mille (never mills) · deux mille · un million · deux millions|mille never takes an s: deux mille. Million is a noun: un million, deux millions d'années.
+pvd|malcolm|pouvoir · vouloir · devoir|peux · veux · dois (je, tu) · peut · veut · doit · pouvons · voulons · devons|All three are irregular and take an infinitive: Je peux entrer. Tu veux voir Blue ? Nous devons attendre.
+irre|ellie|-ir and -re|finir: finis, finit, finissons · attendre: attends, attend, attendons|Two more regular families. -ir verbs add -iss- in the plural; -re verbs drop the ending.
+compar|ellie|comparison|plus / moins / aussi + ADJ + que|Le T. rex est plus grand que le raptor. Before a vowel que becomes qu'.
+superl|ellie|superlative|le / la / les plus + ADJ|Blue est la plus intelligente. The article and adjective agree with the noun.
+meill|malcolm|meilleur|bon → meilleur (not plus bon)|Malcolm: the exception. bon / bonne → meilleur / meilleure.
+poss|ellie|possessives|mon/ma/mes · ton/ta/tes · son/sa/ses · notre/nos · votre/vos · leur/leurs|The possessive matches the THING owned, not the owner. ma/ta/sa → mon/ton/son before a vowel (mon amie).
+pca|alan|passé composé|avoir (présent) + PARTICIPE PASSÉ|-er → é · -ir → i · -re → u. J'ai trouvé, il a fini, nous avons entendu.
+part|alan|participles|-er → é · -ir → i · -re → u|The regular participle is built from the infinitive: trouver → trouvé, finir → fini, entendre → entendu.
+partirr|malcolm|chaos list|faire → fait · prendre → pris · voir → vu · avoir → eu · être → été · boire → bu · dire → dit · écrire → écrit · ouvrir → ouvert · mettre → mis · pouvoir → pu · vouloir → voulu · devoir → dû|Irregular participles: just learn them.
+pcneg|ellie|neg. in the past|je n'ai pas vu · je n'ai rien vu · je n'ai jamais vu|The brackets go around the auxiliary: ne + ai + pas + participe.
+tmark|alan|time markers|hier · ce matin · cette nuit · la semaine dernière · il y a deux heures|il y a + time = ago.
+pce|alan|passé avec être|être (présent) + participe, accordé avec le sujet|The house of être: aller, venir, arriver, partir, entrer, sortir, monter, descendre, tomber, rester, retourner, revenir, devenir, naître.
+pcagr|ellie|agreement with être|elle est partie · ils sont arrivés · elles sont sorties|With être the participle agrees with the subject like an adjective.
+pcrefl|ellie|reflexive past|je me suis levé(e) · il s'est échappé|Reflexive verbs always take être in the past.
+cod|owen|le / la / les|le / la / l' / les go BEFORE the verb|je vois le raptor → je le vois · je ne le vois pas · je l'ai vu
+codpc|malcolm|l'ai vue|la → participle + e|"You won't hear it, but you'll see it": je l'ai vue (la jeep), je l'ai vu (le raptor).
+imp|ellie|imparfait|nous-form − ons + ais · ais · ait · ions · iez · aient|nous regardons → je regardais. Use it for descriptions, habits and background.
+impetre|malcolm|étais|être → ét- + endings|Only one exception: j'étais, tu étais, il était, nous étions, vous étiez, ils étaient.
+impuse|alan|when imparfait|description · habit · background|The imparfait is the stage: it was hot, every day I dug, I was sleeping.
+impvspc|alan|imparfait or PC|imparfait = stage (long line) · passé composé = event (dot)|Je dormais (stage) quand le T. rex est arrivé (event).
+ilyaago|ellie|il y a + time|il y a + durée = ago|il y a 65 millions d'années = 65 million years ago.
+fut|ellie|futur simple|INFINITIF + ai · as · a · ons · ez · ont|-re verbs drop the e: prendre → je prendrai. Je parlerai, tu parleras, il parlera.
+futirr|malcolm|future stems|être → ser- · avoir → aur- · aller → ir- · faire → fer- · venir → viendr- · pouvoir → pourr- · voir → verr- · vouloir → voudr- · devoir → devr-|Irregular stems, but the endings are always ai, as, a, ons, ez, ont.
+coi|owen|lui / leur|à + personne → lui (sing.) / leur (plur.), before the verb|je parle à Claire → je lui parle · je téléphone à Alan et Ellie → je leur téléphone
+y|ellie|y|y = à/en + a place|j'y vais = I go there. It goes before the verb.
+en|ellie|en|en = some of it / of them|j'en veux deux (the number stays). It goes before the verb.
+opin|owen|opinion|je pense que · je trouve que · à mon avis · je préfère · mon film préféré|Giving an opinion: je pense que + sentence.
+vocab|ellie|vocabulary|le/la/l' + nom|Learn the noun with its article: blue = masculine, red = feminine.
+read|ellie|reading|read first, then read again|Read for the main idea first, then for details. Then try to recall the passage.
+`);
+EP(1,{
+tr:`
+I am Ashok.|Je suis Ashok.|etre
+I am Indian.|Je suis indien.|nat
+I live in Belgium.|J'habite en Belgique.|jhabite
+She is American.|Elle est américaine.|nat
+We are on the island.|Nous sommes sur l'île.|etre
+You (polite) are a palaeontologist.|Vous êtes paléontologue.|job
+How are you?|Comment ça va ?;Ça va ?;Comment allez-vous ?|cava
+Are you tired?|Tu es fatigué ?;Vous êtes fatigué ?;Vous êtes fatigués ?;Tu es fatiguée ?|etre
+They are here.|Ils sont ici.;Elles sont ici.|etre
+My name is Ashok.|Je m'appelle Ashok.|jappelle
+I am an engineer.|Je suis ingénieur.|job
+He is Scottish.|Il est écossais.|nat
+We are happy.|Nous sommes contents.;Nous sommes contentes.;On est contents.|etre
+I am tired.|Je suis fatigué.;Je suis fatiguée.|etre
+Where are you from?|Tu es d'où ?;Vous êtes d'où ?|etre
+She is a palaeobotanist.|Elle est paléobotaniste.|job
+Hello, welcome to the island!|Bonjour, bienvenue sur l'île !|cava
+I am happy.|Je suis content.;Je suis contente.|etre
+Hammond is Scottish.|Hammond est écossais.|nat
+She is Belgian.|Elle est belge.|nat
+`,
+fill:`
+Je ___ Ashok.|suis|etre|être|I am Ashok.
+Tu ___ indien.|es|etre|être|You are Indian.
+Il ___ écossais.|est|etre|être|He is Scottish.
+Nous ___ sur l'île.|sommes|etre|être|We are on the island.
+Vous ___ fatigués.|êtes|etre|être|You are tired.
+Ils ___ ici.|sont|etre|être|They are here.
+Elle ___ paléobotaniste.|est|etre|être|She is a palaeobotanist.
+Moi, je ___ content.|suis|etre|être|Me, I am happy.
+Alan et Ellie ___ ici.|sont|etre|être|Alan and Ellie are here.
+Ashok et moi, nous ___ contents.|sommes|etre|être|Ashok and I, we are happy.
+Tu ___ d'où ?|es|etre|être|Where are you from?
+J'___ en Belgique.|habite|jhabite|habiter|I live in Belgium.
+Je ___ Ellie.|m'appelle|jappelle|s'appeler|My name is Ellie.
+Comment ça ___ ?|va|cava|aller|How are you?
+Hammond ___ écossais.|est|etre|être|Hammond is Scottish.
+`,
+agree:`
+Ellie est ___ . (américain)|américaine|nat||Ellie is American.
+Ashok est ___ . (indien)|indien|nat||Ashok is Indian.
+Elle est ___ . (indien)|indienne|nat||She is Indian.
+Alan est ___ . (écossais)|écossais|nat||Alan is Scottish.
+Elle est ___ . (écossais)|écossaise|nat||She is Scottish.
+Il est ___ . (belge)|belge|nat||He is Belgian.
+Elle est ___ . (belge)|belge|nat||She is Belgian.
+Ellie est ___ . (content)|contente|nat||Ellie is happy.
+Nous sommes ___ . (content)|contents;contentes|etre||We are happy.
+Ellie est ___ . (fatigué)|fatiguée|nat||Ellie is tired.
+Ian est ___ . (américain)|américain|nat||Ian is American.
+`,
+fix:`
+Je suis un ingénieur.|Je suis ingénieur.|job
+Je suis indienne.|Je suis indien.|nat
+Je suis habite en Belgique.|J'habite en Belgique.|jhabite
+Elle est américain.|Elle est américaine.|nat
+Je es Ashok.|Je suis Ashok.|etre
+Nous êtes ici.|Nous sommes ici.|etre
+Tu êtes fatigué ?|Tu es fatigué ?|etre
+Ils est ici.|Ils sont ici.|etre
+Je habite en Belgique.|J'habite en Belgique.|elis
+Elle est un paléontologue.|Elle est paléontologue.|job
+`,
+rs:`
+Why « J'habite » and not « Je habite » ?|Vowel elision: je → j' before a vowel or silent h~It is a plural~It is feminine|elis
+Why does « Elle est indienne » end in -ne?|Feminine: add an e, and the n becomes audible~It is plural~It is polite|nat
+Why does « Vous êtes fatigués » have an s?|Vous = several people, so the adjective is plural~Because it is feminine~Because of elision|etre
+Why « Je suis ingénieur » with no « un » ?|A job after être takes no article~Ingénieur is feminine~Because of a vowel|job
+You meet the park director for the first time. Which pronoun?|vous (polite)~tu~il|tuvous
+Why does « tu es » sound like « il est » ?|The final s and t are silent: both are « è »~They are the same word~They are both plural|etre
+`,
+gap:`
+hammond|Bonjour, Ashok ! ___ sur l'île !|Bienvenue|Welcome to the island!|cava
+hammond|Je ___ John Hammond. Je suis écossais.|suis|I am John Hammond.|etre
+ellie|Je ___ Ellie. Je suis paléobotaniste.|m'appelle|My name is Ellie.|jappelle
+alan|Salut. Moi, c'est Alan. Je suis ___ .|paléontologue|Hi. I'm Alan. I am a palaeontologist.|job
+malcolm|Et toi ? Tu es d'___ ?|où|And you? Where are you from?|etre
+ellie|Il est de Trichy. Il ___ en Belgique.|habite|He is from Trichy. He lives in Belgium.|jhabite
+hammond|Alors, ___ ça va ?|comment|So, how are you?|cava
+ellie|Ça va bien, ___ . Et vous ?|merci|I'm fine, thank you. And you?|cava
+hammond|Nous ___ ici, sur l'île ! Nous sommes contents !|sommes|We are here on the island!|etre
+alan|Ça va, mais je suis ___ .|fatigué|I'm OK, but I am tired.|etre
+`,
+voc:`
+f|île|island|place
+m|hélicoptère|helicopter|place
+x|bonjour|hello|greet
+x|salut|hi / bye|greet
+x|merci|thank you|greet
+x|au revoir|goodbye|greet
+x|bienvenue|welcome|greet
+x|ici|here|word
+x|je m'appelle|my name is|expr
+x|j'habite|I live|expr
+x|indien / indienne|Indian|nat
+x|belge|Belgian|nat
+x|américain / américaine|American|nat
+x|écossais / écossaise|Scottish|nat
+x|paléontologue|palaeontologist|job
+x|paléobotaniste|palaeobotanist|job
+x|mathématicien|mathematician|job
+x|ingénieur|engineer|job
+x|fatigué(e)|tired|adj
+x|content(e)|happy|adj
+`});
+EP(2,{
+tr:`
+I have a hat.|J'ai un chapeau.|avoir
+There is a dinosaur.|Il y a un dinosaure.|ilya
+There are three eggs.|Il y a trois œufs.|ilya
+We have a jeep.|Nous avons une jeep.|avoir
+Do you have a question?|Tu as une question ?;Vous avez une question ?|avoir
+The eggs|Les œufs|art
+The island|L'île|elisl
+The baby is two days old.|Le bébé a deux jours.|age
+I'm scared.|J'ai peur.|peur
+They have a laboratory.|Ils ont un laboratoire.|avoir
+I am ten years old.|J'ai dix ans.|age
+The dinosaur has a tail.|Le dinosaure a une queue.|avoir
+We have two jeeps.|Nous avons deux jeeps.|avoir
+They have five eggs.|Ils ont cinq œufs.|avoir
+Is there a tree?|Il y a un arbre ?|ilya
+You have a brush.|Tu as une brosse.;Vous avez une brosse.|avoir
+There are leaves.|Il y a des feuilles.|ilya
+Alan has a hat.|Alan a un chapeau.|avoir
+I have a question.|J'ai une question.|avoir
+Ellie has a brush and tools.|Ellie a une brosse et des outils.|art
+`,
+fill:`
+J'___ un chapeau.|ai|avoir|avoir|I have a hat.
+Tu ___ une question.|as|avoir|avoir|You have a question.
+Il ___ une queue.|a|avoir|avoir|It has a tail.
+Nous ___ une jeep.|avons|avoir|avoir|We have a jeep.
+Vous ___ des outils.|avez|avoir|avoir|You have tools.
+Ils ___ un laboratoire.|ont|avoir|avoir|They have a laboratory.
+Le bébé ___ deux jours.|a|age|avoir|The baby is two days old.
+J'___ peur.|ai|peur|avoir|I am scared.
+Tu ___ peur ?|as|peur|avoir|Are you scared?
+Ellie ___ une brosse.|a|avoir|avoir|Ellie has a brush.
+Alan et Ellie ___ des chapeaux.|ont|avoir|avoir|Alan and Ellie have hats.
+Il y ___ trois œufs.|a|ilya|avoir|There are three eggs.
+J'___ vingt ans.|ai|age|avoir|I am twenty.
+Il y a ___ œufs. (des / les)|des|art||There are (some) eggs.
+J'ai ___ chapeau. (un / une)|un|gender||I have a hat.
+Il a ___ queue. (un / une)|une|gender||It has a tail.
+___ dinosaures sont ici. (the)|Les|art||The dinosaurs are here.
+Voici ___ laboratoire. (the)|le|gender||Here is the laboratory.
+Il y a ___ île. (un / une)|une|gender||There is an island.
+Il y a ___ arbre ici. (un / une)|un|gender||There is a tree here.
+`,
+fix:`
+Je suis 35 ans.|J'ai 35 ans.|age
+Je suis peur.|J'ai peur.|peur
+Il a un queue.|Il a une queue.|gender
+Il y a trois œuf.|Il y a trois œufs.|art
+Il y a un île.|Il y a une île.|gender
+Je ai un chapeau.|J'ai un chapeau.|elis
+Nous avez une jeep.|Nous avons une jeep.|avoir
+Ils y a des dinosaures.|Il y a des dinosaures.|ilya
+Le bébé est deux jours.|Le bébé a deux jours.|age
+Tu a une question ?|Tu as une question ?|avoir
+Il y a la dinosaure ici.|Il y a un dinosaure ici.|art
+`,
+rs:`
+Why « l'œuf » ?|Vowel: le → l'~The noun is plural~The noun is feminine|elisl
+Why « J'ai 35 ans » and not « Je suis 35 ans » ?|Age uses avoir in French~Être is irregular~35 starts with a vowel|age
+Why « des œufs » ?|Plural of un/une is des~It is feminine~It is a negation|art
+Why « la queue » ?|Queue is a feminine noun~Queue is plural~Queue starts with a vowel|gender
+In « Il y a trois œufs », why « a » and not « ont » ?|il y a never changes, singular or plural~Œufs is feminine~Trois is a verb|ilya
+`,
+gap:`
+alan|Regarde ! Il y a un ___ !|dinosaure|Look! There is a dinosaur!|ilya
+alan|Il ___ une petite tête et une longue queue.|a|It has a small head and a long tail.|avoir
+alan|Il y a trois ___ .|œufs|There are three eggs.|ilya
+ellie|Le bébé a deux ___ .|jours|The baby is two days old.|age
+alan|J'___ un chapeau, une brosse et des outils.|ai|I have a hat, a brush and tools.|avoir
+malcolm|Tu ___ peur ?|as|Are you scared?|peur
+alan|J'ai un chapeau, une ___ et des outils.|brosse|I have a hat, a brush and tools.|gender
+`,
+voc:`
+m|dinosaure|dinosaur|body
+f|tête|head|body
+f|queue|tail|body
+f|dent|tooth|body
+f|patte|paw / leg|body
+m|cou|neck|body
+m|œuf|egg|lab
+m|bébé|baby|lab
+m|laboratoire|laboratory|lab
+m|chapeau|hat|equip
+f|brosse|brush|equip
+m|outil|tool|equip
+f|jeep|jeep|equip
+m|arbre|tree|park
+f|feuille|leaf|park
+f|clôture|fence|park
+f|question|question|word
+m|jour|day|time
+m|an|year|time
+x|il y a|there is / there are|expr
+x|avoir peur|to be scared|expr
+x|regarde !|look!|expr
+`});
+EP(3,{
+tr:`
+The dinosaur is big.|Le dinosaure est grand.|agree
+The plant is green.|La plante est verte.|colors
+It's a small dinosaur.|C'est un petit dinosaure.|pos
+The eggs are white.|Les œufs sont blancs.|colors
+Ellie is happy.|Ellie est contente.|agree
+He is a paleontologist.|Il est paléontologue.|cest
+Seventy, in France and in Belgium.|soixante-dix;septante|num100
+Ninety-nine.|quatre-vingt-dix-neuf;nonante-neuf|num100
+The leaves are green.|Les feuilles sont vertes.|colors
+The T. rex is very strong.|Le T. rex est très fort.|agree
+The raptor is dangerous.|Le raptor est dangereux.|agr2
+Alan is serious.|Alan est sérieux.|agr2
+Ellie is intelligent.|Ellie est intelligente.|agree
+It's a red jeep.|C'est une jeep rouge.|pos
+It's a beautiful island.|C'est une belle île.|pos
+It's an old plant.|C'est une vieille plante.|agr2
+The dinosaurs are big.|Les dinosaures sont grands.|agree
+It's a very old plant.|C'est une plante très vieille.;C'est une très vieille plante.|pos
+Malcolm is funny.|Malcolm est drôle.|agree
+The brachiosaur is a big dinosaur.|Le brachiosaure est un grand dinosaure.|pos
+`,
+agree:`
+Le dinosaure est ___ . (grand)|grand|agree||The dinosaur is big.
+La plante est ___ . (vert)|verte|colors||The plant is green.
+Les œufs sont ___ . (blanc)|blancs|colors||The eggs are white.
+Les feuilles sont ___ . (vert)|vertes|colors||The leaves are green.
+Ellie est ___ . (intelligent)|intelligente|agree||Ellie is intelligent.
+Alan est ___ . (sérieux)|sérieux|agr2||Alan is serious.
+Ellie est ___ . (sérieux)|sérieuse|agr2||Ellie is serious.
+Le T. rex est ___ . (dangereux)|dangereux|agr2||The T. rex is dangerous.
+La fougère est ___ . (vieux)|vieille|agr2||The fern is old.
+Les dinosaures sont ___ . (petit)|petits|agree||The dinosaurs are small.
+Les plantes sont ___ . (petit)|petites|agree||The plants are small.
+C'est une jeep ___ . (rouge)|rouge|colors||It's a red jeep.
+Ils sont ___ . (gentil)|gentils|agree||They are kind.
+Elle est ___ . (gentil)|gentille|agree||She is kind.
+Il est ___ . (sportif)|sportif|agr2||He is sporty.
+Elle est ___ . (sportif)|sportive|agr2||She is sporty.
+La clôture est ___ . (blanc)|blanche|agr2||The fence is white.
+Elle est ___ . (beau)|belle|agr2||She is beautiful.
+Le chapeau est ___ . (marron)|marron|colors||The hat is brown.
+Les chapeaux sont ___ . (marron)|marron|colors||The hats are brown.
+Les jeeps sont ___ . (jaune)|jaunes|colors||The jeeps are yellow.
+`,
+fill:`
+___ un petit dinosaure. (c'est / il est)|C'est|cest||It's a small dinosaur.
+Alan ? ___ paléontologue. (il est / c'est)|Il est|cest||Alan? He is a palaeontologist.
+___ une plante verte.|C'est|cest||It's a green plant.
+Voilà Ellie. ___ paléobotaniste.|Elle est|cest||There's Ellie. She is a palaeobotanist.
+Malcolm ? ___ drôle.|Il est|cest||Malcolm? He is funny.
+C'est un ___ dinosaure. (grand)|grand|pos||It's a big dinosaur.
+C'est une plante ___ . (vert)|verte|pos||It's a green plant.
+C'est une ___ île. (beau)|belle|pos||It's a beautiful island.
+`,
+fix:`
+La plante est vert.|La plante est verte.|colors
+Les œufs sont blanc.|Les œufs sont blancs.|agree
+C'est un dinosaure grand.|C'est un grand dinosaure.|pos
+Il est un paléontologue.|Il est paléontologue.;C'est un paléontologue.|cest
+Ellie est sérieux.|Ellie est sérieuse.|agr2
+Elle est un dinosaure.|C'est un dinosaure.|cest
+Le dinosaure est grande.|Le dinosaure est grand.|agree
+C'est une plante vieille.|C'est une vieille plante.|pos
+Les feuilles sont vert.|Les feuilles sont vertes.|colors
+Elle est blanc.|Elle est blanche.|agr2
+`,
+rs:`
+Why « un grand dinosaure » (grand before the noun)?|BAGS: size adjectives come before~Colours come before~Grand is feminine|pos
+Why « une plante verte » (verte after the noun)?|Colours come after the noun~BAGS adjectives come after~Verte is plural|pos
+Why « les œufs sont blancs » ?|Plural: add an s~Feminine: add an e~BAGS rule|agree
+Why « Il est paléontologue » and not « Il est un paléontologue » ?|A job after il est has no article~Il est is plural~Paléontologue is feminine|cest
+Why « une vieille plante » and not « une vieux plante » ?|Vieux → vieille in the feminine~Plural~Elision|agr2
+`,
+gap:`
+ellie|Le T. rex est ___ . Il est très fort.|grand|The T. rex is big. It is very strong.|agree
+ellie|Le compsognathus est ___ .|petit|The compsognathus is small.|agree
+ellie|C'est une plante très ___ .|vieille|It's a very old plant.|agr2
+ellie|Les feuilles sont ___ .|vertes|The leaves are green.|colors
+hammond|Le brachiosaure ___ vingt-cinq mètres.|mesure|The brachiosaur measures 25 metres.|num100
+hammond|Il y a ___ dinosaures. (15)|quinze|There are fifteen dinosaurs.|num20
+ellie|Ellie est ___ . Alan est sérieux.|intelligente|Ellie is intelligent. Alan is serious.|agree
+ashok|Malcolm est ___ !|drôle|Malcolm is funny!|agree
+`,
+voc:`
+x|grand|big / tall|desc
+x|petit|small|desc
+x|fort|strong|desc
+x|gentil / gentille|kind|desc
+x|dangereux / dangereuse|dangerous|desc
+x|vieux / vieille|old|desc
+x|jeune|young|desc
+x|intelligent(e)|intelligent|desc
+x|sérieux / sérieuse|serious|desc
+x|drôle|funny|desc
+x|beau / belle|beautiful|desc
+x|vert(e)|green|color
+x|rouge|red|color
+x|bleu(e)|blue|color
+x|jaune|yellow|color
+x|noir(e)|black|color
+x|blanc / blanche|white|color
+x|gris(e)|grey|color
+x|marron|brown|color
+m|mètre|metre|word
+f|plante|plant|park
+f|fougère|fern|park
+x|très|very|word
+`});
+EP(4,{
+tr:`
+I like dinosaurs.|J'aime les dinosaures.|aimer
+The triceratops eats plants.|Le tricératops mange des plantes.|er
+I don't eat meat.|Je ne mange pas de viande.|negde
+Where is the T. rex?|Où est le T. rex ?|quest
+Do you like the island?|Est-ce que tu aimes l'île ?;Tu aimes l'île ?;Est-ce que vous aimez l'île ?;Vous aimez l'île ?|quest
+We are watching the dinosaurs.|Nous regardons les dinosaures.|er
+I'm not scared.|Je n'ai pas peur.|neg
+What are you looking at?|Qu'est-ce que tu regardes ?;Qu'est-ce que vous regardez ?|quest
+Why?|Pourquoi ?|quest
+They are looking for the raptor.|Ils cherchent le raptor.|er
+He doesn't like the T. rex.|Il n'aime pas le T. rex.|neg
+We are visiting the park.|Nous visitons le parc.|er
+The carnivores don't eat plants.|Les carnivores ne mangent pas de plantes.|negde
+I'm listening to the guide.|J'écoute le guide.|er
+Do you hunt?|Est-ce que tu chasses ?;Tu chasses ?;Est-ce que vous chassez ?;Vous chassez ?|quest
+We don't eat.|Nous ne mangeons pas.|neg
+I hate the T. rex.|Je déteste le T. rex.|aimer
+Why do you like the herbivores?|Pourquoi est-ce que tu aimes les herbivores ?;Pourquoi tu aimes les herbivores ?;Pourquoi est-ce que vous aimez les herbivores ?|quest
+Where are the eggs?|Où sont les œufs ?|quest
+`,
+fill:`
+Je ___ les dinosaures. (aimer)|aime|aimer|aimer|I like dinosaurs.
+Tu ___ le guide. (écouter)|écoutes|er|écouter|You listen to the guide.
+Il ___ des plantes. (manger)|mange|er|manger|He eats plants.
+Nous ___ le parc. (visiter)|visitons|er|visiter|We visit the park.
+Nous ___ les dinosaures. (regarder)|regardons|er|regarder|We watch the dinosaurs.
+Nous ___ des plantes. (manger)|mangeons|er2|manger|We eat plants.
+Vous ___ le raptor. (chercher)|cherchez|er|chercher|You look for the raptor.
+Les carnivores ___ . (chasser)|chassent|er|chasser|The carnivores hunt.
+Les herbivores ___ des plantes. (manger)|mangent|er|manger|Herbivores eat plants.
+J'___ les dinosaures. (adorer)|adore|er2|adorer|I love dinosaurs.
+Tu ___ les dinosaures ? (aimer)|aimes|aimer|aimer|Do you like dinosaurs?
+Je ne mange pas ___ viande. (de)|de|negde||I don't eat meat.
+Je ___ aime pas le T. rex. (ne)|n'|neg||I don't like the T. rex.
+Il ne mange pas ___ plantes. (de)|de|negde||He doesn't eat plants.
+Nous ne regardons pas ___ dinosaures. (the)|les|negde||We aren't watching the dinosaurs.
+Je n'aime pas ___ viande. (the)|la|negde||I don't like meat.
+___ est le T. rex ? (where)|Où|quest||Where is the T. rex?
+___ tu regardes ? (what: 3 words)|Qu'est-ce que|quest||What are you looking at?
+___ tu aimes les herbivores ? (why)|Pourquoi|quest||Why do you like herbivores?
+`,
+fix:`
+Je mange pas de viande.|Je ne mange pas de viande.|neg
+Je ne mange pas des plantes.|Je ne mange pas de plantes.|negde
+Nous mangons des plantes.|Nous mangeons des plantes.|er2
+Je ne aime pas les dinosaures.|Je n'aime pas les dinosaures.|neg
+J'aime dinosaures.|J'aime les dinosaures.|aimer
+Il manges des plantes.|Il mange des plantes.|er
+Nous regardez les dinosaures.|Nous regardons les dinosaures.|er
+Où le T. rex est ?|Où est le T. rex ?|quest
+Ils mange des plantes.|Ils mangent des plantes.|er
+Je ne pas mange.|Je ne mange pas.|neg
+Je n'aime pas de la viande.|Je n'aime pas la viande.|negde
+Est-ce que tu aime l'île ?|Est-ce que tu aimes l'île ?|er
+`,
+rs:`
+Why « nous mangeons » with an e?|It keeps the g soft before o~It is plural~It is feminine|er2
+Why « Je n'aime pas » (n')?|Elision: ne → n' before a vowel~Plural~Feminine|neg
+Why « pas de viande » and not « pas des viande » ?|After pas, un/une/des → de~It is feminine~Elision|negde
+Why « J'aime les dinosaures » with « les » ?|aimer takes the definite article~Plural of un~Elision|aimer
+Why do « tu manges » and « il mange » sound alike?|The endings -e and -es are silent~The verb is irregular~They are the same pronoun|er
+`,
+gap:`
+alan|Nous ___ le parc. Nous regardons les dinosaures.|visitons|We visit the park. We watch the dinosaurs.|er
+ellie|Le tricératops ___ des plantes.|mange|The triceratops eats plants.|er
+ellie|Il ne mange ___ de viande.|pas|He doesn't eat meat.|neg
+malcolm|___ est le T. rex ?|Où|Where is the T. rex?|quest
+malcolm|Il ne ___ pas ? Il ne chasse pas ?|mange|Isn't he eating? Isn't he hunting?|neg
+ellie|Est-ce que tu ___ les dinosaures ?|aimes|Do you like dinosaurs?|quest
+ashok|Oui, j'___ les dinosaures !|adore|Yes, I love dinosaurs!|er2
+alan|Qu'est-ce que tu ___ ?|regardes|What are you looking at?|quest
+`,
+voc:`
+x|manger|to eat|verb
+x|regarder|to look at / watch|verb
+x|chercher|to look for|verb
+x|chasser|to hunt|verb
+x|aimer|to like / love|verb
+x|adorer|to adore|verb
+x|détester|to hate|verb
+x|parler|to speak|verb
+x|écouter|to listen|verb
+x|visiter|to visit|verb
+f|viande|meat|food
+m|carnivore|carnivore|park
+m|herbivore|herbivore|park
+f|visite|visit|park
+m|guide|guide|park
+f|voiture|car|equip
+x|où|where|qw
+x|quand|when|qw
+x|comment|how|qw
+x|pourquoi|why|qw
+x|combien|how much / many|qw
+x|qui|who|qw
+x|parce que|because|word
+`});
+EP(5,{
+tr:`
+I'm going to the restaurant.|Je vais au restaurant.|contr
+I come from India.|Je viens d'Inde.|country
+I'll have a coffee.|Je prends un café.|prendre
+What are you doing?|Qu'est-ce que tu fais ?;Qu'est-ce que vous faites ?|faire
+The skeleton is in front of the door.|Le squelette est devant la porte.|prep
+It's half past three.|Il est trois heures et demie.|time
+We're going to the labs.|Nous allons aux laboratoires.|contr
+The map is on the table.|La carte est sur la table.|prep
+The lab is next to the restaurant.|Le laboratoire est à côté du restaurant.|contr
+It's noon.|Il est midi.|time
+We are taking a sandwich.|Nous prenons un sandwich.|prendre
+He comes from Canada.|Il vient du Canada.|country
+They are going to the United States.|Ils vont aux États-Unis.|country
+I'm taking a break.|Je fais une pause.|faire
+She is going to Italy.|Elle va en Italie.|country
+The computer is behind the table.|L'ordinateur est derrière la table.|prep
+It's quarter past four.|Il est quatre heures et quart.|time
+It's quarter to six.|Il est six heures moins le quart.|time
+You come from the laboratory.|Vous venez du laboratoire.|contr
+Where are you going?|Où est-ce que tu vas ?;Où vas-tu ?;Tu vas où ?;Où allez-vous ?;Où est-ce que vous allez ?;Vous allez où ?|aller
+It's midnight.|Il est minuit.|time
+We come from the restaurant.|Nous venons du restaurant.|contr
+`,
+fill:`
+Je vais ___ restaurant. (à + le)|au|contr||I'm going to the restaurant.
+Nous allons ___ laboratoires. (à + les)|aux|contr||We're going to the labs.
+Il va ___ salle de contrôle. (à + la)|à la|contr||He goes to the control room.
+Nous allons ___ l'île. (to)|à l'|contr||We're going to the island.
+Le café est à côté ___ restaurant. (de + le)|du|contr||The café is next to the restaurant.
+La porte est à côté ___ salle. (de + la)|de la|contr||The door is next to the room.
+Le restaurant est à côté ___ laboratoires. (de + les)|des|contr||The restaurant is next to the labs.
+Je viens ___ laboratoire. (de + le)|du|contr||I come from the laboratory.
+Nous ___ au restaurant. (aller)|allons|aller|aller|We go to the restaurant.
+Qu'est-ce que vous ___ ? (faire)|faites|faire|faire|What are you doing?
+Il ___ un café. (prendre)|prend|prendre|prendre|He has a coffee.
+Ils ___ du Canada. (venir)|viennent|venir|venir|They come from Canada.
+Tu ___ une pause. (faire)|fais|faire|faire|You take a break.
+Je ___ un sandwich. (prendre)|prends|prendre|prendre|I have a sandwich.
+Vous ___ aux États-Unis. (aller)|allez|aller|aller|You go to the United States.
+Elle ___ d'Inde. (venir)|vient|venir|venir|She comes from India.
+Nous ___ un café. (prendre)|prenons|prendre|prendre|We have a coffee.
+Ils ___ au laboratoire. (aller)|vont|aller|aller|They go to the lab.
+Nous ___ de France. (venir)|venons|venir|venir|We come from France.
+Ils ___ un sandwich. (prendre)|prennent|prendre|prendre|They have a sandwich.
+Ils ___ une pause. (faire)|font|faire|faire|They take a break.
+Le squelette est ___ la porte. (in front of)|devant|prep||The skeleton is in front of the door.
+Le café est ___ la table. (on)|sur|prep||The coffee is on the table.
+La carte est ___ la table. (under)|sous|prep||The map is under the table.
+Le restaurant est ___ le laboratoire et la salle. (between)|entre|prep||The restaurant is between the lab and the room.
+La porte est ___ la salle de contrôle. (behind)|derrière|prep||The door is behind the control room.
+Le restaurant est ___ de la clôture. (opposite)|en face|prep||The restaurant is opposite the fence.
+`,
+fix:`
+Je vais à le restaurant.|Je vais au restaurant.|contr
+Je vais à les laboratoires.|Je vais aux laboratoires.|contr
+Je viens de le Canada.|Je viens du Canada.|contr
+Je suis venir d'Inde.|Je viens d'Inde.|venir
+Je vais en Canada.|Je vais au Canada.|country
+Il est trois heures et demi.|Il est trois heures et demie.|time
+Je prend un café.|Je prends un café.|prendre
+Vous faisez une pause.|Vous faites une pause.|faire
+Je fait une pause.|Je fais une pause.|faire
+Nous allez au restaurant.|Nous allons au restaurant.|aller
+Il est à côté de le restaurant.|Il est à côté du restaurant.|contr
+Ils vont à États-Unis.|Ils vont aux États-Unis.|country
+`,
+rs:`
+Why « au restaurant » ?|à + le = au~Au is plural~Au is feminine|contr
+Why « à la porte » with no contraction?|Only le and les contract~Porte is plural~Because of a vowel|contr
+Why « en Inde » but « au Canada » ?|Inde is feminine, Canada masculine~Both are plural~Both are cities|country
+Why « aux États-Unis » ?|The country is plural~It is feminine~It starts with a vowel|country
+Why « et demie » (with an e) after « heures » ?|Heure is feminine~Heures is plural~It is a verb|time
+Why « vous faites » and not « vous faisez » ?|Faire is irregular (chaos club)~Because of elision~It is a reflexive verb|faire
+`,
+gap:`
+hammond|Le squelette est ___ la porte.|devant|The skeleton is in front of the door.|prep
+hammond|Le restaurant est à ___ du laboratoire.|côté|The restaurant is next to the lab.|contr
+alan|Qu'est-ce que tu ___ ?|prends|What will you have?|prendre
+ashok|Je prends un café et un ___ .|sandwich|I'll have a coffee and a sandwich.|prendre
+hammond|Je ___ d'Écosse. Et toi ?|viens|I come from Scotland. And you?|venir
+ashok|Je viens d'Inde, mais j'___ en Belgique.|habite|I come from India but I live in Belgium.|jhabite
+ellie|Nous allons au Canada et ___ États-Unis.|aux|We are going to Canada and the United States.|country
+malcolm|Qu'est-ce que tu ___ ?|fais|What are you doing?|faire
+ashok|Je fais une ___ .|pause|I'm taking a break.|faire
+malcolm|Quelle ___ est-il ?|heure|What time is it?|time
+ashok|Il est trois heures et ___ .|demie|It's half past three.|time
+`,
+voc:`
+m|centre des visiteurs|visitor centre|place
+m|restaurant|restaurant|place
+f|porte|door|place
+f|salle|room / hall|place
+f|salle de contrôle|control room|place
+f|table|table|place
+m|squelette|skeleton|thing
+f|carte|map|thing
+m|café|coffee|food
+m|sandwich|sandwich|food
+m|ordinateur|computer|thing
+f|heure|hour / time|time
+x|midi|noon|time
+x|minuit|midnight|time
+x|devant|in front of|prep
+x|derrière|behind|prep
+x|dans|in|prep
+x|sur|on|prep
+x|sous|under|prep
+x|à côté de|next to|prep
+x|entre|between|prep
+x|en face de|opposite|prep
+x|faire une pause|to take a break|expr
+`});
+EP(6,{
+tr:`
+It's raining.|Il pleut.|weather
+I'm cold.|J'ai froid.|feel
+Don't move!|Ne bouge pas !;Ne bougez pas !|imper2
+Come here!|Viens ici !;Venez ici !|imper2
+We are going to leave the island.|Nous allons quitter l'île.|fproche
+We have to run.|Il faut courir.|faut
+Tomorrow the weather is going to be nice.|Demain, il va faire beau.|fproche
+I'm hungry.|J'ai faim.|feel
+Let's go!|Allons-y !|imper2
+Look! (to several people)|Regardez !|imper
+I'm going to eat.|Je vais manger.|fproche
+I'm not going to wait.|Je ne vais pas attendre.|fproche
+It's hot.|Il fait chaud.|weather
+There is wind.|Il y a du vent.|weather
+Stay here!|Reste ici !;Restez ici !|imper2
+Wait!|Attends !;Attendez !|imper
+Listen!|Écoute !;Écoutez !|imper
+Let's wait!|Attendons !|imper
+We must wait.|Il faut attendre.|faut
+I'm thirsty.|J'ai soif.|feel
+It's bad weather.|Il fait mauvais.|weather
+Tonight we are going to eat.|Ce soir, nous allons manger.|fproche
+The electricity isn't working.|L'électricité ne marche pas.|neg
+Don't run!|Ne cours pas !;Ne courez pas !|imper2
+Are you going to come back?|Tu vas revenir ?;Vous allez revenir ?|fproche
+`,
+fill:`
+Je ___ manger. (aller)|vais|fproche|aller|I'm going to eat.
+Nous ___ partir. (aller)|allons|fproche|aller|We are going to leave.
+Tu ___ revenir ? (aller)|vas|fproche|aller|Are you going to come back?
+Ils ___ quitter l'île. (aller)|vont|fproche|aller|They are going to leave the island.
+Vous ___ attendre ? (aller)|allez|fproche|aller|Are you going to wait?
+Je ne ___ pas manger. (aller)|vais|fproche|aller|I'm not going to eat.
+Demain, il va ___ beau. (faire)|faire|weather|faire|Tomorrow it will be nice.
+Il ___ courir. (falloir)|faut|faut||We have to run.
+Tu regardes → ___ ! (impératif)|Regarde|imper||Look!
+Tu restes ici → ___ ici !|Reste|imper2||Stay here!
+Vous écoutez → ___ !|Écoutez|imper||Listen!
+Nous attendons → ___ !|Attendons|imper||Let's wait!
+Tu viens → ___ !|Viens|imper2||Come!
+Vous venez → ___ !|Venez|imper2||Come!
+Tu manges → ___ !|Mange|imper||Eat!
+J'___ froid. (avoir)|ai|feel|avoir|I'm cold.
+Tu ___ faim ? (avoir)|as|feel|avoir|Are you hungry?
+Nous ___ soif. (avoir)|avons|feel|avoir|We are thirsty.
+Il ___ chaud. (avoir)|a|feel|avoir|He is hot.
+Ils ___ peur. (avoir)|ont|feel|avoir|They are scared.
+Il ___ beau. (faire)|fait|weather|faire|It's nice weather.
+Il ___ . (pleuvoir)|pleut|weather||It's raining.
+`,
+fix:`
+Je suis froid.|J'ai froid.|feel
+Je suis faim.|J'ai faim.|feel
+Je vais mangeons.|Je vais manger.|fproche
+Ne bouges pas !|Ne bouge pas !|imper
+Regardes !|Regarde !|imper
+Je ne vais manger pas.|Je ne vais pas manger.|fproche
+Il faut courons.|Il faut courir.|faut
+Nous allons mange.|Nous allons manger.|fproche
+Il fait pleut.|Il pleut.|weather
+Ne pas bouge !|Ne bouge pas !|imper2
+Il est chaud. (weather)|Il fait chaud.|weather
+`,
+rs:`
+Why « Regarde ! » without an s?|-er verbs lose the s in the tu imperative~It is plural~It is irregular|imper
+Why « Je vais manger » (manger, not mange)?|After aller the second verb stays infinitive~Because of the negation~It is plural|fproche
+Where does « ne … pas » go in « Je ne vais pas manger » ?|Around aller~Around manger~After manger|fproche
+Why « J'ai froid » and not « Je suis froid » ?|Feelings use avoir~Froid is feminine~Être is irregular|feel
+Why « Il faut courir » ?|il faut + infinitive = you must~Faut is plural~Courir is a noun|faut
+`,
+gap:`
+ellie|Il ___ mauvais. Il pleut.|fait|The weather is bad. It's raining.|weather
+ellie|Il y a du ___ .|vent|There is wind.|weather
+ashok|L'électricité ne ___ pas !|marche|The electricity isn't working!|neg
+ashok|Qu'est-ce que nous ___ faire ?|allons|What are we going to do?|fproche
+alan|Ne ___ pas ! Reste derrière moi !|bouge|Don't move! Stay behind me!|imper2
+ashok|J'ai froid. J'ai ___ .|faim|I'm cold. I'm hungry.|feel
+alan|Il ___ attendre.|faut|We have to wait.|faut
+hammond|Tu ___ revenir, Ashok ?|vas|Are you going to come back, Ashok?|fproche
+ellie|Demain, nous allons ___ l'île.|quitter|Tomorrow we are going to leave the island.|fproche
+ellie|Le matin, il fait ___ !|beau|In the morning, the weather is nice!|weather
+`,
+voc:`
+f|tempête|storm|weather
+m|orage|thunderstorm|weather
+f|pluie|rain|weather
+m|vent|wind|weather
+f|électricité|electricity|thing
+x|marcher|to work / to walk|verb
+x|bouger|to move|verb
+x|rester|to stay|verb
+x|courir|to run|verb
+x|attendre|to wait|verb
+x|quitter|to leave|verb
+x|revenir|to come back|verb
+x|demain|tomorrow|time
+x|ce soir|tonight|time
+x|il pleut|it's raining|weather
+x|il fait beau|it's nice weather|weather
+x|il fait mauvais|it's bad weather|weather
+x|il fait chaud|it's hot|weather
+x|il fait froid|it's cold|weather
+x|avoir faim|to be hungry|feel
+x|avoir soif|to be thirsty|feel
+x|avoir froid|to be cold|feel
+x|avoir chaud|to be hot|feel
+`});
+EP(7,{
+tr:`
+I get up at seven.|Je me lève à sept heures.|refl
+She goes to bed late.|Elle se couche tard.|refl
+I drink coffee.|Je bois du café.|partit
+I don't drink coffee.|Je ne bois pas de café.|partit
+There is a lot of water.|Il y a beaucoup d'eau.|quant
+Do you (formal) get up early?|Vous vous levez tôt ?|vous2
+We eat bread.|Nous mangeons du pain.|partit
+Twenty thousand visitors.|Vingt mille visiteurs.|bignum
+First I wake up, then I get dressed.|D'abord, je me réveille, ensuite je m'habille.|routine
+I never go to bed before midnight.|Je ne me couche jamais avant minuit.|reflneg
+We drink tea.|Nous buvons du thé.|boire
+He eats fish.|Il mange du poisson.|partit
+A cup of tea.|Une tasse de thé.|quant
+She doesn't get up early.|Elle ne se lève pas tôt.|reflneg
+You (pl.) drink water.|Vous buvez de l'eau.|boire
+I eat a little bread.|Je mange un peu de pain.|quant
+They get up at six.|Ils se lèvent à six heures.|refl
+There is too much coffee.|Il y a trop de café.|quant
+I get ready quickly.|Je me prépare vite.|refl
+Finally, we go to bed.|Enfin, nous nous couchons.|routine
+A kilo of fish.|Un kilo de poisson.|quant
+Do you drink tea?|Tu bois du thé ?;Vous buvez du thé ?|boire
+Herbivores eat a lot of plants.|Les herbivores mangent beaucoup de plantes.|quant
+You (formal) are the director.|Vous êtes la directrice.;Vous êtes le directeur.|vous2
+`,
+fill:`
+Je ___ lève tôt. (me / te)|me|refl||I get up early.
+Tu ___ couches tard. (me / te)|te|refl||You go to bed late.
+Il ___ réveille à six heures. (se)|se|refl||He wakes up at six.
+Nous ___ habillons.|nous|refl||We get dressed.
+Vous ___ préparez vite.|vous|refl||You get ready quickly.
+Elles ___ lavent.|se|refl||They wash.
+Je ne ___ couche jamais avant minuit.|me|reflneg||I never go to bed before midnight.
+Il se ___ à cinq heures. (se lever)|lève|refl|se lever|He gets up at five.
+Nous nous ___ . (se coucher)|couchons|refl|se coucher|We go to bed.
+Vous vous ___ tôt. (se lever)|levez|refl|se lever|You get up early.
+Ils se ___ vite. (se préparer)|préparent|refl|se préparer|They get ready quickly.
+Tu te ___ à sept heures. (se réveiller)|réveilles|refl|se réveiller|You wake up at seven.
+Je mange ___ pain. (du / de la)|du|partit||I eat (some) bread.
+Je bois ___ eau. (some)|de l'|partit||I drink (some) water.
+Il mange ___ viande. (some)|de la|partit||He eats (some) meat.
+Nous mangeons ___ poisson. (some)|du|partit||We eat (some) fish.
+Elle boit ___ thé. (some)|du|partit||She drinks (some) tea.
+Je ne mange pas ___ viande. (de)|de|partit||I don't eat meat.
+Il y a beaucoup ___ plantes. (de)|de|quant||There are a lot of plants.
+Il y a un peu ___ café. (de)|de|quant||There is a little coffee.
+Une tasse ___ thé. (de)|de|quant||A cup of tea.
+Je mange ___ plantes. (some, plural)|des|partit||I eat (some) plants.
+Elle mange ___ salade. (some)|de la|partit||She eats (some) salad.
+Je bois ___ café. (some)|du|partit||I drink (some) coffee.
+Je ___ du thé. (boire)|bois|boire|boire|I drink tea.
+Nous ___ de l'eau. (boire)|buvons|boire|boire|We drink water.
+Ils ___ du café. (boire)|boivent|boire|boire|They drink coffee.
+Il ___ du lait. (boire)|boit|boire|boire|He drinks milk.
+Vous ___ du thé. (boire)|buvez|boire|boire|You drink tea.
+Tu ___ de l'eau. (boire)|bois|boire|boire|You drink water.
+`,
+fix:`
+Je lève à sept heures.|Je me lève à sept heures.|refl
+Je bois café.|Je bois du café.|partit
+Je ne bois pas du café.|Je ne bois pas de café.|partit
+Il y a beaucoup des plantes.|Il y a beaucoup de plantes.|quant
+Je me couche pas tard.|Je ne me couche pas tard.|reflneg
+Je mange de la pain.|Je mange du pain.|partit
+Il se lèvent.|Ils se lèvent.|refl
+Je me lèvent tôt.|Je me lève tôt.|refl
+Je bois du eau.|Je bois de l'eau.|partit
+Nous nous lève tôt.|Nous nous levons tôt.|refl
+Tu te couche tard.|Tu te couches tard.|refl
+Nous buvez du thé.|Nous buvons du thé.|boire
+`,
+rs:`
+Why « je me lève » and not « je lève » ?|Reflexive verbs need a reflexive pronoun~Lever is irregular~It is plural|refl
+Why « pas de café » and not « pas du café » ?|After a negation du/de la/des → de~Café is feminine~Elision|partit
+Why « du pain » and not « le pain » ?|An unknown amount: partitive~Pain is plural~Pain is feminine|partit
+Why « de l'eau » ?|de la + vowel → de l'~Eau is plural~Eau is masculine|partit
+Why « beaucoup de plantes » and not « beaucoup des plantes » ?|After a quantity word you use de only~Plantes is singular~Beaucoup is a verb|quant
+Why does Claire say « vous » to you on day one?|It is polite with a stranger~Vous is singular only~Tu is for the plural|vous2
+`,
+gap:`
+claire|Bonjour, monsieur. ___ êtes Ashok ?|Vous|Hello, sir. Are you Ashok?|vous2
+claire|Je m'___ Claire.|appelle|My name is Claire.|jappelle
+claire|Je suis la ___ du parc.|directrice|I am the director of the park.|vous2
+claire|Je me ___ à cinq heures.|lève|I get up at five.|refl
+claire|Je ne me couche ___ avant minuit.|jamais|I never go to bed before midnight.|reflneg
+ellie|Les carnivores mangent de la ___ .|viande|Carnivores eat meat.|partit
+claire|Je bois du café. Je ne bois pas de ___ .|thé|I drink coffee. I don't drink tea.|partit
+hammond|Il y a vingt ___ visiteurs par jour.|mille|There are twenty thousand visitors a day.|bignum
+claire|Je me prépare ___ .|vite|I get ready quickly.|routine
+`,
+voc:`
+x|directeur / directrice|director|job
+m|visiteur|visitor|job
+m|pain|bread|food
+m|thé|tea|food
+f|eau|water|food
+m|poisson|fish|food
+m|fromage|cheese|food
+f|salade|salad|food
+m|lait|milk|food
+f|tasse|cup|container
+m|verre|glass|container
+x|se réveiller|to wake up|routine
+x|se lever|to get up|routine
+x|se laver|to wash (oneself)|routine
+x|s'habiller|to get dressed|routine
+x|se préparer|to get ready|routine
+x|se coucher|to go to bed|routine
+x|tôt|early|time
+x|tard|late|time
+x|jamais|never|time
+x|d'abord|first|time
+x|ensuite|then|time
+x|enfin|finally|time
+x|mille|thousand|word
+`});
+EP(8,{
+tr:`
+I want to see the raptors.|Je veux voir les raptors.|pvd
+Can you wait?|Tu peux attendre ?;Vous pouvez attendre ?|pvd
+We must be careful.|Nous devons faire attention.|pvd
+Blue is more intelligent than Charlie.|Blue est plus intelligente que Charlie.|compar
+The T. rex is the biggest.|Le T. rex est le plus grand.|superl
+It's his hat.|C'est son chapeau.|poss
+her friend (female)|Son amie|poss
+They are waiting.|Ils attendent.|irre
+I hear a noise.|J'entends un bruit.|irre
+This film is better.|Ce film est meilleur.|meill
+You can't enter.|Tu ne peux pas entrer.;Vous ne pouvez pas entrer.|pvd
+You must wait here.|Tu dois attendre ici.;Vous devez attendre ici.|pvd
+Do you want to see Blue?|Tu veux voir Blue ?;Vous voulez voir Blue ?|pvd
+The raptor is faster than the T. rex.|Le raptor est plus rapide que le T. rex.|compar
+These are our eggs.|Ce sont nos œufs.|poss
+It's my hat.|C'est mon chapeau.|poss
+It's Alan's hat.|C'est le chapeau d'Alan.|poss
+We finish at six.|Nous finissons à six heures.|irre
+She chooses the jeep.|Elle choisit la jeep.|irre
+I am less tired than Alan.|Je suis moins fatigué qu'Alan.|compar
+He answers.|Il répond.|irre
+His friends|Ses amis|poss
+They want to eat.|Ils veulent manger.|pvd
+Our raptors are calm.|Nos raptors sont calmes.|poss
+The T. rex is as dangerous as the raptor.|Le T. rex est aussi dangereux que le raptor.|compar
+`,
+fill:`
+Tu ___ attendre. (pouvoir)|peux|pvd|pouvoir|You can wait.
+Je ___ voir Blue. (vouloir)|veux|pvd|vouloir|I want to see Blue.
+Nous ___ faire attention. (devoir)|devons|pvd|devoir|We must be careful.
+Ils ___ entrer. (pouvoir)|peuvent|pvd|pouvoir|They can enter.
+Vous ___ attendre ici. (devoir)|devez|pvd|devoir|You must wait here.
+Elle ___ manger. (vouloir)|veut|pvd|vouloir|She wants to eat.
+Nous ___ entrer. (pouvoir)|pouvons|pvd|pouvoir|We can enter.
+Ils ___ voir les œufs. (vouloir)|veulent|pvd|vouloir|They want to see the eggs.
+Il ___ attendre. (devoir)|doit|pvd|devoir|He must wait.
+Nous ___ à six heures. (finir)|finissons|irre|finir|We finish at six.
+Vous ___ la jeep. (choisir)|choisissez|irre|choisir|You choose the jeep.
+J'___ un bruit. (entendre)|entends|irre|entendre|I hear a noise.
+Ils ___ ici. (attendre)|attendent|irre|attendre|They wait here.
+Elle ___ à six heures. (finir)|finit|irre|finir|She finishes at six.
+Le T. rex est ___ grand que le raptor. (more)|plus|compar||The T. rex is bigger than the raptor.
+Le raptor est ___ lent que le T. rex. (less)|moins|compar||The raptor is less slow than the T. rex.
+Blue est ___ intelligente. (the most)|la plus|superl||Blue is the most intelligent.
+Les raptors sont ___ rapides. (the most)|les plus|superl||The raptors are the fastest.
+Ce film est ___ . (better)|meilleur|meill||This film is better.
+Cette plante est ___ . (better, f.)|meilleure|meill||This plant is better.
+C'est ___ chapeau. (my)|mon|poss||It's my hat.
+C'est ___ queue. (his)|sa|poss||It's his tail.
+Ce sont ___ œufs. (our)|nos|poss||These are our eggs.
+Voici ___ amie. (my)|mon|poss||Here is my friend.
+___ raptors sont calmes. (your, formal)|Vos|poss||Your raptors are calm.
+C'est ___ jeep. (their)|leur|poss||It's their jeep.
+Ce sont ___ outils. (their)|leurs|poss||They are their tools.
+Tu as ___ chapeau ? (your, tu)|ton|poss||Do you have your hat?
+Où est ___ brosse ? (your, tu)|ta|poss||Where is your brush?
+Ce sont ___ œufs. (her)|ses|poss||They are her eggs.
+C'est ___ île. (our)|notre|poss||It's our island.
+`,
+fix:`
+Je peut attendre.|Je peux attendre.|pvd
+Nous pouvons attendons.|Nous pouvons attendre.|pvd
+Il est plus grand de le raptor.|Il est plus grand que le raptor.|compar
+Ce film est plus bon.|Ce film est meilleur.|meill
+C'est ma amie.|C'est mon amie.|poss
+C'est sa chapeau.|C'est son chapeau.|poss
+Blue est la plus intelligent.|Blue est la plus intelligente.|superl
+Tu dois pas entrer.|Tu ne dois pas entrer.|pvd
+Nous finisons à six heures.|Nous finissons à six heures.|irre
+Ils finit.|Ils finissent.|irre
+Je veux voyons les raptors.|Je veux voir les raptors.|pvd
+Le raptor est plus rapide de le T. rex.|Le raptor est plus rapide que le T. rex.|compar
+`,
+rs:`
+Why « son amie » and not « sa amie » ?|ma/ta/sa → mon/ton/son before a vowel~Amie is masculine~Amie is plural|poss
+Why « sa queue » when the owner is a male dinosaur?|The possessive matches the thing owned (queue is feminine)~It matches the owner~It is a mistake|poss
+Why « meilleur » and not « plus bon » ?|Bon has an irregular comparative~Bon is plural~It is a verb|meill
+Why « Tu peux entrer » (entrer, not entres)?|pouvoir + infinitive~Entrer is a noun~Tu is plural|pvd
+Why « la plus grande » ?|le/la/les plus + adjective, agreeing with the noun~It is a verb~It is the past|superl
+`,
+gap:`
+owen|Voici ___ raptors.|mes|Here are my raptors.|poss
+owen|Blue est la ___ intelligente.|plus|Blue is the most intelligent.|superl
+owen|Tu ne ___ pas entrer.|peux|You can't enter.|pvd
+owen|Tu ___ attendre ici.|dois|You must wait here.|pvd
+owen|Tu ___ voir Blue ?|veux|Do you want to see Blue?|pvd
+ellie|Le T. rex est ___ grand que le raptor, mais le raptor est plus rapide.|plus|The T. rex is bigger than the raptor, but the raptor is faster.|compar
+alan|C'est ___ chapeau ?|ton|Is it your hat?|poss
+alan|Non, c'est le chapeau d'Alan. C'est ___ chapeau.|son|No, it's Alan's hat. It's his hat.|poss
+ellie|Ce ___ nos œufs.|sont|These are our eggs.|poss
+`,
+voc:`
+m|dresseur|trainer|job
+m|enclos|enclosure|place
+m|bruit|noise|thing
+m|ami / amie|friend|person
+x|entrer|to enter|verb
+x|attendre|to wait|verb
+x|entendre|to hear|verb
+x|répondre|to answer|verb
+x|finir|to finish|verb
+x|choisir|to choose|verb
+x|faire attention|to be careful|expr
+x|rapide|fast|desc
+x|lent(e)|slow|desc
+x|calme|calm|desc
+x|nerveux / nerveuse|nervous|desc
+x|meilleur(e)|better / best|desc
+`});
+EP(9,{
+tr:`
+I saw a raptor.|J'ai vu un raptor.|pca
+We heard a noise.|Nous avons entendu un bruit.|pca
+Did you eat?|Tu as mangé ?;Vous avez mangé ?|pca
+She opened the door.|Elle a ouvert la porte.|partirr
+I didn't sleep.|Je n'ai pas dormi.|pcneg
+They found an egg.|Ils ont trouvé un œuf.|pca
+Yesterday I watched the film.|Hier, j'ai regardé le film.|tmark
+What did you do?|Qu'est-ce que tu as fait ?;Qu'est-ce que vous avez fait ?|partirr
+I saw nothing.|Je n'ai rien vu.|pcneg
+Two hours ago.|Il y a deux heures.|tmark
+I found tracks.|J'ai trouvé des traces.|pca
+I measured the tracks.|J'ai mesuré les traces.|pca
+I said: chaos!|J'ai dit : le chaos !;J'ai dit : chaos !|partirr
+You didn't listen.|Vous n'avez pas écouté.;Tu n'as pas écouté.|pcneg
+I never saw the raptor.|Je n'ai jamais vu le raptor.|pcneg
+This morning I ate bread.|Ce matin, j'ai mangé du pain.|tmark
+We took the jeep.|Nous avons pris la jeep.|partirr
+He drank coffee.|Il a bu du café.|partirr
+She finished.|Elle a fini.|part
+They waited.|Ils ont attendu.|part
+I wrote a card.|J'ai écrit une carte.|partirr
+Last week we visited the lab.|La semaine dernière, nous avons visité le laboratoire.|tmark
+I put the hat on the table.|J'ai mis le chapeau sur la table.|partirr
+I was scared (at that moment).|J'ai eu peur.|partirr
+`,
+fill:`
+J'ai ___ un raptor. (voir)|vu|partirr|voir|I saw a raptor.
+Tu as ___ ? (manger)|mangé|part|manger|Did you eat?
+Il a ___ la porte. (ouvrir)|ouvert|partirr|ouvrir|He opened the door.
+Nous avons ___ des traces. (trouver)|trouvé|part|trouver|We found tracks.
+Ils ont ___ un bruit. (entendre)|entendu|part|entendre|They heard a noise.
+Elle a ___ . (finir)|fini|part|finir|She finished.
+J'ai ___ un café. (prendre)|pris|partirr|prendre|I had a coffee.
+Tu as ___ du thé. (boire)|bu|partirr|boire|You drank tea.
+J'ai ___ une carte. (écrire)|écrit|partirr|écrire|I wrote a card.
+Nous avons ___ une pause. (faire)|fait|partirr|faire|We took a break.
+Il a ___ le chapeau sur la table. (mettre)|mis|partirr|mettre|He put the hat on the table.
+J'ai ___ le film. (regarder)|regardé|part|regarder|I watched the film.
+J'ai ___ peur. (avoir)|eu|partirr|avoir|I was scared.
+Nous avons ___ attendre. (devoir)|dû|partirr|devoir|We had to wait.
+J'ai ___ voir Blue. (vouloir)|voulu|partirr|vouloir|I wanted to see Blue.
+Il a ___ ouvrir la porte. (pouvoir)|pu|partirr|pouvoir|He was able to open the door.
+Elle a ___ : le chaos ! (dire)|dit|partirr|dire|She said: chaos!
+Nous ___ trouvé un œuf. (avoir)|avons|pca|avoir|We found an egg.
+Ils ___ vu le dinosaure. (avoir)|ont|pca|avoir|They saw the dinosaur.
+Tu ___ entendu ? (avoir)|as|pca|avoir|Did you hear?
+J'___ dormi. (avoir)|ai|pca|avoir|I slept.
+Je n'ai ___ vu. (nothing)|rien|pcneg||I saw nothing.
+Je n'ai ___ vu le raptor. (never)|jamais|pcneg||I never saw the raptor.
+Je n'___ pas dormi. (avoir)|ai|pcneg|avoir|I didn't sleep.
+___ , j'ai regardé le film. (yesterday)|Hier|tmark||Yesterday, I watched the film.
+J'ai entendu un bruit ___ nuit. (this)|cette|tmark||I heard a noise tonight.
+La semaine ___ , j'ai vu Alan. (last)|dernière|tmark||Last week, I saw Alan.
+Il y a ___ heures. (two)|deux|tmark||Two hours ago.
+`,
+fix:`
+J'ai mangé pas.|Je n'ai pas mangé.|pcneg
+Je ne pas ai vu.|Je n'ai pas vu.|pcneg
+Nous avons trouvons un œuf.|Nous avons trouvé un œuf.|pca
+J'ai voir un raptor.|J'ai vu un raptor.|partirr
+J'ai faire un café.|J'ai fait un café.|partirr
+Il a ouvri la porte.|Il a ouvert la porte.|partirr
+J'ai écouté pas.|Je n'ai pas écouté.|pcneg
+J'ai prendu un café.|J'ai pris un café.|partirr
+Hier, je regarde le film.|Hier, j'ai regardé le film.|pca
+J'ai bois du café.|J'ai bu du café.|partirr
+Je n'ai pas rien vu.|Je n'ai rien vu.|pcneg
+Ils ont entendus un bruit.|Ils ont entendu un bruit.|part
+`,
+rs:`
+Why « J'ai trouvé » with avoir?|Most verbs form the past with avoir~Because trouver is irregular~Because it is reflexive|pca
+Where does « ne … pas » go in « Je n'ai pas vu » ?|Around the auxiliary ai~Around the participle vu~After vu|pcneg
+Why « pris » and not « prendu » ?|Irregular participle (the chaos list)~Regular -re → u~It is plural|partirr
+Why the passé composé in « Hier, j'ai regardé le film » ?|A finished event~A habit~A description|tmark
+Why « J'ai fini » ends in -i ?|-ir verbs → i~-er verbs → i~-re verbs → i|part
+`,
+gap:`
+owen|J'ai ___ un bruit cette nuit.|entendu|I heard a noise tonight.|pca
+alan|J'ai ___ des traces.|trouvé|I found tracks.|pca
+alan|J'ai ___ les traces. Elles sont grandes.|mesuré|I measured the tracks. They are big.|pca
+claire|Tu as ___ le dinosaure ?|vu|Did you see the dinosaur?|partirr
+ashok|Non, je n'ai ___ vu. J'ai dormi.|rien|No, I saw nothing. I slept.|pcneg
+malcolm|J'ai ___ : le chaos !|dit|I said: chaos!|partirr
+malcolm|Vous n'avez pas ___ !|écouté|You didn't listen!|pcneg
+claire|Qu'est-ce qui s'est ___ ?|passé|What happened?|tmark
+`,
+voc:`
+f|trace|trace / track|invest
+f|empreinte|footprint|invest
+f|enquête|investigation|invest
+m|témoin|witness|invest
+x|trouver|to find|verb
+x|ouvrir|to open|verb
+x|fermer|to close|verb
+x|dormir|to sleep|verb
+x|hier|yesterday|time
+x|ce matin|this morning|time
+x|cette nuit|tonight / last night|time
+x|la semaine dernière|last week|time
+x|il y a deux heures|two hours ago|time
+x|rien|nothing|word
+x|jamais|never|word
+`});
+EP(10,{
+tr:`
+The dinosaur escaped.|Le dinosaure s'est échappé.|pcrefl
+She left.|Elle est partie.|pce
+We arrived at the lab.|Nous sommes arrivés au laboratoire.;Nous sommes arrivées au laboratoire.|pce
+I fell.|Je suis tombé.;Je suis tombée.|pce
+They stayed in the jeep.|Ils sont restés dans la jeep.;Elles sont restées dans la jeep.|pce
+Do you see the T. rex? Yes, I see it.|Oui, je le vois.|cod
+I didn't go out.|Je ne suis pas sorti.;Je ne suis pas sortie.|pce
+Claire came back.|Claire est revenue.|pcagr
+I got up at six.|Je me suis levé à six heures.;Je me suis levée à six heures.|pcrefl
+I saw it (the jeep).|Je l'ai vue.|codpc
+He went into the forest.|Il est allé dans la forêt.|pce
+Owen stayed at the lab.|Owen est resté au laboratoire.|pce
+We left by jeep.|Nous sommes partis en jeep.;Nous sommes parties en jeep.|pce
+Claire got into the jeep.|Claire est montée dans la jeep.|pcagr
+I see her.|Je la vois.|cod
+I see them.|Je les vois.|cod
+I don't see it.|Je ne le vois pas.;Je ne la vois pas.|cod
+I saw them.|Je les ai vus.;Je les ai vues.|codpc
+She went out of the lab.|Elle est sortie du laboratoire.|pcagr
+We got up late.|Nous nous sommes levés tard.;Nous nous sommes levées tard.|pcrefl
+They (f) arrived.|Elles sont arrivées.|pcagr
+I saw him behind the tree.|Je l'ai vu derrière l'arbre.|codpc
+He went down.|Il est descendu.|pce
+Did you come back? (to a man)|Tu es revenu ?|pce
+I didn't see her.|Je ne l'ai pas vue.|codpc
+`,
+fill:`
+Je ___ allé. (être)|suis|pce|être|I went.
+Elle ___ partie. (être)|est|pce|être|She left.
+Nous ___ arrivés. (être)|sommes|pce|être|We arrived.
+Ils ___ restés. (être)|sont|pce|être|They stayed.
+Vous ___ sortis. (être)|êtes|pce|être|You went out.
+Tu ___ tombé. (être)|es|pce|être|You fell.
+Il ___ vu le raptor. (avoir / être)|a|pca||He saw the raptor.
+Elle ___ sortie. (avoir / être)|est|pce||She went out.
+Nous ___ entendu. (avoir / être)|avons|pca||We heard.
+Je ___ arrivé. (avoir / être)|suis|pce||I arrived.
+Elle s'___ échappée. (avoir / être)|est|pcrefl||She escaped.
+Elle est ___ . (partir)|partie|pcagr|partir|She left.
+Ils sont ___ . (arriver)|arrivés|pcagr|arriver|They arrived.
+Elles sont ___ . (sortir)|sorties|pcagr|sortir|They (f) went out.
+Claire est ___ . (revenir)|revenue|pcagr|revenir|Claire came back.
+Nous sommes ___ . (rester, fem. plural)|restées|pcagr|rester|We stayed.
+Elle est ___ . (tomber)|tombée|pcagr|tomber|She fell.
+Je suis ___ . (aller, masc.)|allé|pce|aller|I went.
+Ils sont ___ . (monter)|montés|pcagr|monter|They went up.
+Elle est ___ . (descendre)|descendue|pcagr|descendre|She went down.
+Je ___ vois. (le raptor)|le|cod||I see it.
+Je ___ vois. (la jeep)|la|cod||I see it.
+Je ___ vois. (les dinosaures)|les|cod||I see them.
+Je ___ ai vu. (le raptor)|l'|cod||I saw it.
+Tu ___ vois ? (Claire)|la|cod||Do you see her?
+Je l'ai ___ . (voir, la jeep)|vue|codpc|voir|I saw it.
+Je l'ai ___ . (voir, le raptor)|vu|codpc|voir|I saw it.
+Je les ai ___ . (voir, les raptors)|vus|codpc|voir|I saw them.
+Il l'a ___ . (prendre, la jeep)|prise|codpc|prendre|He took it.
+Je me suis ___ . (lever, masc.)|levé|pcrefl|lever|I got up.
+Il s'est ___ . (échapper)|échappé|pcrefl|échapper|He escaped.
+Elle s'est ___ . (lever)|levée|pcrefl|lever|She got up.
+Ils se sont ___ . (échapper)|échappés|pcrefl|échapper|They escaped.
+`,
+fix:`
+J'ai allé à la forêt.|Je suis allé à la forêt.;Je suis allée à la forêt.|pce
+Elle est parti.|Elle est partie.|pcagr
+Nous avons arrivés.|Nous sommes arrivés.;Nous sommes arrivées.|pce
+Il a tombé.|Il est tombé.|pce
+Je suis levé à six heures.|Je me suis levé à six heures.;Je me suis levée à six heures.|pcrefl
+Je vois le.|Je le vois.|cod
+Je vois la.|Je la vois.|cod
+Je ai vu le.|Je l'ai vu.|cod
+Je ne vois le pas.|Je ne le vois pas.|cod
+Ils sont resté dans la jeep.|Ils sont restés dans la jeep.|pcagr
+Il s'a échappé.|Il s'est échappé.|pcrefl
+Claire est revenu.|Claire est revenue.|pcagr
+`,
+rs:`
+Why « Elle est partie » ends in -e ?|With être the participle agrees with the subject~It is plural~It is a negation|pcagr
+Why « Je suis tombé » with être?|Tomber is a movement verb of the être house~All verbs use être~It is reflexive|pce
+Why « Il s'est échappé » with être?|Reflexive verbs always take être in the past~Échapper is irregular~It is masculine|pcrefl
+Why « Je le vois » (le before the verb)?|Object pronouns go before the verb~Le is plural~It is a negation|cod
+Why « Je l'ai vue » with an e?|la is feminine, so the participle agrees~It is plural~It is a negation|codpc
+Where does « ne … pas » go in « Je ne le vois pas » ?|Around the pronoun and the verb~Only around vois~After vois|cod
+`,
+gap:`
+claire|Le dinosaure ___ échappé !|s'est|The dinosaur escaped!|pcrefl
+claire|Il est ___ de l'enclos.|sorti|He went out of the enclosure.|pce
+claire|Il est ___ dans la forêt.|allé|He went into the forest.|pce
+owen|Nous sommes ___ en jeep.|partis|We left by jeep.|pce
+owen|Claire est ___ dans la jeep.|montée|Claire got into the jeep.|pcagr
+alan|Tu vois le dinosaure ? — Oui, je le ___ !|vois|Do you see the dinosaur? Yes, I see it!|cod
+ashok|Je l'ai ___ derrière l'arbre !|vu|I saw it behind the tree!|codpc
+ashok|Je suis ___ , mais ça va !|tombé|I fell, but I'm OK!|pce
+owen|Claire est ___ avec Owen.|revenue|Claire came back with Owen.|pcagr
+`,
+voc:`
+f|évasion|escape|invest
+x|s'échapper|to escape|verb
+f|forêt|forest|nature
+f|rivière|river|nature
+f|vallée|valley|nature
+x|monter|to go up|verb
+x|descendre|to go down|verb
+x|sortir|to go out|verb
+x|entrer|to go in|verb
+x|tomber|to fall|verb
+x|arriver|to arrive|verb
+x|partir|to leave|verb
+x|en sécurité|safe|expr
+`});
+EP(11,{
+tr:`
+When I was little, I liked dinosaurs.|Quand j'étais petit, j'aimais les dinosaures.|imp
+The dinosaurs lived in forests.|Les dinosaures vivaient dans des forêts.|imp
+It was hot.|Il faisait chaud.|impuse
+I was sleeping when the T. rex arrived.|Je dormais quand le T. rex est arrivé.|impvspc
+Every day, Alan dug.|Tous les jours, Alan creusait.|impuse
+We had a dog.|Nous avions un chien.|imp
+The raptors had feathers.|Les raptors avaient des plumes.|imp
+There were huge forests.|Il y avait des forêts immenses.|imp
+65 million years ago.|Il y a soixante-cinq millions d'années.|ilyaago
+I watched films with my brother.|Je regardais des films avec mon frère.|imp
+I was watching the film when the electricity went out.|Je regardais le film quand l'électricité est partie.|impvspc
+You were tired.|Tu étais fatigué.;Tu étais fatiguée.;Vous étiez fatigué.;Vous étiez fatigués.|impetre
+We were happy.|Nous étions contents.;Nous étions contentes.|impetre
+It was raining.|Il pleuvait.|impuse
+The T. rex did not live in the Jurassic.|Le T. rex ne vivait pas au Jurassique.|imp
+It lived in the Cretaceous.|Il vivait au Crétacé.|imp
+The raptors were small.|Les raptors étaient petits.|impetre
+I was living in India.|J'habitais en Inde.|imp
+They ate plants.|Ils mangeaient des plantes.|imp
+Where were you?|Tu étais où ?;Où étais-tu ?;Où est-ce que tu étais ?;Vous étiez où ?;Où étiez-vous ?;Où est-ce que vous étiez ?|impetre
+There was a storm.|Il y avait un orage.|imp
+The film was good.|Le film était bon.|impetre
+`,
+fill:`
+Je ___ les dinosaures. (aimer)|aimais|imp|aimer|I liked dinosaurs.
+Tu ___ petit. (être)|étais|impetre|être|You were little.
+Il ___ chaud. (faire)|faisait|imp|faire|It was hot.
+Nous ___ un chien. (avoir)|avions|imp|avoir|We had a dog.
+Vous ___ à Genk. (habiter)|habitiez|imp|habiter|You lived in Genk.
+Ils ___ des plumes. (avoir)|avaient|imp|avoir|They had feathers.
+Les dinosaures ___ partout. (vivre)|vivaient|imp|vivre|Dinosaurs lived everywhere.
+Alan ___ tous les jours. (creuser)|creusait|imp|creuser|Alan dug every day.
+Je ___ quand le T. rex est arrivé. (dormir)|dormais|impvspc|dormir|I was sleeping when the T. rex arrived.
+Nous ___ le film. (regarder)|regardions|imp|regarder|We were watching the film.
+Elle ___ en Inde. (habiter)|habitait|imp|habiter|She lived in India.
+Nous ___ du pain. (manger)|mangions|imp|manger|We ate bread.
+Il y ___ des forêts. (avoir)|avait|imp|avoir|There were forests.
+Ils ___ contents. (être)|étaient|impetre|être|They were happy.
+Vous ___ fatigués. (être)|étiez|impetre|être|You were tired.
+J'___ petit. (être)|étais|impetre|être|I was little.
+Nous ___ au parc. (aller)|allions|imp|aller|We went to the park.
+Les raptors ___ petits. (être)|étaient|impetre|être|The raptors were small.
+J'___ peur. (avoir)|avais|imp|avoir|I was scared.
+`,
+fix:`
+Quand j'étais petit, j'ai aimé les dinosaures.|Quand j'étais petit, j'aimais les dinosaures.|impuse
+Je étais petit.|J'étais petit.|impetre
+Nous étaions contents.|Nous étions contents.|impetre
+Il faisa chaud.|Il faisait chaud.|imp
+Les dinosaures vivais dans des forêts.|Les dinosaures vivaient dans des forêts.|imp
+Je mangais du pain.|Je mangeais du pain.|imp
+Nous mangeions du pain.|Nous mangions du pain.|imp
+Il y avaient des forêts.|Il y avait des forêts.|imp
+J'avait peur.|J'avais peur.|imp
+Je dormir quand le T. rex est arrivé.|Je dormais quand le T. rex est arrivé.|impvspc
+Il a soixante-cinq millions d'années.|Il y a soixante-cinq millions d'années.|ilyaago
+Les raptors avait des plumes.|Les raptors avaient des plumes.|imp
+`,
+rs:`
+Why « j'aimais » in « Quand j'étais petit, j'aimais les dinosaures » ?|A habit in the past: imparfait~A finished event~A future plan|impuse
+How do you form the imparfait of « regarder » ?|nous regardons → regard- + ais~infinitive + ai~avoir + participle|imp
+Why « j'étais » and not « j'avais été » ?|être has the stem ét- in the imparfait~Être is regular~It is a negation|impetre
+Why « il faisait chaud » (imparfait)?|It describes the background / stage~It is a one-time event~It is the future|impuse
+« Je dormais quand le T. rex ___ . » Which form of « arriver » ?|est arrivé (passé composé: the event)~arrivait (imparfait)~arrivera (future)|impvspc
+« Il ___ chaud quand nous sommes partis. » Which form of « faire » ?|faisait (imparfait: the stage)~a fait (passé composé)~fera (future)|impvspc
+Why « nous mangions » without an e?|The e only keeps g soft before a, o; before i it is not needed~It is irregular~It is plural|imp
+`,
+gap:`
+alan|Il y a très ___ , les dinosaures vivaient partout.|longtemps|A very long time ago, dinosaurs lived everywhere.|ilyaago
+alan|Il ___ chaud.|faisait|It was hot.|impuse
+alan|Il y ___ des forêts immenses.|avait|There were huge forests.|imp
+ellie|Le mot « jurassique » vient du ___ .|Jura|The word "Jurassic" comes from the Jura.|read
+malcolm|Le T. rex ne ___ pas au Jurassique.|vivait|T. rex didn't live in the Jurassic.|imp
+malcolm|Il vivait au ___ !|Crétacé|It lived in the Cretaceous!|imp
+malcolm|Les vrais vélociraptors étaient petits et ___ des plumes.|avaient|The real velociraptors were small and had feathers.|imp
+ashok|Quand j'___ petit, en Inde, j'aimais les dinosaures.|étais|When I was little, in India, I liked dinosaurs.|impetre
+ashok|Je ___ les films avec mon frère.|regardais|I watched the films with my brother.|imp
+`,
+voc:`
+m|Trias|the Triassic|time
+m|Jurassique|the Jurassic|time
+m|Crétacé|the Cretaceous|time
+f|époque|era / period|time
+x|longtemps|a long time|time
+f|plume|feather|nature
+m|fossile|fossil|nature
+f|météorite|meteorite|nature
+f|montagne|mountain|nature
+x|creuser|to dig|verb
+x|vivre|to live|verb
+x|disparaître|to disappear|verb
+x|tous les jours|every day|time
+`});
+EP(12,{
+tr:`
+Tomorrow I will go back to Belgium.|Demain, je rentrerai en Belgique.|fut
+We will see.|Nous verrons.|futirr
+I talk to him.|Je lui parle.|coi
+I phone them.|Je leur téléphone.|coi
+Yes, I'm going there.|Oui, j'y vais.|y
+I want two (of them).|J'en veux deux.|en
+In my opinion, the first film is the best.|À mon avis, le premier film est le meilleur.|opin
+I think that Owen is nice.|Je pense qu'Owen est sympa.|opin
+My favourite film is the first.|Mon film préféré, c'est le premier.;Mon film préféré est le premier.|opin
+I will come back one day.|Je reviendrai un jour.|futirr
+We will be happy.|Nous serons contents.|futirr
+I will have two eggs.|J'aurai deux œufs.|futirr
+They will come.|Ils viendront.|futirr
+You will see.|Tu verras.;Vous verrez.|futirr
+I'm going there in March.|J'y vais en mars.|y
+We will go to Paris.|Nous irons à Paris.|futirr
+I think that the raptors are fantastic.|Je pense que les raptors sont fantastiques.|opin
+I find that the film is good.|Je trouve que le film est bon.|opin
+I prefer the first film.|Je préfère le premier film.|opin
+I saw it five times.|Je l'ai vu cinq fois.|codpc
+She will take the boat.|Elle prendra le bateau.|fut
+I'm phoning her.|Je lui téléphone.|coi
+Yes, I speak to him.|Oui, je lui parle.|coi
+We will speak.|Nous parlerons.|fut
+He will be able to come.|Il pourra venir.|futirr
+`,
+fill:`
+Je ___ en Belgique. (rentrer)|rentrerai|fut|rentrer|I will go back to Belgium.
+Tu ___ le film. (voir)|verras|futirr|voir|You will see the film.
+Il ___ un jour. (revenir)|reviendra|futirr|revenir|He will come back one day.
+Nous ___ contents. (être)|serons|futirr|être|We will be happy.
+Vous ___ des œufs. (avoir)|aurez|futirr|avoir|You will have eggs.
+Ils ___ à Paris. (aller)|iront|futirr|aller|They will go to Paris.
+Je ___ un café. (prendre)|prendrai|fut|prendre|I will have a coffee.
+Elle ___ attendre. (devoir)|devra|futirr|devoir|She will have to wait.
+Nous ___ voir Blue. (pouvoir)|pourrons|futirr|pouvoir|We will be able to see Blue.
+Ils ___ voir Blue. (vouloir)|voudront|futirr|vouloir|They will want to see Blue.
+Nous ___ une pause. (faire)|ferons|futirr|faire|We will take a break.
+Je ___ demain. (venir)|viendrai|futirr|venir|I will come tomorrow.
+Vous ___ demain. (parler)|parlerez|fut|parler|You will speak tomorrow.
+Je ___ parle. (à Claire)|lui|coi||I talk to her.
+Je ___ téléphone. (à Alan et Ellie)|leur|coi||I phone them.
+Elle ___ écrit. (à Owen)|lui|coi||She writes to him.
+Nous ___ parlons. (à Owen et Claire)|leur|coi||We talk to them.
+J'___ vais. (à Paris)|y|y||I go there.
+J'___ veux deux. (des œufs)|en|en||I want two.
+Tu ___ veux ? (du café)|en|en||Do you want some?
+Nous ___ allons en mars. (au Canada)|y|y||We go there in March.
+Il ___ mange. (du pain)|en|en||He eats some.
+Je ne ___ vais pas. (au laboratoire)|y|y||I'm not going there.
+Il ___ a trois. (des œufs)|en|en||He has three.
+`,
+fix:`
+Je parle à lui.|Je lui parle.|coi
+Je téléphone leur.|Je leur téléphone.|coi
+Je vais y.|J'y vais.|y
+J'veux en deux.|J'en veux deux.|en
+Je veux deux œufs en.|J'en veux deux.|en
+Je ferrai un café.|Je ferai un café.|futirr
+Je prendrerai un café.|Je prendrai un café.|fut
+Il viendera demain.|Il viendra demain.|futirr
+Nous allerons à Paris.|Nous irons à Paris.|futirr
+Je penses que les raptors sont fantastiques.|Je pense que les raptors sont fantastiques.|opin
+Je aurai deux œufs.|J'aurai deux œufs.|elis
+Je lui parle à Claire.|Je parle à Claire.;Je lui parle.|coi
+`,
+rs:`
+Why « lui » in « Je lui parle » ?|Parler à + person → lui~Lui = the object (le/la)~Lui is plural|coi
+Why « leur » in « Je leur téléphone » ?|à + several people → leur~Leur is feminine~Leur is a verb|coi
+Why « je serai » and not « j'êtrerai » ?|Irregular future stem ser-~Regular future~It is the past|futirr
+Why « j'y vais » ?|y replaces à + place~y is a pronoun for people~y is a negation|y
+Why « j'en veux deux » ?|en replaces « des œufs » and the number stays~en means to~en is a place|en
+Why « je rentrerai » ?|infinitive + ai (futur simple)~avoir + participle~imparfait|fut
+`,
+gap:`
+ashok|Demain, je ___ en Belgique.|rentrerai|Tomorrow I will go back to Belgium.|fut
+ashok|Je ___ un jour !|reviendrai|I will come back one day!|futirr
+ashok|Je lui ___ . Je leur écris une carte.|téléphone|I phone him/her. I write them a card.|coi
+owen|Tu vas à Paris ? — Oui, j'___ vais en mars.|y|Are you going to Paris? Yes, I'm going there in March.|y
+claire|Tu veux des œufs en chocolat ? — Oui, j'___ veux deux !|en|Do you want chocolate eggs? Yes, I want two!|en
+ellie|Quel est ton film ___ ?|préféré|What is your favourite film?|opin
+malcolm|À mon ___ , le premier film est le meilleur.|avis|In my opinion, the first film is the best.|opin
+owen|Je ___ que les raptors sont fantastiques.|pense|I think that the raptors are fantastic.|opin
+alan|Je l'ai ___ cinq fois.|vu|I saw it five times.|codpc
+`,
+voc:`
+m|retour|return|travel
+x|rentrer|to go home|verb
+m|bateau|boat|travel
+f|carte postale|postcard|travel
+m|souvenir|souvenir|travel
+m|film|film|film
+f|suite|sequel|film
+m|acteur / actrice|actor|film
+x|préféré(e)|favourite|desc
+x|fantastique|fantastic|desc
+x|sympa|nice|desc
+x|à mon avis|in my opinion|expr
+x|un jour|one day|time
+`});
+/* ===== reading passages: 3 per episode ===== */
+PAS(1,`
+@Le journal d'Ashok|ashok
+Je m'appelle [[Ashok]].|My name is Ashok.
+Je suis indien et j'habite en [[Belgique]].|I am Indian and I live in Belgium.
+Aujourd'hui, je suis sur l'île.|Today I am on the island.
+Je suis fatigué, mais je suis [[content]] !|I am tired, but I am happy!
+Hammond est écossais.|Hammond is Scottish.
+Ellie et Alan sont ici.|Ellie and Alan are here.
+?vf|Ashok est belge.|F
+?mc|Where is Ashok today?|On the island~In India~In Scotland
+?ty|Who is Scottish? (one name)|Hammond
+@La lettre de Hammond|hammond
+Bonjour, Ashok ! Bienvenue sur l'île !|Hello, Ashok! Welcome to the island!
+Je suis John Hammond. Je suis [[écossais]].|I am John Hammond. I am Scottish.
+Alan est paléontologue. Ellie est [[paléobotaniste]].|Alan is a palaeontologist. Ellie is a palaeobotanist.
+Ils sont ici et ils sont contents.|They are here and they are happy.
+Et toi ? Tu es [[ingénieur]], oui ?|And you? You are an engineer, yes?
+Nous sommes contents : tu es ici !|We are happy: you are here!
+?vf|Hammond est belge.|F
+?mc|What is Ellie's job?|Palaeobotanist~Palaeontologist~Engineer
+?ty|What is Alan's job? (French, one word)|paléontologue
+@Une conversation|malcolm
+Malcolm : Bonjour ! Je suis [[Ian]] Malcolm. Je suis mathématicien.|Hello! I am Ian Malcolm. I am a mathematician.
+Ashok : Bonjour ! Je suis indien. J'habite en Belgique.|Hello! I am Indian. I live in Belgium.
+Malcolm : Moi, je suis américain. Ça va ?|Me, I am American. How are you?
+Ashok : Ça va [[bien]], merci. Et vous ?|I'm fine, thank you. And you?
+Malcolm : Ça va, merci. Nous sommes ici sur l'île !|I'm fine, thank you. We are here on the island!
+Ashok : Oui, nous sommes contents.|Yes, we are happy.
+?vf|Malcolm est mathématicien.|V
+?mc|Where does Ashok live?|In Belgium~In India~In America
+?ty|What is Malcolm's nationality? (French, masculine)|américain
+`);
+PAS(2,`
+@Le laboratoire|alan
+Dans le laboratoire, il y a [[trois]] œufs.|In the laboratory, there are three eggs.
+Il y a aussi un bébé dinosaure.|There is also a baby dinosaur.
+Le bébé a deux jours.|The baby is two days old.
+Alan a une brosse et des [[outils]].|Alan has a brush and tools.
+Il a aussi un chapeau.|He also has a hat.
+Ellie a une [[question]].|Ellie has a question.
+?vf|Il y a quatre œufs.|F
+?mc|How old is the baby?|Two days~Three days~Two years
+?ty|What does Alan wear on his head? (French, with the article)|un chapeau;chapeau
+@Aujourd'hui, j'ai peur !|ashok
+Il y a un dinosaure ici !|There is a dinosaur here!
+Il a une tête, des dents et une [[queue]].|It has a head, teeth and a tail.
+Malcolm a une question : « Tu as peur ? »|Malcolm has a question: "Are you scared?"
+Oui, j'ai [[peur]], mais Alan est ici.|Yes, I am scared, but Alan is here.
+Nous avons une jeep.|We have a jeep.
+?vf|Ashok a peur.|V
+?mc|Who is with Ashok?|Alan~Hammond~Claire
+?ty|What does the dinosaur have at the back? (French, with the article)|une queue;queue
+@Les outils d'Alan|alan
+Voici les outils d'Alan.|Here are Alan's tools.
+Alan a un chapeau, une brosse et [[des]] outils.|Alan has a hat, a brush and tools.
+Il y a aussi une jeep.|There is also a jeep.
+Nous avons deux jeeps.|We have two jeeps.
+Alan : « J'ai un [[chapeau]]. Tu as un chapeau, Ashok ? »|Alan: "I have a hat. Do you have a hat, Ashok?"
+Ashok : « Oui, j'ai un chapeau ! »|Ashok: "Yes, I have a hat!"
+?vf|Alan a une brosse.|V
+?mc|How many jeeps are there?|Two~One~Three
+?ty|What does Alan ask Ashok about? (French, with the article)|un chapeau;chapeau
+`);
+PAS(3,`
+@La plante verte|ellie
+Voici une plante très vieille.|Here is a very old plant.
+Les [[feuilles]] sont vertes.|The leaves are green.
+C'est une petite plante.|It is a small plant.
+La fougère est [[grande]].|The fern is big.
+Ellie est paléobotaniste : elle est intelligente.|Ellie is a palaeobotanist: she is intelligent.
+Elle est contente !|She is happy!
+?vf|Les feuilles sont rouges.|F
+?mc|How is the plant?|Very old~Very young~Very big
+?ty|What colour are the leaves? (French)|vertes;vert
+@Hammond et les nombres|hammond
+Le brachiosaure mesure vingt-cinq mètres.|The brachiosaur measures twenty-five metres.
+Il y a [[quinze]] dinosaures.|There are fifteen dinosaurs.
+Le T. rex est très grand et il est [[dangereux]].|The T. rex is very big and it is dangerous.
+Le compsognathus est petit.|The compsognathus is small.
+En Belgique, 70, c'est « septante ».|In Belgium, 70 is "septante".
+Pour toi, c'est utile !|For you, it is useful!
+?vf|Il y a vingt dinosaures.|F
+?mc|How tall is the brachiosaur?|25 metres~15 metres~50 metres
+?ty|How do Belgians say 70? (French)|septante
+@Mes amis|ashok
+Ellie est intelligente et gentille.|Ellie is intelligent and kind.
+Alan est sérieux. Il est paléontologue.|Alan is serious. He is a palaeontologist.
+Malcolm est [[drôle]]. Il est mathématicien.|Malcolm is funny. He is a mathematician.
+Hammond est écossais et il est content.|Hammond is Scottish and he is happy.
+Moi, je suis [[fatigué]] !|Me, I am tired!
+?vf|Alan est drôle.|F
+?mc|What is Malcolm's job?|Mathematician~Palaeontologist~Engineer
+?ty|Who is serious? (one name)|Alan
+`);
+PAS(4,`
+@La visite en jeep|malcolm
+Nous visitons le parc en jeep.|We visit the park by jeep.
+Nous [[regardons]] les dinosaures.|We watch the dinosaurs.
+Le tricératops mange des plantes.|The triceratops eats plants.
+Il ne mange pas de viande.|It doesn't eat meat.
+Où est le T. rex ? Il ne chasse pas ?|Where is the T. rex? Isn't it hunting?
+Malcolm [[adore]] le chaos.|Malcolm loves chaos.
+?vf|Le tricératops mange des plantes.|V
+?mc|What are they doing in the jeep?|Visiting the park~Hunting~Eating a sandwich
+?ty|Who loves chaos? (one name)|Malcolm
+@Questions dans la jeep|ashok
+Ellie : Est-ce que tu aimes les dinosaures ?|Do you like dinosaurs?
+Ashok : Oui, j'adore les dinosaures !|Yes, I love dinosaurs!
+Alan : Qu'est-ce que tu [[regardes]] ?|What are you looking at?
+Ashok : Je regarde le [[tricératops]].|I'm looking at the triceratops.
+Alan : Pourquoi ?|Why?
+Ashok : Parce que j'aime les herbivores.|Because I like herbivores.
+?vf|Ashok n'aime pas les dinosaures.|F
+?mc|Why does Ashok look at the triceratops?|He likes herbivores~He is scared~He is hungry
+?ty|What does Ashok love? (French)|les dinosaures;dinosaures
+@Avis aux visiteurs|hammond
+Avis aux visiteurs :|Notice to visitors:
+Les visiteurs ne mangent pas dans la jeep.|Visitors don't eat in the jeep.
+Ils [[regardent]] les dinosaures dans le parc.|They watch the dinosaurs in the park.
+Les carnivores [[chassent]].|The carnivores hunt.
+Les herbivores mangent des plantes.|The herbivores eat plants.
+Nous adorons les visiteurs !|We love our visitors!
+?vf|Les visiteurs mangent dans la jeep.|F
+?mc|What do herbivores eat?|Plants~Meat~Eggs
+?ty|Who hunts? (French)|les carnivores;carnivores
+`);
+PAS(5,`
+@Au centre des visiteurs|hammond
+Le centre des visiteurs est grand.|The visitor centre is big.
+Le squelette est [[devant]] la porte.|The skeleton is in front of the door.
+Le restaurant est à côté du laboratoire.|The restaurant is next to the lab.
+Nous allons [[au]] restaurant.|We are going to the restaurant.
+Je prends un café et un sandwich.|I'll have a coffee and a sandwich.
+Il est trois heures et demie.|It is half past three.
+?vf|Le squelette est derrière la porte.|F
+?mc|What does the speaker order?|A coffee and a sandwich~Tea and bread~A fish~
+?ty|The restaurant is next to the ... (French)|laboratoire;le laboratoire;du laboratoire
+@Tu viens d'où ?|hammond
+Hammond : Je viens d'Écosse. Et toi ?|I come from Scotland. And you?
+Ashok : Je viens d'[[Inde]], mais j'habite en Belgique.|I come from India, but I live in Belgium.
+Ellie : Nous venons des États-Unis.|We come from the United States.
+Alan : Nous allons au [[Canada]].|We are going to Canada.
+Malcolm : Moi, je vais aux États-Unis.|Me, I'm going to the United States.
+Hammond : Vous faites une pause ?|Are you taking a break?
+?vf|Ashok habite en Inde.|F
+?mc|Where does Hammond come from?|Scotland~India~Canada
+?ty|Where does Malcolm go? (French)|aux États-Unis;États-Unis
+@Quelle heure est-il ?|malcolm
+Malcolm : Qu'est-ce que tu fais ?|What are you doing?
+Ashok : Je fais une [[pause]].|I'm taking a break.
+Malcolm : Quelle heure est-il ?|What time is it?
+Ashok : Il est midi.|It's noon.
+Malcolm : Alors, nous allons au restaurant !|Then we're going to the restaurant!
+Ashok : Oui, je prends un [[sandwich]].|Yes, I'll have a sandwich.
+?vf|Il est minuit.|F
+?mc|What is Ashok doing?|Taking a break~Running~Hunting
+?ty|What time is it? (French, one word)|midi
+`);
+PAS(6,`
+@La tempête|ellie
+Il fait mauvais. Il pleut.|The weather is bad. It's raining.
+Il y a du [[vent]].|There is wind.
+Il va y avoir un orage.|There is going to be a thunderstorm.
+L'électricité ne marche pas !|The electricity isn't working!
+Qu'est-ce que nous allons faire ?|What are we going to do?
+Alan : « Il faut [[attendre]]. Reste ici ! »|Alan: "We have to wait. Stay here!"
+?vf|Il fait beau.|F
+?mc|What is going to happen?|A thunderstorm~A sunny day~A party
+?ty|What isn't working? (French)|l'électricité;électricité
+@Dans la nuit|alan
+Alan : Ne bouge pas ! Reste derrière moi !|Don't move! Stay behind me!
+Ashok : J'ai [[froid]] et j'ai faim.|I'm cold and I'm hungry.
+Alan : Il faut attendre ici.|We have to wait here.
+Nous n'allons pas [[courir]].|We are not going to run.
+Ashok : J'ai [[peur]] !|I'm scared!
+Ellie : Demain, il va faire beau.|Tomorrow the weather is going to be nice.
+?vf|Ashok a chaud.|F
+?mc|What does Alan tell Ashok to do?|Stay behind him~Run away~Eat~
+?ty|Name one thing Ashok feels. (French, one word)|froid;faim;peur
+@Le matin|hammond
+Le matin, il fait beau !|In the morning, the weather is nice!
+Nous allons quitter l'île.|We are going to leave the island.
+Hammond : « Tu vas [[revenir]], Ashok ? »|Hammond: "Are you going to come back, Ashok?"
+Ashok est fatigué, mais il est content.|Ashok is tired, but he is happy.
+Ashok : « Oui ! Je vais revenir ! »|Ashok: "Yes! I'm going to come back!"
+Ellie : Il [[faut]] dormir maintenant.|We have to sleep now.
+?vf|Il pleut le matin.|F
+?mc|What is the weather in the morning?|Nice~Bad~Stormy
+?ty|What is Hammond's question? (one verb, French)|revenir
+`);
+PAS(7,`
+@La journée de Claire|claire
+Claire est la directrice du parc.|Claire is the director of the park.
+Elle se lève à [[cinq]] heures.|She gets up at five.
+Elle se prépare vite.|She gets ready quickly.
+Elle boit du café et elle mange du pain.|She drinks coffee and eats bread.
+Elle ne se couche jamais avant minuit.|She never goes to bed before midnight.
+Elle est très [[fatiguée]].|She is very tired.
+?vf|Claire se couche tôt.|F
+?mc|What time does Claire get up?|Five o'clock~Seven o'clock~Midnight
+?ty|What does Claire drink? (French)|du café;café
+@Un message de Claire|claire
+Bonjour, monsieur Ashok.|Hello, Mr Ashok.
+Vous êtes [[ici]] au nouveau parc.|You are here at the new park.
+Aujourd'hui, il y a vingt [[mille]] visiteurs.|Today there are twenty thousand visitors.
+Vous [[buvez]] du café ou du thé ?|Do you drink coffee or tea?
+Les herbivores mangent beaucoup de plantes.|The herbivores eat a lot of plants.
+Nous mangeons à midi.|We eat at noon.
+?vf|Il y a vingt visiteurs.|F
+?mc|What does Claire ask Ashok?|Coffee or tea?~Plants or meat?~Early or late?
+?ty|How many visitors are there? (French)|vingt mille
+@Ma routine|ashok
+D'abord, je me [[réveille]] à sept heures.|First, I wake up at seven.
+Ensuite, je me lève et je me lave.|Then I get up and wash.
+Après, je m'habille.|Afterwards, I get dressed.
+Je bois du thé et je mange du [[pain]].|I drink tea and eat bread.
+Enfin, je vais au centre.|Finally, I go to the centre.
+Le soir, je me couche tôt.|In the evening, I go to bed early.
+?vf|Ashok boit du café.|F
+?mc|What does Ashok do first?|He wakes up~He gets dressed~He drinks tea
+?ty|What does Ashok eat? (French)|du pain;pain
+`);
+PAS(8,`
+@Les raptors d'Owen|owen
+Voici mes raptors.|Here are my raptors.
+Blue est la plus [[intelligente]].|Blue is the most intelligent.
+Tu veux voir Blue ?|Do you want to see Blue?
+Tu ne peux pas entrer dans l'enclos.|You can't enter the enclosure.
+Tu [[dois]] attendre ici.|You must wait here.
+Le raptor est plus rapide que le T. rex.|The raptor is faster than the T. rex.
+?vf|Ashok peut entrer dans l'enclos.|F
+?mc|Who is the most intelligent?|Blue~Charlie~The T. rex
+?ty|Who is faster than the T. rex? (French)|le raptor;raptor
+@À qui est ce chapeau ?|alan
+C'est ton chapeau ?|Is it your hat?
+Non, c'est le chapeau d'Alan.|No, it is Alan's hat.
+C'est [[son]] chapeau.|It is his hat.
+Ce sont nos [[œufs]].|These are our eggs.
+Ellie et son amie attendent.|Ellie and her friend are waiting.
+Elles attendent à côté de la jeep.|They are waiting next to the jeep.
+?vf|Le chapeau est à Ashok.|F
+?mc|Whose eggs are they?|Ours~Alan's~Owen's
+?ty|Whose hat is it? (French name)|Alan;d'Alan
+@Les règles de l'enclos|owen
+Vous pouvez regarder les raptors.|You can watch the raptors.
+Vous ne pouvez pas [[entrer]].|You can't enter.
+Vous devez faire attention.|You must be careful.
+Les raptors sont intelligents et [[rapides]].|The raptors are intelligent and fast.
+Ils sont aussi nerveux.|They are also nervous.
+Le dresseur est calme.|The trainer is calm.
+?vf|Les visiteurs peuvent entrer.|F
+?mc|What must visitors do?|Be careful~Run~Feed the raptors
+?ty|Name one thing visitors can do. (French verb)|regarder
+`);
+PAS(9,`
+@Un bruit dans la nuit|claire
+Cette nuit, Owen a [[entendu]] un bruit.|Tonight, Owen heard a noise.
+Il a regardé l'enclos.|He looked at the enclosure.
+Il n'a rien vu.|He saw nothing.
+Claire a ouvert la porte.|Claire opened the door.
+Il n'y a pas de raptor !|There is no raptor!
+Claire : « Qu'est-ce qui s'est [[passé]] ? »|Claire: "What happened?"
+?vf|Owen a vu un raptor.|F
+?mc|What did Owen do?|Heard a noise~Found an egg~Ate bread
+?ty|What did Claire open? (French, with the article)|la porte
+@L'enquête d'Alan|alan
+Alan a trouvé des traces.|Alan found tracks.
+Il a [[mesuré]] les traces.|He measured the tracks.
+Elles sont grandes.|They are big.
+Hier, il a regardé le parc.|Yesterday, he looked at the park.
+Il a pris un café.|He had a coffee.
+Alan : « J'ai [[dit]] : c'est un raptor ! »|Alan: "I said: it's a raptor!"
+?vf|Alan a trouvé des traces.|V
+?mc|What did Alan measure?|The tracks~The eggs~The jeep
+?ty|What did Alan find? (French)|des traces;traces
+@Le verdict de Malcolm|malcolm
+Malcolm a [[dit]] : « Le chaos ! »|Malcolm said: "Chaos!"
+Vous n'avez pas écouté !|You didn't listen!
+Ashok a dormi. Il n'a [[rien]] vu.|Ashok slept. He saw nothing.
+Ellie a fait un café.|Ellie made a coffee.
+Nous avons pris la jeep.|We took the jeep.
+Il y a deux heures, le raptor a ouvert la porte.|Two hours ago, the raptor opened the door.
+?vf|Ashok a vu le raptor.|F
+?mc|Who made coffee?|Ellie~Alan~Claire
+?ty|When did the raptor open the door? (French)|il y a deux heures
+`);
+PAS(10,`
+@L'évasion|claire
+Le dinosaure s'est échappé !|The dinosaur escaped!
+Il est sorti de l'enclos.|It went out of the enclosure.
+Il est [[allé]] dans la forêt.|It went into the forest.
+Nous sommes partis en jeep.|We left by jeep.
+Claire est [[montée]] dans la jeep.|Claire got into the jeep.
+Owen est resté au laboratoire.|Owen stayed at the laboratory.
+?vf|Owen est parti en jeep.|F
+?mc|Where did the dinosaur go?|Into the forest~To the lab~To the sea
+?ty|Who stayed at the lab? (French)|Owen
+@Dans la forêt|owen
+Tu vois le dinosaure ?|Do you see the dinosaur?
+Oui, je le [[vois]] !|Yes, I see it!
+Je l'ai vu derrière l'arbre !|I saw it behind the tree!
+Ashok est tombé, mais ça va.|Ashok fell, but he is OK.
+La rivière est à côté.|The river is next to it.
+Nous sommes [[arrivés]] au centre.|We arrived at the centre.
+?vf|Ashok est tombé.|V
+?mc|Where was the dinosaur?|Behind the tree~In the river~In the jeep
+?ty|Where did they arrive? (French)|au centre
+@Le retour au calme|claire
+Claire est revenue avec Owen.|Claire came back with Owen.
+Nous sommes en [[sécurité]] !|We are safe!
+Je me suis levé à six heures, mais je suis [[fatigué]].|I got up at six, but I am tired.
+Ellie est sortie du laboratoire.|Ellie went out of the laboratory.
+La jeep ? Je l'ai [[vue]] !|The jeep? I saw it!
+Nous sommes contents.|We are happy.
+?vf|Claire est restée au laboratoire.|F
+?mc|Who went out of the lab?|Ellie~Owen~Alan
+?ty|Who came back with Owen? (French)|Claire
+`);
+PAS(11,`
+@L'histoire d'Alan|alan
+Il y a très longtemps, les dinosaures vivaient partout.|A very long time ago, dinosaurs lived everywhere.
+Il [[faisait]] chaud.|It was hot.
+Il y avait des forêts immenses.|There were huge forests.
+Les raptors avaient des plumes.|The raptors had feathers.
+Le T. rex ne vivait pas au Jurassique.|The T. rex did not live in the Jurassic.
+Il vivait au [[Crétacé]].|It lived in the Cretaceous.
+?vf|Il faisait froid.|F
+?mc|What did the raptors have?|Feathers~Wings~Fur
+?ty|When did the T. rex live? (French)|au Crétacé;Crétacé
+@Le Jura|ellie
+Le mot « jurassique » vient du Jura.|The word "Jurassic" comes from the Jura.
+Le Jura, ce sont des [[montagnes]] en France et en Suisse.|The Jura is a range of mountains in France and Switzerland.
+Alan creusait tous les jours.|Alan dug every day.
+Il [[cherchait]] des fossiles.|He looked for fossils.
+Il y a soixante-cinq millions d'années, une météorite est tombée.|Sixty-five million years ago, a meteorite fell.
+Les dinosaures ont disparu.|The dinosaurs disappeared.
+?vf|Le Jura est en Belgique.|F
+?mc|What did Alan look for?|Fossils~Eggs~Feathers
+?ty|Name a country with the Jura. (French)|France;Suisse;en France;en Suisse
+@Quand j'étais petit|ashok
+Quand j'étais petit, j'habitais en Inde.|When I was little, I lived in India.
+J'aimais les dinosaures.|I loved dinosaurs.
+Je [[regardais]] les films avec mon frère.|I watched films with my brother.
+Un jour, je regardais le film quand l'électricité est partie !|One day, I was watching the film when the electricity went out!
+Nous avions un [[chien]].|We had a dog.
+J'étais content.|I was happy.
+?vf|Ashok habitait en Belgique.|F
+?mc|Who did Ashok watch films with?|His brother~His dog~Alan
+?ty|What happened while he was watching? (French)|l'électricité est partie;électricité est partie
+`);
+PAS(12,`
+@Le départ|ashok
+Demain, je [[rentrerai]] en Belgique.|Tomorrow I will go back to Belgium.
+Nous quitterons l'île en bateau.|We will leave the island by boat.
+Je reviendrai un jour !|I will come back one day!
+Hammond sera content.|Hammond will be happy.
+Ellie et Alan viendront aussi.|Ellie and Alan will come too.
+Nous [[serons]] contents.|We will be happy.
+?vf|Ashok restera sur l'île.|F
+?mc|How will they leave the island?|By boat~By jeep~By helicopter
+?ty|When will Ashok come back? (French)|un jour
+@Cartes postales|ashok
+Je téléphone à Claire : je [[lui]] téléphone.|I phone Claire: I phone her.
+J'écris une carte à Ellie et Alan : je leur écris une carte.|I write a card to Ellie and Alan: I write them a card.
+Tu vas à Paris ? Oui, j'[[y]] vais en mars.|Are you going to Paris? Yes, I'm going there in March.
+Tu veux des œufs en chocolat ? J'[[en]] veux deux !|Do you want chocolate eggs? I want two!
+Le souvenir est pour Owen.|The souvenir is for Owen.
+?vf|Ashok téléphone à Claire.|V
+?mc|How many chocolate eggs does he want?|Two~Three~One
+?ty|When is he going to Paris? (French)|en mars
+@Mon film préféré|malcolm
+Quel est ton film préféré ?|What is your favourite film?
+À mon [[avis]], le premier film est le meilleur.|In my opinion, the first film is the best.
+Je l'ai vu cinq fois.|I saw it five times.
+Je pense que les raptors sont fantastiques.|I think the raptors are fantastic.
+Je trouve qu'Owen est [[sympa]].|I find that Owen is nice.
+Je préfère le premier film.|I prefer the first film.
+?vf|Il a vu le film dix fois.|F
+?mc|How many times did he see the film?|Five~Ten~Two
+?ty|What does he think of the raptors? (French)|fantastiques
+`);
+/* ===== verb tables (conjugation grids + sprint items) ===== */
+var VERBS=[];
+(function(t){_L(t).forEach(function(l){var p=l.split('|');VERBS.push({inf:p[0],ep:+p[1],tag:p[2],tense:p[3],f:p[4].split(','),en:p[5]||''})})})(`
+être|1|etre|présent|suis,es,est,sommes,êtes,sont|to be
+avoir|2|avoir|présent|ai,as,a,avons,avez,ont|to have
+habiter|4|er|présent|habite,habites,habite,habitons,habitez,habitent|to live
+manger|4|er|présent|mange,manges,mange,mangeons,mangez,mangent|to eat
+regarder|4|er|présent|regarde,regardes,regarde,regardons,regardez,regardent|to watch
+aimer|4|aimer|présent|aime,aimes,aime,aimons,aimez,aiment|to like
+parler|4|er|présent|parle,parles,parle,parlons,parlez,parlent|to speak
+visiter|4|er|présent|visite,visites,visite,visitons,visitez,visitent|to visit
+chercher|4|er|présent|cherche,cherches,cherche,cherchons,cherchez,cherchent|to look for
+adorer|4|er|présent|adore,adores,adore,adorons,adorez,adorent|to adore
+écouter|4|er|présent|écoute,écoutes,écoute,écoutons,écoutez,écoutent|to listen
+chasser|4|er|présent|chasse,chasses,chasse,chassons,chassez,chassent|to hunt
+aller|5|aller|présent|vais,vas,va,allons,allez,vont|to go
+faire|5|faire|présent|fais,fais,fait,faisons,faites,font|to do / make
+venir|5|venir|présent|viens,viens,vient,venons,venez,viennent|to come
+prendre|5|prendre|présent|prends,prends,prend,prenons,prenez,prennent|to take
+se lever|7|refl|présent|me lève,te lèves,se lève,nous levons,vous levez,se lèvent|to get up
+se coucher|7|refl|présent|me couche,te couches,se couche,nous couchons,vous couchez,se couchent|to go to bed
+se réveiller|7|refl|présent|me réveille,te réveilles,se réveille,nous réveillons,vous réveillez,se réveillent|to wake up
+s'habiller|7|refl|présent|m'habille,t'habilles,s'habille,nous habillons,vous habillez,s'habillent|to get dressed
+se préparer|7|refl|présent|me prépare,te prépares,se prépare,nous préparons,vous préparez,se préparent|to get ready
+se laver|7|refl|présent|me lave,te laves,se lave,nous lavons,vous lavez,se lavent|to wash
+boire|7|boire|présent|bois,bois,boit,buvons,buvez,boivent|to drink
+pouvoir|8|pvd|présent|peux,peux,peut,pouvons,pouvez,peuvent|can
+vouloir|8|pvd|présent|veux,veux,veut,voulons,voulez,veulent|to want
+devoir|8|pvd|présent|dois,dois,doit,devons,devez,doivent|must
+finir|8|irre|présent|finis,finis,finit,finissons,finissez,finissent|to finish
+choisir|8|irre|présent|choisis,choisis,choisit,choisissons,choisissez,choisissent|to choose
+attendre|8|irre|présent|attends,attends,attend,attendons,attendez,attendent|to wait
+entendre|8|irre|présent|entends,entends,entend,entendons,entendez,entendent|to hear
+répondre|8|irre|présent|réponds,réponds,répond,répondons,répondez,répondent|to answer
+trouver|9|pca|passé composé|ai trouvé,as trouvé,a trouvé,avons trouvé,avez trouvé,ont trouvé|to find
+voir|9|partirr|passé composé|ai vu,as vu,a vu,avons vu,avez vu,ont vu|to see
+faire|9|partirr|passé composé|ai fait,as fait,a fait,avons fait,avez fait,ont fait|to do
+prendre|9|partirr|passé composé|ai pris,as pris,a pris,avons pris,avez pris,ont pris|to take
+entendre|9|pca|passé composé|ai entendu,as entendu,a entendu,avons entendu,avez entendu,ont entendu|to hear
+dormir|9|pca|passé composé|ai dormi,as dormi,a dormi,avons dormi,avez dormi,ont dormi|to sleep
+ouvrir|9|partirr|passé composé|ai ouvert,as ouvert,a ouvert,avons ouvert,avez ouvert,ont ouvert|to open
+aller|10|pce|passé composé|suis allé,es allé,est allé,sommes allés,êtes allés,sont allés|to go
+partir|10|pce|passé composé|suis parti,es parti,est parti,sommes partis,êtes partis,sont partis|to leave
+arriver|10|pce|passé composé|suis arrivé,es arrivé,est arrivé,sommes arrivés,êtes arrivés,sont arrivés|to arrive
+sortir|10|pce|passé composé|suis sorti,es sorti,est sorti,sommes sortis,êtes sortis,sont sortis|to go out
+tomber|10|pce|passé composé|suis tombé,es tombé,est tombé,sommes tombés,êtes tombés,sont tombés|to fall
+rester|10|pce|passé composé|suis resté,es resté,est resté,sommes restés,êtes restés,sont restés|to stay
+se lever|10|pcrefl|passé composé|me suis levé,t'es levé,s'est levé,nous sommes levés,vous êtes levés,se sont levés|to get up
+regarder|11|imp|imparfait|regardais,regardais,regardait,regardions,regardiez,regardaient|to watch
+être|11|impetre|imparfait|étais,étais,était,étions,étiez,étaient|to be
+avoir|11|imp|imparfait|avais,avais,avait,avions,aviez,avaient|to have
+faire|11|imp|imparfait|faisais,faisais,faisait,faisions,faisiez,faisaient|to do
+aller|11|imp|imparfait|allais,allais,allait,allions,alliez,allaient|to go
+manger|11|imp|imparfait|mangeais,mangeais,mangeait,mangions,mangiez,mangeaient|to eat
+vivre|11|imp|imparfait|vivais,vivais,vivait,vivions,viviez,vivaient|to live
+finir|11|imp|imparfait|finissais,finissais,finissait,finissions,finissiez,finissaient|to finish
+creuser|11|imp|imparfait|creusais,creusais,creusait,creusions,creusiez,creusaient|to dig
+habiter|11|imp|imparfait|habitais,habitais,habitait,habitions,habitiez,habitaient|to live
+parler|12|fut|futur simple|parlerai,parleras,parlera,parlerons,parlerez,parleront|to speak
+rentrer|12|fut|futur simple|rentrerai,rentreras,rentrera,rentrerons,rentrerez,rentreront|to go home
+prendre|12|fut|futur simple|prendrai,prendras,prendra,prendrons,prendrez,prendront|to take
+être|12|futirr|futur simple|serai,seras,sera,serons,serez,seront|to be
+avoir|12|futirr|futur simple|aurai,auras,aura,aurons,aurez,auront|to have
+aller|12|futirr|futur simple|irai,iras,ira,irons,irez,iront|to go
+faire|12|futirr|futur simple|ferai,feras,fera,ferons,ferez,feront|to do
+venir|12|futirr|futur simple|viendrai,viendras,viendra,viendrons,viendrez,viendront|to come
+voir|12|futirr|futur simple|verrai,verras,verra,verrons,verrez,verront|to see
+pouvoir|12|futirr|futur simple|pourrai,pourras,pourra,pourrons,pourrez,pourront|can
+vouloir|12|futirr|futur simple|voudrai,voudras,voudra,voudrons,voudrez,voudront|to want
+devoir|12|futirr|futur simple|devrai,devras,devra,devrons,devrez,devront|must
+revenir|12|futirr|futur simple|reviendrai,reviendras,reviendra,reviendrons,reviendrez,reviendront|to come back
+`);
+var VOW=/^[aeiouyàâäéèêëîïôöûùœh]/i;
+var PL=['je','tu','il / elle','nous','vous','ils / elles'];
+function plabel(v,i){if(i===0)return VOW.test(v.f[0])?"j'":'je';return PL[i]}
+function cellAlts(v,i){var b=v.f[i],a=[b];if(v.tag==='pce'||v.tag==='pcrefl'){var w=b.split(' '),l=w.pop();w.push(l.slice(-1)==='s'?l.slice(0,-1)+'es':l+'e');a.push(w.join(' '))}return a}
+/* ===== numbers ===== */
+var NU=['zéro','un','deux','trois','quatre','cinq','six','sept','huit','neuf','dix','onze','douze','treize','quatorze','quinze','seize','dix-sept','dix-huit','dix-neuf'];
+function nfr(n,be){if(n<20)return NU[n];var t=Math.floor(n/10),u=n%10,T=['','','vingt','trente','quarante','cinquante','soixante'];
+ if(t<=6)return u===0?T[t]:u===1?T[t]+' et un':T[t]+'-'+NU[u];
+ if(t===7){if(be)return u===0?'septante':u===1?'septante et un':'septante-'+NU[u];return u===1?'soixante et onze':'soixante-'+NU[10+u]}
+ if(t===8)return u===0?'quatre-vingts':'quatre-vingt-'+NU[u];
+ if(be)return u===0?'nonante':u===1?'nonante et un':'nonante-'+NU[u];return 'quatre-vingt-'+NU[10+u]}
+function nalts(n){var a=[nfr(n,false)],b=nfr(n,true);if(b!==a[0])a.push(b);return a}
+var BIG={1000:'mille',2000:'deux mille',5000:'cinq mille',10000:'dix mille',20000:'vingt mille',50000:'cinquante mille',100000:'cent mille',1000000:'un million',2000000:'deux millions',65000000:'soixante-cinq millions'};
+/* ===== time ===== */
+var HW=['','une','deux','trois','quatre','cinq','six','sept','huit','neuf','dix','onze','douze'];
+function hp(h){return HW[h]+(h===1?' heure':' heures')}
+function timeFr(h,m){var core,alt=[];
+ if(h===12&&m===0)core='midi';else if(h===0&&m===0)core='minuit';
+ else if(m===0)core=hp(h);else if(m===15){core=hp(h)+' et quart';alt.push(hp(h)+' quinze')}
+ else if(m===30){core=hp(h)+' et demie';alt.push(hp(h)+' trente')}
+ else{core=hp(h+1)+' moins le quart';alt.push(hp(h)+' quarante-cinq')}
+ var a=['Il est '+core,core];alt.forEach(function(x){a.push('Il est '+x);a.push(x)});return a}
+function pad(n){return(n<10?'0':'')+n}
+/* ===== countries ===== */
+var COUNTRIES=[['Belgique','f','en','de'],['Inde','f','en',"d'"],['France','f','en','de'],['Canada','m','au','du'],['États-Unis','p','aux','des'],['Écosse','f','en',"d'"],['Italie','f','en',"d'"],['Espagne','f','en',"d'"],['Allemagne','f','en',"d'"],['Japon','m','au','du'],['Brésil','m','au','du'],['Maroc','m','au','du']];
+var CATL={greet:'greetings',place:'places',body:'dinosaur body parts',lab:'lab words',equip:'equipment',park:'park words',job:'jobs',nat:'nationalities',desc:'adjectives',color:'colours',verb:'verbs',food:'food and drink',weather:'weather',time:'time words',prep:'position words',qw:'question words',feel:'feelings',routine:'routine verbs',thing:'things',container:'containers',invest:'investigation words',nature:'nature words',travel:'travel words',film:'film words',person:'people'};
+/* ===== helpers ===== */
+function hash(s){var x=5381;for(var i=0;i<s.length;i++)x=((x<<5)+x+s.charCodeAt(i))|0;return(x>>>0).toString(36)}
+function isVowel(w){return VOW.test(w)}
+function defArt(fr,g){return isVowel(fr)?"l'":(g==='m'?'le ':'la ')}
+function indArt(g){return g==='m'?'un':'une'}
+function noArt(s){return s.replace(/^(le |la |l')/,'')}
+function strip(s){return s.replace(/\[\[|\]\]/g,'')}
+function nospk(s){return s.replace(/^[A-Za-zÀ-ÿ]+\s?:\s*/,'').replace(/[«»"“”]/g,'').trim()}
+function vocAlts(fr){var a=[fr],m;if(/ \/ /.test(fr)){fr.split(' / ').forEach(function(x){a.push(x.trim())})}
+ if(/\(e\)$/.test(fr)){var b=fr.replace(/\(e\)$/,'');a.push(b);a.push(b+'e')}
+ return a}
+/* ===== item builder ===== */
+function buildItems(){var I=[];
+ function add(o){o.id=o.ep+o.type[0]+hash(o.type+'|'+(o.k||o.q||'')+'|'+(o.a?o.a[0]:''));var w=WHY[o.tag];if(!o.ch)o.ch=w?w.c:'ellie';I.push(o)}
+ var seenEn={};
+ for(var ep=1;ep<=12;ep++){var D=DATA[ep];
+  D.tr.forEach(function(t,i){
+   add({ep:ep,type:'tr',tag:t.tag,q:t.en,a:t.a,en:t.en});
+   var tok=t.a[0].replace(/[.?!…]+$/,'').trim().split(/\s+/).filter(function(x){return!/^[?!.:]+$/.test(x)});
+   if(tok.length>=3&&tok.length<=9&&t.a[0].split(' ').length>2)add({ep:ep,type:'build',tag:t.tag,q:t.en,a:t.a,en:t.en,tok:tok,k:'b'+t.en});
+   add({ep:ep,type:'comp',tag:t.tag,q:t.a[0],a:[t.en],en:t.en,k:'c'+t.a[0]});
+   if(i%3===0&&tok.length<=8)add({ep:ep,type:'dict',tag:t.tag,q:t.a[0],a:t.a,en:t.en,k:'d'+t.a[0]});
+  });
+  ['fill','agree'].forEach(function(k){D[k].forEach(function(f,i){
+   add({ep:ep,type:k,tag:f.tag,q:f.q,a:f.a,en:f.en,note:f.note});
+   if(k==='fill'&&f.note){var inf=f.note,fs={},ans=f.a[0];VERBS.forEach(function(v){if(v.inf===inf){v.f.forEach(function(x){var w=x.split(' ');fs[w[w.length-1]]=1;fs[x]=1})}});
+    if(fs[ans]&&i%2===0){var d=Object.keys(fs).filter(function(x){return x!==ans&&x.indexOf(' ')<0});if(d.length>=3)add({ep:ep,type:'quiz',tag:f.tag,q:f.q,a:[ans],en:f.en,note:inf,pool:d,k:'z'+f.q})}}
+  })});
+  D.fix.forEach(function(f){add({ep:ep,type:'fix',tag:f.tag,q:f.q,a:f.a,en:''})});
+  D.rs.forEach(function(r){add({ep:ep,type:'rs',tag:r.tag,q:r.q,a:[r.o[0]],opts:r.o})});
+  D.gap.forEach(function(g){add({ep:ep,type:'gap',tag:g.tag,q:g.q,a:g.a,en:g.en,ch:g.who})});
+  D.voc.forEach(function(v){var noun=v.g==='m'||v.g==='f',da=noun?defArt(v.fr,v.g):'',disp=noun?(da+v.fr):v.fr;
+   add({ep:ep,type:'flash',tag:'vocab',q:v.fr,g:v.g,en:v.en,cat:v.cat,disp:disp,a:[disp],ch:'ellie'});
+   if(noun){
+    add({ep:ep,type:'art',tag:v.g==='m'?'gender':'gender',q:'___ '+v.fr+'  (the)',a:[da.trim(),(da+v.fr).trim()],en:v.en,g:v.g,fr:v.fr,k:'ad'+v.fr,ch:'ellie'});
+    add({ep:ep,type:'art',tag:'gender',q:'___ '+v.fr+'  (a)',a:[indArt(v.g),indArt(v.g)+' '+v.fr],en:v.en,g:v.g,fr:v.fr,k:'ai'+v.fr,ch:'ellie'});
+    add({ep:ep,type:'vtr',tag:'vocab',q:v.en,a:[disp.replace(/'\s/,"'")],lo:[v.fr],en:v.en,g:v.g,disp:disp,k:'v'+v.fr,ch:'ellie'});
+   }else if(['verb','expr','prep','qw','time','desc','color','routine','nat','job','greet','word','feel'].indexOf(v.cat)>=0){
+    add({ep:ep,type:'vtr',tag:'vocab',q:v.en,a:vocAlts(v.fr),en:v.en,disp:v.fr,k:'v'+v.fr,ch:'ellie'});}
+  });
+  // odd one out per category
+  (function(){var cats={};for(var e=1;e<=ep;e++)DATA[e].voc.forEach(function(v){(cats[v.cat]=cats[v.cat]||[]).push(e)});
+   Object.keys(cats).forEach(function(c){var es=cats[c];if(es.length>=4&&es.filter(function(x){return x===ep}).length>0)add({ep:ep,type:'odd',tag:'vocab',cat:c,q:'odd'+c,k:'o'+c+ep,a:['x'],ch:'ellie'})})})();
+  // passages
+  D.pas.forEach(function(p,pi){
+   var plain=p.s.map(function(s){return{fr:strip(s.fr),en:s.en,raw:s.fr}});
+   p.q.forEach(function(q,qi){
+    var it={ep:ep,type:'rq',tag:'read',p:p,pl:plain,qt:q.t,q:q.q,k:p.title+q.q,ch:p.ch};
+    if(q.t==='vf'){it.a=[q.a==='V'?'Vrai':'Faux'];it.opts=['Vrai','Faux']}
+    else if(q.t==='mc'){var o=q.a.split('~').filter(Boolean);it.opts=o;it.a=[o[0]]}
+    else it.a=_A(q.a);
+    add(it)});
+   var bl=[];p.s.forEach(function(s,si){var m,re=/\[\[(.+?)\]\]/g;while((m=re.exec(s.fr)))bl.push(m[1])});
+   if(bl.length)add({ep:ep,type:'cloze',tag:'read',p:p,pl:plain,q:p.title,k:'cz'+p.title,a:bl,ch:p.ch});
+   [1,3].forEach(function(si){var s=p.s[si];if(!s)return;var fr=nospk(strip(s.fr));if(fr.split(' ').length<3)return;
+    add({ep:ep,type:'ptr',tag:'read',p:p,q:nospk(s.en),a:[fr],en:nospk(s.en),k:'pt'+fr,ch:p.ch})});
+  });
+ }
+ // verbs: grids + conj
+ VERBS.forEach(function(v){var lab=v.inf+'|'+v.tense;
+  add({ep:v.ep,type:'grid',tag:v.tag,q:v.inf,v:v,k:'g'+lab+v.f[0],a:[v.f[0]],en:v.en});
+  for(var i=0;i<6;i++)add({ep:v.ep,type:'conj',tag:v.tag,q:v.inf,v:v,pi:i,k:'j'+lab+i,a:cellAlts(v,i),en:v.en});
+ });
+ // numbers
+ [3,7,9,11,12,13,14,15,16,17,18,19,20,5,8,10,4,6].forEach(function(n){add({ep:2,type:'num',tag:'num20',sub:'n2w',q:String(n),a:nalts(n),n:n,k:'n2w'+n,ch:'hammond'})});
+ [4,9,13,16,17,19,20,0,2,12].forEach(function(n){add({ep:2,type:'num',tag:'num20',sub:'w2n',q:NU[n],a:[String(n)],n:n,k:'w2n'+n,ch:'hammond'})});
+ [21,30,34,40,45,52,60,66,70,71,75,80,82,90,91,96,99,100].forEach(function(n){add({ep:3,type:'num',tag:'num100',sub:'n2w',q:String(n),a:n===100?['cent']:nalts(n),n:n,k:'n2w'+n,ch:'hammond'})});
+ [[30,0],[45,0],[60,0],[70,1],[75,1],[80,0],[90,1],[99,1],[77,0],[100,0],[93,0],[72,1]].forEach(function(x){var n=x[0],be=x[1],w=n===100?'cent':nfr(n,!!be);add({ep:3,type:'num',tag:'num100',sub:'w2n',q:w,a:[String(n)],n:n,be:be,k:'w2n'+w,ch:'hammond'})});
+ [1000,2000,5000,10000,20000,50000,100000,1000000,2000000].forEach(function(n){add({ep:7,type:'num',tag:'bignum',sub:'n2w',q:String(n),a:[BIG[n]],n:n,k:'n2w'+n,ch:'hammond'})});
+ [2000,20000,100000,1000000].forEach(function(n){add({ep:7,type:'num',tag:'bignum',sub:'w2n',q:BIG[n],a:[String(n)],n:n,k:'w2n'+n,ch:'hammond'})});
+ add({ep:11,type:'num',tag:'ilyaago',sub:'n2w',q:'65000000',a:[BIG[65000000]],n:65000000,k:'n2w65m',ch:'hammond'});
+ // time
+ [[3,0],[3,30],[4,15],[6,45],[1,0],[2,30],[5,15],[8,45],[9,0],[10,30],[7,15],[1,45],[12,0],[0,0],[11,0],[6,30]].forEach(function(x){var h=x[0],m=x[1],a=timeFr(h,m);
+  add({ep:5,type:'time',tag:'time',sub:'t2f',q:(h===0?'0':String(h))+':'+pad(m),a:a,h:h,m:m,k:'t2f'+h+m,ch:'hammond'});
+  add({ep:5,type:'time',tag:'time',sub:'f2t',q:a[0]+'.',a:[(h)+':'+pad(m)],h:h,m:m,k:'f2t'+h+m,ch:'hammond'})});
+ // countries
+ COUNTRIES.forEach(function(c,i){var n=c[0],g=c[1],s=['Je vais','Nous allons','Ils vont','Elle va'][i%4],w=['Je viens','Nous venons','Ils viennent','Elle vient'][i%4],art=g==='p'?'':'';
+  var name=n;
+  add({ep:5,type:'fill',tag:'country',q:s+' ___ '+name+'.',a:[c[2]],en:'to / in '+name,k:'ca'+n,ch:'ellie'});
+  var d=c[3];add({ep:5,type:'fill',tag:'country',q:w+' ___'+(d==="d'"?'':' ')+name+'.',a:d==="d'"?["d'","d’","d'"+name]:[d],en:'from '+name,k:'cv'+n,ch:'ellie'})});
+ return I}
+var ITEMS=buildItems();
+/* ===== storage (localStorage in try/catch with in-memory fallback) ===== */
+var KEY='fj.jurassic.v1',MEM={};
+function lsGet(k){try{var v=localStorage.getItem(k);if(v!==null)return v}catch(e){}return MEM[k]||null}
+function lsSet(k,v){MEM[k]=v;try{localStorage.setItem(k,v)}catch(e){}}
+function newState(){return{v:1,set:{watched:1,items:15,mins:5},it:{},cal:{sure:[0,0],unsure:[0,0],guess:[0,0]},refl:[],rounds:0,sprints:0,best:0,today:{d:0,n:0}}}
+function loadS(){try{var r=lsGet(KEY);if(r){var o=JSON.parse(r);if(o&&o.v===1){var s=newState();for(var k in o)s[k]=o[k];s.set=Object.assign(newState().set,o.set);return s}}}catch(e){}return newState()}
+var S=loadS();function save(){lsSet(KEY,JSON.stringify(S))}
+/* ===== small helpers ===== */
+var $=function(s,r){return(r||document).querySelector(s)},$$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function rnd(n){return Math.floor(Math.random()*n)}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=rnd(i+1),t=a[i];a[i]=a[j];a[j]=t}return a}
+function dayStart(ts){var d=new Date(ts);return new Date(d.getFullYear(),d.getMonth(),d.getDate()).getTime()}
+function addDays(ts,n){var d=new Date(ts);return new Date(d.getFullYear(),d.getMonth(),d.getDate()+n).getTime()}
+var INT=[0,1,2,4,7,14,30];
+function st(it){return S.it[it.id]||(S.it[it.id]={b:0,d:0,n:0,ok:0,half:0,bad:0,last:0})}
+var CHN={ellie:'Ellie',alan:'Alan',malcolm:'Malcolm',hammond:'Hammond',owen:'Owen',claire:'Claire',ashok:'Ashok'};
+var TL={fill:'Fill the gap',agree:'Agreement',gap:'Dialogue gap',fix:'Fix the mistake',tr:'English → French',comp:'French → English',flash:'Flashcard',art:'Article and gender',vtr:'Vocab: English → French',conj:'Conjugate',grid:'Conjugation grid',num:'Numbers',time:'Time',odd:'Odd one out',rs:'Why?',quiz:'Quiz',build:'Sentence builder',dict:'Dictation',rq:'Reading',cloze:'Reading: fill the text',ptr:'Translate from the text'};
+var EPT=["Bienvenue sur l'île","Les dinosaures","Grand ou petit ?","La visite","Au centre des visiteurs","La tempête","Le nouveau parc","Les raptors","Qu'est-ce qui s'est passé ?","L'évasion","Il y a 65 millions d'années","Le retour"];
+var FLAV=['The fence held. Keep going.','Isla Nublar is quiet. For now.','The jeep is fuelled. Next round!','Ellie nods. Alan grunts. Good sign.','Malcolm: "Chaos, but you handled it."','Hammond: "Spared no expense on your French."','Even the raptors are impressed.','The jungle is a little less scary now.'];
+var SPFL=['Raptor sprint!','Run, Ashok, run!','Faster than Blue!','Jeep chase!'];
+/* ===== speech (offline browser voices, graceful if none) ===== */
+var VOICE=null;
+function pickVoice(){try{var vs=speechSynthesis.getVoices()||[];var f=vs.filter(function(v){return/^fr([-_]|$)/i.test(v.lang)});VOICE=f.filter(function(v){return/^fr[-_]FR/i.test(v.lang)})[0]||f[0]||null}catch(e){VOICE=null}}
+try{pickVoice();speechSynthesis.addEventListener('voiceschanged',pickVoice)}catch(e){}
+function speak(t){try{if(!VOICE)pickVoice();if(!VOICE)return false;speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(t);u.lang='fr-FR';u.voice=VOICE;u.rate=.85;speechSynthesis.speak(u);return true}catch(e){return false}}
+function voiceOK(){if(!VOICE)pickVoice();return!!VOICE}
+/* ===== answer checking ===== */
+function norm(s){s=String(s).toLowerCase().replace(/[’‘`´]/g,"'").replace(/[«»"“”]/g,' ').replace(/[,;:]/g,' ').replace(/-/g,' ').replace(/ /g,' ').replace(/\s+/g,' ').trim();
+ for(var i=0;i<3;i++)s=s.replace(/\s*[.?!…]+\s*$/,'').trim();return s.replace(/\s+([?!.])/g,'$1')}
+function sa(s){return s.normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/œ/g,'oe').replace(/æ/g,'ae')}
+function cmp(u,answers){var nu=norm(u);if(!nu)return{r:'bad'};var i,a;
+ for(i=0;i<answers.length;i++)if(norm(answers[i])===nu)return{r:'ok',m:answers[i]};
+ var su=sa(nu);for(i=0;i<answers.length;i++)if(sa(norm(answers[i]))===su)return{r:'half',m:answers[i],acc:true,u:nu};
+ return{r:'bad'}}
+function accHTML(m,u){var na=norm(m),out='';var same=na.length===u.length;for(var i=0;i<na.length;i++){var c=na[i],d=same?(c!==u[i]):/[^\u0000-\u007f]/.test(c);out+=d?'<b>'+esc(c)+'</b>':esc(c)}return out}
+function stripPre(u,label){var n=norm(u),c=label==="j'"?["j'"]:label==='je'?['je']:label.split(' / ');for(var i=0;i<c.length;i++){var p=c[i];if(p==="j'"&&n.indexOf("j'")===0)return n.slice(2);if(n.indexOf(p+' ')===0)return n.slice(p.length+1)}return n}
+function cmpP(u,label,alts){var c=cmp(u,alts);if(c.r==='bad')c=cmp(stripPre(u,label),alts);return c}
+function parseTime(u){var m=String(u).trim().toLowerCase().match(/^(\d{1,2})\s*(?:[:h.]\s*(\d{1,2})?)?$/);if(!m)return null;return{h:+m[1],m:m[2]?+m[2]:0}}
+/* ===== state of the running loop ===== */
+var R={cur:null,phase:'',kind:'normal',queue:[],used:{},last:[],count:0,max:15,right:0,recovered:0,cal:{sure:[0,0],unsure:[0,0],guess:[0,0]},newCount:0,nNewest:0,paused:false,deadline:0,timeUp:false,sp:0,sel:[],focus:null};
+var CARRY=[];
+function typeW(t){return{flash:.45,art:.5,vtr:.45,odd:.5,comp:.6,dict:.6,grid:.5,build:.8,quiz:.6,ptr:.7}[t]||1}
+function pool(sprint){var w=S.set.watched;return ITEMS.filter(function(it){return it.ep<=w})}
+function wchoose(list,wf){var tot=0,ws=list.map(function(x){var v=Math.max(wf(x),.001);tot+=v;return v}),r=Math.random()*tot;for(var i=0;i<list.length;i++){r-=ws[i];if(r<=0)return list[i]}return list[list.length-1]}
+function pickNormal(){var w=S.set.watched,now=Date.now(),eod=addDays(dayStart(now),1)-1,i;
+ R.queue.forEach(function(q){q.cd--});
+ for(i=0;i<R.queue.length;i++){var q=R.queue[i];if(q.cd<=0&&q.it.ep<=w){R.queue.splice(i,1);q.it._retry=q.tries;return q.it}}
+ var vo=voiceOK();var P=pool().filter(function(it){return it.type!=='conj'&&(it.type!=='dict'||vo)&&!R.used[it.id]});
+ if(!P.length){R.used={};P=pool().filter(function(it){return it.type!=='conj'&&(it.type!=='dict'||vo)})}
+ if(w>1&&R.count>=3&&R.nNewest/R.count>.55){var o=P.filter(function(it){return it.ep!==w});if(o.length)P=o}
+ var due=[],neu=[],rest=[];P.forEach(function(it){var s=S.it[it.id];if(!s||!s.n)neu.push(it);else if(s.d<=eod)due.push(it);else rest.push(it)});
+ var cap=Math.max(3,Math.round(R.max*.4)),from,r=Math.random();
+ if(due.length&&(r<.7||R.newCount>=cap||!neu.length))from=due;else if(neu.length&&R.newCount<cap)from=neu;else if(due.length)from=due;else if(neu.length)from=neu;else from=rest.sort(function(a,b){return S.it[a.id].d-S.it[b.id].d}).slice(0,80);
+ var L=R.last;
+ var it=wchoose(from,function(x){var v=typeW(x.type)*(x.ep===w?2.2:1);if(L[0]===x.type)v*=.15;else if(L[1]===x.type)v*=.5;if(L[0]===x.tag)v*=.4;
+  if(R.count===0&&/^(comp|odd|flash|quiz|rs)$/.test(x.type))v*=3;var s=S.it[x.id];if(s&&s.n)v*=1+(6-s.b)*.15;return v});
+ return it}
+function sprintKinds(){return['conj','art','num']}
+function pickSprint(){var w=S.set.watched,k=R.spKind,P=ITEMS.filter(function(it){return it.ep<=w&&it.type===k});
+ if(P.length<6)P=ITEMS.filter(function(it){return it.ep<=w&&it.type==='conj'});
+ if(P.length<6)P=ITEMS.filter(function(it){return it.ep<=w&&(it.type==='fill'||it.type==='agree')});
+ var un=P.filter(function(it){return!R.used[it.id]});if(!un.length){R.used={};un=P}
+ var eod=addDays(dayStart(Date.now()),1)-1;
+ return wchoose(un,function(x){var s=S.it[x.id];var v=(!s||!s.n)?1:(s.d<=eod?2.5:.7);if(R.last[0]===x.q)v*=.1;return v*(x.ep===w?1.5:1)})}
+/* ===== scheduling ===== */
+function sched(it,r,retry,extra){var s=st(it);s.n++;if(r==='ok')s.ok++;else if(r==='half')s.half++;else s.bad++;s.last=Date.now();
+ S.today.n=(S.today.d===dayStart(Date.now()))?S.today.n+1:1;S.today.d=dayStart(Date.now());
+ if(!retry){var t0=dayStart(Date.now());
+  if(r==='ok'){s.b=Math.min(6,s.b+1+(extra||0));s.d=addDays(t0,INT[s.b])}
+  else if(r==='half'){s.b=Math.max(1,s.b);s.d=addDays(t0,INT[s.b])}
+  else{s.b=0;s.d=addDays(t0,1)}}
+ save()}
+/* ===== rendering ===== */
+var card,topInfo,bar,accBar;
+function chip(it){var c=it.ch||'ellie',w=WHY[it.tag],lab='';if(it.type==='gap')lab='';else if(it.type==='rq'||it.type==='cloze'||it.type==='ptr')lab='';else if(w&&it.tag!=='vocab'&&it.tag!=='read')lab=w.k;
+ return'<span class="chip ch-'+c+'">'+(CHN[c]||c)+(lab?' · '+esc(lab):'')+'</span>'}
+function inputHTML(id,cls){return'<input id="'+(id||'ans')+'" class="'+(cls||'ans')+'" type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="go">'}
+function sentenceWithInput(q,note){var s=q;if(note&&s.indexOf('(')<0)s+=' ('+note+')';var i=s.indexOf('___');if(i<0)return esc(s);return esc(s.slice(0,i))+inputHTML('ans','inl')+esc(s.slice(i+3))}
+function clockSVG(h,m){var a1=((h%12)*30+m*.5)*Math.PI/180,a2=m*6*Math.PI/180,t='';for(var i=0;i<12;i++){var a=i*Math.PI/6;t+='<line x1="'+(Math.sin(a)*40).toFixed(1)+'" y1="'+(-Math.cos(a)*40).toFixed(1)+'" x2="'+(Math.sin(a)*45).toFixed(1)+'" y2="'+(-Math.cos(a)*45).toFixed(1)+'" stroke="currentColor" stroke-width="2"/>'}
+ return'<svg class="clock" viewBox="-50 -50 100 100"><circle r="47" fill="none" stroke="currentColor" stroke-width="2"/>'+t+'<line x1="0" y1="0" x2="'+(Math.sin(a1)*24).toFixed(1)+'" y2="'+(-Math.cos(a1)*24).toFixed(1)+'" stroke="var(--amber)" stroke-width="4" stroke-linecap="round"/><line x1="0" y1="0" x2="'+(Math.sin(a2)*36).toFixed(1)+'" y2="'+(-Math.cos(a2)*36).toFixed(1)+'" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><circle r="2.5" fill="var(--amber)"/></svg>'}
+function artColor(g,txt){return g==='m'?'<span class="gm">'+esc(txt)+'</span>':g==='f'?'<span class="gf">'+esc(txt)+'</span>':esc(txt)}
+function dispWord(it){if(it.g==='m'||it.g==='f'){var d=it.disp,i=d.indexOf("'")===1?2:(d.indexOf(' ')>0&&/^(le|la)\s/.test(d)?3:0);return artColor(it.g,d.slice(0,i))+esc(d.slice(i))}return esc(it.disp||it.q)}
+function passageHTML(it,blank){var h='<div class="passage"><div class="ptitle">'+esc(it.p.title)+' <button class="mini" data-act="readp" title="Read aloud">🔊</button></div><p>';var n=0;
+ it.p.s.forEach(function(s,i){var dlg=/^[A-Za-zÀ-ÿ]+ : /.test(s.fr),t=s.fr;var seg;
+  if(blank){seg=esc(t).replace(/\[\[(.+?)\]\]/g,function(){return inputHTML('cz'+(n++),'inl cz')})}else seg=esc(strip(t));
+  h+=(dlg?'<br>':'')+'<span class="ps">'+seg+'</span> '});
+ return h+'</p></div>'}
+function choicesHTML(opts){return'<div class="choices">'+opts.map(function(o,i){return'<button class="choice" data-i="'+i+'"><kbd>'+(i+1)+'</kbd>'+(o.html||esc(o))+'</button>'}).join('')+'</div>'}
+function build(it){ // returns {html, kind}
+ var t=it.type,h='',kind='text';
+ switch(t){
+ case 'fill':case 'agree':h='<div class="prompt big">'+sentenceWithInput(it.q,it.note)+'</div>';break;
+ case 'gap':h='<div class="prompt big"><span class="say">'+(CHN[it.ch]||'')+' :</span> « '+sentenceWithInput(it.q,'')+' »</div>';break;
+ case 'fix':h='<div class="sub">Ashok says:</div><div class="prompt big wrong">« '+esc(it.q)+' »</div><div class="sub">Fix it. Type the correct sentence.</div>'+inputHTML();break;
+ case 'tr':h='<div class="sub">Say it in French</div><div class="prompt big">'+esc(it.q)+'</div>'+inputHTML();break;
+ case 'vtr':h='<div class="sub">Say it in French'+(it.g==='m'||it.g==='f'?' — with the article!':'')+'</div><div class="prompt big">'+esc(it.q)+'</div>'+inputHTML();break;
+ case 'ptr':h='<div class="sub">Translate this sentence from the text ('+esc(it.p.title)+') — from memory</div><div class="prompt big">'+esc(it.q)+'</div>'+inputHTML();break;
+ case 'conj':{var v=it.v;h='<div class="sub">'+esc(v.tense)+' · '+esc(v.en)+'</div><div class="prompt big"><span class="pl">'+esc(plabel(v,it.pi))+'</span> '+inputHTML('ans','inl')+' <span class="sub">('+esc(v.inf)+')</span></div>';break}
+ case 'art':{if(it._mc){kind='choice';var o=/\(the\)/.test(it.q)?['le','la',"l'",'les']:['un','une','des'];it._opts=o;h='<div class="sub">Choose the article — you will type the next one</div><div class="prompt big">'+esc(it.q.replace('___','…'))+'</div>'+choicesHTML(o)}
+   else h='<div class="sub">Type the article'+(it.g?'':'')+'</div><div class="prompt big">'+sentenceWithInput(it.q,'')+'</div>';break}
+ case 'num':if(it.sub==='n2w')h='<div class="sub">Write in French words'+(it.n>=70&&it.n<100?' (Belgian forms also accepted)':'')+'</div><div class="prompt big num">'+Number(it.n).toLocaleString('fr-FR')+'</div>'+inputHTML();
+  else h='<div class="sub">Write the digits'+(it.be?' (Belgian form)':'')+'</div><div class="prompt big">'+esc(it.q)+'</div>'+inputHTML();break;
+ case 'time':if(it.sub==='t2f')h='<div class="sub">Tell the time in French</div><div class="prompt">'+clockSVG(it.h,it.m)+'<div class="big">'+it.q+'</div></div>'+inputHTML();
+  else h='<div class="sub">Write the time as digits (like 3:30)</div><div class="prompt big">'+esc(it.q)+' <button class="mini" data-act="say">🔊</button></div>'+inputHTML();break;
+ case 'dict':h='<div class="sub">Listen and type what you hear</div><div class="prompt"><button class="bigspk" data-act="say">🔊 Play</button></div>'+inputHTML();break;
+ case 'comp':{kind='choice';var d=distract(it);it._opts=shuffle([it.a[0]].concat(d));h='<div class="sub">What does it mean?</div><div class="prompt big">« '+esc(it.q)+' » <button class="mini" data-act="say">🔊</button></div>'+choicesHTML(it._opts);break}
+ case 'quiz':{kind='choice';var ds=shuffle(it.pool).slice(0,3);it._opts=shuffle([it.a[0]].concat(ds));var s=it.q.replace('___','<span class="blk">…</span>');h='<div class="sub">Quiz: pick the right form</div><div class="prompt big">'+esc(it.q).replace('___','<span class="blk">…</span>')+(it.note&&it.q.indexOf('(')<0?' <span class="sub">('+esc(it.note)+')</span>':'')+'</div>'+choicesHTML(it._opts);break}
+ case 'odd':{kind='choice';var o=oddSet(it);it._opts=o.opts;it.a=[o.ans];it._cat=o.cat;h='<div class="sub">Which one does not belong?</div>'+choicesHTML(o.opts.map(function(x){return{html:x.html,t:x.t}}));it._opts=o.opts.map(function(x){return x.t});break}
+ case 'rs':{kind='choice';it._opts=shuffle(it.opts);h='<div class="sub">Pick the reason</div><div class="prompt big">'+esc(it.q)+'</div>'+choicesHTML(it._opts);break}
+ case 'build':{kind='build';it._tiles=shuffle(it.tok.map(function(x,i){return{t:x,i:i}}));R.sel=[];h='<div class="sub">Build the sentence</div><div class="prompt big">'+esc(it.q)+'</div><div id="built" class="built"></div><div id="tiles" class="tiles"></div>';break}
+ case 'grid':{kind='grid';var v2=it.v;h='<div class="sub">Fill all six forms · '+esc(v2.tense)+(v2.tag==='pce'||v2.tag==='pcrefl'?' (masculine)':'')+'</div><div class="prompt big">'+esc(v2.inf)+' <span class="sub">'+esc(v2.en)+'</span></div><div class="grid">'+v2.f.map(function(f,i){return'<label class="cell"><span class="pl">'+esc(plabel(v2,i))+'</span>'+inputHTML('g'+i,'inl gi')+'</label>'}).join('')+'</div>';break}
+ case 'flash':{kind='flash';it._dir=Math.random()<.5?'fr':'en';
+   var front=it._dir==='fr'?'<span class="fw">'+dispWord(it)+'</span>':'<span class="fw">'+esc(it.en)+'</span>',back=it._dir==='fr'?'<div class="fen">'+esc(it.en)+'</div>':'<div class="fw">'+dispWord(it)+'</div>';
+   h='<div class="sub">Flashcard — recall it first, then flip</div><div class="flash" id="fc"><div class="fwrap">'+front+' <button class="mini" data-act="say">🔊</button></div><div id="fback" hidden>'+back+'</div></div><div id="fbtn"><button class="btn" data-act="flip">Show answer <kbd>↵</kbd></button></div>';break}
+ case 'rq':{h=passageHTML(it,false)+'<div class="prompt big qq">'+esc(it.q)+'</div>';
+   if(it.qt==='ty')h+=inputHTML();else{kind='choice';it._opts=it.qt==='vf'?it.opts:shuffle(it.opts);h+=choicesHTML(it._opts)}break}
+ case 'cloze':{kind='cloze';h='<div class="sub">Fill in the missing words of the text — from memory</div>'+passageHTML(it,true);break}
+ }
+ return{html:h,kind:kind}}
+function distract(it){var w=S.set.watched,seen={},o=[];seen[it.a[0]]=1;
+ var same=ITEMS.filter(function(x){return x.type==='comp'&&x.ep<=w&&x.tag===it.tag&&!seen[x.a[0]]}),all=ITEMS.filter(function(x){return x.type==='comp'&&x.ep<=w});
+ shuffle(same).concat(shuffle(all)).forEach(function(x){if(o.length<3&&!seen[x.a[0]]){seen[x.a[0]]=1;o.push(x.a[0])}});return o}
+function wordDisp(v){var noun=v.g==='m'||v.g==='f';return noun?{t:defArt(v.fr,v.g)+v.fr,html:dispW(v)}:{t:v.fr,html:esc(v.fr)}}
+function dispW(v){var da=defArt(v.fr,v.g);return artColor(v.g,da.replace(/ $/,''))+(da.slice(-1)===' '?' ':'')+esc(v.fr)}
+function oddSet(it){var w=S.set.watched,c=it.cat,V=[],O=[];for(var e=1;e<=Math.min(it.ep,w);e++)DATA[e].voc.forEach(function(v){(v.cat===c?V:O).push(v)});
+ var g=shuffle(V).slice(0,3),x=shuffle(O.filter(function(v){return v.cat!==c}))[0]||{fr:'dinosaure',g:'m',cat:'body'};
+ var items=shuffle(g.concat([x])).map(wordDisp);var ans=wordDisp(x).t;return{opts:items,ans:ans,cat:c,others:g.map(function(v){return wordDisp(v).t})}}
+/* ===== the loop ===== */
+function startRound(){var sp=(S.rounds%4===3);R.kind=sp?'sprint':'normal';R.count=0;R.right=0;R.recovered=0;R.used={};R.last=[];R.newCount=0;R.nNewest=0;R.timeUp=false;R.cal={sure:[0,0],unsure:[0,0],guess:[0,0]};R.sp=0;R.spN=0;R.max=S.set.items;
+ R.queue=CARRY.map(function(q){return{it:q.it,cd:Math.min(q.cd,3),tries:q.tries}});CARRY=[];
+ if(sp){R.spKind=sprintKinds()[S.sprints%3];R.queue=[];R.deadline=Date.now()+60000;R.spFlav=SPFL[rnd(SPFL.length)]}else R.deadline=Date.now()+S.set.mins*60000;
+ R.paused=false;tick();nextItem()}
+function nextItem(){if(R.kind==='normal'&&(R.count>=R.max||R.timeUp)){return endRound()}
+ var it=R.kind==='sprint'?pickSprint():pickNormal();if(!it)return endRound();showItem(it)}
+function showItem(it){R.cur=it;R.phase='ask';R.hints=0;R.conf=null;R.t0=Date.now();R.used[it.id]=1;
+ R.last.unshift(R.kind==='sprint'?it.q:it.type);R.last=R.last.slice(0,2);if(R.kind==='normal'){R.last[0]=it.type;R.last[1]=R.last[1];R.lastTag=it.tag}
+ if(it.type==='art'&&R.kind==='normal'){var s=S.it[it.id];it._mc=(!s||!s.n)}
+ var spr=R.kind==='sprint';if(spr)it._mc=false;
+ var b=build(it);it._kind=b.kind;
+ var head='<div class="head">'+chip(it)+'<span class="tt">'+TL[it.type]+'</span>'+(R.cur._retry?'<span class="retry">again</span>':'')+'</div>';
+ var acts='';if(b.kind==='text'||b.kind==='grid'||b.kind==='cloze'){acts='<div class="acts">'+(!spr&&b.kind==='text'?'<button class="btn ghost" data-act="hint">Hint <kbd>Tab</kbd></button>':'')+'<button class="btn" data-act="check">'+(spr?'Go':'Check')+' <kbd>↵</kbd></button></div><div id="hint" class="hint" hidden></div>'}
+ else if(b.kind==='build'){acts='<div class="acts"><button class="btn ghost" data-act="hint">Hint</button><button class="btn" data-act="check">Check <kbd>↵</kbd></button></div><div id="hint" class="hint" hidden></div>'}
+ card.innerHTML=head+b.html+acts+'<div id="fb"></div>';
+ card.className='card '+(spr?'spr':'');
+ if(b.kind==='build')renderBuild();
+ updateInfo();accUpdate();
+ var f=$('#ans')||$('#g0')||$('#cz0');if(f&&!R.paused)setTimeout(function(){f.focus()},30);
+ if(it.type==='dict')setTimeout(function(){speak(it.q)},250);
+ window.scrollTo(0,0)}
+function renderBuild(){var it=R.cur;$('#built').innerHTML=R.sel.map(function(x,k){return'<button class="tile on" data-un="'+k+'">'+esc(x.t)+'</button>'}).join('')||'<span class="sub">tap the words in order</span>';
+ $('#tiles').innerHTML=it._tiles.map(function(x,i){var used=R.sel.some(function(s){return s===x});return'<button class="tile'+(used?' used':'')+'" data-t="'+i+'"><kbd>'+(i+1)+'</kbd>'+esc(x.t)+'</button>'}).join('')}
+function readAnswer(it){var k=it._kind;
+ if(k==='grid')return $$('.gi').map(function(x){return x.value});
+ if(k==='cloze')return $$('.cz').map(function(x){return x.value});
+ if(k==='build')return R.sel.map(function(x){return x.t}).join(' ');
+ var a=$('#ans');return a?a.value:''}
+function evaluate(it,v){var t=it.type,r;
+ if(t==='grid'){var cells=it.v.f.map(function(f,i){var c=cmpP(v[i]||'',plabel(it.v,i),cellAlts(it.v,i));c.u=v[i]||'';return c}),ok=cells.filter(function(c){return c.r==='ok'}).length,hf=cells.filter(function(c){return c.r==='half'}).length,good=ok+hf;
+  return{r:good===6?(hf?'half':'ok'):(good>=5?'half':'bad'),cells:cells,n:good,note:good<6?good+' of 6':''}}
+ if(t==='cloze'){var cs=it.a.map(function(a,i){var c=cmp(v[i]||'',[a]);c.u=v[i]||'';return c}),g=cs.filter(function(c){return c.r!=='bad'}).length,hh=cs.filter(function(c){return c.r==='half'}).length;
+  return{r:g===cs.length?(hh?'half':'ok'):(g>=cs.length-1&&cs.length>2?'half':'bad'),cells:cs,n:g,note:g+' of '+cs.length}}
+ if(t==='conj'){var c=cmpP(v,plabel(it.v,it.pi),it.a);c.u=v;return c}
+ if(t==='num'&&it.sub==='w2n'){var d=String(v).replace(/[\s., ]/g,'');return{r:d===it.a[0]?'ok':'bad',u:v}}
+ if(t==='time'&&it.sub==='f2t'){var p=parseTime(v);return{r:p&&(p.h%12)===(it.h%12)&&p.m===it.m?'ok':'bad',u:v}}
+ if(t==='vtr'){var c2=cmp(v,it.a);if(c2.r==='bad'&&it.lo){var c3=cmp(v,it.lo);if(c3.r!=='bad'){c3.r='half';c3.note='Add the article! Gender is part of the word.';c3.m=it.a[0];return c3}}c2.u=v;return c2}
+ if(t==='build'||t==='tr'||t==='fix'||t==='fill'||t==='agree'||t==='gap'||t==='art'||t==='dict'||t==='ptr'||t==='num'||t==='time'||(t==='rq'&&it.qt==='ty')){var c4=cmp(v,it.a);c4.u=v;return c4}
+ return{r:'bad'}}
+var CALTYPES={fill:1,agree:1,gap:1,tr:1,fix:1,vtr:1,ptr:1,rq:1,art:1};
+function submit(){if(R.phase!=='ask'||R.paused)return;var it=R.cur,k=it._kind;
+ if(k==='flash'||k==='choice')return;
+ var v=readAnswer(it);var empty=(k==='grid'||k==='cloze')?v.every(function(x){return!x.trim()}):!String(v).trim();if(empty&&R.kind!=='sprint'){var f=$('#ans')||$('#g0')||$('#cz0');if(f)f.focus();return}
+ R.val=v;
+ if(R.kind==='normal'&&CALTYPES[it.type]&&(it.type!=='rq'||it.qt==='ty')&&Math.random()<.34){R.phase='cal';lockInputs();
+  $('#fb').innerHTML='<div class="cal"><div class="sub">Before you see the answer: how sure are you?</div><div class="choices row"><button class="choice" data-cal="sure"><kbd>1</kbd>Sure</button><button class="choice" data-cal="unsure"><kbd>2</kbd>Unsure</button><button class="choice" data-cal="guess"><kbd>3</kbd>Guess</button></div></div>';$('.acts',card)&&($('.acts',card).hidden=true);return}
+ finish(evaluate(it,v))}
+function choose(i){if(R.phase!=='ask')return;var it=R.cur,o=it._opts[i];if(o===undefined)return;var ok=o===it.a[0];
+ $$('.choice',card).forEach(function(b,j){b.disabled=true;if(it._opts[j]===it.a[0])b.classList.add('right');else if(j===i)b.classList.add('wrong')});
+ var res={r:ok?'ok':'bad',u:o};if(it.type==='odd'){res.u=o}finish(res)}
+function finish(res){var it=R.cur,retry=!!it._retry;R.phase='fb';res.conf=R.conf;if(res.r!=='bad'&&R.hints>0&&res.r==='ok'){res.r='half';res.note='Right, but with a hint: it counts as half.'}
+ if(R.conf){var cc=R.cal[R.conf];cc[0]++;if(res.r!=='bad')cc[1]++;var gs=S.cal[R.conf];gs[0]++;if(res.r!=='bad')gs[1]++}
+ sched(it,res.r,retry);
+ if(it.ep===S.set.watched)R.nNewest++;var s=S.it[it.id];if(s&&s.n===1&&!retry)R.newCount++;
+ R.count++;if(res.r!=='bad')R.right++;if(retry&&res.r!=='bad')R.recovered++;
+ if(res.r==='bad'&&R.kind==='normal'){var tr=(it._retry||0)+1;if(tr<=2){var q={it:it,cd:4+rnd(4),tries:tr};R.queue.push(q)}}
+ it._retry=0;
+ if(R.kind==='sprint'){R.spN++;if(res.r!=='bad')R.sp++;sprintFlash(it,res);return}
+ showFeedback(it,res);updateInfo()}
+function sprintFlash(it,res){lockInputs();var ans=ansDisp(it);
+ $('#fb').innerHTML='<div class="sflash '+res.r+'">'+(res.r==='bad'?'✗ '+ans:'✓')+'</div>';updateInfo();
+ clearTimeout(R.sprT);R.sprT=setTimeout(function(){if(R.kind==='sprint'&&!R.paused&&R.phase==='fb'&&R.cur===it)nextItem()},res.r==='bad'?1300:280);R.sprRes=res}
+function ansDisp(it){var t=it.type;
+ if(t==='grid')return it.v.f.map(function(f,i){return plabel(it.v,i)+(plabel(it.v,i)==="j'"?'':' ')+f}).join(' · ');
+ if(t==='cloze')return it.a.join(' · ');
+ if(t==='conj')return plabel(it.v,it.pi)+(plabel(it.v,it.pi)==="j'"?'':' ')+it.a[0];
+ if(t==='odd'||t==='rs'||t==='comp'||t==='quiz'||t==='rq')return it.a[0];
+ if(t==='time'&&it.sub==='f2t')return it.a[0];
+ if(t==='num'&&it.sub==='n2w'&&it.a.length>1)return it.a[0]+'  (Belgium: '+it.a[1]+')';
+ return it.a[0]}
+function fullSentence(it){if(it.q&&it.q.indexOf('___')>=0&&(it.type==='fill'||it.type==='agree'||it.type==='gap'||it.type==='art'||it.type==='quiz'||it.type==='conj')&&it.type!=='conj'){var a=it.a[0];return esc(it.q.replace(/\s*\([^)]*\)\s*$/,'')).replace('___','<b class="ans-b">'+esc(a)+'</b>')}return null}
+function showFeedback(it,res){var h='',r=res.r;
+ var head=r==='ok'?'✓ Correct':r==='half'?(res.acc?'✓ — accent: '+accHTML(res.m,res.u):'½ '+(res.note||'Almost')):'✗ Not quite';
+ if(r==='half'&&res.acc&&res.note)head+=' · '+esc(res.note);
+ h+='<div class="fbhead '+r+'">'+head+'</div>';
+ if(res.cells){h+='<div class="fbgrid">'+res.cells.map(function(c,i){var lab=it.type==='grid'?plabel(it.v,i):'';var a=it.type==='grid'?cellAlts(it.v,i)[0]:it.a[i];return'<div class="'+c.r+'">'+(lab?'<span class="pl">'+esc(lab)+'</span> ':'')+(c.r==='bad'?'<s>'+esc(c.u||'—')+'</s> → ':'')+'<b>'+esc(a)+'</b></div>'}).join('')+'</div>'}
+ else{var fs=fullSentence(it);
+  if(r!=='ok'||it.type==='fix'||it.type==='tr'||it.type==='vtr'||it.type==='num'||it.type==='time'||it.type==='dict'||it.type==='build'||it.type==='ptr'){h+='<div class="fbans">'+(fs?fs:(r==='bad'?'Answer: ':'')+'<b>'+esc(ansDisp(it))+'</b>')+'</div>'}
+  else if(fs)h+='<div class="fbans">'+fs+'</div>';
+  if(r==='bad'&&res.u&&it._kind==='text')h+='<div class="sub">You wrote: <s>'+esc(res.u)+'</s></div>';
+  if(r==='bad'&&it._kind==='choice'&&res.u&&it.type==='odd')h+='';
+  if(it.type==='odd'){var o=oddSet2(it);h+='<div class="sub">The others are all '+esc(CATL[it._cat]||it._cat)+'.</div>'}
+  if(it.type==='rs'||it.type==='quiz'||it.type==='rq'&&it.qt!=='ty'){if(r==='bad')h+='<div class="sub">Correct: <b>'+esc(it.a[0])+'</b></div>'}
+  if(it.type==='flash'){}}
+ if(it.en&&(it.type==='fill'||it.type==='agree'||it.type==='gap'||it.type==='comp'||it.type==='quiz'||it.type==='dict'||it.type==='fix')){if(it.type!=='comp'||true)h+='<div class="sub en">'+esc(it.en)+'</div>'}
+ if(it.type==='fix')h+='<div class="sub en">Typical learner mistake. Correct: '+esc(it.a[0])+'</div>';
+ if(it.type==='num'&&it.sub==='n2w'&&it.a.length>1&&r==='ok')h+='<div class="sub">Belgium: <b>'+esc(it.a[1])+'</b> / France: <b>'+esc(it.a[0])+'</b></div>';
+ if(it.type==='rq'||it.type==='cloze'){h+='<div class="sub en">'+it.pl.map(function(s){return esc(s.en)}).join(' ')+'</div>'}
+ if(res.conf){var sure=res.conf,right=r!=='bad';h+='<div class="sub calnote">You said "'+sure+'" — '+(right?(sure==='guess'?'lucky or learned: nice!':'right.'):(sure==='sure'?'wrong. Sure-but-wrong items are the best ones to review.':'wrong, as you suspected.'))+'</div>'}
+ var w=WHY[it.tag];
+ if(w)h+='<div class="rule"><span class="chip ch-'+w.c+'">'+CHN[w.c]+' · '+esc(w.k)+'</span> <span class="formula">'+esc(w.f)+'</span></div>';
+ h+='<div class="fbtn"><button class="btn ghost" data-act="why">Why? <kbd>W</kbd></button><button class="btn ghost" data-act="stats">Stats <kbd>S</kbd></button>'+(speakText(it)?'<button class="btn ghost" data-act="say">🔊 <kbd>L</kbd></button>':'')+'<button class="btn primary" data-act="next" id="nextBtn">Continue <kbd>↵</kbd></button></div><div id="extra"></div>';
+ $('#fb').innerHTML=h;$('.acts',card)&&($('.acts',card).hidden=true);lockInputs();
+ var hh=$('#hint');if(hh)hh.hidden=true;
+ setTimeout(function(){var b=$('#nextBtn');if(b)b.scrollIntoView({block:'nearest'})},30)}
+function oddSet2(){return null}
+function lockInputs(){$$('input',card).forEach(function(x){x.disabled=true});try{document.activeElement.blur()}catch(e){}}
+function speakText(it){if(!voiceOK())return null;var t=it.type;
+ if(t==='tr'||t==='fix'||t==='ptr')return it.a[0];if(t==='comp'||t==='dict')return it.q;
+ if(t==='fill'||t==='agree'||t==='gap'||t==='quiz')return it.q.replace(/\s*\([^)]*\)\s*$/,'').replace('___',it.a[0]);
+ if(t==='vtr'||t==='flash')return it.disp;if(t==='rq'||t==='cloze')return it.p.s.map(function(s){return strip(s.fr)}).join(' ');
+ if(t==='conj')return plabel(it.v,it.pi)+' '+it.a[0];if(t==='time'||t==='num')return it.a[0];if(t==='art')return it.a[1]||null;return null}
+function whyHTML(it){var w=WHY[it.tag];if(!w)return'';var more='';
+ return'<div class="whybox"><span class="chip ch-'+w.c+'">'+CHN[w.c]+'</span> <b>'+esc(w.k)+'</b><div class="formula big">'+esc(w.f)+'</div><div>'+esc(w.t)+'</div></div>'}
+function statsHTML(it){var s=st(it),eod=addDays(dayStart(Date.now()),1)-1,ds=Date.now(),due=0,mast=0,tot=0;var w=S.set.watched;
+ ITEMS.forEach(function(x){if(x.ep<=w&&x.type!=='conj'){tot++;var y=S.it[x.id];if(y&&y.n){if(y.d<=eod)due++;if(y.b>=4)mast++}}});
+ var nd=s.d?(s.d<=eod?'today':new Date(s.d).toLocaleDateString()):'—';
+ return'<div class="whybox"><b>This item</b>: box '+s.b+' of 6 · seen '+s.n+'× · '+s.ok+' right, '+s.half+' half, '+s.bad+' wrong · next review: '+nd+
+ '<br><b>Overall</b> (episodes 1–'+w+'): '+mast+' of '+tot+' items in box 4+ · '+due+' due today · '+(S.today.d===dayStart(Date.now())?S.today.n:0)+' answers today'+
+ (S.cal.sure[0]+S.cal.unsure[0]+S.cal.guess[0]?'<br><b>Calibration</b>: sure '+S.cal.sure[1]+'/'+S.cal.sure[0]+' · unsure '+S.cal.unsure[1]+'/'+S.cal.unsure[0]+' · guess '+S.cal.guess[1]+'/'+S.cal.guess[0]:'')+'</div>'}
+/* ===== hints (first letters, then the formula) ===== */
+function hint(){var it=R.cur;if(R.phase!=='ask'||R.kind==='sprint')return;var h=$('#hint');if(!h)return;R.hints++;h.hidden=false;
+ var a=(it.type==='grid'?it.v.f[0]:it.type==='cloze'?it.a[0]:it.a[0]),w=WHY[it.tag];
+ if(R.hints===1){var txt=String(a).split(' ').map(function(x){return x.charAt(0)+new Array(Math.max(0,Math.min(x.length-1,7))+1).join('·')}).join('  ');h.innerHTML='First letters: <b>'+esc(txt)+'</b>'}
+ else{h.innerHTML=(h.innerHTML.indexOf('First')===0?h.innerHTML.split('<br>')[0]+'<br>':'')+(w?'Formula: <b>'+esc(w.f)+'</b>':'No more hints — take a guess!')}}
+/* ===== info bar & timer ===== */
+function fmt(ms){ms=Math.max(0,ms);var s=Math.ceil(ms/1000);return Math.floor(s/60)+':'+('0'+s%60).slice(-2)}
+function updateInfo(){if(!topInfo)return;if(R.kind==='sprint'){topInfo.innerHTML='<b class="sp">'+R.spFlav+'</b> ⏱ <b>'+fmt(R.deadline-Date.now())+'</b> · ✓ '+R.sp;bar.style.width=Math.max(0,(R.deadline-Date.now())/600)+'%'}
+ else{var left=R.deadline-Date.now();topInfo.innerHTML='Expedition '+(S.rounds+1)+' · ⏱ '+(R.timeUp?'time!':fmt(left))+' · '+Math.min(R.count+(R.phase==='ask'?1:0),R.max)+'/'+R.max;bar.style.width=(R.count/R.max*100)+'%'}}
+var TM=null;function tick(){clearInterval(TM);TM=setInterval(function(){if(R.paused)return;
+ if(R.kind==='sprint'&&Date.now()>=R.deadline){clearInterval(TM);endRound();return}
+ if(R.kind==='normal'&&Date.now()>=R.deadline&&!R.timeUp){R.timeUp=true}updateInfo()},250)}
+/* ===== end of round: summary, calibration, reflection ===== */
+function endRound(){clearInterval(TM);clearTimeout(R.sprT);R.phase='sum';var sp=R.kind==='sprint',h='';
+ if(sp){S.sprints++;var newbest=R.sp>S.best;if(newbest)S.best=R.sp;h+='<div class="sumh">'+esc(R.spFlav)+' done</div><div class="big">'+R.sp+' correct in 60 seconds</div><div class="sub">'+R.spN+' tried · best ever: '+S.best+(newbest?' — new record!':'')+' · kind: '+({conj:'conjugation',art:'gender and articles',num:'numbers'}[R.spKind]||'mixed')+'</div>'}
+ else{h+='<div class="sumh">Expedition '+(S.rounds+1)+' complete</div><div class="big">'+R.right+' of '+R.count+' right</div><div class="sub">'+(R.recovered?R.recovered+' mistakes recovered in this session · ':'')+(R.queue.length?R.queue.length+' still waiting to come back · ':'')+'mistakes return later today and again tomorrow.</div>';
+  var c=R.cal,n=c.sure[0]+c.unsure[0]+c.guess[0];
+  if(n){h+='<div class="calsum"><b>Calibration</b><br>You were <b>sure</b> '+c.sure[0]+' time'+(c.sure[0]===1?'':'s')+' and right '+c.sure[1]+'.'+(c.unsure[0]?' Unsure '+c.unsure[0]+', right '+c.unsure[1]+'.':'')+(c.guess[0]?' Guessing '+c.guess[0]+', right '+c.guess[1]+'.':'')+(c.sure[0]>c.sure[1]?' <span class="amber">Some "sure" answers were wrong: those are the ones to watch.</span>':c.sure[0]?' Your confidence matches your memory.':'')+'</div>'}
+  S.rounds++}
+ CARRY=R.queue.slice();
+ var last=S.refl.length?S.refl[S.refl.length-1].text:'';
+ h+='<div class="refl"><label for="refl">What will you remember from this round?</label>'+(last?'<div class="sub">Last time you wrote: “'+esc(last)+'”</div>':'')+'<input id="refl" class="ans" type="text" autocomplete="off" maxlength="200" placeholder="one line, in your own words"><div class="acts"><button class="btn ghost" data-act="skipr">Skip</button><button class="btn primary" data-act="saver">Save · next round <kbd>↵</kbd></button></div></div><div class="sub flav">'+esc(FLAV[rnd(FLAV.length)])+'</div>';
+ save();card.className='card sum';card.innerHTML=h;updateInfo();bar.style.width='100%';accUpdate();var r=$('#refl');if(r&&!R.paused)setTimeout(function(){r.focus()},30)}
+function saveRefl(){var v=($('#refl')||{}).value||'';v=v.trim();if(v){S.refl.push({t:Date.now(),round:S.rounds,text:v});if(S.refl.length>200)S.refl=S.refl.slice(-200);save()}startRound()}
+/* ===== flashcards ===== */
+function flip(){if(R.phase!=='ask'||R.cur.type!=='flash')return;R.phase='flip';$('#fback').hidden=false;$('#fbtn').innerHTML='<div class="grades"><button class="btn g1" data-grade="again"><kbd>1</kbd>Again</button><button class="btn g2" data-grade="hard"><kbd>2</kbd>Hard</button><button class="btn g3" data-grade="good"><kbd>3</kbd>Good</button><button class="btn g4" data-grade="easy"><kbd>4</kbd>Easy</button></div>'}
+function grade(g){if(R.phase!=='flip')return;var it=R.cur;R.phase='fb';var r=g==='again'?'bad':g==='hard'?'half':'ok',retry=!!it._retry;
+ sched(it,r,retry,g==='easy'?1:0);R.count++;if(r!=='bad')R.right++;if(it.ep===S.set.watched)R.nNewest++;
+ if(r==='bad'){var tr=(it._retry||0)+1;if(tr<=2)R.queue.push({it:it,cd:4+rnd(4),tries:tr})}
+ it._retry=0;if(R.kind==='sprint'){nextItem();return}nextItem()}
+/* ===== pause / settings ===== */
+function openPause(){if(R.paused)return;R.paused=true;R.pAt=Date.now();var p=$('#pause');
+ $('#setWatched').innerHTML=EPT.map(function(t,i){return'<option value="'+(i+1)+'"'+(S.set.watched===i+1?' selected':'')+'>Episode '+(i+1)+' · '+esc(t)+'</option>'}).join('');
+ $('#setItems').value=String(S.set.items);$('#setMins').value=String(S.set.mins);$('#xfer').value='';$('#xmsg').textContent='';$('#resetBtn').textContent='Reset all progress';
+ p.hidden=false;$('#resumeBtn').focus()}
+function closePause(){if(!R.paused)return;R.paused=false;R.deadline+=Date.now()-R.pAt;$('#pause').hidden=true;
+ var f=$('#ans')||$('#g0')||$('#cz0')||$('#refl');if(f&&!f.disabled)f.focus();updateInfo()}
+function accUpdate(){var show=!!($('#ans')||$('#g0')||$('#cz0')||$('#refl'));accBar.hidden=!show||R.phase==='fb'}
+/* ===== events ===== */
+function setupEvents(){
+ document.addEventListener('focusin',function(e){var t=e.target;if(t&&t.tagName==='INPUT')R.focus=t});
+ var ac='éèêàùâçôîûëïœ'.split('');accBar.innerHTML=ac.map(function(c){return'<button type="button" class="acc" data-c="'+c+'">'+c+'</button>'}).join('');
+ function ins(c){var el=R.focus&&document.body.contains(R.focus)&&!R.focus.disabled?R.focus:($('#ans')||$('#cz0')||$('#g0')||$('#refl'));if(!el)return;var s=el.selectionStart==null?el.value.length:el.selectionStart,e=el.selectionEnd==null?s:el.selectionEnd;el.value=el.value.slice(0,s)+c+el.value.slice(e);el.setSelectionRange(s+1,s+1);el.focus()}
+ ['mousedown','touchstart'].forEach(function(ev){accBar.addEventListener(ev,function(e){var b=e.target.closest('.acc');if(!b)return;e.preventDefault();ins(b.getAttribute('data-c'))},{passive:false})});
+ document.addEventListener('keydown',function(e){
+  if(R.paused){if(e.key==='Escape'){e.preventDefault();closePause()}return}
+  if(e.key==='Escape'){e.preventDefault();openPause();return}
+  var tg=e.target,inp=tg&&(tg.tagName==='INPUT'||tg.tagName==='TEXTAREA'||tg.tagName==='SELECT');
+  if(R.phase==='sum'){if(e.key==='Enter'&&tg&&tg.id!=='refl'){}if(e.key==='Enter'&&tg&&tg.id==='refl'){e.preventDefault();saveRefl()}return}
+  if(inp){
+   if(e.key==='Enter'&&R.phase==='ask'){e.preventDefault();var cls=tg.className;if(/\bgi\b/.test(cls)||/\bcz\b/.test(cls)){var all=$$(/\bgi\b/.test(cls)?'.gi':'.cz'),i=all.indexOf(tg);if(i<all.length-1){all[i+1].focus();return}}submit();return}
+   if(e.key==='Tab'&&R.phase==='ask'&&R.cur&&R.cur._kind==='text'&&R.kind==='normal'){e.preventDefault();hint()}
+   return}
+  var k=e.key,it=R.cur;
+  if(R.phase==='cal'){if(k==='1'||k==='2'||k==='3'){R.conf=['sure','unsure','guess'][+k-1];e.preventDefault();$('#fb').innerHTML='';finish(evaluate(it,R.val))}return}
+  if(R.phase==='fb'){if(R.kind==='sprint')return;if(k==='Enter'||k===' '){e.preventDefault();nextItem()}else if(k==='w'||k==='W')toggleExtra('why');else if(k==='s'||k==='S')toggleExtra('stats');else if(k==='l'||k==='L')say();return}
+  if(R.phase==='flip'){if(/^[1-4]$/.test(k)){grade(['again','hard','good','easy'][+k-1])}return}
+  if(R.phase==='ask'&&it){
+   if(it.type==='flash'&&(k==='Enter'||k===' ')){e.preventDefault();flip();return}
+   if(it._kind==='choice'&&/^[1-9]$/.test(k)){choose(+k-1);return}
+   if(it._kind==='build'){if(/^[1-9]$/.test(k)){addTile(+k-1)}else if(k==='Backspace'){R.sel.pop();renderBuild()}else if(k==='Enter'){e.preventDefault();submit()}else if(k==='h'||k==='H')hint()}
+   if(it.type==='rq'&&it.qt==='vf'){if(k==='v'||k==='V')choose(0);if(k==='f'||k==='F')choose(1)}}
+ });
+ document.addEventListener('click',function(e){var t=e.target.closest('[data-act],[data-i],[data-cal],[data-grade],[data-t],[data-un]');if(!t)return;
+  var act=t.getAttribute('data-act');
+  if(t.hasAttribute('data-i')&&R.cur&&R.cur._kind==='choice'){choose(+t.getAttribute('data-i'));return}
+  if(t.hasAttribute('data-cal')){R.conf=t.getAttribute('data-cal');$('#fb').innerHTML='';finish(evaluate(R.cur,R.val));return}
+  if(t.hasAttribute('data-grade')){grade(t.getAttribute('data-grade'));return}
+  if(t.hasAttribute('data-t')){addTile(+t.getAttribute('data-t'));return}
+  if(t.hasAttribute('data-un')){R.sel.splice(+t.getAttribute('data-un'),1);renderBuild();return}
+  if(act==='check')submit();else if(act==='hint')hint();else if(act==='next')nextItem();else if(act==='why')toggleExtra('why');else if(act==='stats')toggleExtra('stats');
+  else if(act==='say')say();else if(act==='readp'){if(!speak(R.cur.p.s.map(function(s){return strip(s.fr)}).join(' ')))noVoice()}
+  else if(act==='flip')flip();else if(act==='saver')saveRefl();else if(act==='skipr')startRound()});
+ $('#pauseBtn').addEventListener('click',function(){R.paused?closePause():openPause()});
+ $('#resumeBtn').addEventListener('click',closePause);
+ $('#pause').addEventListener('click',function(e){if(e.target.id==='pause')closePause()});
+ $('#setWatched').addEventListener('change',function(){S.set.watched=+this.value;save()});
+ $('#setItems').addEventListener('change',function(){S.set.items=+this.value;save()});
+ $('#setMins').addEventListener('change',function(){S.set.mins=+this.value;save()});
+ $('#exportBtn').addEventListener('click',function(){var j=JSON.stringify(S);$('#xfer').value=j;$('#xfer').select();var ok=false;try{ok=document.execCommand('copy')}catch(e){}$('#xmsg').textContent=ok?'Exported and copied. Paste it somewhere safe.':'Exported: select all and copy this text.'});
+ $('#importBtn').addEventListener('click',function(){try{var o=JSON.parse($('#xfer').value);if(!o||o.v!==1||typeof o.it!=='object')throw 0;S=Object.assign(newState(),o);save();$('#xmsg').textContent='Imported. Progress restored.'}catch(e){$('#xmsg').textContent='That text is not a valid export.'}});
+ $('#resetBtn').addEventListener('click',function(){if(this.dataset.arm!=='1'){this.dataset.arm='1';this.textContent='Click again to erase everything';var b=this;setTimeout(function(){b.dataset.arm='0';b.textContent='Reset all progress'},4000)}else{this.dataset.arm='0';S=newState();save();CARRY=[];$('#xmsg').textContent='Progress erased.';this.textContent='Reset all progress'}});
+ window.addEventListener('beforeunload',save)}
+function addTile(i){if(R.phase!=='ask')return;var x=R.cur._tiles[i];if(!x||R.sel.indexOf(x)>=0)return;R.sel.push(x);renderBuild()}
+function say(){var t=speakText(R.cur);if(!t){noVoice();return}if(!speak(t))noVoice()}
+function noVoice(){var h=$('#hint')||$('#extra');if(h){h.hidden=false;h.innerHTML='No French voice found on this device (the 🔊 button needs one).'}}
+function toggleExtra(w){var ex=$('#extra');if(!ex)return;var cur=ex.getAttribute('data-w');if(cur===w){ex.innerHTML='';ex.removeAttribute('data-w');return}ex.setAttribute('data-w',w);ex.innerHTML=w==='why'?whyHTML(R.cur):statsHTML(R.cur)}
+/* ===== boot ===== */
+function boot(){card=$('#card');topInfo=$('#info');bar=$('#bar');accBar=$('#acc');setupEvents();startRound()}
+window.FJ={ITEMS:ITEMS,S:function(){return S},R:R,evaluate:evaluate,build:build,showItem:showItem,cmp:cmp,norm:norm,nextItem:nextItem,finish:finish,startRound:startRound,pickNormal:pickNormal,set:function(k,v){S.set[k]=v},VERBS:VERBS};
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
+})();
+</script></body></html>

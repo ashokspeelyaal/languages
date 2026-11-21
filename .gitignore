@@ -18,3 +18,11 @@ francais/jurassic-serie/episodes/*/audio/
 francais/jurassic-serie/episodes/*/qa/
 francais/jurassic-serie/episodes/*/*.mp4
 francais/jurassic-serie/episodes/*/*.log
+
+# Dutch Jurassic listening series: track scripts/engine, not media
+nederlands/jurassic-luister/**/__pycache__/
+nederlands/jurassic-luister/episodes/*/images/
+nederlands/jurassic-luister/episodes/*/audio/
+nederlands/jurassic-luister/episodes/*/qa/
+nederlands/jurassic-luister/episodes/*/*.mp4
+nederlands/jurassic-luister/episodes/*/*.log

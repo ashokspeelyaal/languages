@@ -59,7 +59,7 @@ Steps:
 - Folder: `nederlands/<topic>-video/` (git-ignored by `nederlands/*-video/`). Don't git commit.
 - Render at 1280x720, 30 fps (or render 1080p and downscale).
 - Final encode: `ffmpeg -i in.mp4 -vf scale=1280:-2 -c:v libx264 -profile:v high -preset slow -crf 27 -pix_fmt yuv420p -c:a aac -b:a 80k -ac 1 -movflags +faststart <topic>.mp4`. Target **≤ ~6 MB per minute** (15 min ≲ 90 MB; ideally 40–70 MB). If bigger, raise crf to 28–29.
-- **Always, as the last step:** copy the final iPhone encode to iCloud Drive → `~/Library/Mobile Documents/com~apple~CloudDocs/LeerVideos/<topic>.mp4` (create the folder with `mkdir -p` if missing), then verify it is there with `ls -lh`. A video is not delivered until it is in LeerVideos. Delete intermediate big files (uncompressed/1080p masters) after a verified encode; keep scripts, audio, images, timeline.
+- **Always, as the last step:** copy the final iPhone encode to iCloud Drive → `~/Library/Mobile Documents/com~apple~CloudDocs/DutchVideos/<topic>.mp4` (create the folder with `mkdir -p` if missing), then verify it is there with `ls -lh`. A video is not delivered until it is in DutchVideos. Delete intermediate big files (uncompressed/1080p masters) after a verified encode; keep scripts, audio, images, timeline.
 
 ## Rules
 - Azure key: `/Users/ashokkumar/Development/Workspace/Training&Learning/languages/.secrets/azuretts-key`, region `francecentral`. Read it only inside the script; never print, log or copy it.

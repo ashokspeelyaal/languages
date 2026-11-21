@@ -1,0 +1,9 @@
+# Épisode 5 · Au centre des visiteurs (A1), follows LESSON_PLAN.md
+Can-do: say where things are, where you go and come from (countries, towns), order food, tell the time.
+Grammar: aller, prendre, venir, faire (all six forms); à+le=au, à+les=aux, de+le=du, de+les=des (la / l' unchanged); en / au / aux + country, à + city, de / d' / du / des for "from"; position words (devant, derrière, dans, sur, sous, entre, à côté de, en face de); the time (Quelle heure est-il ? il est... heure(s), midi, minuit, et quart, et demie, moins le quart, minutes).
+Structure: Intro (Ellie) · Rappel ép.4 (mini scene, board rappel, 3 À toi) · S1 hall -> boards posit, contr -> 3 À toi · S2 restaurant -> Malcolm boards aller, prendre -> 3 À toi · S3 origins (Ashok: Kulithalai, Genk) -> Malcolm venir + Ellie pays -> 3 À toi · S4 control room -> Malcolm faire + Ellie heure, minutes -> 3 À toi · Résumé (3 boards) · outro. Replay after each scene.
+Ashok (own voice) answers in scenes; learner mistakes corrected: « à le laboratoire » (Ellie), « je viens en Inde » (Ellie), « ils faisent » (Malcolm).
+À toi (15): J'aime les dinosaures / Je ne mange pas de viande / Est-ce que tu aimes l'île ? / Le squelette est devant la porte / La carte est sur la table / Le laboratoire est à côté du restaurant / Je vais au restaurant / Je prends un café / Nous allons aux laboratoires / Je viens d'Inde / J'habite à Genk, en Belgique / Tu viens d'où ? / Qu'est-ce que tu fais ? / Il est trois heures et demie / Il est midi.
+Flagged expressions: avoir faim (tu as faim), il y a, voici, attention, quelle heure est-il, ingénieur informatique, mais, aussi, très, là, après.
+Hammond's time lines are in the scene; the time board is explained by Ellie (Hammond cannot speak English in the engine).
+Speech: -25% French, 900 ms after each French sentence, examples twice, À toi answer twice.

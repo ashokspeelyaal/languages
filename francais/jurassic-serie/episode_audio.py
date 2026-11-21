@@ -11,7 +11,7 @@ SERIE = pathlib.Path(__file__).resolve().parent; EP = pathlib.Path(sys.argv[1]).
 sys.path.insert(0, str(SERIE)); sys.path.insert(0, str(EP))
 from voices import VOICE, MULTILINGUAL
 import script_data as SD
-from dsl import SEQ, BOARDS, META
+from dsl import SEQ, BOARDS, META, SSML_ALIAS
 KEY = next(p for p in [SERIE.parent.parent / '.secrets' / 'azuretts-key'] if p.exists()).read_text().strip()
 REGION, SR = 'francecentral', 24000
 LEAD, GAP, WAIT, TAIL, FRBREAK = 1.0, 1.5, 4.0, 2.0, 900
@@ -43,6 +43,12 @@ def parse(text, base):
     toks = [(m.group(), out_l[m.start()]) for m in re.finditer(r'\S+', plain)]
     return plain, out_l, toks, cards, marks
 
+def alias_text(t):
+    """Single regex pass, longest key first; aliases are one word so the token count (subtitle alignment) is unchanged."""
+    if not SSML_ALIAS: return t
+    keys = sorted(SSML_ALIAS, key=len, reverse=True)
+    return re.sub(r'(?<!\w)(' + '|'.join(re.escape(k) for k in keys) + r')(?!\w)', lambda m: SSML_ALIAS[m.group(1)], t)
+
 def ssml(who, plain, langs, fr_rate, final_break):
     runs = []
     for c, l in zip(plain, langs):
@@ -50,7 +56,7 @@ def ssml(who, plain, langs, fr_rate, final_break):
         else: runs.append([l, c])
     ml = who in MULTILINGUAL; body = ''
     for i, (l, t) in enumerate(runs):
-        t = escape(t.strip() + ' ')
+        t = escape(alias_text(t.strip()) + ' ')
         if l == 'fr':
             t = re.sub(r'([.!?…])\s+(?=\S)', r'\1<break time="%dms"/> ' % FRBREAK, t)
             seg = f'<prosody rate="{fr_rate}">{t}</prosody>'
@@ -119,8 +125,8 @@ def main():
         elif k == 'explain':
             p = parse(it['text'], 'en'); prep.append((n, 'ex', p, [synth_args(it['who'], p, RATE, True)]))
         elif k == 'atoi':
-            pp = parse(it['prompt'], 'en'); pa = parse(it['answer'], 'fr')
-            prep.append((n, 'atoi', (pp, pa), [synth_args(it['who'], pp, RATE, False), synth_args(it['who'], pa, '-35%', False), synth_args(it['who'], pa, RATE, False)]))
+            by = it.get('by') or it['who']; pp = parse(it['prompt'], 'en'); pa = parse(it['answer'], 'fr')
+            prep.append((n, 'atoi', (pp, pa), [synth_args(it['who'], pp, RATE, False), synth_args(by, pa, '-35%', False), synth_args(by, pa, RATE, False)]))
     with ThreadPoolExecutor(6) as ex: results = list(ex.map(lambda pr: [synth(a) for a in pr[3]], prep))
     R = {pr[0]: (pr, res) for pr, res in zip(prep, results)}
     pcm = bytearray(b'\x00\x00' * int(LEAD * SR)); t = LEAD; items, chapters = [], []; board_groups = {}; warn = 0
@@ -157,11 +163,11 @@ def main():
                 g = board_groups.setdefault(it['board'], 0); board_groups[it['board']] = g + len(d['reveals']); d['first_group'] = g
             silence(GAP)
         else:
-            pp, pa = pr[2]
+            pp, pa = pr[2]; by = it.get('by') or it['who']
             d = entry('ap', it['who'], pp, res[0], prompt=it['prompt'], answer=it['answer'], img=it.get('img')); silence(0.4)
             items.append(dict(kind='aw', who=it['who'], start=round(t, 3), end=round(t + WAIT, 3), prompt=it['prompt'], answer=it['answer'], img=it.get('img'))); silence(WAIT)
-            entry('aa', it['who'], pa, res[1], prompt=it['prompt'], answer=it['answer'], n=1, img=it.get('img')); silence(1.0)
-            entry('aa', it['who'], pa, res[2], prompt=it['prompt'], answer=it['answer'], n=2, img=it.get('img')); silence(GAP)
+            entry('aa', by, pa, res[1], prompt=it['prompt'], answer=it['answer'], n=1, img=it.get('img')); silence(1.0)
+            entry('aa', by, pa, res[2], prompt=it['prompt'], answer=it['answer'], n=2, img=it.get('img')); silence(GAP)
     silence(TAIL - GAP if TAIL > GAP else 0)
     for bid, b in BOARDS.items():
         ng = sum(1 for l in b['lines'] if not l.startswith('#') and not l.startswith('+'))

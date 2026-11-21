@@ -1,12 +1,12 @@
 """The 6 flat cartoon busts of « Français Jurassique » (our own designs, not actor look-alikes).
 Pillow only.  bust(name, mouth, blink, height) -> RGBA image (head + shoulders).
-names: ellie alan malcolm hammond owen claire.  mouths: closed wide mid open round fv (from Azure viseme ids, see mouth_shape)."""
+names: ellie alan malcolm hammond owen claire ashok.  mouths: closed wide mid open round fv (from Azure viseme ids, see mouth_shape)."""
 import math
 from PIL import Image, ImageDraw
 
-NAMES = {'ellie': 'ELLIE', 'alan': 'ALAN', 'malcolm': 'IAN', 'hammond': 'JOHN', 'owen': 'OWEN', 'claire': 'CLAIRE'}
-FULL = {'ellie': 'Ellie Sattler', 'alan': 'Alan Grant', 'malcolm': 'Ian Malcolm', 'hammond': 'John Hammond', 'owen': 'Owen Grady', 'claire': 'Claire Dearing'}
-COLOR = {'ellie': (255, 150, 140), 'alan': (110, 190, 255), 'malcolm': (190, 160, 255), 'hammond': (250, 222, 120), 'owen': (130, 215, 125), 'claire': (255, 105, 105)}
+NAMES = {'ellie': 'ELLIE', 'alan': 'ALAN', 'malcolm': 'IAN', 'hammond': 'JOHN', 'owen': 'OWEN', 'claire': 'CLAIRE', 'ashok': 'ASHOK'}
+FULL = {'ellie': 'Ellie Sattler', 'alan': 'Alan Grant', 'malcolm': 'Ian Malcolm', 'hammond': 'John Hammond', 'owen': 'Owen Grady', 'claire': 'Claire Dearing', 'ashok': 'Ashok'}
+COLOR = {'ellie': (255, 150, 140), 'alan': (110, 190, 255), 'malcolm': (190, 160, 255), 'hammond': (250, 222, 120), 'owen': (130, 215, 125), 'claire': (255, 105, 105), 'ashok': (90, 220, 200)}
 from voices import VOICE, MULTILINGUAL
 
 def mouth_shape(i):
@@ -25,6 +25,7 @@ LOOK = dict(
     malcolm=dict(skin=(226, 184, 154), hair=(26, 22, 24), brow=(26, 22, 24), shirt=(32, 32, 38), collar=(60, 60, 70)),
     hammond=dict(skin=(238, 198, 172), hair=(242, 242, 242), brow=(220, 220, 220), shirt=(246, 246, 240), collar=(205, 205, 200)),
     owen=dict(skin=(212, 168, 134), hair=(92, 64, 42), brow=(80, 56, 38), shirt=(198, 178, 138), collar=(170, 150, 112)),
+    ashok=dict(skin=(176, 122, 86), hair=(22, 18, 20), brow=(22, 18, 20), shirt=(222, 224, 228), collar=(186, 190, 198)),
     claire=dict(skin=(244, 212, 188), hair=(190, 52, 42), brow=(150, 40, 34), shirt=(248, 248, 250), collar=(214, 214, 222)),
 )
 
@@ -81,6 +82,9 @@ def raw(who, mouth, blink):
         d.pieslice([(cx - 112) * s, (cy - 134) * s, (cx + 112) * s, (cy + 20) * s], 180, 360, fill=hair); R(cx - 116, cy - 70, cx - 96, cy - 5, 8, fill=hair); R(cx + 96, cy - 70, cx + 116, cy - 5, 8, fill=hair)
     elif who == 'owen':
         d.pieslice([(cx - 112) * s, (cy - 136) * s, (cx + 112) * s, (cy + 10) * s], 180, 360, fill=hair)
+    elif who == 'ashok':
+        d.pieslice([(cx - 114) * s, (cy - 142) * s, (cx + 114) * s, (cy + 14) * s], 180, 360, fill=hair)
+        P([(cx - 114, cy - 50), (cx - 70, cy - 100), (cx - 100, cy - 10)], fill=hair)
     elif who == 'claire':
         d.pieslice([(cx - 120) * s, (cy - 140) * s, (cx + 120) * s, (cy + 50) * s], 180, 360, fill=hair)
         P([(cx - 120, cy - 60), (cx + 30, cy - 125), (cx + 120, cy - 60), (cx + 118, cy - 10), (cx + 40, cy - 70), (cx - 120, cy - 20)], fill=hair)
@@ -105,7 +109,7 @@ def raw(who, mouth, blink):
         R(cx - 104, cy - 82, cx + 104, cy - 66, 4, fill=(90, 64, 36))
         E(cx - 172, cy - 92, cx + 172, cy - 44, fill=(140, 100, 52)); E(cx - 160, cy - 90, cx + 160, cy - 58, fill=(170, 128, 72))
     # mouth
-    mx, my = cx, cy + 68; lip = (170, 70, 70) if who in ('alan', 'owen', 'malcolm') else (205, 80, 95); dark = (90, 25, 35)
+    mx, my = cx, cy + 68; lip = (170, 70, 70) if who in ('alan', 'owen', 'malcolm', 'ashok') else (205, 80, 95); dark = (90, 25, 35)
     if who in ('alan', 'hammond'): lip = (235, 175, 160)
     if mouth == 'closed': d.arc([(mx - 22) * s, (my - 12) * s, (mx + 22) * s, (my + 10) * s], 10, 170, fill=lip, width=6)
     elif mouth == 'wide': E(mx - 26, my - 8, mx + 26, my + 10, fill=dark); R(mx - 22, my - 8, mx + 22, my - 1, 3, fill=(255, 255, 255))

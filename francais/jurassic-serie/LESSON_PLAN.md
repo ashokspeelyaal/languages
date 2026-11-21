@@ -28,6 +28,7 @@ The French in episode N may only use grammar from episodes 1..N. Fixed chunks ar
 | **John Hammond** | `fr-FR-MauriceNeural` | Older-sounding male voice for the host. |
 | **Owen Grady** (A2) | `fr-FR-HenriNeural` | Steady male voice; style `cheerful` is available. |
 | **Claire Dearing** (A2) | `fr-FR-DeniseNeural` | Crisp, professional female voice. |
+| **Ashok** (the learner) | `fr-FR-AlainNeural` | Ashok's own voice: a learner from Kulithalai (Tamil Nadu, India) who lives in **Genk**, Belgium. He answers and practises the new structures. |
 | *Spare: Maisie or a child* | `fr-FR-EloiseNeural` | Child voice, if needed. |
 | *Spare: lab scientist* | `fr-FR-ClaudeNeural` | Extra male voice. |
 | **« À toi ! » prompt (English)** | Ellie's voice in en-US | One consistent "teacher" voice for the prompts. |

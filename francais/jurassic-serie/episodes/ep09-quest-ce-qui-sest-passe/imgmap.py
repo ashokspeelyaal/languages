@@ -1,0 +1,15 @@
+IMG = {
+ "fence": "mntp_installedfencearoundbisonarea_07171_dca1.jpg", "fence_b": "broken_fence_6078307739_bbca.jpg",
+ "track1": "sauropod_dinosaur_trackway_morrison_form_2acd.jpg", "track2": "cal_orcko_fossil_tracks_2_98ad.jpg",
+ "track3": "dinosaur_tracks_grallator_01e8.jpg", "track4": "anchisauripus_exsertus_dinosaur_footprin_317a.jpg",
+ "lab": "dinosaur_laboratory_a299.jpg", "fossilab": "smithsonian_fossilab_at_the_national_mus_27c0.jpg", "cleaning": "cleaning_fossil_6d49.jpg",
+ "jackets": "plaster_dinosaur_jackets_to_protect_the__0ca6.jpg", "egg": "dinosaur_s_egg_fossil_02_1cef.jpg",
+ "raptor": "velociraptor_skeleton_1561.jpg", "trex": "tyrannosaurus_rex_skeleton_cast_of_speci_bc9f.jpg",
+ "brachio_hall": "brachiosaurus_brancai_berlin_1_f11a.jpg", "hall1": "dinosaur_hall_at_natural_history_museum__4877.jpg",
+ "jungle": "khao_sok_primary_tropical_rainforest_sou_475e.jpg", "path": "monteverde_reserve_costa_rica_02_63f3.jpg",
+ "cloud": "monteverde_cloud_forest_28367816878_f3f8.jpg", "kauai1": "coast_of_kauai_hawaii_5c00.jpg", "dark": "road_bend_in_a_dark_forest_unsplash_38af.jpg",
+ "sunrise1": "sunrise_in_playa_carrillo_1004.jpg", "sunrise3": "caribbean_sunrise_04cc.jpg", "roots1": "khao_yai_thailand_giant_tree_roots_in_th_87b4.jpg",
+ "ctrl1": "goddard_tv_control_room_a93a.jpg", "ctrl2": "diagnostic_monitors_in_the_control_room__2b50.jpg", "clock": "clock_johor_bahru_p1110135_dc22.jpg",
+ "kuli1": "tample_kulithalai_0e0d.jpg", "kuli2": "kulitalai_kadambavanesvarar_temple_karur_240d.jpg", "genk1": "3600_genk_belgium_panoramio_5_555f.jpg",
+ "heli_land": "starr_151005_0881_megathyrsus_maximus_he_222d.jpg",
+}

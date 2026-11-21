@@ -1,0 +1,7 @@
+Engine v3 is ready (2026-11-21). All options optional; see ENGINE.md "Engine v3".
+1. alias({'Word': 'Alias'}) in script_data.py: spoken-only pronunciation (single words); defaults Genk->Guenk, Kulithalai->Koulitalaï. Subtitles keep real spelling.
+2. atoi(prompt, answer, img=.., by='ashok'): French answer spoken by that character (bust highlighted); prompt stays Ellie.
+3. fr(who, text, en, id='x', mistake=True): mistake lines are skipped by replay(); replay('s1', skip=['x']) skips by id.
+4. Subtitle wrap: lone ! ? : ; » never starts a line.
+5. End card: next-episode titles for 7-11; episode 12 shows "Félicitations ! Tu as fini le niveau A2 !".
+6. A2: meta(rate='-15%'); Owen/Claire French-only (no explain); build_listen.py N>=7 -> FrenchVideos/A2/.

@@ -8,13 +8,13 @@ These are private learning videos, a fan-made story with Jurassic Park character
 - Photos are real and come from Wikimedia Commons: dinosaur skeletons and fossils, tropical islands and jungle (Kauai, Costa Rica), labs, museums.
 
 ## The learner
-- Ashok, from Tamil Nadu, lives in Belgium, an IT person and a structured learner.
+- Ashok, from Kulithalai (Tamil Nadu, India), lives in Genk (Belgium), an IT person and a structured learner.
 - French: **absolute beginner (A1)**. Goal: A2 by the end of the series.
 - Knows the six films well (in English).
 - Watches in the gym on an iPhone, so the audio must work on its own, and the on-screen text must be big.
 
 ## The conceit
-"You" (the viewer, addressed as **tu**, called Ashok) are the newest visitor or intern on Isla Nublar. The characters teach you French while things happen in the park. They speak slow, clear French to you. The grammar explanations are in **English**.
+Ashok (a cartoon character on screen, and the viewer's stand-in, addressed as **tu**) is the newest visitor or intern on Isla Nublar. The characters teach you French while things happen in the park. They speak slow, clear French to you. The grammar explanations are in **English**.
 
 ## Characters and grammar roles
 Each character always teaches the same kind of thing, so the brain links the grammar to the person.
@@ -25,6 +25,7 @@ Each character always teaches the same kind of thing, so the brain links the gra
 | **Alan Grant** | gruff, loves fossils, dislikes computers, softens over time | **the past**: things that are dug up (passé composé and imparfait in A2); describing dinosaurs |
 | **Ian Malcolm** | ironic, funny, chaos theory | **the exceptions and irregular verbs** ("grammar is chaos, but chaos has patterns") |
 | **John Hammond** | enthusiastic host, "no expense spared" type (never quote it) | **welcome, numbers, prices, il y a** |
+| **Ashok** (the learner, on screen in every episode) | from **Kulithalai** (Tamil Nadu, India), lives in **Genk**, Belgium; IT engineer; loves the films; a beginner in French who grows to A2 | **practises**: he answers, makes typical learner mistakes that get corrected, and says the « À toi ! » answers after the pause |
 | **Owen Grady** (A2) | calm raptor trainer | **commands, the imperative, pronouns** (le, la, lui) |
 | **Claire Dearing** (A2) | organised park manager, schedules | **time, daily routine, reflexive verbs, formal vous** |
 
