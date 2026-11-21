@@ -1,0 +1,186 @@
+# Jurassic Luisteren B2 · aflevering 6 · Jurassic World Dominion. Alle dialoog is eigen werk (geen filmcitaten).
+@meta num=6 ; title=Jurassic World Dominion ; level=B2 ; slug=dominion ; film=Jurassic World Dominion (2022)
+@alias Biosyn=Biosien ; Dodgson=Dodsen ; Maisie=Meisie ; Kayla=Keila ; Quetzalcoatlus=Ketsalkoatlus ; Giganotosaurus=Gigantosaurus ; Therizinosaurus=Terizinosaurus ; Ramsay=Remzee ; Franklin=Frenklin ; Beta=Beeta ; Blue=Bloe ; Lockwood=Lokwoed ; Wu=Woe ; Ellie=Elly ; Nadu=Naadoe ; Kulithalai=Koelietalai ; Pyroraptor=Pierorraptor
+== 1 · Dinosaurussen op alle continenten | cast: ashok claire owen | bg: cropfield_in
+ashok: [[cropfield_in]]Ik werk als {landbouwanalist|iemand die gegevens over landbouw onderzoekt|agricultural analyst} in Tamil Nadu, en mijn dagen bestaan uit cijfers over {oogsten|de opbrengst van akkers|harvests}. Maar de laatste tijd vertellen die cijfers een {onrustbarend|zorgwekkend|alarming} verhaal.
+claire: [[rice]]Dan weet je meer dan de meeste mensen, Ashok. Vier jaar nadat we de dieren van het eiland hebben {losgelaten|vrijgelaten|released}, leven ze {overal|op alle plaatsen|everywhere}. [[heli_land]]Ze {planten zich voort|krijgen jongen|reproduce} sneller dan wij ze kunnen tellen.
+owen: [[elephant]]Ik zie ze {bijna elke week|ongeveer iedere week|almost every week}. Dan help ik een dier dat {verdwaald|de weg kwijt|lost} is naar een veilige plek te brengen. [[path]]Soms is het niet meer dan een {kudde|groep dieren|herd} langs een snelweg.
+ashok: [[trex]]Bij ons in Tamil Nadu is het gelukkig nog {rustig|kalm, zonder problemen|quiet}. Maar in Genk las ik laatst over een {roofdier|dier dat andere dieren eet|predator} in een bos in de Ardennen. [[genk]]Mijn buren dachten eerst dat het een {grap|iets om te lachen|joke} was.
+claire: [[kauai2]]Het is geen grap meer. Elk land {worstelt|heeft grote moeite|struggles} met de vraag wie verantwoordelijk is voor deze dieren. Sommige regeringen {kijken weg|doen alsof ze het niet zien|look the other way}, andere {laten er geld aan verdienen|maken er winst mee|let people profit from it}.
+owen: [[rice2]]Precies daarom doen we {wat we kunnen|ons best|what we can}. [[valletta]]En hoe meer ik hoor over {handel|het kopen en verkopen van dieren|trade}, hoe minder ik het mooi vind.
+ashok: [[dilo]]Mag ik jullie iets vragen? Ik ben hier niet alleen {uit nieuwsgierigheid|omdat ik het interessant vind|out of curiosity}. [[lab]]Ik volg al maanden gegevens van {mislukte oogsten|oogsten die niet slagen|failed harvests}, en ik heb het gevoel dat er iets heel groots aan de hand is.
+claire: Vertel het ons maar. [[servers]]Wij hebben {bewijs|aanwijzingen waarmee je iets kunt aantonen|evidence} verzameld over {illegale kwekerijen|kwekerijen die niet mogen|illegal breeding sites}, maar over landbouw weten we weinig.
+owen: [[sunset_heli]]En laat het {rustig|zonder haast|calmly} komen. Eerst een kop koffie, daarna de {slechte nieuwtjes|informatie over wat er gebeurd is|the news}.
+ashok: [[genk]]In België hebben we daar {strenge regels|duidelijke wetten die streng zijn|strict rules} voor. [[ecar]]Je mag niet zomaar een {genetisch gewijzigd|met aangepast DNA|genetically modified} gewas telen. In India praten we meer over {honger|het gebrek aan eten|hunger} dan over regels.
+claire: [[cropfield_in]]En toch hangt alles samen. [[wheat1]]Als de oogst {mislukt|niet slaagt|fails}, stijgen de prijzen, en dan {verdwijnt|gaat weg|disappears} het geld van gewone gezinnen als eerste.
+owen: [[rice]]Mijn grootvader had een kleine boerderij. Hij zei altijd: wie de grond verwaarloost, {oogst|krijgt|reaps} wat hij verdient.
+ashok: [[kaveri]]Mijn vader zegt iets vergelijkbaars over de rivier. Je kunt haar niet {dwingen|met kracht laten doen wat jij wilt|force}, je kunt haar alleen {begeleiden|de weg wijzen|guide}.
+ashok: [[dilo]]Voor ik het vergeet: ik heb een {rapport|schriftelijk overzicht van gegevens|report} voor jullie meegebracht. [[servers]]Het bevat {grafieken|tekeningen met cijfers|graphs} per land, en de lijn gaat overal {omlaag|naar beneden|downwards}.
+== 2 · De hut in de bergen | cast: owen claire ashok | bg: cabin
+claire: [[cabin]]Op deze foto zie je zo'n houten hut, al staat die in Schotland. Weet je, Ashok, wij wonen nu {afgelegen|ver van alles|remote} in een houten hut in de bergen. [[lake]]De dichtstbijzijnde winkel is een uur rijden. Dat is niet {toevallig|bij toeval|by chance}.
+ashok: [[sierra]]Op deze foto zie je het Tahoemeer in de Sierra Nevada. Jullie verbergen jullie voor iemand? Je klinkt als een {gezin|familie|family} op de vlucht.
+owen: [[path]]Wij hebben een meisje van veertien in huis, Maisie. [[lake]]Ze is {bijzonder|anders dan anderen|special}, en daar zijn mensen naar op zoek. We {beschermen|zorgen dat haar niets overkomt|protect} haar zo goed we kunnen.
+claire: [[cabin2]]Het is niet makkelijk. Ze is veertien, ze wil {vrienden|mensen van haar eigen leeftijd|friends}, ze wil de wereld zien. En wij zeggen elke dag: {niet naar buiten|blijf binnen|stay inside}.
+ashok: [[sierra]]Dat herken ik. Mijn zus mocht als tiener ook niet {zomaar|zonder reden of toestemming|just like that} het dorp uit. Ze werd {zo kwaad|heel boos|so angry} dat ze op een dag in haar eentje naar Trichy fietste.
+owen: [[egg]]En dan is er nog Blue. [[raptor]]Mijn oude {raptor|kleine roofdinosaurus|raptor}, die ik als jong dier heb grootgebracht. [[egg2]]Op een ochtend stond ze aan de rand van het bos met een jong, helemaal {zonder vader|zonder mannetje|without a father}.
+claire: [[eggs1]]Dat is wetenschappelijk bijna {onmogelijk|niet te geloven|nearly impossible}, maar het gebeurde. Maisie noemde het jong Beta. [[cleaning]]Ze was {dolgelukkig|heel erg blij|overjoyed}, en wij waren {doodsbang|vreselijk bang|terrified}.
+ashok: [[fossilab]]Waarom bang? Een nieuw leven op zich is toch {goed nieuws|iets positiefs|good news}?
+owen: [[dna]]Omdat een dier dat zich zonder partner kan voortplanten ook voor {bedrijven|firma's die geld willen verdienen|companies} interessant is. [[pipette]]Voor sommige mensen is dat geen jong dier, maar een {goudmijn|iets dat veel geld oplevert|goldmine}.
+claire: [[cabin2]]Op een middag was Maisie {verdwenen|plotseling weg|gone}. [[jeep]]Een paar uur later {bleek|werd duidelijk|turned out} dat ze, samen met Beta, {ontvoerd|met geweld meegenomen|kidnapped} was door een groep huurlingen.
+owen: [[lake]]Er stond {een bandenspoor|het spoor van een auto|a tire track} {in de modder|natte aarde|mud}. We hebben alles in één minuut gepakt en zijn weggereden.
+claire: [[cabin]]Soms denk ik dat we haar {te veel|meer dan goed is|too much} beschermen. [[lake]]Een kind moet {fouten maken|dingen verkeerd doen om te leren|make mistakes}, anders leert ze nooit zelf kiezen.
+owen: [[sierra]]Dat weet ik. Maar de wereld is {wreed|hard|cruel} voor iemand zoals zij. [[path]]Daarom hebben we dat huis zo {ver weg|op grote afstand van anderen|far away} gekozen.
+ashok: [[cabin2]]Ik snap jullie dilemma. Veiligheid en vrijheid {botsen|staan tegenover elkaar|clash}, en zoiets lost niemand met één {besluit|beslissing|decision} op.
+ashok: [[sierra]]Dan begrijp ik waarom Franklin jullie belde. Hij werkt nu voor een {dienst|overheidsorganisatie|agency} die zich met gevaarlijke dieren bezighoudt.
+
+== 3 · De sprinkhanen | cast: ashok ellie alan | bg: locust1
+ashok: [[locust1]]Twee dagen later zit ik in Ellie's lab, en mijn gegevens zijn duidelijk. In Tamil Nadu, in Kansas, in Oekraïne: overal worden de gewassen {kaalgevreten|volledig opgegeten|stripped bare}. [[locust2]]En het zijn geen gewone insecten. Dit zijn {gigantische|enorm grote|giant} sprinkhanen.
+ellie: [[wheat1]]Ik weet het, ik zie het ook. Maar kijk eens goed naar je kaart. [[corn]]Sommige velden blijven {ongemoeid|helemaal intact|untouched}. Weet je waarom?
+ashok: [[wheat2]]Ik heb er lang naar gekeken. Het zijn allemaal velden met zaden van één bedrijf: Biosyn. [[locust4]]Eerst dacht ik aan {toeval|iets dat zomaar gebeurt|coincidence}, maar dat is het niet.
+ellie: [[locust3]]Dat is precies wat ik denk. Een {plaag|ramp door insecten|plague} die alleen de gewassen van de concurrentie opeet, dat is geen natuur. [[lab]]Dat is {ontworpen|bedacht en gemaakt|engineered}.
+alan: [[fossilab]]Ellie, je hebt me hier naar mijn {opgraving|plek waar ik fossielen opgraaf|dig site} laten komen voor een insect?
+ellie: [[tips]]Een insect dat ik uit een veld in Kansas heb gehaald, Alan. Kijk er eens onder de microscoop naar.
+alan: [[locust5]]Hm. [[dna]]Dit is {geen normale sprinkhaan|niet iets uit de natuur|not a natural locust}. Er zit DNA in van een insect uit het Krijt, en dat is meer dan honderd miljoen jaar oud.
+ashok: [[egg]]Moderne en oude genen door elkaar? Dat is als je een oude machine met een nieuw {besturingssysteem|programma dat alles aanstuurt|operating system} combineert.
+ellie: [[dna]]En het systeem is te {efficiënt|doelmatig|efficient}. Als deze dieren zich verspreiden, {raakt de hele voedselketen|valt het hele systeem|the whole food chain gets} in de war.
+alan: [[servers]]Dus het bedrijf dat de zaden verkoopt, verkoopt ook de {plaag|ramp|plague}. Dat is {geen ongelukje|geen toeval|no accident}, dat is een {plan|bewuste strategie|plan}.
+ashok: [[rice]]In mijn dorp zeggen ze: wie het water beheert, beheert het leven. [[kaveri]]Maar als één bedrijf bepaalt wat er {groeit|op de akkers staat|grows}, dan beheert dat bedrijf nog veel meer.
+ellie: [[wheat1]]Ik heb jarenlang planten {bestudeerd|onderzocht|studied}. [[corn]]Een gezond veld is {gevarieerd|niet overal hetzelfde|varied}. Als overal dezelfde soort staat, is dat een {kwetsbaar|gemakkelijk te beschadigen|vulnerable} systeem.
+alan: [[fossilab]]Vroeger had ik niets met {landbouw|het telen van gewassen|agriculture}, ik dacht aan botten. [[locust4]]Nu zie ik dat voedsel net zo {levensbelangrijk|heel erg belangrijk|vital} is als dinosaurussen.
+ashok: [[rice]]In Tamil Nadu is de {oogst|de opbrengst van de akkers|harvest} van de rijst het belangrijkste moment van het jaar. [[kaveri]]Als die mislukt, merken we dat in elk gezin.
+ellie: [[locust2]]Dan moeten we {snel|zonder tijd te verliezen|quickly} handelen. [[locust3]]Dit gaat niet over een of twee {akkers|stuk land voor gewassen|field}, maar over de {voedselvoorziening|het eten voor iedereen|food supply} van hele landen.
+malcolm: [[locust1]]Mag ik even {tussenbeide komen|iets zeggen terwijl jullie praten|interrupt}? Ik kom net uit Biosyn. [[dolo1]]Daar werk ik, al is {dat|dat werk|that} een lange {omweg|ingewikkeld verhaal|detour}. Ze hebben daar zoveel {macht|invloed|power} dat niemand ze durft te {tegenspreken|zeggen dat ze ongelijk hebben|contradict}.
+ellie: [[servers]]Ian, kun je ons binnenlaten? [[code]]We hebben een {plan|manier om iets aan te pakken|plan} nodig.
+malcolm: [[lab]]Ik ken een {medewerker|iemand die er werkt|employee}, Ramsay. [[camera]]Hij wil dat het bedrijf {zijn gezicht laat zien|eerlijk wordt|shows its true face}.
+== 4 · Een tip uit Washington | cast: owen claire ashok | bg: plane
+claire: [[plane]]Franklin heeft een {spoor|aanwijzing|lead}. De huurlingen hebben Maisie en Beta naar Malta gebracht, naar een {clandestiene|geheime en illegale|clandestine} markt voor dieren. [[valletta2]]We vliegen {vanavond|deze avond|tonight}.
+owen: [[ctrl2]]Ashok, jij zit bij Ellie, toch? Kun je ons vanuit je laptop {op de hoogte houden|steeds informeren|keep us posted}?
+ashok: [[code]]Natuurlijk. Ik kan de vrachtroutes van het bedrijf Biosyn volgen. [[servers]]Bijna alle {gegevens|informatie|data} over zaadtransporten staan in openbare bestanden, als je weet waar je moet zoeken.
+claire: [[ctrl1]]Dat is nuttig. Wat zie je tot nu toe?
+ashok: [[plane]]Op deze foto zie je een groot vrachtvliegtuig; zoiets vliegt vaak naar Biosyn. Eén ding valt op. Veel vrachtvluchten gaan naar een vallei in de Dolomieten, in Noord-Italië. [[dolo1]]Daar heeft Biosyn een {natuurreservaat|beschermd gebied met dieren|nature reserve} voor dinosaurussen. Officieel is het {onderzoek voor medicijnen|wetenschap voor gezondheid|research for medicine}.
+owen: [[dolo2]]Officieel. Dat woord hoor ik niet graag.
+ashok: [[kaveri]]Bij ons zeggen oma's dat een {mooi etiket|aantrekkelijke verpakking|nice label} niets over de inhoud vertelt. Voor mij is het hetzelfde met dit reservaat.
+claire: [[helipad]]We moeten eerst Maisie vinden. Daarna denken we aan Biosyn. [[plane]]Kayla, een piloot die ik ken, kan ons {mogelijk|misschien, als het kan|possibly} later helpen. Eerst Malta.
+owen: [[plane]]Hoe lang is de vlucht? [[valletta2]]Ik haat wachten, dan krijg ik {jeuk|een onrustig gevoel|itchy feet}.
+claire: [[valletta]]Je hebt een uur om je {voor te bereiden|klaar te maken|prepare}. En ik wil dat je de mensen daar niet {onderschat|te laag inschat|underestimate}.
+ashok: [[code]]Ik kijk ondertussen of de haven in Malta {bewaakt|in de gaten wordt gehouden|guarded} wordt. [[servers]]Het zou {me niet verbazen|niet raar zijn|not surprise me} als de handelaren hun eigen {schip|boot|ship} hebben.
+
+== 5 · De zwarte markt in Malta | cast: owen claire ashok | bg: valletta
+owen: [[valletta]]Malta bij nacht. [[valletta2]]Prachtige oude straten, en daaronder een {onderwereld|illegale wereld die verborgen blijft|underworld}.
+claire: [[mnight]]Ik loop voorop. [[market]]Het ziet eruit als een {gewone markt|een normale markt|an ordinary market}. Maar kijk naar de {kratten|houten kisten|crates} achteraan: daar zit iets in dat beweegt.
+ashok: [[market2]]Ik zie jullie camera. Er staan wel dertig mensen rond een kooi. Dat is een {veiling|openbare verkoop|auction}.
+owen: [[croc]]Ze verkopen kleine dieren aan de hoogste {bieder|persoon die het meeste biedt|bidder}. Dit is precies wat we al jaren willen {tegenhouden|stoppen|stop}.
+claire: [[market]]Ik zie een man die geld {telt|aan het tellen is|counts}. [[mnight]]Hij kijkt steeds om zich heen. Hij is {nerveus|zenuwachtig|nervous}.
+owen: [[market]]Het zijn kleine dieren, geen grote. Maar de {kooien|ijzeren hokken|cages} zijn te klein. [[croc]]Dat doet me pijn om te zien.
+ashok: [[valletta2]]Ik vergelijk het met de {smokkel|illegale handel|smuggling} van planten die ik ken. [[market]]Waar vraag is, is altijd iemand die het {aanbod|wat er te koop is|supply} regelt, ook illegaal.
+claire: [[market]]Ik probeer een {gesprek|praatje|conversation} met de verkoper te beginnen. [[mnight]]Hij kijkt me {wantrouwend|met argwaan|suspiciously} aan.
+owen: [[market3]]Zeg gewoon dat we een {koper|iemand die iets wil kopen|buyer} zijn. [[croc]]Dan laat hij ons misschien bij de kooien.
+ashok: [[valletta]]Wat een {contrast|groot verschil|contrast}: bovenin een toeristenstad, onderin een {criminele|illegale|criminal} wereld.
+claire: [[fence_ana]]Er is hier ook een {inval|politieactie|raid} aan de gang. Een Franse agent, Barry, leidt het team dat de markt wil {opdoeken|sluiten|shut down}.
+ashok: [[tracks]]Ik zie op mijn scherm dat er twee {vrachtwagens|grote auto's voor goederen|lorries} de haven uitrijden. Dat kan Maisie zijn.
+owen: [[jeep]]Ik zie ze. Claire, ga rechts, ik ga links. [[claw2]]Plotseling gaan alle kooien open!
+claire: [[raptor]]Dat is het gevolg van de inval. De dieren raken {in paniek|helemaal van streek|in a panic} en rennen de straat op. [[trex2]]Dit is het begin van een {chaotische|zeer rommelige|chaotic} nacht.
+ashok: [[panel]]Het {lawaai|de herrie|noise} is zelfs op mijn laptop te horen. Zorg dat jullie veilig blijven, alsjeblieft.
+owen: [[claw]]Dit is geen kalm moment, maar ik heb een {plan|idee|plan}. Eerst zorgen dat niemand gewond raakt, dan pas achter de wagens aan.
+claire: [[valletta]]Franse politie, mensen, dieren, een {achtervolging|jacht op iemand|chase} door de {smalle straten|straten met weinig ruimte|narrow streets}... Ik had nooit gedacht dat ik dit nog zou meemaken.
+ashok: [[harbour]]Ik heb jullie bijgestaan met een {kaart van de haven|plek waar schepen aanleggen|harbour}. Het {kantoor|de plek|office} waar Maisie heen is gebracht, hoort bij Biosyn. Dat {staat nu vast|het is zeker|it is certain}.
+== 6 · Kayla en het vliegtuig | cast: owen claire ashok | bg: plane
+claire: [[plane]]We hebben een {vliegtuig|toestel|plane} nodig, en snel. [[helipad]]Kayla is een piloot die voor veel organisaties werkt en weinig vragen stelt.
+owen: [[md500]]Ze heeft ons {gisteren|de dag voor vandaag|yesterday} een lift beloofd. [[plane]]Vandaag brengt ze ons {rechtstreeks|zonder omweg|directly} naar de Dolomieten, {ongeacht|zonder rekening te houden met|regardless of} het weer.
+ashok: [[clouds]]Dat is gevaarlijk. De bergen daar zijn {grillig|onvoorspelbaar|unpredictable}, en de regels voor het luchtruim zijn {streng|met strikte regels|strict}.
+claire: [[dolo1]]Dat weten we. Maar we {hebben geen keuze|kunnen niet anders|have no choice}. [[dolo2]]Dit is de enige route naar het meisje.
+ashok: [[servers]]Ik stuur jullie de {coördinaten|cijfers die een plek aanwijzen|coordinates} van het gebied. [[code]]Als de verbinding {wegvalt|ophoudt|drops}, houd dan de {hoogte|hoe hoog je zit|altitude} aan die ik heb opgeschreven.
+claire: [[plane]]Ik vind het {bijzonder|heel apart|remarkable} dat we nu hier zitten. [[dolo2]]Een jaar geleden dacht ik nog dat mijn leven rustig zou {verlopen|gaan|run}.
+owen: [[clouds]]Rustig is {niet ons ding|niets voor ons|not our thing}, Claire.
+owen: [[md500]]Zij vliegt {vaak|regelmatig|often} met vracht waar niemand naar vraagt. [[helipad]]Ik vertrouw haar, ook al kennen we elkaar nauwelijks.
+claire: [[plane]]Dat is de {kracht|het mooie|strength} van samenwerken. [[dolo1]]Je hoeft elkaar niet goed te kennen, als je hetzelfde {doel|waar je naartoe werkt|goal} hebt.
+ashok: [[servers]]Ik houd intussen Biosyn in de gaten. [[code]]Er zijn vandaag opvallend veel {transporten|vervoer van goederen|shipments} naar het reservaat, meer dan normaal.
+owen: [[storm1]]Dat doen we. [[clouds]]Ze vertelde me dat ze het veel {spannender|leuker en gevaarlijker|more exciting} vindt dan haar gewone vluchten.
+claire: [[sunset_heli]]Dat klinkt als een goede {basis voor|iets waarop je kunt bouwen|a basis} een {vriendschap|band met elkaar|friendship}. Kom, we stijgen op.
+== 7 · Biosyn in de Dolomieten | cast: ashok ellie alan malcolm | bg: dolo1
+ashok: [[dolo1]]Ik zit op dezelfde dag in een {busje|kleine bus|minibus} naar Biosyn. [[dolo2]]Ellie en Alan hebben me meegenomen omdat Ian Malcolm daar nu werkt.
+malcolm: [[dolo1]]Ja, Ashok, ik werk voor het bedrijf. [[ctrl1]]Maar niet uit {overtuiging|omdat je er echt in gelooft|out of conviction}. Ik wil de {leiding|de mensen aan de top|management} laten zien dat hun plan ver weg gaat van wat ze zeggen.
+ellie: [[servers]]Ian heeft ons uitgenodigd. Hij kent iemand binnen, een {medewerker|persoon die er werkt|employee} die zich zorgen maakt over de {directeur|de baas van een bedrijf|the director}, Lewis Dodgson.
+alan: [[ctrl2]]Ik ben hier niet voor het {gezelschap|het samen zijn met anderen|company}. [[lab]]Ik wil een bewijs dat die sprinkhanen uit een {laboratorium|ruimte voor wetenschappelijk onderzoek|laboratory} komen.
+malcolm: [[camera]]Dan moeten we {discreet|voorzichtig en onopvallend|discreetly} te werk gaan. Overal hangen camera's. Maar meneer Dodgson is {dol op|heel graag hebben|to be very fond of} {zijn eigen verhaal|wat hijzelf zegt|his own story}.
+ashok: [[servers]]Ik heb een aanvraag voor {toegang|binnenkomen|access} gedaan als gast. [[bunker]]Ze denken dat ik een landbouwexpert ben die hun gewassen komt {bewonderen|prijzen|admire}.
+malcolm: [[dilo]]Dat is {niet eens gelogen|zelfs eerlijk|not even a lie}. [[stairs]]Kom, we gaan de lift in.
+ellie: [[dna]]Binnen werkt ook de geneticus Henry Wu. Hij heeft het insect {aangepast|veranderd|modified}, onder druk van Dodgson, en hij is er niet blij mee.
+alan: [[tips]]Dan willen we met hem praten, {voor het te laat is|zolang het nog kan|before it is too late}.
+ashok: [[servers]]Mijn laptop toont dat de {hoofdserver|computer die gegevens bewaart|server} {draait|werkt|runs} op een apart netwerk. Als we daar toegang tot krijgen, vinden we het {bewijs|het materiaal dat alles aantoont|evidence}.
+malcolm: [[dolo2]]Dodgson houdt van {grote woorden|indrukwekkende beloftes|big words}. Hij zegt dat hij de wereld {voedt|te eten geeft|feeds}. [[ctrl1]]In werkelijkheid {bezit|heeft in handen|owns} hij vooral de zaden.
+ellie: [[servers]]Een {monopolie|een situatie waarin één bedrijf alles beheerst|monopoly} op voedsel is gevaarlijker dan een monopolie op telefoons. Mensen kunnen leven zonder telefoon.
+ashok: [[rice]]In mijn land hebben boeren duizenden jaren zaden {bewaard|opgeslagen voor het volgende jaar|saved} en met elkaar {gedeeld|doorgegeven|shared}. [[seeds]]Als dat verboden wordt, verliezen ze hun {onafhankelijkheid|vrijheid om zelf te beslissen|independence}.
+alan: [[stairs]]Praat zachter. We lopen hier niet zonder {risico|gevaar|risk}.
+
+== 8 · Een noodlanding boven de bergen | cast: owen claire ashok | bg: plane
+claire: [[plane]]We vliegen nu over het gebied van Biosyn. [[dolo2]]Het {luchtruim|de lucht boven het terrein|airspace} is gesloten, maar niemand hield ons tegen.
+owen: [[clouds]]Dat is raar. Zoveel {geheimhouding|dingen verborgen houden|secrecy} en geen enkel radarsignaal?
+ashok: [[servers]]Ik volg jullie toestel via mijn scherm. Er komt iets van boven op jullie af. Een {grote|enorme|huge} vlieger, geen vliegtuig.
+claire: [[quetzal]]Daar! Een reusachtig vliegend dier met vleugels van bijna tien meter. Op deze foto zie je een skelet van een verwant, zodat je een idee van de {omvang|grootte|size} krijgt.
+owen: [[storm1]]Het valt {aan|valt ons aan|attacks}! Kayla, trek op!
+ashok: [[panel]]Ik hoor alarmsignalen. Het {motorgeluid|geluid van de motor|sound of the engine} verandert.
+claire: [[helipad]]We maken een {noodlanding|geforceerde landing|emergency landing}! Ik word naar buiten geslingerd, maar mijn parachute opent {net op tijd|op het nippertje|just in time}.
+owen: [[jeep]]Het toestel slaat op de grond en ik kom met Kayla {tot stilstand|tot rust|to a halt} tussen de bomen. [[dolo4]]Ik ben {heel|in orde|fine}. Claire?
+claire: [[therizino]]Er staat iets groots vlak voor me. Op deze foto zie je de armen van zijn skelet. [[claw]]Met enorme klauwen, als {zeisen|grote snijdende werktuigen|scythes}. Ik probeer me stil te houden.
+ashok: [[dolo4]]Blijf kalm, ik heb jullie signalen nog. [[dolo2]]Claire, loop naar links, daar is een {rotswand|steile wand van steen|rock face}.
+owen: [[raptor2]]Hier heb ik een kleine roofdinosaurus met veren. Een {Pyroraptor|snelle roofdino met rode en zwarte veren|Pyroraptor}. Kayla en ik rennen weg.
+claire: [[therizino]]De klauwdino is weg. [[dolo1]]Ik hoor jullie roepen. Blijf waar je bent, ik kom jullie zoeken.
+ashok: [[code]]Ik probeer de {vluchtgegevens|informatie over de vlucht|flight data} te lezen. [[servers]]Eén toestel is lager gezakt dan {toegestaan|toegelaten|allowed}.
+claire: [[plane]]Het is bijna {onwerkelijk|niet te geloven|surreal} stil, nu de motor uit is. [[dolo4]]Ik hoor alleen mijn eigen {hartslag|hartklop|heartbeat}.
+owen: [[jeep]]Blijf bewegen. [[dolo4]]In het bos bij Biosyn is niets wat het lijkt, en {elk geluid|alle geluiden|every sound} kan gevaar betekenen.
+claire: [[dolo4]]Ik leg mijn {hand|vingers|hand} op mijn mond. [[therizino]]Het dier snuffelt aan het blad, een paar meter van mij {vandaan|weg|away}.
+ashok: [[helipad]]Hou vol. [[code]]Binnen tien minuten is er een {reddingsteam|groep die mensen komt halen|rescue team} dat jullie komt halen, dat heb ik net {geregeld|voor elkaar gekregen|arranged}.
+ashok: [[ctrl2]]Jullie zijn alle drie {in leven|nog niet verloren|alive}. Dat is voor mij op dit moment {goed genoeg|belangrijk genoeg|good enough}.
+== 9 · De sprinkhanen in de lab | cast: ashok ellie alan malcolm | bg: lab
+ellie: [[lab]]Alan, kijk. Hier staat een {ruimte|zaal|room} vol met glazen kasten. [[locust3]]Daarin zitten {honderden|veel, tussen honderd en duizend|hundreds} sprinkhanen.
+alan: [[tips]]Er is een {apparaat|machine voor een bepaalde taak|device} dat {luchtmonsters|een klein stukje om te onderzoeken|sample} neemt. Dat betekent dat ze de dieren {zorgvuldig|met grote aandacht|carefully} volgen.
+ashok: [[servers]]Ik heb de database gevonden. [[code]]Er staan {duizenden regels|een regel tekst of code|line} over sprinkhanen en zaden. Alles is {opgeslagen|bewaard|stored} op één plek.
+malcolm: [[ctrl1]]Mooi. [[camera]]Maar daar komt iemand aan. Het is Maisie, het meisje van Owen en Claire. [[lab]]Ze is {ontsnapt|weggekomen|escaped} uit een kamer.
+ellie: [[camera]]Maisie, ik ben Ellie. Wij zijn hier om je te {helpen|bijstaan|help}.
+alan: [[tips]]Wu heeft ons iets verteld. Het gaat over jouw {afkomst|oorsprong|origin}. [[dna]]Je bent genetisch een {kloon|exacte kopie|clone} van Charlotte Lockwood, de dochter van meneer Lockwood.
+ashok: [[dna]]Dat is een zware boodschap voor een kind van veertien. [[pipette]]Maar het verklaart waarom jouw DNA zo {waardevol|kostbaar|valuable} is.
+ellie: [[lab]]Wu zegt dat jouw gen kan helpen om de sprinkhanen te stoppen. Het zit {verstopt|verborgen|hidden} in een ziekte waar zij als kind al tegen vocht.
+ashok: [[code]]Ik heb zo veel gegevens gezien dat ik niet {weet waar ik moet beginnen|geen overzicht meer heb|know where to start}. [[servers]]Maar één ding is zeker: het bedrijf heeft de sprinkhanen {zelf|met opzet|deliberately} verspreid.
+ellie: [[lab]]Dan kunnen we dat bewijzen. [[dna]]Maisie, ben je bereid ons te helpen? Het is jouw {keuze|beslissing|choice}.
+alan: [[cabin2]]Je hoeft nergens aan {mee te doen|deel te nemen|participate in}. Maar als je het wilt, zijn we er {samen|met elkaar|together} voor.
+malcolm: [[ctrl1]]Een goede {strategie|plan|strategy} heeft altijd twee uitgangen. [[stairs]]Als de ene dicht is, neem je de andere.
+malcolm: [[fire]]Plotseling gaan de {alarmen|geluid dat waarschuwt|alarm} af. Dodgson heeft gemerkt dat we in het lab zijn en wil alles {verbranden|in vlammen laten opgaan|burn}.
+alan: [[fire]]Hij steekt de kassen aan om bewijs te {vernietigen|kapotmaken|destroy}. Maar de sprinkhanen ontsnappen door de ventilatie en starten een {vuurzee|een enorme brand die zich snel verspreidt|firestorm}.
+ellie: [[wildfire]]Vlug, naar buiten! Wij nemen Maisie mee.
+ashok: [[panel]]Ik sla alle bestanden op een kleine schijf op. [[code]]Dat is het enige dat ik kan {meenemen|bij me houden|take along}.
+malcolm: [[fire]]Ik blijf achter om Dodgson af te leiden. [[dolo2]]Loop naar de {poort|grote ingang in een hek|gate}, daar staat een {helikopter|toestel met wieken|helicopter}.
+== 10 · Giganotosaurus bij de toren | cast: alan claire owen ashok | bg: giga
+alan: [[tower]]We zijn bij de oude {observatietoren|toren waarvandaan je het terrein kunt zien|observation tower} gekomen. [[giga]]Op deze foto zie je het skelet van een Giganotosaurus, nog groter dan een T. rex.
+claire: [[giga]]Wat een {gigant|reus|giant}. Hij komt recht op ons af.
+owen: [[tower]]Naar de {trap|treden om omhoog te lopen|staircase}, nu! [[stairs]]Niemand blijft op de grond.
+ashok: [[ctrl2]]Ik zie jullie op de kaart. [[tower]]Als jullie bovenin zijn, hebben jullie {tijdelijk|voor een korte tijd|temporarily} {de overhand|de beste positie|the upper hand}.
+alan: [[trex]]Een tweede dier! [[trex_top]]Dat is een T. rex, en ik zie een {litteken|merkteken van een oude wond|scar} dat ik ken. [[trex2]]Dat is Rexy, het dier van Isla Nublar.
+claire: [[trex2]]Ze is helemaal uit {Noord-Amerika|het andere werelddeel|North America} gekomen. [[therizino]]En kijk, die klauwdino helpt haar!
+owen: [[claw2]]Een {vreemd|raar, ongewoon|strange} {bondgenootschap|samenwerking tussen tegenstanders|alliance}. [[giga]]Maar zij houden de Giganotosaurus bezig, en wij krijgen de tijd om Beta te {vangen|te pakken te krijgen|catch}.
+alan: [[eggs1]]Met mijn handen kan ik het jong kalmeren. [[egg2]]Maisie helpt me. Beta is bang en wij zijn rustig, dat is {genoeg|voldoende|enough}.
+ashok: [[helipad]]De {helikopter|het toestel met wieken|helicopter} van Biosyn staat nog {klaar op het dak|voorbereid zijn om te gebruiken|to stand ready}. [[sunset_heli]]Wu is bij jullie, hij weet hoe je hem moet bedienen.
+malcolm: [[fire]]Ik hoor de {ontploffingen|harde knallen|explosions} van de brand. [[wildfire]]Het vuur trekt naar het bos. Als de wind {draait|van richting verandert|turns} komt het naar jullie toe.
+ashok: [[tower]]Ik begrijp niet hoe de dieren {samenwerken|elkaar helpen|cooperate}. [[giga]]In mijn gegevens had ik zoiets nooit {voorspeld|verwacht|predicted}.
+alan: [[trex2]]Dieren gedragen zich niet altijd zoals wij {verwachten|denken dat het zal gaan|expect}. [[trex]]Soms is een oude {vijand|tegenstander|enemy} ineens een {bondgenoot|helper|ally}.
+claire: [[dilo]]En Dodgson? Hij wilde ontsnappen met embryo's, maar {de stroom viel uit|er kwam geen elektriciteit meer|the power went out}. Drie kleine Dilophosaurus hebben hem {ingehaald|bereikt|caught up with}.
+owen: [[dilo]]Ik ben er niet blij mee, maar het is {zijn eigen schuld|door zijn eigen keuzes|his own fault}.
+claire: [[sunset_heli]]Iedereen {aan boord|in het vliegtuig of schip|on board}. [[heli_sky]]Ashok, ben je er al?
+ashok: [[md500]]Ja, ik zit naast Ellie. [[heli_land]]Wat een {onwerkelijke|bijna niet te geloven|unreal} dag.
+claire: [[heli_sky]]Het was een heftige {dag|periode|day}. [[kauai4]]Maar iedereen leeft nog en dat is voor mij het {belangrijkste|meest waardevolle|most important}.
+== 11 · Na de storm | cast: ashok ellie malcolm claire | bg: un
+ellie: [[un]]Weken later zaten we in een {zaal|grote ruimte voor bijeenkomsten|hall} bij de Verenigde Naties. [[wheat1]]Ik heb mijn {getuigenis|verklaring onder ede|testimony} afgelegd, samen met Alan, Ian en Ramsay.
+malcolm: [[un]]Ik heb gezegd wat ik dacht. [[seeds]]Dat één bedrijf niet het {eigendom|bezit|ownership} van de {voedselketen|wie wie opeet in de natuur|food chain} mag hebben, en dat {veiligheid|toestand waarin er geen gevaar is|safety} vóór {winst|het geld dat overblijft|profit} moet komen.
+ashok: [[seeds]]Ik heb mijn gegevens laten zien. [[rice]]Zaden zijn geen product zoals een telefoon, zaden zijn {overleven|het leven zelf|survival}. Dat heb ik van mijn vader geleerd.
+claire: [[cabin2]]Maisie is {thuis|in je eigen huis|at home} bij ons, in een hut zoals op deze foto. [[egg2]]Owen en ik hebben Beta teruggebracht naar Blue, en dat was een {ontroerend|emotioneel|touching} moment.
+ellie: [[lake]]Wu heeft een sprinkhaan met een ziekte losgelaten. [[locust1]]Die verspreidt zich {langzaam|niet snel|slowly} en {maakt een einde aan|stopt|ends} de zwermen.
+malcolm: [[dolo1]]En het reservaat van Biosyn is nu een {officieel|volgens de regels of de woorden van het bedrijf|officially} {toevluchtsoord|beschermd gebied|sanctuary}. Alle landen {hebben ingestemd|waren het eens|agreed}.
+ashok: [[kaveri]]Ik ga terug naar Tamil Nadu. [[rice]]Daar wachten de {akkers|stuk land voor gewassen|field}, en mijn vader. Ik denk dat het goed komt, want {samen|met elkaar|together} kunnen we meer dan één bedrijf.
+claire: [[kauai2]]Dat is een mooie gedachte. Mensen en dieren {moeten ruimte voor elkaar vinden|zullen afspraken moeten maken|have to find room for each other}. Het is niet altijd {makkelijk|eenvoudig|easy}, maar het kan.
+claire: [[un]]De wereld moet nu nieuwe afspraken maken. [[kauai2]]Wie mag dieren houden, wie beschermt de {gewassen|planten die we eten|crops}, en wie {betaalt|draait op voor de kosten|pays}?
+ashok: [[wheat2]]Dat is {geen eenvoudige|niet makkelijk|no simple} vraag. [[seeds]]Maar ik ben {optimistisch|vol vertrouwen in de toekomst|optimistic}. [[rice]]Als boeren in Tamil Nadu en in Limburg hun {zaden|het zaad van planten|seeds} weer kunnen delen, hebben we al veel gewonnen.
+ellie: [[lake]]En als er weer een {zwerm|grote groep insecten|swarm} komt, weten we nu waar we moeten {kijken|zoeken|look}.
+ellie: [[genk]]En jij mag altijd bij ons {langskomen|op bezoek komen|visit}. Ook in Genk, als je daar nog woont.
+malcolm: [[dna]]Een {goede oogst|het binnenhalen van gewassen|harvest} is geen toeval, hij komt van een eerlijk systeem. [[fire]]Het is aan ons om dat systeem {eerlijk|rechtvaardig|fair} te houden.
+ashok: [[sunset_heli]]Bedankt voor het luisteren. Tot de volgende film.
+

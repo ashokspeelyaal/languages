@@ -232,7 +232,7 @@ if __name__ == '__main__':
     ff = subprocess.Popen(['ffmpeg', '-y', '-loglevel', 'error', '-f', 'rawvideo', '-pix_fmt', 'rgb24', '-s', f'{OW}x{OH}', '-r', str(FPS), '-i', '-',
         '-i', str(AUDIO_WAV), '-af', f'apad=pad_dur={DISC_END + CRED + 1}', '-c:v', 'libx264', '-preset', 'veryfast', '-crf', '18', '-pix_fmt', 'yuv420p',
         '-c:a', 'aac', '-b:a', '128k', '-t', f'{DUR:.3f}', str(OUT)], stdin=subprocess.PIPE)
-    with Pool(os.cpu_count()) as p:
+    with Pool(int(os.environ.get("RENDER_PROCS", os.cpu_count()))) as p:
         for i, b in enumerate(p.imap(render, range(N), chunksize=8)):
             ff.stdin.write(b)
             if i % 900 == 0: print(i, N, round(time.time() - t0), 's', flush=True)
