@@ -10,3 +10,11 @@ nederlands/.DS_Store
 # Generated learning videos (large media, venvs, node_modules) — kept local / iCloud only
 nederlands/*-video/
 francais/*-video/
+
+# Jurassic French series: track engine + scripts, not media
+francais/jurassic-serie/**/__pycache__/
+francais/jurassic-serie/episodes/*/images/
+francais/jurassic-serie/episodes/*/audio/
+francais/jurassic-serie/episodes/*/qa/
+francais/jurassic-serie/episodes/*/*.mp4
+francais/jurassic-serie/episodes/*/*.log
