@@ -135,3 +135,13 @@ IMG = {
 "meeting1": "minimalist_meeting_room_unsplash_b25a.jpg",
 "meeting2": "small_conference_room_unsplash_a8cb.jpg"
 }
+IMG.update({
+ "studio1": "nbc_studios_studio_11_the_jay_leno_show__3842.jpg",
+ "studio2": "studio_a_broadcast_area_4039602492_10d7.jpg",
+ "studio3": "whrw_studio_a_d506.jpg",
+ "press": "journalists_before_the_presidential_pres_ae74.jpg",
+ "news": "a_stack_of_newspapers_f730.jpg",
+ "collar": "elk_being_collared_with_gps_a_tracking_d_9f32.jpg",
+ "lynx": "lynx_project_at_yukon_flats_national_wil_191c.jpg",
+ "pin": "map_tack_inserted_b818.jpg",
+})
