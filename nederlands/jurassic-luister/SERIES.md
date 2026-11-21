@@ -13,7 +13,7 @@ Ashok: uit Kulithalai (Tamil Nadu, India, aan de Kaveri), woont in Genk (Belgisc
 | Beurten | max ~4 zinnen | langere beurten (5-8 zinnen), impliciete betekenis, ironie |
 | Kaartjes | 1-2 per zin, ~300 per 25 min | minder, moeilijker: C1-C2 woorden, nuanceparen, idioom, registerverschil (formeel/informeel), ~100-150 per 25 min |
 | Verhaal | volgt de film scène voor scène, Ashok doet mee | zelfde film, ander perspectief: panel, hoorzitting, debat, onderzoekscommissie of parallel verhaal |
-| Lengte | ~25 min (3.600-3.700 woorden; B2-afleveringen 2-4 met ~3.200 woorden werden maar 20-23 min) | ~25 min (4.300-4.500 woorden; Azure spreekt ~180 woorden/min bij +6%) |
+| Lengte | ~25 min (3.600-3.700 woorden; B2-afleveringen 2-4 met ~3.200 woorden werden maar 20-23 min) | ~25 min (4.500-4.800 woorden; Azure spreekt ~180-193 woorden/min bij +6%) |
 | iCloud | `DutchVideos/B2/NN-<film-slug>.mp4` | `DutchVideos/C1/NN-<film-slug>.mp4` |
 | Map | `episodes/b2-epNN-<slug>/` | `episodes/c1-epNN-<slug>/` |
 
