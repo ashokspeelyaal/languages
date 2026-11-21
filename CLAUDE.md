@@ -10,6 +10,7 @@ Personal language-learning tools and material: `nederlands/` (Dutch, level B1+/B
   - Learning layer: dense vocabulary and phrase pop-up cards at B2-stretch level.
   - Output: 720p encode copied to iCloud Drive → `DutchVideos/`.
   - Reference implementation: `nederlands/kulithalai-video/`. The agent file holds the full spec plus its Learnings.
+  - Series « Jurassic Luisteren » (`nederlands/jurassic-luister/`): pure listening, one episode per film, B2 set and C1 set of 6 each, Ashok inside the story. Read its `SERIES.md` and `ENGINE.md`. Output: iCloud `DutchVideos/B2/` and `DutchVideos/C1/`.
 - **`fr-jurassic-video`**: makes one episode of the private French A1→A2 series « Français Jurassique », in which Jurassic Park / Jurassic World characters (cartoon) teach grammar.
   - Format: slow French, blackboard grammar in English, « À toi ! » speaking pauses, and French + English subtitles.
   - Each episode also gets a cumulative "listen" companion (conversations only).
