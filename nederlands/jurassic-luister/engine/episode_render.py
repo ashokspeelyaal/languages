@@ -171,7 +171,7 @@ def disclaimer(im, a):
 def credits():
     c = json.load(open(IMGD / 'credits.json')); used = {IMGMAP[n] for _, _, n in SLOTS}; seen = {}
     for f, m in c.items():
-        if f in used: seen.setdefault(m['artist'][:40], m['lic'])
+        if f in used: seen.setdefault(' '.join(str(m['artist']).split())[:40], ' '.join(str(m['lic']).split()))
     return list(seen.items())
 CR = None
 def frame(n):
