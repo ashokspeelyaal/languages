@@ -1,0 +1,56 @@
+# Jurassic Luisteren B2 · aflevering 2 · The Lost World. Alle dialoog is eigen werk (geen filmcitaten).
+@meta num=2 ; title=The Lost World ; level=B2 ; slug=the-lost-world ; film=The Lost World: Jurassic Park (1997)
+@alias Nublar=Noeblar ; Sorna=Sorna ; Kulithalai=Koelietalai ; Ludlow=Loedlo ; Tembo=Tembo ; Malcolm=Malkom ; Kaveri=Kaaveri ; InGen=Ingen
+== 1 · Een onverwacht telefoontje | cast: hammond ashok | bg: genk
+ashok: [[genk]]Ik zat 's avonds thuis in Genk, {boven mijn laptop|met mijn laptop open|over my laptop}, toen mijn telefoon {overging|begon te rinkelen|rang}. Een {onbekend nummer|nummer dat ik niet kende|unknown number}. Ik nam toch op, want mijn moeder had die week al twee keer {geprobeerd me te bereiken|me proberen te bellen|tried to reach me}.
+hammond: [[servers]]Goedenavond, Ashok. Hier Hammond. Ik hoop dat ik {niet te laat stoor|je niet hinder op een slecht moment|not disturbing you too late}. Ik heb {een grote gunst|een belangrijke hulpvraag|a big favour} te vragen, en ik heb {weinig tijd|bijna geen tijd|little time}.
+ashok: Meneer Hammond? Na ons weekend op Isla Nublar had ik niet verwacht nog iets van u te horen. [[beach1]]Eerlijk gezegd dacht ik dat het {hoofdstuk afgesloten|verhaal voorbij|chapter closed} was.
+hammond: Dat dacht ik ook. Maar {de dingen zijn veranderd|er is iets gebeurd|things have changed}. Er bestaat een tweede eiland, Isla Sorna, ten zuiden van het eerste, [[beach2]]waar de dieren {gekweekt|opgegroeid, in het lab gemaakt|bred} werden voordat ze naar het park gingen.
+ashok: Een tweede eiland? Maar dat eiland is toch {verlaten|leeg, door de mensen achtergelaten|abandoned}?
+hammond: Voor de mensen wel, ja. Er kwam een zware {orkaan|tropische storm met wervelwinden|hurricane}, de medewerkers zijn vertrokken en [[jungle2]]de dieren zijn {op zichzelf aangewezen|zonder hulp van mensen|left to fend for themselves} gebleven. Ze leven daar nog steeds, en ze {doen het verrassend goed|redden het opvallend goed|are doing surprisingly well}.
+ashok: Dat klinkt {even fascinerend als verontrustend|boeiend en zorgwekkend tegelijk|as fascinating as worrying}. Maar waarom belt u mij?
+hammond: Mijn eigen bedrijf is niet meer van mij. [[servers]]Mijn neef Ludlow heeft {de leiding overgenomen|het roer in handen genomen|taken over control}, en hij wil geld verdienen aan dat tweede eiland. Een heel team staat al {te popelen|ongeduldig klaar|itching} om de dieren te vangen.
+ashok: [[storm1]]Dan zit u echt in een {lastig parket|moeilijke situatie|tight spot}.
+hammond: Dat kun je wel zeggen. Daarom stuur ik een kleine {expeditie|onderzoekstocht naar een ver gebied|expedition} die de dieren {in kaart brengt|vastlegt en beschrijft|maps out} en daarna de wereld laat zien waarom je ze met rust moet laten. Ik zoek een ingenieur voor de {communicatie|verbindingen en radio|communication} en het volgen van de dieren.
+ashok: [[code]]Dat ligt {in mijn straatje|bij mijn vak|right up my street}. Maar ik ben geen avonturier. Ik heb {in mijn leven|tot nu toe|so far} nog nooit een tent opgezet.
+hammond: [[jeep]]Je hoeft geen tent op te zetten, we hebben twee grote trailers. Zeg ja, en {de rest regelen we samen|we vinden samen een oplossing|we'll sort out the rest together}.
+ashok: [[jungle3]]Ik ga er een nachtje over {slapen|nadenken, het uitstellen tot morgen|sleep on it}. Maar ik weet nu al hoe het afloopt. Mijn nieuwsgierigheid wint het {van mijn gezond verstand|van mijn voorzichtigheid|from my common sense}.
+== 2 · De briefing | cast: malcolm hammond ellie ashok | bg: hall2
+ashok: [[hall2]]Twee dagen later zat ik in een vergaderzaal, tegenover een man die ik al kende van ons eerste weekend. Malcolm zat {onderonderuit gezakt|ontspannen onderuit|slouched} op zijn stoel, alsof hij {nergens zin in|geen enkele zin|no desire at all} had.
+malcolm: [[lab]]Ik wil één ding duidelijk {stellen|zeggen|state}, Ashok. Ik ga niet vrijwillig terug naar een eiland met dinosaurussen. Ik heb de vorige keer te veel meegemaakt om {dat nog eens te proberen|opnieuw mijn leven te riskeren|to try that again}.
+ashok: Waarom zit u dan hier?
+malcolm: [[trex]]Omdat mijn partner, een paleontologe, al op het eiland zit. Ze {liet zich niet tegenhouden|ging toch, ondanks mijn bezwaren|wouldn't be stopped} en bestudeert de dieren zonder enige {bescherming|veiligheidsmaatregel|protection}. Ik ga dus niet voor het avontuur, maar om haar {terug te halen|weer mee naar huis te nemen|to bring her back}.
+hammond: [[wall]]En ik hoop dat je intussen {ook iets meer|ook wat meer|a bit more} doet dan dat. Jullie maken foto's en filmbeelden, en daarmee {overtuigen|krijgen we de wereld mee|convince} we mensen dat het eiland moet blijven zoals het is.
+malcolm: Non-interventie, dus. {Kijken, niet aanraken|er alleen naar kijken|look but don't touch}. Dat klinkt beter dan het {in de praktijk|als je het toepast|in practice} werkt.
+ellie: [[panel]]Dag allemaal, ik hoor jullie door de luidspreker. Ik zit in een ander land en kan niet mee, maar ik wil {jullie toch even|even|just} sterkte wensen. Ashok, ik heb gehoord dat jij {het technische deel|de techniek|the technical side} doet?
+ashok: Klopt, ik zorg voor de verbindingen. [[camera]]Als de radio het niet meer doet, kunnen we niemand bereiken. Dat is {het zwakke punt|de kwetsbaarheid|the weak spot} van elke expeditie.
+ellie: Dan is dat een {verstandige|slimme, goed doordachte|sensible} keuze. En Ian, probeer deze keer {jezelf|ook jezelf|yourself} een beetje te {beschermen|in veiligheid te brengen|protect}.
+malcolm: [[hall3]]Ik zal {mijn best doen|het proberen|do my best}, Ellie. Maar de natuur heeft de {vervelende gewoonte|irritante eigenschap|annoying habit} om zich niet aan plannen te houden.
+hammond: Precies daarom zijn jullie er. [[hall2]]En vergeet niet: {het gaat om kijken en luisteren|observeren en documenteren is het doel|it's about watching and listening}, niet om vangen.
+ashok: Dat klinkt {redelijk|aannemelijk|reasonable}, maar ik denk dat de {tegenpartij|andere partij|opposing side} dat niet zo ziet.
+== 3 · De uitrusting en de mobiele basis | cast: malcolm ashok | bg: ctrl1
+ashok: [[trailer]]Onze mobiele basis bestond uit twee grote trailers, die aan elkaar gekoppeld konden worden. In de ene stond een {laboratorium|ruimte om proeven te doen|laboratory}, in de andere stond mijn {werkplek|plek om te werken|workstation}, met een heleboel schermen en {kabels|snoeren voor stroom en gegevens|cables}.
+malcolm: [[ctrl2]]Ik heb altijd gedacht dat avonturiers een kaart en een kompas gebruikten. Jullie hebben een complete {controlekamer|centrale ruimte voor besturing en toezicht|control room} op wielen.
+ashok: [[dish]]Zonder die schermen weten we niets. Op het dak staat een schotel voor de {satellietverbinding|verbinding via een satelliet|satellite connection}. Daarmee kunnen we {altijd bellen|overal contact houden|always call}, zelfs midden in de jungle.
+malcolm: En als dat niet {lukt|werkt|works}?
+ashok: [[radio]]Dan hebben we nog twee {noodradio's|radio's voor als er niets anders meer werkt|emergency radios}, een satelliettelefoon en {reservebatterijen|extra accu's voor noodgevallen|spare batteries}. Een goede ingenieur gaat nooit op reis met maar één {oplossing|manier om iets te doen|solution}.
+malcolm: [[panel]]Zo praten alleen mensen die {al eens gefaald hebben|al eens iets zagen misgaan|have already failed once}. Wat heb je nog meer?
+ashok: [[tracks]]Kleine {zenders|apparaatjes die een signaal uitsturen|transmitters} die we bij dieren kunnen {bevestigen|vastmaken|attach}, zodat we kunnen zien waar ze heen gaan. Zonder de dieren aan te raken, natuurlijk: de zender zit in een {verdovingspijl|pijl met een slaapmiddel|tranquilizer dart} die we van een afstand afschieten.
+malcolm: [[binocs]]Het systeem dat ik het meest wantrouw, is het systeem dat zich {onfeilbaar|nooit fout|infallible} noemt. Maar goed, een zender is {altijd beter dan|in elk geval beter dan|better than any} gokken.
+ashok: En {een heleboel|veel|plenty of} verrekijkers, camera's en {nachtkijkers|toestellen om in het donker te zien|night-vision devices}.
+malcolm: [[suv]]Wie rijdt eigenlijk met die {terreinwagen|auto voor ruw terrein|off-road vehicle}?
+ashok: Eddie. De uitrustingsspecialist. Hij heeft die {bouwwerken|constructies|structures} zelf ontworpen en kent elk onderdeel. Hij is {van nature|echt|by nature} een optimist, hij gelooft dat alles te {herstellen|repareren|repair} valt.
+malcolm: Optimisme is {een mooie eigenschap|iets moois|a nice trait}, tot je ermee in een kloof rijdt.
+== 4 · Aankomst op Isla Sorna | cast: malcolm ashok | bg: heli_sky
+ashok: [[heli_sky]]We vlogen over zee, onder een grijze lucht, en toen {doemde|kwam|loomed} het eiland op: steile bergen, dichte jungle en geen enkel teken van mensen. Het was eigenlijk {adembenemend|prachtig, het nam mijn adem weg|breathtaking}.
+malcolm: [[kauai_aerial]]Mooi, ja. Maar een mooie plek is nog geen {veilige plek|plek zonder gevaar|safe place}. Houd je ogen open voor {bewegingen|dingen die zich verplaatsen|movement} in het gras.
+ashok: [[napali]]We landden op een {open plek|ruimte zonder bomen|clearing} langs een rivier. Eddie bouwde meteen een {tentje|kleine opstelling|little set-up} op, en ik zette de antennes in de {top van de bomen|hoogste takken|treetops}.
+malcolm: [[ferns]]Heb je al verbinding?
+ashok: [[camera]]Ik heb {een zwak signaal|slechts weinig bereik|a weak signal}, maar het werkt. Als iemand ver weg wil blijven, is dit {een goed begin|een prima start|a good start}.
+malcolm: [[brachio_leg]]Kijk daar, tussen de bomen. Dat is geen {gewone|normale|ordinary} beweging.
+ashok: [[sauropod]]Het is een {kudde|groep dieren die samen leven|herd} planteneters, vredig en rustig. Ze eten bladeren {van de hoogste takken|boven in de bomen|from the top branches}. Zo hoort het ook: dieren in hun eigen {leefomgeving|natuurlijke omgeving|habitat}.
+malcolm: [[elephant]]Mijn partner zei altijd dat het eiland lijkt op de Afrikaanse {savanne|open vlakte met gras en bomen|savannah}, vol met kuddes. Ik zie nu wat ze bedoelde.
+ashok: [[jungle1]]Ik zie ook iets anders, Ian. Voetsporen. Heel {vers|nieuw|fresh}.
+malcolm: [[claw]]Van wie?
+ashok: Geen idee. Maar iemand heeft vandaag {gelopen|rondgewandeld|walked} waar wij nu staan, en het was niemand met schoenen.
+malcolm: Dat is precies wat ik graag {wil horen|hoor|want to hear} als ik net uit het vliegtuig ben gestapt.
